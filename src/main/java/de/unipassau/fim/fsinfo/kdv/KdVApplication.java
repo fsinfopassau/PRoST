@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class KdVApplication {
 
-  public static UserRepository userRepository;
-
   public static void main(String[] args) {
     SpringApplication.run(KdVApplication.class, args);
   }
@@ -21,7 +19,6 @@ public class KdVApplication {
       User user = new User("testUser", UserRole.ADMINISTRATOR, true);
       user.setPassword("test");
       userRepository.save(user);
-      KdVApplication.userRepository = userRepository;
     };
   }
 
