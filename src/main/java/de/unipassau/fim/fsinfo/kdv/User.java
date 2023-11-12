@@ -1,6 +1,5 @@
 package de.unipassau.fim.fsinfo.kdv;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -20,8 +19,6 @@ public class User {
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private UserRole role;
-  @JsonIgnore
-  private String password;
   private double balance;
   private Boolean enabled;
 
@@ -29,15 +26,10 @@ public class User {
       Boolean enabled) {
     this.role = role;
     this.name = name;
-    this.password = password;
     this.enabled = enabled;
   }
 
   public User() {
-  }
-
-  public String getPassword() {
-    return password;
   }
 
   public String getUsername() {
@@ -64,10 +56,6 @@ public class User {
     this.name = username;
   }
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
   public Boolean getEnabled() {
     return enabled;
   }
@@ -90,7 +78,6 @@ public class User {
         "id=" + id +
         ", name='" + name + '\'' +
         ", role=" + role +
-        ", password='" + password + '\'' +
         ", balance=" + balance +
         ", enabled=" + enabled +
         '}';

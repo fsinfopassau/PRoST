@@ -1,10 +1,8 @@
 package de.unipassau.fim.fsinfo.kdv.service;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.context.annotation.ApplicationScope;
+import org.springframework.stereotype.Service;
 
-@Configuration
-@ApplicationScope
+@Service
 public class UserAuthService {
 
   public boolean auth(String apiKey) {

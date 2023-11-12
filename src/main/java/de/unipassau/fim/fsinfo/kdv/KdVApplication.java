@@ -17,8 +17,11 @@ public class KdVApplication {
   CommandLineRunner commandLineRunner(UserRepository userRepository) {
     return args -> {
       User user = new User("testUser", UserRole.ADMINISTRATOR, true);
-      user.setPassword("test");
-      userRepository.save(user);
+      try {
+        userRepository.save(user);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     };
   }
 

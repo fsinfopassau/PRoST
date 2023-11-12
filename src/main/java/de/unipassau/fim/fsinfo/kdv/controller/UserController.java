@@ -28,7 +28,6 @@ public class UserController {
     if (!userAuthService.auth(key)) {
       return ResponseEntity.badRequest().build();
     }
-
     return ResponseEntity.ok(repository.findAll());
   }
 
@@ -39,17 +38,17 @@ public class UserController {
       return ResponseEntity.badRequest().body("Not Allowed");
     }
 
+    if (repository.findByName(user.getUsername()) != null) {
+      return ResponseEntity.badRequest().body("Username already exists!");
+    }
+
     try {
       repository.save(user);
     } catch (Exception e) {
-      if (e.getMessage().contains("primary key violation")) {
-        return ResponseEntity.badRequest().body("Username already exists!");
-      } else {
-        return ResponseEntity.internalServerError().build();
-      }
+      return ResponseEntity.internalServerError().build();
     }
 
-    return ResponseEntity.ok("TODO " + user.getId());
+    return ResponseEntity.ok("" + user.getId());
   }
 
 }
