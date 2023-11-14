@@ -17,11 +17,13 @@ public class KdVApplication {
   }
 
   @Bean
-  CommandLineRunner commandLineRunner(UserRepository repository) {
+  CommandLineRunner userTestInit(UserRepository repository) {
     return args -> {
-      User a = new User("testUser", UserRole.ADMINISTRATOR, true);
+      User a = new User("admin", UserRole.ADMINISTRATOR, true);
+      User a2 = new User("normalUser", UserRole.USER, true);
       try {
         repository.save(a);
+        repository.save(a2);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -29,11 +31,13 @@ public class KdVApplication {
   }
 
   @Bean
-  CommandLineRunner commandLineRunner2(ShopItemRepository repository) {
+  CommandLineRunner shopItemTestInit(ShopItemRepository repository) {
     return args -> {
-      ShopItem a = new ShopItem("bier", "drink", "Bier", 10.32);
+      ShopItem a = new ShopItem("bier", "drink", "Bier", 1.50);
+      ShopItem a2 = new ShopItem("spezi", "drink", "Spezi", 1.00);
       try {
         repository.save(a);
+        repository.save(a2);
       } catch (Exception e) {
         e.printStackTrace();
       }
