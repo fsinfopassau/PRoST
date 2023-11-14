@@ -1,6 +1,6 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
-import de.unipassau.fim.fsinfo.kdv.ShopItem;
+import de.unipassau.fim.fsinfo.kdv.dao.ShopItem;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;

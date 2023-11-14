@@ -1,5 +1,6 @@
-package de.unipassau.fim.fsinfo.kdv;
+package de.unipassau.fim.fsinfo.kdv.dao;
 
+import de.unipassau.fim.fsinfo.kdv.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,7 +20,8 @@ public class User {
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private UserRole role;
-  private double balance;
+  @Column(nullable = false)
+  private Double balance;
   private Boolean enabled;
 
   public User(String name, UserRole role,
@@ -27,8 +29,10 @@ public class User {
     this.role = role;
     this.name = name;
     this.enabled = enabled;
+    this.balance = 0D;
   }
 
+  @Deprecated
   public User() {
   }
 
@@ -44,11 +48,11 @@ public class User {
     return id;
   }
 
-  public double getBalance() {
+  public Double getBalance() {
     return balance;
   }
 
-  public void setBalance(double balance) {
+  public void setBalance(Double balance) {
     this.balance = balance;
   }
 

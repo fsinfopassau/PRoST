@@ -1,6 +1,6 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
-import de.unipassau.fim.fsinfo.kdv.User;
+import de.unipassau.fim.fsinfo.kdv.dao.User;
 import de.unipassau.fim.fsinfo.kdv.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.service.UserAuthService;
 import java.util.List;
@@ -22,16 +22,27 @@ public class UserController {
   @Autowired
   UserRepository userRepository;
 
+  /**
+   * List all Users
+   *
+   * @return List of all Users
+   */
   @GetMapping("/")
   public ResponseEntity<List<User>> list() {
     return ResponseEntity.ok(userRepository.findAll());
   }
 
+  /**
+   * Create a new User
+   *
+   * @param user with a unique Username
+   * @return the ID of the new user - nothing if User can not be created
+   */
   @PostMapping("/create")
   public ResponseEntity<String> create(@RequestBody User user) {
 
     if (userRepository.findByName(user.getUsername()) != null) {
-      return ResponseEntity.badRequest().body("Username already exists!");
+      return ResponseEntity.badRequest().build();
     }
 
     try {
