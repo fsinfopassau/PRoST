@@ -5,6 +5,7 @@ import de.unipassau.fim.fsinfo.kdv.data.dao.User;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.service.UserAuthService;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,33 +57,67 @@ public class UserController {
     return ResponseEntity.ok(user.getUsername());
   }
 
-  @PostMapping("/{id}/delete")
-  public ResponseEntity<String> delete(@PathVariable String id) {
-    // TODO
+  @PostMapping("/delete/{id}")
+  public ResponseEntity<User> delete(@PathVariable String id) {
+    Optional<User> user = userRepository.findById(id);
+
+    if (user.isPresent()) {
+      userRepository.delete(user.get());
+      return ResponseEntity.ok(user.get());
+    }
+
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/balance")
-  public ResponseEntity<String> balance(@PathVariable String id, @RequestBody String value) {
-    // TODO
+  @PostMapping("/balance/{id}")
+  public ResponseEntity<Double> balance(@PathVariable String id, @RequestBody Double value) {
+    Optional<User> user = userRepository.findById(id);
+
+    if (user.isPresent()) {
+      user.get().setBalance(value);
+      userRepository.save(user.get());
+      return ResponseEntity.ok(user.get().getBalance());
+    }
+
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/enable")
+  @PostMapping("/enable/{id}")
   public ResponseEntity<String> enable(@PathVariable String id) {
-    // TODO
+    Optional<User> user = userRepository.findById(id);
+
+    if (user.isPresent()) {
+      user.get().setEnabled(true);
+      userRepository.save(user.get());
+      return ResponseEntity.ok().build();
+    }
+
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/disable")
+  @PostMapping("/disable/{id}")
   public ResponseEntity<String> disable(@PathVariable String id) {
-    // TODO
+    Optional<User> user = userRepository.findById(id);
+
+    if (user.isPresent()) {
+      user.get().setEnabled(false);
+      userRepository.save(user.get());
+      return ResponseEntity.ok().build();
+    }
+
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/role")
+  @PostMapping("/role/{id}")
   public ResponseEntity<String> role(@PathVariable String id, @RequestBody UserRole role) {
-    // TODO
+    Optional<User> user = userRepository.findById(id);
+
+    if (user.isPresent()) {
+      user.get().setRole(role);
+      userRepository.save(user.get());
+      return ResponseEntity.ok().build();
+    }
+
     return ResponseEntity.badRequest().build();
   }
 
