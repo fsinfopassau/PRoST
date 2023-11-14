@@ -36,8 +36,8 @@ public class ShopController {
 
   @PostMapping("/item/consume")
   public ResponseEntity<String> consume(@RequestBody ConsumeDTO consumeDTO) {
-    Optional<User> userOption = userRepository.findById(consumeDTO.getUserId());
-    Optional<ShopItem> itemOptional = itemRepository.findById(consumeDTO.getItemId());
+    Optional<User> userOption = userRepository.findById(consumeDTO.userId());
+    Optional<ShopItem> itemOptional = itemRepository.findById(consumeDTO.itemId());
 
     if (userOption.isPresent() && itemOptional.isPresent()) {
 
@@ -52,7 +52,7 @@ public class ShopController {
 
       return ResponseEntity.ok(user.getBalance() + "");
     }
-    return ResponseEntity.ok(consumeDTO.getUserId() + " " + consumeDTO.getItemId());
+    return ResponseEntity.ok(consumeDTO.userId() + " " + consumeDTO.itemId());
   }
 
   @GetMapping("/history")
