@@ -14,14 +14,14 @@ public class ShopItem {
   @Column(nullable = false)
   private String displayName;
   private Double price;
-  private Boolean displayed;
+  private Boolean enabled;
 
   public ShopItem(String id, String category, String displayName, double price) {
     this.id = id;
     this.category = category;
     this.displayName = displayName;
     this.price = price;
-    this.displayed = true;
+    this.enabled = true;
   }
 
   @Deprecated
@@ -60,11 +60,11 @@ public class ShopItem {
     this.price = price;
   }
 
-  public Boolean getDisplayed() {
-    return displayed;
+  public Boolean getEnabled() {
+    return enabled;
   }
 
-  public void setDisplayed(Boolean displayed) {
-    this.displayed = displayed;
+  public void setEnabled(Boolean displayed) {
+    this.enabled = displayed;
   }
 }
