@@ -36,23 +36,27 @@ public class ShopController {
 
   @PostMapping("/item/consume")
   public ResponseEntity<String> consume(@RequestBody ConsumeDTO consumeDTO) {
-    Optional<User> userOption = userRepository.findById(consumeDTO.userId());
-    Optional<ShopItem> itemOptional = itemRepository.findById(consumeDTO.itemId());
 
-    if (userOption.isPresent() && itemOptional.isPresent()) {
+    if (consumeDTO.username() != null && consumeDTO.itemId() != null) {
 
-      User user = userOption.get();
-      ShopItem item = itemOptional.get();
+      Optional<User> userOption = userRepository.findById(consumeDTO.username());
+      Optional<ShopItem> itemOptional = itemRepository.findById(consumeDTO.itemId());
 
-      user.setBalance(user.getBalance() - item.getPrice());
-      userRepository.save(user);
+      if (userOption.isPresent() && itemOptional.isPresent()) {
 
-      ShopHistory history = new ShopHistory(user.getId(), item.getId(), item.getPrice());
-      historyRepository.save(history);
+        User user = userOption.get();
+        ShopItem item = itemOptional.get();
 
-      return ResponseEntity.ok(user.getBalance() + "");
+        user.setBalance(user.getBalance() - item.getPrice());
+        userRepository.save(user);
+
+        ShopHistory history = new ShopHistory(user.getUsername(), item.getId(), item.getPrice());
+        historyRepository.save(history);
+
+        return ResponseEntity.ok(user.getBalance() + "");
+      }
     }
-    return ResponseEntity.ok(consumeDTO.userId() + " " + consumeDTO.itemId());
+    return ResponseEntity.badRequest().build();
   }
 
   @GetMapping("/history")

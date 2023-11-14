@@ -35,13 +35,13 @@ public class UserController {
   /**
    * Create a new User
    *
-   * @param user with a unique Username
+   * @param user with a unique username
    * @return the ID of the new user - nothing if User can not be created
    */
   @PostMapping("/create")
   public ResponseEntity<String> create(@RequestBody User user) {
 
-    if (userRepository.findByName(user.getUsername()) != null) {
+    if (userRepository.findById(user.getUsername()).isPresent()) {
       return ResponseEntity.badRequest().build();
     }
 
@@ -51,7 +51,7 @@ public class UserController {
       return ResponseEntity.internalServerError().build();
     }
 
-    return ResponseEntity.ok(String.valueOf(user.getId()));
+    return ResponseEntity.ok(user.getUsername());
   }
 
 }

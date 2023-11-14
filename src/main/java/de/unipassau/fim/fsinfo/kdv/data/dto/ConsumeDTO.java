@@ -1,5 +1,5 @@
 package de.unipassau.fim.fsinfo.kdv.data.dto;
 
-public record ConsumeDTO(Long userId, String itemId) {
+public record ConsumeDTO(String username, String itemId) {
 
 }
