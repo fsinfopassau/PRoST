@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 public class ShopItem {
 
   @Id
-  @Column(nullable = false)
   private String id;
   private String category;
   @Column(nullable = false)

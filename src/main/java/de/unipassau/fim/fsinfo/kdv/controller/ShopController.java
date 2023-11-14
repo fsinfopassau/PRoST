@@ -3,7 +3,6 @@ package de.unipassau.fim.fsinfo.kdv.controller;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopHistory;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.kdv.data.dao.User;
-import de.unipassau.fim.fsinfo.kdv.data.dto.ConsumeDTO;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopHistoryRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/shop/item")
+@RequestMapping("/api/shop")
 public class ShopController {
 
   @Autowired
@@ -35,64 +34,102 @@ public class ShopController {
   }
 
   @PostMapping("/create")
-  public ResponseEntity<String> create(@RequestBody ShopItem item) {
-    // TODO
+  public ResponseEntity<ShopItem> create(@RequestBody ShopItem item) {
+    if (item.getId() == null || itemRepository.existsById(item.getId())
+        || item.getDisplayName() == null
+        || item.getDisplayName().isBlank()) {
+      return ResponseEntity.badRequest().build();
+    }
+
+    if (item.getEnabled() == null) {
+      item.setEnabled(true);
+    }
+
+    if (item.getPrice() == null) {
+      item.setPrice(0.0);
+    }
+
+    itemRepository.save(item);
+    return ResponseEntity.ok(item);
+  }
+
+  @PostMapping("/delete/{id}")
+  public ResponseEntity<Optional<ShopItem>> delete(@PathVariable String id) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    if (item.isPresent()) {
+      itemRepository.delete(item.get());
+      return ResponseEntity.ok(item);
+    }
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/delete")
-  public ResponseEntity<String> delete(@PathVariable String id) {
-    // TODO
-    return ResponseEntity.badRequest().build();
-  }
-
-  @PostMapping("/{id}/diplayname")
+  @PostMapping("/displayname/{id}")
   public ResponseEntity<String> displayName(@PathVariable String id,
       @RequestBody String displayName) {
-    // TODO
+    Optional<ShopItem> item = itemRepository.findById(id);
+    if (item.isPresent()) {
+      item.get().setDisplayName(displayName);
+      itemRepository.save(item.get());
+      return ResponseEntity.ok().build();
+    }
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/price")
+  @PostMapping("/price/{id}")
   public ResponseEntity<String> price(@PathVariable String id,
-      @RequestBody String price) {
-    // TODO
-    return ResponseEntity.badRequest().build();
-  }
-
-  @PostMapping("/{id}/enable")
-  public ResponseEntity<String> enable(@PathVariable String id) {
-    // TODO
-    return ResponseEntity.badRequest().build();
-  }
-
-  @PostMapping("/{id}/disable")
-  public ResponseEntity<String> disable(@PathVariable String id) {
-    // TODO
-    return ResponseEntity.badRequest().build();
-  }
-
-  @PostMapping("/consume")
-  public ResponseEntity<String> consume(@RequestBody ConsumeDTO consumeDTO) {
-
-    if (consumeDTO.username() != null && consumeDTO.itemId() != null) {
-
-      Optional<User> userOption = userRepository.findById(consumeDTO.username());
-      Optional<ShopItem> itemOptional = itemRepository.findById(consumeDTO.itemId());
-
-      if (userOption.isPresent() && itemOptional.isPresent()) {
-
-        User user = userOption.get();
-        ShopItem item = itemOptional.get();
-
-        user.setBalance(user.getBalance() - item.getPrice());
-        userRepository.save(user);
-
-        ShopHistory history = new ShopHistory(user.getUsername(), item.getId(), item.getPrice());
-        historyRepository.save(history);
-
-        return ResponseEntity.ok(user.getBalance() + "");
+      @RequestBody String value) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    try {
+      Double price = Double.parseDouble(value);
+      if (item.isPresent()) {
+        item.get().setPrice(price);
+        itemRepository.save(item.get());
+        return ResponseEntity.ok().build();
       }
+    } catch (NumberFormatException e) {
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/enable/{id}")
+  public ResponseEntity<String> enable(@PathVariable String id) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    if (item.isPresent()) {
+      item.get().setEnabled(true);
+      itemRepository.save(item.get());
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/disable/{id}")
+  public ResponseEntity<String> disable(@PathVariable String id) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    if (item.isPresent()) {
+      item.get().setEnabled(false);
+      itemRepository.save(item.get());
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/consume/{id}")
+  public ResponseEntity<String> consume(@PathVariable String id, @RequestBody String userId) {
+    Optional<ShopItem> itemOptional = itemRepository.findById(id);
+    Optional<User> userOption = userRepository.findById(userId);
+
+    if (userOption.isPresent() && itemOptional.isPresent()) {
+
+      User user = userOption.get();
+      ShopItem item = itemOptional.get();
+
+      user.setBalance(user.getBalance() - item.getPrice());
+      userRepository.save(user);
+
+      ShopHistory history = new ShopHistory(user.getUsername(), item.getId(), item.getPrice());
+      historyRepository.save(history);
+
+      return ResponseEntity.ok(user.getBalance() + "");
     }
     return ResponseEntity.badRequest().build();
   }

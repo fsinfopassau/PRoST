@@ -70,13 +70,17 @@ public class UserController {
   }
 
   @PostMapping("/balance/{id}")
-  public ResponseEntity<Double> balance(@PathVariable String id, @RequestBody Double value) {
+  public ResponseEntity<Double> balance(@PathVariable String id, @RequestBody String value) {
     Optional<User> user = userRepository.findById(id);
 
-    if (user.isPresent()) {
-      user.get().setBalance(value);
-      userRepository.save(user.get());
-      return ResponseEntity.ok(user.get().getBalance());
+    try {
+      Double d = Double.parseDouble(value);
+      if (user.isPresent()) {
+        user.get().setBalance(d);
+        userRepository.save(user.get());
+        return ResponseEntity.ok(user.get().getBalance());
+      }
+    } catch (NumberFormatException e) {
     }
 
     return ResponseEntity.badRequest().build();
