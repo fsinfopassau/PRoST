@@ -12,14 +12,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/shop")
+@RequestMapping("/api/shop/item")
 public class ShopController {
 
   @Autowired
@@ -29,12 +28,12 @@ public class ShopController {
   @Autowired
   UserRepository userRepository;
 
-  @GetMapping("/item")
+  @GetMapping
   public ResponseEntity<List<ShopItem>> list() {
     return ResponseEntity.ok(itemRepository.findAll());
   }
 
-  @PostMapping("/item/consume")
+  @PostMapping("/consume")
   public ResponseEntity<String> consume(@RequestBody ConsumeDTO consumeDTO) {
 
     if (consumeDTO.username() != null && consumeDTO.itemId() != null) {
@@ -57,16 +56,6 @@ public class ShopController {
       }
     }
     return ResponseEntity.badRequest().build();
-  }
-
-  @GetMapping("/history")
-  public ResponseEntity<List<ShopHistory>> history() {
-    return ResponseEntity.ok(historyRepository.findAll());
-  }
-
-  @GetMapping("/history/{userId}")
-  public ResponseEntity<List<ShopHistory>> historyUser(@PathVariable String userId) {
-    return ResponseEntity.ok(historyRepository.findByUsernameEquals(userId));
   }
 
 }
