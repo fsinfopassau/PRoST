@@ -1,9 +1,9 @@
 package de.unipassau.fim.fsinfo.kdv;
 
-import de.unipassau.fim.fsinfo.kdv.dao.ShopItem;
-import de.unipassau.fim.fsinfo.kdv.dao.User;
-import de.unipassau.fim.fsinfo.kdv.repositories.ShopItemRepository;
-import de.unipassau.fim.fsinfo.kdv.repositories.UserRepository;
+import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
+import de.unipassau.fim.fsinfo.kdv.data.dao.User;
+import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
+import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

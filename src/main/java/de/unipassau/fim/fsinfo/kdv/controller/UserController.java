@@ -1,7 +1,7 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
-import de.unipassau.fim.fsinfo.kdv.dao.User;
-import de.unipassau.fim.fsinfo.kdv.repositories.UserRepository;
+import de.unipassau.fim.fsinfo.kdv.data.dao.User;
+import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.service.UserAuthService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

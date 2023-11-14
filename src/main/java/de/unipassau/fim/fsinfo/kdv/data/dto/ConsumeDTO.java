@@ -1,4 +1,4 @@
-package de.unipassau.fim.fsinfo.kdv.dto;
+package de.unipassau.fim.fsinfo.kdv.data.dto;
 
 public class ConsumeDTO {
 

@@ -1,6 +1,6 @@
-package de.unipassau.fim.fsinfo.kdv.repositories;
+package de.unipassau.fim.fsinfo.kdv.data.repositories;
 
-import de.unipassau.fim.fsinfo.kdv.dao.ShopItem;
+import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

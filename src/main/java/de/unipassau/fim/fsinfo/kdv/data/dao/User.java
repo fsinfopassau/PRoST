@@ -1,4 +1,4 @@
-package de.unipassau.fim.fsinfo.kdv.dao;
+package de.unipassau.fim.fsinfo.kdv.data.dao;
 
 import de.unipassau.fim.fsinfo.kdv.UserRole;
 import jakarta.persistence.Column;

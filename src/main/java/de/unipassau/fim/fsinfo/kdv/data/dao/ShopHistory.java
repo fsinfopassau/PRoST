@@ -1,4 +1,4 @@
-package de.unipassau.fim.fsinfo.kdv.dao;
+package de.unipassau.fim.fsinfo.kdv.data.dao;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

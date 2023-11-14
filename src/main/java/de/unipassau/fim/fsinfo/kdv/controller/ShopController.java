@@ -1,12 +1,12 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
-import de.unipassau.fim.fsinfo.kdv.dao.ShopHistory;
-import de.unipassau.fim.fsinfo.kdv.dao.ShopItem;
-import de.unipassau.fim.fsinfo.kdv.dao.User;
-import de.unipassau.fim.fsinfo.kdv.dto.ConsumeDTO;
-import de.unipassau.fim.fsinfo.kdv.repositories.ShopHistoryRepository;
-import de.unipassau.fim.fsinfo.kdv.repositories.ShopItemRepository;
-import de.unipassau.fim.fsinfo.kdv.repositories.UserRepository;
+import de.unipassau.fim.fsinfo.kdv.data.dao.ShopHistory;
+import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
+import de.unipassau.fim.fsinfo.kdv.data.dao.User;
+import de.unipassau.fim.fsinfo.kdv.data.dto.ConsumeDTO;
+import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopHistoryRepository;
+import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
+import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
