@@ -65,9 +65,8 @@ public class ShopController {
   }
 
   @GetMapping("/history/{userId}")
-  public ResponseEntity<String> historyUser(@PathVariable String userId) {
-    // TODO
-    return ResponseEntity.noContent().build();
+  public ResponseEntity<List<ShopHistory>> historyUser(@PathVariable String userId) {
+    return ResponseEntity.ok(historyRepository.findByUsernameEquals(userId));
   }
 
 }
