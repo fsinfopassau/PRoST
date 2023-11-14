@@ -46,6 +46,9 @@ public class ShopController {
       user.setBalance(user.getBalance() - item.getPrice());
       userRepository.save(user);
 
+      ShopHistory history = new ShopHistory(user.getId(), item.getId(), item.getPrice());
+      historyRepository.save(history);
+
       return ResponseEntity.ok(user.getBalance() + "");
     }
     return ResponseEntity.ok(consumeDTO.getUserId() + " " + consumeDTO.getItemId());
