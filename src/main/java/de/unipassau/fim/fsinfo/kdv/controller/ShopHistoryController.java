@@ -27,4 +27,19 @@ public class ShopHistoryController {
     return ResponseEntity.ok(historyRepository.findByUsernameEquals(userId));
   }
 
+  @GetMapping("/{userId}/{amount}")
+  public ResponseEntity<List<ShopHistory>> historyUserLength(@PathVariable String userId,
+      @PathVariable Integer amount) {
+    if (amount == null || amount < 0) {
+      return ResponseEntity.badRequest().build();
+    }
+
+    List<ShopHistory> history = historyRepository.findByUsernameEquals(userId);
+    if (history.size() <= amount) {
+      return ResponseEntity.ok(history);
+    } else {
+      return ResponseEntity.ok(history.subList(history.size() - amount, history.size()));
+    }
+  }
+
 }
