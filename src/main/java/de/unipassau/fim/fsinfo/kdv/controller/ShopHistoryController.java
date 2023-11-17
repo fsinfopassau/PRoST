@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,23 +19,23 @@ public class ShopHistoryController {
   ShopHistoryRepository historyRepository;
 
   @GetMapping
-  public ResponseEntity<List<ShopHistory>> history() {
-    return ResponseEntity.ok(historyRepository.findAll());
+  public ResponseEntity<List<ShopHistory>> history(@RequestParam(required = false) Integer n) {
+    return getSizedHistory(n, historyRepository.findAll());
   }
 
   @GetMapping("/{userId}")
-  public ResponseEntity<List<ShopHistory>> historyUser(@PathVariable String userId) {
-    return ResponseEntity.ok(historyRepository.findByUsernameEquals(userId));
+  public ResponseEntity<List<ShopHistory>> historyUser(@PathVariable String userId,
+      @RequestParam(required = false) Integer n) {
+    return getSizedHistory(n, historyRepository.findByUsernameEquals(userId));
   }
 
-  @GetMapping("/{userId}/{amount}")
-  public ResponseEntity<List<ShopHistory>> historyUserLength(@PathVariable String userId,
-      @PathVariable Integer amount) {
+  private ResponseEntity<List<ShopHistory>> getSizedHistory(
+      @RequestParam(required = false) Integer amount,
+      List<ShopHistory> history) {
     if (amount == null || amount < 0) {
-      return ResponseEntity.badRequest().build();
+      return ResponseEntity.ok(history);
     }
 
-    List<ShopHistory> history = historyRepository.findByUsernameEquals(userId);
     if (history.size() <= amount) {
       return ResponseEntity.ok(history);
     } else {

@@ -33,7 +33,7 @@ public class ShopController {
     return ResponseEntity.ok(itemRepository.findAll());
   }
 
-  @PostMapping("/create")
+  @PostMapping
   public ResponseEntity<ShopItem> create(@RequestBody ShopItem item) {
     if (item.getId() == null || itemRepository.existsById(item.getId())
         || item.getDisplayName() == null
@@ -53,7 +53,7 @@ public class ShopController {
     return ResponseEntity.ok(item);
   }
 
-  @PostMapping("/delete/{id}")
+  @PostMapping("/{id}/delete")
   public ResponseEntity<Optional<ShopItem>> delete(@PathVariable String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
@@ -63,7 +63,7 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/displayname/{id}")
+  @PostMapping("/{id}/displayname")
   public ResponseEntity<String> displayName(@PathVariable String id,
       @RequestBody String displayName) {
     Optional<ShopItem> item = itemRepository.findById(id);
@@ -75,7 +75,7 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/price/{id}")
+  @PostMapping("/{id}/price")
   public ResponseEntity<String> price(@PathVariable String id,
       @RequestBody String value) {
     Optional<ShopItem> item = itemRepository.findById(id);
@@ -91,7 +91,7 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/enable/{id}")
+  @PostMapping("/{id}/enable")
   public ResponseEntity<String> enable(@PathVariable String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
@@ -102,7 +102,7 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/disable/{id}")
+  @PostMapping("/{id}/disable")
   public ResponseEntity<String> disable(@PathVariable String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
@@ -113,7 +113,7 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/consume/{id}")
+  @PostMapping("/{id}/consume")
   public ResponseEntity<String> consume(@PathVariable String id, @RequestBody String userId) {
     Optional<ShopItem> itemOptional = itemRepository.findById(id);
     Optional<User> userOption = userRepository.findById(userId);

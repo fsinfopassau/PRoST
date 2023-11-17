@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
 
   @Autowired
@@ -41,7 +42,7 @@ public class UserController {
    * @param user with a unique username
    * @return the ID of the new user - nothing if User can not be created
    */
-  @PostMapping("/create")
+  @PostMapping
   public ResponseEntity<String> create(@RequestBody User user) {
 
     if (userRepository.findById(user.getUsername()).isPresent()) {
@@ -57,7 +58,7 @@ public class UserController {
     return ResponseEntity.ok(user.getUsername());
   }
 
-  @PostMapping("/delete/{id}")
+  @DeleteMapping("/{id}")
   public ResponseEntity<User> delete(@PathVariable String id) {
     Optional<User> user = userRepository.findById(id);
 
@@ -69,7 +70,7 @@ public class UserController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/balance/{id}")
+  @PostMapping("/{id}/balance")
   public ResponseEntity<Double> balance(@PathVariable String id, @RequestBody String value) {
     Optional<User> user = userRepository.findById(id);
 
@@ -86,7 +87,7 @@ public class UserController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/enable/{id}")
+  @PostMapping("/{id}/enable")
   public ResponseEntity<String> enable(@PathVariable String id) {
     Optional<User> user = userRepository.findById(id);
 
@@ -99,7 +100,7 @@ public class UserController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/disable/{id}")
+  @PostMapping("/{id}/disable")
   public ResponseEntity<String> disable(@PathVariable String id) {
     Optional<User> user = userRepository.findById(id);
 
@@ -112,7 +113,7 @@ public class UserController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/role/{id}")
+  @PostMapping("/{id}/role")
   public ResponseEntity<String> role(@PathVariable String id, @RequestBody UserRole role) {
     Optional<User> user = userRepository.findById(id);
 
