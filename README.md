@@ -6,7 +6,7 @@ Ein digitales Kaffeekassen-System
 der [Fachschaft für Informatik und Mathematik der Universität Passau](https://fsinfo.fim.uni-passau.de/).
 
 **IMPORTANT**:
-- H2-Datenbank benötigt `/data`-Ordner mit Nutzer-Rechten zum lokalen testen!
+- H2-Datenbank benötigt `/tmp`-Ordner mit Nutzer-Rechten zum lokalen testen!
 
 ## API
 
