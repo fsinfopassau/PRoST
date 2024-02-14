@@ -44,7 +44,11 @@ export function App() {
   return (
     <>
       <h1>Kasse des Vertrauens</h1>
-      <input type="search" onChange={(e) => setSearchValue(e.target.value)} />
+      <input
+        type="text"
+        onChange={(e) => setSearchValue(e.target.value)}
+        className="search"
+      />
       <div className="App">
         <UserContainer users={users} search={searchValue} />
       </div>

@@ -1,17 +1,4 @@
-import { User } from "../DTO/User";
-
-export function userBalanceString(user: User): string {
-  return user.balance + "";
-}
-
-function formatBalance(balance: number, decimalCount = 2): string {
-  const formatted = new Intl.NumberFormat("de-DE", {
-    minimumFractionDigits: decimalCount,
-    maximumFractionDigits: decimalCount,
-  }).format(balance);
-
-  return formatted + " €";
-}
+import { User, formatBalance } from "../DTO/User";
 
 export function UserBox(user: User) {
   function selectUser(user: User) {

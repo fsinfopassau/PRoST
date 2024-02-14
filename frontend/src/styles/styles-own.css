@@ -13,3 +13,7 @@
   padding-top:  20px;
   /* No need to set flex-basis as grid handles it */
 }
+
+.search {
+  width: 100%
+}
