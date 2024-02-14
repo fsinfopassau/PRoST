@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { User } from "../DTO/User";
+import { User } from "../../DTO/User";
 import { UserBox } from "./UserBox";
 
 const UserContainer: FC<{ users: User[]; search: string }> = ({

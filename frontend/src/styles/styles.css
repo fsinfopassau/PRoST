@@ -3,16 +3,82 @@
     box-sizing: border-box;
 }
 
+/* reset */
+button,
+fieldset,
+input {
+  all: unset;
+}
   
 body {
-  background: #333;
-  color: hsl(200, 100%, 90%);
-  max-width: 1000px;
+  justify-content: center;
+  align-items: center;
+  max-width: 1300px;
   padding: 1rem;
   margin: 0 auto;
 }
 
-/* Montserrat Font */
+h1 {
+  font-size: 6rem;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  margin: 4rem 0;
+}
+
+h1 > img {
+  height: 5rem;
+  padding: 0 1rem;
+}
+
+#search {
+  margin: 1rem auto;
+  padding: 0 1rem;
+  justify-content: center;
+  display: flex;
+  width: 80vw;
+  min-width: 10%;
+  max-width: 100%;
+  font-size: 2rem;
+  height: 4rem;
+}
+
+.Input {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 0 10px;
+  height: 35px;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.users-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem,  10fr)); /* Adjust the minmax values as needed */
+  grid-auto-rows: auto; /* Allows rows to size themselves based on content */
+  gap:  1rem; /* Space between grid items */
+  padding: 20px;
+  max-width: 1000%;
+}
+
+.Button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 0 15px;
+  font-size: 1.5rem;
+  line-height: 1;
+  font-weight: 500;
+  height: 3rem;
+}
+
+/* 
+Montserrat Font stuff
+*/
+
 * {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
@@ -24,5 +90,5 @@ body {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: 700;
-  font-style: normal;
+  font-style: bold;
 }
