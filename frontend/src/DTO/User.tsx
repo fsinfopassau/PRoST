@@ -1,5 +1,7 @@
+import { UserRole } from "./UserRole";
+
 export interface User {
-  name: string;
+  name: string; // id
   balance: number;
   enabled: boolean;
   role: UserRole;

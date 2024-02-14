@@ -3,26 +3,39 @@ import "../styles/styles-own.css";
 import { User } from "../DTO/User";
 import UserContainer from "./UserContainer";
 import { useState } from "react";
+import { UserRole } from "../DTO/UserRole";
 
 export function App() {
-  const users: User[] = [
+  var users: User[] = [
     {
       name: "Rainer Zufall",
       balance: 51.4,
       enabled: true,
-      role: "ADMINISTRATOR",
+      role: UserRole.ADMINISTRATOR,
     },
     {
       name: "Erik Zion",
       balance: 3.2,
       enabled: true,
-      role: "USER",
+      role: UserRole.USER,
     },
     {
       name: "Kai Nepanik",
       balance: 25,
       enabled: true,
-      role: "USER",
+      role: UserRole.USER,
+    },
+    {
+      name: "Frank Reich",
+      balance: 2500,
+      enabled: true,
+      role: UserRole.USER,
+    },
+    {
+      name: "Christian Harten",
+      balance: -6.9,
+      enabled: true,
+      role: UserRole.USER,
     },
   ];
 
