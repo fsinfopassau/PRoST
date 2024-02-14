@@ -26,11 +26,12 @@ export function App() {
   });
 
   const switchTheme = () => {
-    const nextTheme = theme === "blue" ? "purple" : "blue";
-    setTheme(nextTheme); // Update state using setTheme
+    const currentIndex = stylesAvailable.indexOf(theme);
+    const nextIndex = (currentIndex + 1) % stylesAvailable.length;
+    const nextTheme = stylesAvailable[nextIndex];
+    setTheme(nextTheme);
   };
 
-  // Ensure that loadTheme is called whenever the theme state changes
   useEffect(() => {
     loadTheme(theme);
     localStorage.setItem("theme", theme);
@@ -39,7 +40,7 @@ export function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <UserSelection />,
+      element: <UserSelection switchTheme={switchTheme} />,
     },
     {
       path: "*",
@@ -55,7 +56,6 @@ export function App() {
   return (
     <>
       <React.StrictMode>
-        <button onClick={switchTheme}>Theme: {theme}</button>
         <RouterProvider router={router} />
       </React.StrictMode>
     </>

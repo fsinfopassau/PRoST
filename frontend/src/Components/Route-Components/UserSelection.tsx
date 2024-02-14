@@ -3,7 +3,7 @@ import UserContainer from "../UserSelection/UserContainer";
 import { User } from "../../DTO/User";
 import { UserRole } from "../../DTO/UserRole";
 
-export function UserSelection() {
+export function UserSelection({ switchTheme }: any) {
   const [searchValue, setSearchValue] = useState("");
 
   var users: User[] = [
@@ -42,7 +42,7 @@ export function UserSelection() {
   return (
     <>
       <h1>
-        <img src="/icons/happy-manje/happy beer.svg" />
+        <img onClick={switchTheme} src="/icons/happy-manje/happy beer.svg" />
         KdV
       </h1>
       <input
