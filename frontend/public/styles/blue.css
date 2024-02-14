@@ -1,7 +1,7 @@
 
 Body{
-  color: var(--blue-11);
-  background: hsl(236, 100%, 92%);
+  color: #000080;
+  background: hsl(240, 100%, 95%);
 }
 
 .Input{
@@ -20,12 +20,12 @@ Body{
 
 .Button.theme {
   background-color: white;
-  color: var(--blue-11);
+  color: #000080;
   box-shadow: 0 2px 10px var(--black-a7);
 }
 .Button.theme:hover {
   background-color: var(--blue-3);
 }
-.Button.theme:focus {
-  box-shadow: 0 0 0 2px black;
+.Button.theme:active {
+  box-shadow: 0 0 0 2px var(--black-a5);
 }

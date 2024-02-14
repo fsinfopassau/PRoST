@@ -26,6 +26,6 @@ Body{
 .Button.theme:hover {
   background-color: var(--violet-3);
 }
-.Button.theme:focus {
-  box-shadow: 0 0 0 2px black;
+.Button.theme:active {
+  box-shadow: 0 0 0 2px var(--black-a5);
 }
