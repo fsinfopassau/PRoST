@@ -5,43 +5,35 @@ import { UserSelection } from "./Route-Components/UserSelection";
 
 const stylesAvailable = ["purple", "blue"];
 
-export function App() {
-  const [theme, setTheme] = useState(stylesAvailable[0]);
-
-  function loadTheme(themeName: string) {
-    // Remove existing theme stylesheet
-    const oldThemeLink = document.getElementById("theme-stylesheet");
-    if (oldThemeLink) {
-      oldThemeLink.remove();
-    }
-    // Add new theme stylesheet
-    const newThemeLink = document.createElement("link");
-    newThemeLink.id = "theme-stylesheet";
-    newThemeLink.rel = "stylesheet";
-    newThemeLink.href = `/styles/${themeName}.css`;
-    document.head.appendChild(newThemeLink);
+function loadTheme(themeName: string) {
+  // Remove existing theme stylesheet
+  const oldThemeLink = document.getElementById("theme-stylesheet");
+  if (oldThemeLink) {
+    oldThemeLink.remove();
   }
+  // Add new theme stylesheet
+  const newThemeLink = document.createElement("link");
+  newThemeLink.id = "theme-stylesheet";
+  newThemeLink.rel = "stylesheet";
+  newThemeLink.href = `/styles/${themeName}.css`;
+  document.head.appendChild(newThemeLink);
+}
+
+export function App() {
+  const [theme, setTheme] = useState(() => {
+    const storedTheme = localStorage.getItem("theme");
+    return storedTheme !== null ? storedTheme : stylesAvailable[0];
+  });
 
   const switchTheme = () => {
     const nextTheme = theme === "blue" ? "purple" : "blue";
-
     setTheme(nextTheme); // Update state using setTheme
-    localStorage.setItem("theme", nextTheme);
-    console.log("switched " + nextTheme);
-    loadTheme(nextTheme);
   };
-
-  useEffect(() => {
-    // Load the theme from local storage if available
-    const storedTheme = localStorage.getItem("theme");
-    if (storedTheme) {
-      setTheme(storedTheme); // Set the initial state from local storage
-    }
-  }, []);
 
   // Ensure that loadTheme is called whenever the theme state changes
   useEffect(() => {
     loadTheme(theme);
+    localStorage.setItem("theme", theme);
   }, [theme]);
 
   const router = createBrowserRouter([
