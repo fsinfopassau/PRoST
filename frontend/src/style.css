@@ -1,3 +1,8 @@
+@import '@radix-ui/colors/black-alpha.css';
+@import '@radix-ui/colors/blue.css';
+@import '@radix-ui/colors/violet.css';
+/*add new radix-ui colors used for themes*/
+
 * {
     font-family: Arial, Helvetica, sans-serif;
     box-sizing: border-box;
