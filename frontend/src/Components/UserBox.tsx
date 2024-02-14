@@ -1,4 +1,5 @@
-import { User, formatBalance } from "../DTO/User";
+import { Label } from "@radix-ui/react-label";
+import { User } from "../DTO/User";
 
 export function UserBox(user: User) {
   function selectUser(user: User) {
@@ -6,9 +7,10 @@ export function UserBox(user: User) {
   }
 
   return (
-    <button className="user-box" onClick={() => selectUser(user)}>
-      <p>{user.name}</p>
-      <small>{formatBalance(user.balance)}</small>
+    <button className="Button violet large" onClick={() => selectUser(user)}>
+      <Label className="bold" htmlFor="username">
+        {user.name}
+      </Label>
     </button>
   );
 }

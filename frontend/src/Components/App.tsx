@@ -1,5 +1,5 @@
 import "../styles/styles.css";
-import "../styles/styles-own.css";
+import "../styles/purple.css";
 import { User } from "../DTO/User";
 import UserContainer from "./UserContainer";
 import { useState } from "react";
@@ -43,11 +43,15 @@ export function App() {
 
   return (
     <>
-      <h1>Kasse des Vertrauens</h1>
+      <h1>
+        <img src="/icons/happy-manje/happy beer.svg" />
+        Kasse des Vertrauens
+      </h1>
       <input
         type="text"
         onChange={(e) => setSearchValue(e.target.value)}
-        className="search"
+        className="Input"
+        id="search"
       />
       <div className="App">
         <UserContainer users={users} search={searchValue} />
