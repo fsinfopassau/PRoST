@@ -1,7 +1,7 @@
 
 Body{
   color: #000080;
-  background: hsl(240, 100%, 95%);
+  background: hsl(240, 100%, 92%);
 }
 
 .Input{
@@ -14,7 +14,7 @@ Body{
   border: 4px dashed var(--black-a3);
 }
 .Input::selection {
-  background-color: var(--black-a9);
+  background-color: var(--black-a5);
   color: white;
 }
 
@@ -27,5 +27,34 @@ Body{
   background-color: var(--blue-3);
 }
 .Button.theme:active {
-  box-shadow: 0 0 0 2px var(--black-a5);
+  box-shadow: 0 0 0 2px black;
+}
+
+
+
+/*
+Tabs
+*/
+
+.TabsTrigger {
+  background-color: white;
+  color: var(--blue-11);
+}
+.TabsTrigger:first-child {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+.TabsTrigger:last-child {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+.TabsTrigger:hover {
+  color: var(--blue-11);
+}
+.TabsTrigger[data-state='active'] {
+  color: var(--blue-11);
+  box-shadow: inset 0 -1px 0 0 currentColor, 0 1px 0 0 currentColor;
+}
+.TabsTrigger:active {
+  box-shadow: 0 0 0 2px black;
 }

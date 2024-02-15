@@ -1,7 +1,18 @@
 import "../style.css";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  createBrowserRouter,
+} from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { UserSelection } from "./Route-Components/UserSelection";
+import { UserBox } from "./UserSelection/UserBox";
+import { UserRole } from "../DTO/UserRole";
+import { ErrorComponent } from "./Route-Components/ErrorComponent";
+import { Label } from "@radix-ui/react-label";
+import { TabChanger } from "./Util/TabChanger";
+import { IconJarLogoIcon } from "@radix-ui/react-icons";
 
 const stylesAvailable = ["purple", "blue"];
 
@@ -40,23 +51,56 @@ export function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <UserSelection switchTheme={switchTheme} />,
+      errorElement: <ErrorComponent />,
+      element: (
+        <>
+          <UserSelection switchTheme={switchTheme} />
+        </>
+      ),
+    },
+    {
+      path: "stats",
+      errorElement: <ErrorComponent />,
+      element: (
+        <>
+          <Label>Stats incoming</Label>
+        </>
+      ),
+    },
+    {
+      path: "users/:userid",
+      errorElement: <ErrorComponent />,
+      element: (
+        <UserBox
+          name="deimam"
+          balance={3.3}
+          role={UserRole.ADMINISTRATOR}
+          enabled={true}
+        />
+      ),
     },
     {
       path: "*",
-      element: (
-        <h1>
-          <img src="/icons/happy-manje/happy beer.svg" />
-          Beer not found!
-        </h1>
-      ),
+      element: <ErrorComponent />,
     },
   ]);
 
   return (
     <>
       <React.StrictMode>
-        <RouterProvider router={router} />
+        <BrowserRouter>
+          <TabChanger />
+          <Routes>
+            <Route
+              path="/"
+              element={<UserSelection switchTheme={switchTheme} />}
+            />
+            <Route
+              path="*"
+              element={<ErrorComponent switchTheme={switchTheme} />}
+            />
+          </Routes>
+        </BrowserRouter>
       </React.StrictMode>
     </>
   );
