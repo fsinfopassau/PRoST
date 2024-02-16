@@ -58,6 +58,17 @@ public class UserController {
     return ResponseEntity.ok(user.getUsername());
   }
 
+  @GetMapping("/{id}")
+  public ResponseEntity<User> get(@PathVariable String id) {
+    Optional<User> user = userRepository.findById(id);
+
+    if (user.isPresent()) {
+      return ResponseEntity.ok(user.get());
+    }
+
+    return ResponseEntity.badRequest().build();
+  }
+
   @DeleteMapping("/{id}")
   public ResponseEntity<User> delete(@PathVariable String id) {
     Optional<User> user = userRepository.findById(id);

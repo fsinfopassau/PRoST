@@ -3,7 +3,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { TabChanger } from "./Util/Navbar";
 import { ErrorComponent } from "./Route-Components/ErrorTab";
-import { SearchTab } from "./Route-Components/SearchTab";
+import { UserSelection } from "./SearchTab/UserSelection";
+import { ItemSelection } from "./SearchTab/ItemSelection";
+import { ItemCheckout } from "./SearchTab/ItemCheckout";
 
 const stylesAvailable = ["purple", "blue"];
 
@@ -45,15 +47,18 @@ export function App() {
         <BrowserRouter>
           <TabChanger switchTheme={switchTheme} />
           <Routes>
-            <Route path="/" element={<SearchTab switchTheme={switchTheme} />} />
-            <Route path="/shop/:user" element={<SearchTab switchTheme={switchTheme}/>}/>
+            <Route
+              path="/"
+              element={<UserSelection switchTheme={switchTheme} />}
+            />
+            <Route path="/shop/:userid" element={<ItemSelection />} />
+            <Route path="/shop/:userid/:itemid" element={<ItemCheckout />} />
             <Route path="/stats" element={<>Rendere Statistiken hier!</>} />
-            <Route path="/settings" element={<>Rendere Settings hier!</>}/>
+            <Route path="/settings" element={<>Rendere Settings hier!</>} />
             <Route
               path="*"
               element={<ErrorComponent switchTheme={switchTheme} />}
             />
-            
           </Routes>
         </BrowserRouter>
       </React.StrictMode>

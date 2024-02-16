@@ -1,13 +1,16 @@
+import { useParams } from "react-router-dom";
 import { ShopItem } from "../../Types/ShopItem";
 import { ItemContainer } from "./ItemContainer";
 
 export function ItemSelection() {
+  const { userid } = useParams();
+
   const items: ShopItem[] = [
     {
       id: "beer",
       displayName: "Bier",
       category: "drinks",
-      price: 1.50,
+      price: 1.5,
       enabled: true,
     },
     {
@@ -21,11 +24,17 @@ export function ItemSelection() {
       id: "wasser",
       displayName: "Wasser",
       category: "drinks",
-      price: .75,
+      price: 0.75,
       enabled: true,
     },
   ];
 
-  return <><h1>Shop:</h1>  
-  <ItemContainer items={items}/></>;
+  console.log("asdf ", userid);
+
+  return (
+    <>
+      <h1>{userid}</h1>
+      <ItemContainer items={items} />
+    </>
+  );
 }

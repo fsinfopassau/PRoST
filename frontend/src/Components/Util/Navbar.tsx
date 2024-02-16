@@ -19,17 +19,14 @@ export function TabChanger(props: { switchTheme: () => void }) {
     }
   }
 
-
   function getSelectedTabValue() {
-    const newValue = location.pathname.split("/")[0]
+    const newValue = location.pathname.split("/")[1];
     if (newValue.includes("search") || newValue.length === 0) {
       return "shop";
     } else {
       return newValue;
     }
   }
-
-  console.log(getSelectedTabValue())
 
   return (
     <>
@@ -41,7 +38,7 @@ export function TabChanger(props: { switchTheme: () => void }) {
           onValueChange={tabUpdate}
         >
           <TabsList className="TabsList">
-            <TabsTrigger value="shop"  className="TabsTrigger">
+            <TabsTrigger value="shop" className="TabsTrigger">
               <MagnifyingGlassIcon />
             </TabsTrigger>
             <TabsTrigger value="stats" className="TabsTrigger">
