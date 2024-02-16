@@ -1,12 +1,12 @@
 import { useState } from "react";
-import UserContainer from "../UserSelection/UserContainer";
 import { User } from "../../Types/User";
 import { UserRole } from "../../Types/UserRole";
+import { UserContainer } from "./UserContainer";
 
-export function UserSelection({ switchTheme }: any) {
+export function UserSelection(props: { switchTheme: () => void }) {
   const [searchValue, setSearchValue] = useState("");
 
-  var users: User[] = [
+  const users: User[] = [
     {
       name: "Rainer Zufall",
       balance: 51.4,
@@ -42,7 +42,7 @@ export function UserSelection({ switchTheme }: any) {
   return (
     <>
       <h1>
-        <img onClick={switchTheme} src="/icons/happy-manje/happy beer.svg" />
+        <img onClick={props.switchTheme} src="/icons/happy-manje/happy beer.svg" />
         KdV
       </h1>
       <input

@@ -1,14 +1,12 @@
-import { FC } from "react";
 import { User } from "../../Types/User";
 import { UserBox } from "./UserBox";
 
-const UserContainer: FC<{ users: User[]; search: string }> = ({
-  users,
-  search,
-}) => {
+export function UserContainer(props: {users: User[], search: string}) {
+  const {users, search} = props;
+  
   function filter(users: User[], useFuzzy: boolean): User[] {
     if (search.trim() === "") return users;
-    var escapedSearch = search.replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&"); // Escape special regex characters
+    const escapedSearch = search.replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&"); // Escape special regex characters
 
     const result = users.filter((user) =>
       // Case-insensitive regex
@@ -32,11 +30,9 @@ const UserContainer: FC<{ users: User[]; search: string }> = ({
     <>
       <div className="users-container">
         {filter(users, true).map((user, index) => (
-          <UserBox key={index} {...user} />
+          <UserBox key={index} user={user}/>
         ))}
       </div>
     </>
   );
-};
-
-export default UserContainer;
+}

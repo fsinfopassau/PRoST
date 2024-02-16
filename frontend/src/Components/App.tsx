@@ -1,7 +1,7 @@
 import "../style.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { TabChanger } from "./Util/TabChanger";
+import { TabChanger } from "./Util/Navbar";
 import { ErrorComponent } from "./Route-Components/ErrorTab";
 import { SearchTab } from "./Route-Components/SearchTab";
 
@@ -46,10 +46,14 @@ export function App() {
           <TabChanger switchTheme={switchTheme} />
           <Routes>
             <Route path="/" element={<SearchTab switchTheme={switchTheme} />} />
+            <Route path="/shop/:user" element={<SearchTab switchTheme={switchTheme}/>}/>
+            <Route path="/stats" element={<>Rendere Statistiken hier!</>} />
+            <Route path="/settings" element={<>Rendere Settings hier!</>}/>
             <Route
               path="*"
               element={<ErrorComponent switchTheme={switchTheme} />}
             />
+            
           </Routes>
         </BrowserRouter>
       </React.StrictMode>
