@@ -1,5 +1,5 @@
 import { Label } from "@radix-ui/react-label";
-import { User } from "../../DTO/User";
+import { User } from "../../Types/User";
 
 export function UserBox(user: User) {
   function selectUser(user: User) {

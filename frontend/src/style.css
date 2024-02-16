@@ -84,6 +84,15 @@ h1 > img {
 Tabs
 */
 
+#tab-changer{
+  display: flex;
+}
+
+#tab-changer > img{
+  margin-right: .6rem;
+  height: 2.8rem;
+}
+
 .TabsRoot {
   display: flex;
   flex-direction: column;
@@ -98,7 +107,7 @@ Tabs
 .TabsTrigger {
   font-family: inherit;
   padding: 0 20px;
-  height: 45px;
+  height: 2.8rem;
   flex: 1;
   display: flex;
   align-items: center;

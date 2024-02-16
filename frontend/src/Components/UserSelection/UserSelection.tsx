@@ -1,7 +1,7 @@
 import { useState } from "react";
 import UserContainer from "../UserSelection/UserContainer";
-import { User } from "../../DTO/User";
-import { UserRole } from "../../DTO/UserRole";
+import { User } from "../../Types/User";
+import { UserRole } from "../../Types/UserRole";
 
 export function UserSelection({ switchTheme }: any) {
   const [searchValue, setSearchValue] = useState("");
