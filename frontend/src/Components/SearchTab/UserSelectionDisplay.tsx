@@ -9,10 +9,7 @@ export function UserBox(props: { user: User }) {
   }
 
   return (
-    <button
-      className="Button theme large"
-      onClick={() => selectUser(props.user)}
-    >
+    <button className="Button large" onClick={() => selectUser(props.user)}>
       <Label className="bold" htmlFor="username">
         {props.user.username}
       </Label>

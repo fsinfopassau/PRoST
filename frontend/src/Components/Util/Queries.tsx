@@ -1,3 +1,4 @@
+import { ShopHistoryEntry } from "../../Types/ShopHistory";
 import { ShopItem } from "../../Types/ShopItem";
 import { User } from "../../Types/User";
 
@@ -49,4 +50,13 @@ export async function buyItem(userId: string, itemId: string, amount: number) {
     )
   ).json();
   return result as number;
+}
+
+export async function getHistory(amount: number) {
+  const result = await (
+    await fetch(`${apiUrl}/api/history?n=${amount}`, {
+      method: "GET",
+    })
+  ).json();
+  return result as ShopHistoryEntry[];
 }

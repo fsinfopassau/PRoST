@@ -11,7 +11,7 @@ export function ItemDisplay(props: { item: ShopItem }) {
 
   return (
     <>
-      <button className="Button theme" onClick={selectItem}>
+      <button className="Button" onClick={selectItem}>
         {props.item.displayName}
       </button>
     </>

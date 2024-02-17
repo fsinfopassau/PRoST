@@ -1,6 +1,6 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
-import de.unipassau.fim.fsinfo.kdv.data.dao.ShopHistory;
+import de.unipassau.fim.fsinfo.kdv.data.dao.ShopHistoryEntry;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.kdv.data.dao.User;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopHistoryRepository;
@@ -137,7 +137,7 @@ public class ShopController {
         user.setBalance(user.getBalance() - item.getPrice());
         userRepository.save(user);
 
-        ShopHistory history = new ShopHistory(user.getUsername(), item.getId(), item.getPrice());
+        ShopHistoryEntry history = new ShopHistoryEntry(user.getUsername(), item.getId(), item.getPrice());
         historyRepository.save(history);
       }
 

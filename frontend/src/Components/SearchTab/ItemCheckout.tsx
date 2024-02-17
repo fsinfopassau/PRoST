@@ -38,7 +38,7 @@ export function ItemCheckout() {
     <>
       <h1>{itemid}</h1>
       <p> Preis: {getPrice()}</p>
-      <button className="Button theme" onClick={checkout}>
+      <button className="Button" onClick={checkout}>
         Fertig
       </button>
     </>

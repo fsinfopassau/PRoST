@@ -7,8 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.Instant;
 
-@Entity(name = "KDV_ShopHistory")
-public class ShopHistory {
+@Entity(name = "KDV_ShopHistoryEntry")
+public class ShopHistoryEntry {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,7 +26,7 @@ public class ShopHistory {
   @Column(nullable = false)
   private Long timestamp;
 
-  public ShopHistory(String username, String itemId, Double price) {
+  public ShopHistoryEntry(String username, String itemId, Double price) {
     this.username = username;
     this.itemId = itemId;
     this.price = price;
@@ -37,7 +37,7 @@ public class ShopHistory {
    * Do not use to create new entries. Unless Timestamp is added manually
    */
   @Deprecated
-  public ShopHistory() {
+  public ShopHistoryEntry() {
   }
 
   public String getUserName() {

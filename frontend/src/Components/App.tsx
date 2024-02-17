@@ -6,6 +6,7 @@ import { ErrorComponent } from "./Route-Components/ErrorTab";
 import { UserSelection } from "./SearchTab/UserSelection";
 import { ItemSelection } from "./SearchTab/ItemSelection";
 import { ItemCheckout } from "./SearchTab/ItemCheckout";
+import { Statistics } from "./StatisticsTab/Statistics";
 
 const stylesAvailable = ["purple", "blue"];
 
@@ -53,7 +54,7 @@ export function App() {
             />
             <Route path="/shop/:userid" element={<ItemSelection />} />
             <Route path="/shop/:userid/:itemid" element={<ItemCheckout />} />
-            <Route path="/stats" element={<>Rendere Statistiken hier!</>} />
+            <Route path="/stats" element={<Statistics />} />
             <Route path="/settings" element={<>Rendere Settings hier!</>} />
             <Route
               path="*"

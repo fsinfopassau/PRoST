@@ -1,6 +1,6 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
-import de.unipassau.fim.fsinfo.kdv.data.dao.ShopHistory;
+import de.unipassau.fim.fsinfo.kdv.data.dao.ShopHistoryEntry;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopHistoryRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,19 +19,19 @@ public class ShopHistoryController {
   ShopHistoryRepository historyRepository;
 
   @GetMapping
-  public ResponseEntity<List<ShopHistory>> history(@RequestParam(required = false) Integer n) {
+  public ResponseEntity<List<ShopHistoryEntry>> history(@RequestParam(required = false) Integer n) {
     return getSizedHistory(n, historyRepository.findAll());
   }
 
   @GetMapping("/{userId}")
-  public ResponseEntity<List<ShopHistory>> historyUser(@PathVariable String userId,
+  public ResponseEntity<List<ShopHistoryEntry>> historyUser(@PathVariable String userId,
       @RequestParam(required = false) Integer n) {
     return getSizedHistory(n, historyRepository.findByUsernameEquals(userId));
   }
 
-  private ResponseEntity<List<ShopHistory>> getSizedHistory(
+  private ResponseEntity<List<ShopHistoryEntry>> getSizedHistory(
       @RequestParam(required = false) Integer amount,
-      List<ShopHistory> history) {
+      List<ShopHistoryEntry> history) {
     if (amount == null || amount < 0) {
       return ResponseEntity.ok(history);
     }
