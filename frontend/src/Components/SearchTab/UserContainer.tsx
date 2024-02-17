@@ -10,14 +10,14 @@ export function UserContainer(props: { users: User[]; search: string }) {
 
     const result = users.filter((user) =>
       // Case-insensitive regex
-      new RegExp(escapedSearch, "i").test(user.name)
+      new RegExp(escapedSearch, "i").test(user.username)
     );
 
     if (useFuzzy) {
       // fuzzy
       const fuzzyRegex = escapedSearch.split("").join(".*");
       const fuzzyResult = users.filter((user) =>
-        new RegExp(fuzzyRegex, "i").test(user.name)
+        new RegExp(fuzzyRegex, "i").test(user.username)
       );
 
       return fuzzyResult;

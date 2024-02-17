@@ -54,6 +54,15 @@ public class ShopController {
     return ResponseEntity.ok(item);
   }
 
+  @GetMapping("/{id}")
+  public ResponseEntity<Optional<ShopItem>> get(@PathVariable String id) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    if(item.isPresent()){
+      return ResponseEntity.ok(item);
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
   @PostMapping("/{id}/delete")
   public ResponseEntity<Optional<ShopItem>> delete(@PathVariable String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
@@ -115,7 +124,7 @@ public class ShopController {
   }
 
   @PostMapping("/{id}/consume")
-  public ResponseEntity<String> consume(@PathVariable String id, @RequestBody String userId,
+  public ResponseEntity<String> consume(@PathVariable String id, @RequestParam String userId,
       @RequestParam(required = false) Integer n) {
     Optional<ShopItem> itemOptional = itemRepository.findById(id);
     Optional<User> userOption = userRepository.findById(userId);

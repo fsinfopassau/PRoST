@@ -21,6 +21,15 @@ export async function getAllUsers() {
   return result as User[];
 }
 
+export async function getShopItem(itemId: string) {
+  const result = await (
+    await fetch(`${apiUrl}/api/shop/${itemId}`, {
+      method: "GET",
+    })
+  ).json();
+  return result as ShopItem;
+}
+
 export async function getAllShopItems() {
   const result = await (
     await fetch(`${apiUrl}/api/shop`, {
@@ -30,11 +39,14 @@ export async function getAllShopItems() {
   return result as ShopItem[];
 }
 
-export async function checkout(userId: string, itemId: string, amount: number) {
+export async function buyItem(userId: string, itemId: string, amount: number) {
   const result = await (
-    await fetch(`${apiUrl}/api/shop`, {
-      method: "GET",
-    })
+    await fetch(
+      `${apiUrl}/api/shop/${itemId}/consume?userId=${userId}&n=${amount}`,
+      {
+        method: "POST",
+      }
+    )
   ).json();
-  return result as ShopItem[];
+  return result as number;
 }

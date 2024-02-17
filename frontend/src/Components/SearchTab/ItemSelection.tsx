@@ -1,39 +1,36 @@
 import { useParams } from "react-router-dom";
 import { ShopItem } from "../../Types/ShopItem";
 import { ItemContainer } from "./ItemContainer";
+import { useEffect, useState } from "react";
+import { getAllShopItems, getUser } from "../Util/Queries";
+import { User, formatBalance } from "../../Types/User";
 
 export function ItemSelection() {
   const { userid } = useParams();
+  const [items, setItems] = useState<ShopItem[]>([]);
+  const [user, setUser] = useState<User>();
 
-  const items: ShopItem[] = [
-    {
-      id: "beer",
-      displayName: "Bier",
-      category: "drinks",
-      price: 1.5,
-      enabled: true,
-    },
-    {
-      id: "spezi",
-      displayName: "Spezi",
-      category: "drinks",
-      price: 1,
-      enabled: true,
-    },
-    {
-      id: "wasser",
-      displayName: "Wasser",
-      category: "drinks",
-      price: 0.75,
-      enabled: true,
-    },
-  ];
+  useEffect(() => {
+    getAllShopItems().then((itemList) => {
+      setItems(itemList);
+    });
+    if (userid)
+      getUser(userid).then((user) => {
+        setUser(user);
+      });
+  }, []);
 
-  console.log("asdf ", userid);
+  function getBalance(): string {
+    if (user?.balance) {
+      return formatBalance(user?.balance);
+    }
+    return formatBalance(0);
+  }
 
   return (
     <>
       <h1>{userid}</h1>
+      <p> ({getBalance()})</p>
       <ItemContainer items={items} />
     </>
   );

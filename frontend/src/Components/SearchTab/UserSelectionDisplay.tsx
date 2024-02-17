@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 export function UserBox(props: { user: User }) {
   const navigate = useNavigate();
   function selectUser(user: User) {
-    navigate(`/shop/${user.name}`);
+    navigate(`/shop/${user.username}`);
   }
 
   return (
@@ -14,7 +14,7 @@ export function UserBox(props: { user: User }) {
       onClick={() => selectUser(props.user)}
     >
       <Label className="bold" htmlFor="username">
-        {props.user.name}
+        {props.user.username}
       </Label>
     </button>
   );
