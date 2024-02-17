@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { buyItem, getShopItem } from "../Util/Queries";
 import { ShopItem } from "../../Types/ShopItem";
 import { useEffect, useState } from "react";
-import { formatBalance } from "../../Types/User";
+import { formatMoney } from "../../Types/User";
 
 export function ItemCheckout() {
   const { userid, itemid } = useParams();
@@ -29,14 +29,14 @@ export function ItemCheckout() {
 
   function getPrice(): string {
     if (item) {
-      return formatBalance(item.price);
+      return formatMoney(item.price);
     }
-    return formatBalance(0);
+    return formatMoney(0);
   }
 
   return (
     <>
-      <h1>{itemid}</h1>
+      <h2>{itemid}</h2>
       <p> Preis: {getPrice()}</p>
       <button className="Button" onClick={checkout}>
         Fertig

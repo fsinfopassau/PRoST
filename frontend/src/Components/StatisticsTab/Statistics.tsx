@@ -4,7 +4,6 @@ import { ShopHistoryEntry } from "../../Types/ShopHistory";
 import { HistoryEntryDisplay } from "./HistoryEntryDisplay";
 import {
   ScrollArea,
-  ScrollAreaCorner,
   ScrollAreaScrollbar,
   ScrollAreaThumb,
   ScrollAreaViewport,
@@ -21,8 +20,8 @@ export function Statistics() {
 
   return (
     <>
-      <ScrollArea className="history-container">
-        <ScrollAreaViewport className="ScrollAreaViewport">
+      <ScrollArea className="history-container DisplayCard">
+        <ScrollAreaViewport>
           <div className="bold">Kürzlich:</div>
           {history.map((item) => (
             <HistoryEntryDisplay entry={item} />
@@ -35,7 +34,6 @@ export function Statistics() {
           <ScrollAreaThumb className="ScrollbarThumb" />
         </ScrollAreaScrollbar>
       </ScrollArea>
-      <br />
     </>
   );
 }

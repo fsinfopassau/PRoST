@@ -3,7 +3,9 @@ import { ShopItem } from "../../Types/ShopItem";
 import { ItemContainer } from "./ItemContainer";
 import { useEffect, useState } from "react";
 import { getAllShopItems, getUser } from "../Util/Queries";
-import { User, formatBalance } from "../../Types/User";
+import { User } from "../../Types/User";
+import { UserSummaryCard } from "../StatisticsTab/UserSummaryCard";
+import { ErrorComponent } from "../Route-Components/ErrorTab";
 
 export function ItemSelection() {
   const { userid } = useParams();
@@ -20,18 +22,14 @@ export function ItemSelection() {
       });
   }, []);
 
-  function getBalance(): string {
-    if (user?.balance) {
-      return formatBalance(user?.balance);
-    }
-    return formatBalance(0);
+  if (user) {
+    return (
+      <>
+        <UserSummaryCard user={user} />
+        <ItemContainer items={items} />
+      </>
+    );
+  } else {
+    return <ErrorComponent />;
   }
-
-  return (
-    <>
-      <h1>{userid}</h1>
-      <p> ({getBalance()})</p>
-      <ItemContainer items={items} />
-    </>
-  );
 }

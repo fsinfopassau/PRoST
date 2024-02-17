@@ -7,7 +7,7 @@ export interface User {
   role: UserRole;
 }
 
-export function formatBalance(balance: number, decimalCount = 2): string {
+export function formatMoney(balance: number, decimalCount = 2): string {
   const formatted = new Intl.NumberFormat("de-DE", {
     minimumFractionDigits: decimalCount,
     maximumFractionDigits: decimalCount,

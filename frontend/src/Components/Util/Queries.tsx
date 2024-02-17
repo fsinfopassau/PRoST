@@ -60,3 +60,12 @@ export async function getHistory(amount: number) {
   ).json();
   return result as ShopHistoryEntry[];
 }
+
+export async function getUserHistory(user: User, amount: number) {
+  const result = await (
+    await fetch(`${apiUrl}/api/history/${user.username}?n=${amount}`, {
+      method: "GET",
+    })
+  ).json();
+  return result as ShopHistoryEntry[];
+}
