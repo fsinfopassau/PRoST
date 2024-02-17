@@ -7,9 +7,9 @@ export function HistoryEntryDisplay(props: { entry: ShopHistoryEntry }) {
   return (
     <table className="history-entry">
       <th className="bold">{entry.userName}</th>
-      <th className="bold">{entry.itemId}</th>
-      <th>-{formatBalance(entry.price)}</th>
-      <th>{getTimeSince(entry.timestamp)}</th>
+      <th className="last">-{formatBalance(entry.price)}</th>
+      <th className="">{entry.itemId}</th>
+      <th className="last">{getTimeSince(entry.timestamp)}</th>
     </table>
   );
 }

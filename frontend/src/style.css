@@ -129,71 +129,64 @@ History
 .history-container {
   overflow: hidden;  
   border-radius: 4px;
-  padding: 0rem;
-  margin: 1rem;
-  max-width: 1000%;
-  box-shadow: 0 2px 10px var(--black-a7);
-  background-color: white;
   --scrollbar-size: 10px;
+  max-width: 1000%;
+  margin: 1.5rem 1rem;
 }
 
 .history-entry {
   display: flex;
+  table-layout: fixed; /* Fixed table layout */
   justify-content: space-evenly; /* or space-around, space-evenly, etc. */
   border-radius: 4px;
-  font-size: 60%;
-  height: 2rem;
+  margin: .4rem 0;
+  font-size: 1rem;
+  height: 2.7rem;
+  min-width: 23em;
   width: 100%;
-  margin: 5px 0;
-  table-layout: fixed; /* Fixed table layout */
-
-  color: var(--mauve-12);
 }
-
-
 .history-entry th{
-  max-width:  4rem;
-  width: 25%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin: 0 1rem;
+  margin: 0 .8rem;
+  width: 25%;
+  max-width:  5rem;
+}
+.history-entry th.last{
+  justify-content: flex-end;
 }
 
 .ScrollAreaViewport {
+  border-radius: inherit;
   width: 100%;
   height: 100%;
-  border-radius: inherit;
+  padding: .4rem .9rem;
 }
 
-.ScrollAreaScrollbar {
+.Scrollbar {
   display: flex;
   /* ensures no selection */
   user-select: none;
   /* disable browser handling of all panning and zooming gestures on touch devices */
   touch-action: none;
   padding: 2px;
-  background: var(--black-a6);
 }
-.ScrollAreaScrollbar:hover {
-  background: var(--black-a8);
-}
-.ScrollAreaScrollbar[data-orientation='vertical'] {
+.Scrollbar[data-orientation='vertical'] {
   width: var(--scrollbar-size);
 }
-.ScrollAreaScrollbar[data-orientation='horizontal'] {
+.Scrollbar[data-orientation='horizontal'] {
   flex-direction: column;
   height: var(--scrollbar-size);
 }
 
-.ScrollAreaThumb {
+.ScrollbarThumb {
   flex: 1;
-  background: var(--mauve-10);
-  border-radius: var(--scrollbar-size);
   position: relative;
+  border-radius: 4px;
 }
 /* increase target size for touch devices https://www.w3.org/WAI/WCAG21/Understanding/target-size.html */
-.ScrollAreaThumb::before {
+.ScrollbarThumb::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -204,18 +197,6 @@ History
   min-width: 44px;
   min-height: 44px;
 }
-
-.ScrollAreaCorner {
-  background: var(--black-a8);
-}
-
-.Text {
-  color: var(--violet-11);
-  font-size: 15px;
-  line-height: 18px;
-  font-weight: 500;
-}
-
 
 
 /* 

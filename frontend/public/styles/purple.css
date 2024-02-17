@@ -34,14 +34,26 @@ Body{
 History
 */
 
+.history-container {
+  border: 2px solid var(--violet-11);
+  background-color: var(--violet-2);
+  box-shadow: 0 2px 10px var(--black-a4);
+}
+
 .history-entry {
   background-color: white;
   color: var(--violet-11);
-  box-shadow: 0 2px 10px var(--black-a7);
+  border: 1px solid var(--violet-7);
 }
 
-.history-container {
-  
+.Scrollbar {
+  background: var(--black-a3);
+}
+.Scrollbar:hover {
+  background: var(--black-a5);
+}
+.ScrollbarThumb {
+  background: var(--violet-11);
 }
 
 

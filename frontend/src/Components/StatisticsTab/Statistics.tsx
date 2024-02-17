@@ -23,26 +23,17 @@ export function Statistics() {
     <>
       <ScrollArea className="history-container">
         <ScrollAreaViewport className="ScrollAreaViewport">
-          <div style={{ padding: "15px 20px" }}>
-            <div className="Text">Kürzlich:</div>
-            {history.map((item) => (
-              <HistoryEntryDisplay entry={item} />
-            ))}
-          </div>
+          <div className="bold">Kürzlich:</div>
+          {history.map((item) => (
+            <HistoryEntryDisplay entry={item} />
+          ))}
         </ScrollAreaViewport>
-        <ScrollAreaScrollbar
-          className="ScrollAreaScrollbar"
-          orientation="vertical"
-        >
-          <ScrollAreaThumb className="ScrollAreaThumb" />
+        <ScrollAreaScrollbar className="Scrollbar" orientation="vertical">
+          <ScrollAreaThumb className="ScrollbarThumb" />
         </ScrollAreaScrollbar>
-        <ScrollAreaScrollbar
-          className="ScrollAreaScrollbar"
-          orientation="horizontal"
-        >
-          <ScrollAreaThumb className="ScrollAreaThumb" />
+        <ScrollAreaScrollbar className="Scrollbar" orientation="horizontal">
+          <ScrollAreaThumb className="ScrollbarThumb" />
         </ScrollAreaScrollbar>
-        <ScrollAreaCorner className="ScrollAreaCorner" />
       </ScrollArea>
       <br />
     </>
