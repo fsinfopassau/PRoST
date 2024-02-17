@@ -3,7 +3,6 @@ package de.unipassau.fim.fsinfo.kdv.controller;
 import de.unipassau.fim.fsinfo.kdv.UserRole;
 import de.unipassau.fim.fsinfo.kdv.data.dao.User;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
-import de.unipassau.fim.fsinfo.kdv.service.UserAuthService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-
-  @Autowired
-  UserAuthService userAuthService;
 
   @Autowired
   UserRepository userRepository;

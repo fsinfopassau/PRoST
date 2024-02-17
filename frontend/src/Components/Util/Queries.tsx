@@ -1,6 +1,7 @@
+import { ShopItem } from "../../Types/ShopItem";
 import { User } from "../../Types/User";
 
-export const apiUrl = import.meta.env.VITE_API_URL as string;
+export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 export async function getUser(userId: string) {
   const result = await (
@@ -9,4 +10,31 @@ export async function getUser(userId: string) {
     })
   ).json();
   return result as User;
+}
+
+export async function getAllUsers() {
+  const result = await (
+    await fetch(`${apiUrl}/api/users`, {
+      method: "GET",
+    })
+  ).json();
+  return result as User[];
+}
+
+export async function getAllShopItems() {
+  const result = await (
+    await fetch(`${apiUrl}/api/shop`, {
+      method: "GET",
+    })
+  ).json();
+  return result as ShopItem[];
+}
+
+export async function checkout(userId: string, itemId: string, amount: number) {
+  const result = await (
+    await fetch(`${apiUrl}/api/shop`, {
+      method: "GET",
+    })
+  ).json();
+  return result as ShopItem[];
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -114,20 +115,22 @@ public class ShopController {
   }
 
   @PostMapping("/{id}/consume")
-  public ResponseEntity<String> consume(@PathVariable String id, @RequestBody String userId) {
+  public ResponseEntity<String> consume(@PathVariable String id, @RequestBody String userId,
+      @RequestParam(required = false) Integer n) {
     Optional<ShopItem> itemOptional = itemRepository.findById(id);
     Optional<User> userOption = userRepository.findById(userId);
 
     if (userOption.isPresent() && itemOptional.isPresent()) {
-
       User user = userOption.get();
       ShopItem item = itemOptional.get();
 
-      user.setBalance(user.getBalance() - item.getPrice());
-      userRepository.save(user);
+      for (int i = 0; i < (n == null ? 1 : n); i++) {
+        user.setBalance(user.getBalance() - item.getPrice());
+        userRepository.save(user);
 
-      ShopHistory history = new ShopHistory(user.getUsername(), item.getId(), item.getPrice());
-      historyRepository.save(history);
+        ShopHistory history = new ShopHistory(user.getUsername(), item.getId(), item.getPrice());
+        historyRepository.save(history);
+      }
 
       return ResponseEntity.ok(user.getBalance() + "");
     }

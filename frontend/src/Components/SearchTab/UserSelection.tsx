@@ -1,38 +1,46 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "../../Types/User";
 import { UserRole } from "../../Types/UserRole";
+import { getAllUsers } from "../Util/Queries";
 import { UserContainer } from "./UserContainer";
 
 export function UserSelection(props: { switchTheme: () => void }) {
   const [searchValue, setSearchValue] = useState("");
+  const [users, setUsers] = useState<User[]>([]);
 
-  const users: User[] = [
+  useEffect(() => {
+    getAllUsers().then((userList) => {
+      setUsers(userList);
+    });
+  }, []);
+
+  const testUsers: User[] = [
     {
-      name: "Rainer Zufall",
+      username: "Rainer Zufall",
       balance: 51.4,
       enabled: true,
       role: UserRole.ADMINISTRATOR,
     },
     {
-      name: "Erik Zion",
+      username: "Erik Zion",
       balance: 3.2,
       enabled: true,
       role: UserRole.USER,
     },
     {
-      name: "Kai Nepanik",
+      username: "Kai Nepanik",
       balance: 25,
       enabled: true,
       role: UserRole.USER,
     },
     {
-      name: "Frank Reich",
+      username: "Frank Reich",
       balance: 2500,
       enabled: true,
       role: UserRole.USER,
     },
     {
-      name: "Christian Harten",
+      username: "Christian Harten",
       balance: -6.9,
       enabled: true,
       role: UserRole.USER,
@@ -42,7 +50,10 @@ export function UserSelection(props: { switchTheme: () => void }) {
   return (
     <>
       <h1>
-        <img onClick={props.switchTheme} src="/icons/happy-manje/happy beer.svg" />
+        <img
+          onClick={props.switchTheme}
+          src="/icons/happy-manje/happy beer.svg"
+        />
         KdV
       </h1>
       <input
