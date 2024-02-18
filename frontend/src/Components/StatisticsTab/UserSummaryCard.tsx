@@ -29,7 +29,7 @@ export function UserSummaryCard(props: { user: User }) {
           <div>
             <div className="bold">Letzte:</div>
             {history.map((entry) => (
-              <div>{entry.itemId}</div>
+              <div key={entry.itemId}>{entry.itemId}</div>
             ))}
           </div>
           <Separator className="Separator" decorative orientation="vertical" />

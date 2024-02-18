@@ -79,11 +79,19 @@ h1 > img {
   height: 3rem;
 }
 
+.CardContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(25rem,  1fr));
+  max-width: 100%;
+  margin: 0.5rem 0rem;
+}
+
 .DisplayCard {
-  overflow: hidden;  
-  max-width: 1000%;
-  margin: 1.5rem 1rem;
-  padding: .7rem 1rem;
+  overflow: hidden;
+  padding: .7rem 1rem;  
+  margin: .5rem 1rem;
+  --scrollbar-size: 10px;
+  flex-grow:  1; /* Grow to fill available space */
 }
 
 /*
@@ -133,9 +141,7 @@ History
 
 .history-container {
   overflow: hidden;  
-  --scrollbar-size: 10px;
-  max-width: 1000%;
-  margin: 1.5rem 1rem;
+  max-width: 30rem;
 }
 
 .history-entry {
@@ -145,7 +151,7 @@ History
   margin: .4rem 0;
   font-size: 1rem;
   height: 2.7rem;
-  min-width: 23em;
+  min-width: 21em;
   width: 100%;
 }
 .history-entry th{
@@ -158,6 +164,9 @@ History
 }
 .history-entry th.last{
   justify-content: flex-end;
+}
+table{
+  width: 100%;
 }
 
 .Scrollbar {
@@ -198,9 +207,10 @@ History
 UserSummary
 */
 .UserSummary {
-  justify-content: center;
+  max-height: 30rem;
   display: flex;
-  max-height: 20rem;
+  margin: 0 auto;
+  max-width: 40rem;
 }
 .UserSummary .Balance{
   font-size: 300%;

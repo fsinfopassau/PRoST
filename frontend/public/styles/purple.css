@@ -44,9 +44,9 @@ History
 }
 
 .history-entry {
-  background-color: var(--violet-5);
+  background-color: var(--violet-4);
   color: var(--violet-11);
-  border: 2px solid var(--violet-4);
+  border: 2px solid var(--violet-8);
   border-radius: 12px;
 }
 

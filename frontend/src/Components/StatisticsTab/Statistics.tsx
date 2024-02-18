@@ -20,20 +20,30 @@ export function Statistics() {
 
   return (
     <>
-      <ScrollArea className="history-container DisplayCard">
-        <ScrollAreaViewport>
-          <div className="bold">Kürzlich:</div>
-          {history.map((item) => (
-            <HistoryEntryDisplay entry={item} />
-          ))}
-        </ScrollAreaViewport>
-        <ScrollAreaScrollbar className="Scrollbar" orientation="vertical">
-          <ScrollAreaThumb className="ScrollbarThumb" />
-        </ScrollAreaScrollbar>
-        <ScrollAreaScrollbar className="Scrollbar" orientation="horizontal">
-          <ScrollAreaThumb className="ScrollbarThumb" />
-        </ScrollAreaScrollbar>
-      </ScrollArea>
+      <div className="CardContainer">
+        <ScrollArea className="DisplayCard">
+          <ScrollAreaViewport>
+            <div className="bold">Kürzlich:</div>
+            <table>
+              <tbody>
+                {history.map((item) => (
+                  <HistoryEntryDisplay entry={item} key={item.id} />
+                ))}
+              </tbody>
+            </table>
+          </ScrollAreaViewport>
+          <ScrollAreaScrollbar className="Scrollbar" orientation="vertical">
+            <ScrollAreaThumb className="ScrollbarThumb" />
+          </ScrollAreaScrollbar>
+          <ScrollAreaScrollbar className="Scrollbar" orientation="horizontal">
+            <ScrollAreaThumb className="ScrollbarThumb" />
+          </ScrollAreaScrollbar>
+        </ScrollArea>
+        <div className="DisplayCard">More STATS..</div>
+        <div className="DisplayCard">More STATS..</div>
+        <div className="DisplayCard">More STATS..</div>
+        <div className="DisplayCard">More STATS..</div>
+      </div>
     </>
   );
 }
