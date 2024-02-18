@@ -1,8 +1,9 @@
 export interface ShopHistoryEntry {
   id: number;
   userId: string;
-  userDisplayname: string;
+  userDisplayName: string;
   itemId: string;
+  itemDisplayName: string;
   price: number;
   timestamp: number;
 }

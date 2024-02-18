@@ -5,22 +5,22 @@ import { useEffect, useState } from "react";
 import { formatMoney } from "../../Types/User";
 
 export function ItemCheckout() {
-  const { userid, itemid } = useParams();
+  const { userId, itemId } = useParams();
   const navigate = useNavigate();
   const [item, setItem] = useState<ShopItem>();
 
-  if (itemid) {
+  if (itemId) {
     useEffect(() => {
-      getShopItem(itemid).then((newItem) => {
+      getShopItem(itemId).then((newItem) => {
         setItem(newItem);
       });
     }, []);
   }
 
   function checkout() {
-    console.log("checkout", userid, itemid);
-    if (userid && itemid)
-      buyItem(userid, itemid, 1).then((balance) => {
+    console.log("checkout", userId, itemId);
+    if (userId && itemId)
+      buyItem(userId, itemId, 1).then((balance) => {
         console.log("new Balance:", balance);
       });
 
@@ -36,7 +36,7 @@ export function ItemCheckout() {
 
   return (
     <>
-      <h2>{itemid}</h2>
+      <h2>{itemId}</h2>
       <p> Preis: {getPrice()}</p>
       <button className="Button" onClick={checkout}>
         Fertig

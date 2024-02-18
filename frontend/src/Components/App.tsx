@@ -2,11 +2,14 @@ import "../style.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { TabChanger } from "./Util/Navbar";
-import { ErrorComponent } from "./Route-Components/ErrorTab";
+import { ErrorComponent } from "./Util/ErrorTab";
 import { UserSelection } from "./SearchTab/UserSelection";
 import { ItemSelection } from "./SearchTab/ItemSelection";
 import { ItemCheckout } from "./SearchTab/ItemCheckout";
 import { Statistics } from "./StatisticsTab/Statistics";
+import { Settings } from "./SettingsTab/Settings";
+import { UserStatistics } from "./StatisticsTab/UserStatistics";
+import { AllUsersStatistics } from "./StatisticsTab/AllUsersStatistics";
 
 const stylesAvailable = ["purple", "blue"];
 
@@ -52,10 +55,12 @@ export function App() {
               path="/"
               element={<UserSelection switchTheme={switchTheme} />}
             />
-            <Route path="/shop/:userid" element={<ItemSelection />} />
-            <Route path="/shop/:userid/:itemid" element={<ItemCheckout />} />
+            <Route path="/shop/:userId" element={<ItemSelection />} />
+            <Route path="/shop/:userId/:itemId" element={<ItemCheckout />} />
             <Route path="/stats" element={<Statistics />} />
-            <Route path="/settings" element={<>Rendere Settings hier!</>} />
+            <Route path="/stats/users" element={<AllUsersStatistics />} />
+            <Route path="/stats/users/:userId" element={<UserStatistics />} />
+            <Route path="/settings" element={<Settings />} />
             <Route
               path="*"
               element={<ErrorComponent switchTheme={switchTheme} />}

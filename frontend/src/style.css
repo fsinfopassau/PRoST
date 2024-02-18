@@ -59,15 +59,6 @@ h1 > img {
   line-height: 1;
 }
 
-.users-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(17rem,  10fr)); /* Adjust the minmax values as needed */
-  grid-auto-rows: auto; /* Allows rows to size themselves based on content */
-  gap:  1rem; /* Space between grid items */
-  padding: 20px;
-  max-width: 1000%;
-}
-
 .Button {
   display: inline-flex;
   align-items: center;
@@ -79,19 +70,33 @@ h1 > img {
   height: 3rem;
 }
 
+/**
+Main Classes
+*/
+
+.SelectionContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem,  10fr)); /* Adjust the minmax values as needed */
+  grid-auto-rows: auto;
+  gap:  1rem;
+  padding: 20px 0px;
+  max-width: 1000%;
+}
+
 .CardContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(25rem,  1fr));
+  grid-template-columns: repeat(auto-fill, minmax(25.5rem,  1fr));
   max-width: 100%;
 }
 
 .DisplayCard {
   overflow: hidden;
   padding: .7rem 1rem;  
-  margin: .5rem 1rem;
-  --scrollbar-size: 10px;
+  margin: .5rem .8rem;
+  --scrollbar-size: 12px;
   flex-grow:  1; /* Grow to fill available space */
 }
+
 
 /*
 Tabs
@@ -159,7 +164,7 @@ History
   align-items: center;
   justify-content: flex-start;
   margin: 0 .8rem;
-  width: 25%;
+  width: 20%;
   max-width:  5rem;
 }
 .history-entry th.last{
@@ -211,16 +216,14 @@ UserSummary
   display: flex;
   margin: 0 auto;
   max-width: 40rem;
+  width: 100%;
 }
 .UserSummary .Balance{
-  font-size: 300%;
+  font-size: 4rem;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   
-  @media screen and (max-width:  900px) {
-    font-size:  4rem;
-  }
   @media screen and (max-width:  450px) {
     font-size:  2rem;
   }
@@ -228,13 +231,8 @@ UserSummary
     font-size:  1rem;
   }
 }
-.UserSummary .TopHContainer{
+.SpreadContainer{
   display: flex;
-  justify-content: space-between;
-}
-.UserSummary .BottomHContainer{
-  display: flex;
-  height: 60%;
   justify-content: space-between;
 }
 
@@ -247,13 +245,11 @@ Separator
 }
 .Separator[data-orientation='horizontal'] {
   height: 2px;
-  width: 100%;
-  margin: .75rem 0
+  margin: .6rem 0
 }
 .Separator[data-orientation='vertical'] {
-  height: 100%;
   width: 2px;
-  margin: 0 .75rem
+  margin: 0 1rem
 }
 
 

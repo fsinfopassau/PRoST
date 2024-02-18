@@ -22,18 +22,18 @@ export function UserSummaryCard(props: { user: User }) {
   return (
     <div className="UserSummary">
       <div className="DisplayCard">
-        <div className="TopHContainer">
+        <div className="SpreadContainer">
           <Link to={`/stats/users/${user.id}`} className="bold">
             {getDisplayName()}
           </Link>
           <div>👑 🍺</div>
         </div>
         <Separator className="Separator" />
-        <div className="BottomHContainer">
+        <div className="SpreadContainer">
           <div>
             <div className="bold">Letzte:</div>
             {history.map((entry) => (
-              <div key={entry.id}>{entry.itemId}</div>
+              <div key={entry.id}>{entry.itemDisplayName}</div>
             ))}
           </div>
           <Separator className="Separator" decorative orientation="vertical" />

@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import { getAllShopItems, getUser } from "../Util/Queries";
 import { User } from "../../Types/User";
 import { UserSummaryCard } from "../StatisticsTab/UserSummaryCard";
-import { ErrorComponent } from "../Route-Components/ErrorTab";
+import { ErrorComponent } from "../Util/ErrorTab";
 
 export function ItemSelection() {
-  const { userid } = useParams();
+  const { userId } = useParams();
   const [items, setItems] = useState<ShopItem[]>([]);
   const [user, setUser] = useState<User>();
 
@@ -16,8 +16,8 @@ export function ItemSelection() {
     getAllShopItems().then((itemList) => {
       setItems(itemList);
     });
-    if (userid)
-      getUser(userid).then((user) => {
+    if (userId)
+      getUser(userId).then((user) => {
         setUser(user);
       });
   }, []);

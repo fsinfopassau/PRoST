@@ -3,10 +3,10 @@ import { ShopItem } from "../../Types/ShopItem";
 
 export function ItemDisplay(props: { item: ShopItem }) {
   const navigate = useNavigate();
-  const { userid } = useParams();
+  const { userId } = useParams();
 
   function selectItem() {
-    navigate(`/shop/${userid}/${props.item.id}`);
+    navigate(`/shop/${userId}/${props.item.id}`);
   }
 
   return (

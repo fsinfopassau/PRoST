@@ -29,9 +29,7 @@ export function UserSelection(props: { switchTheme: () => void }) {
         id="search"
         placeholder="Search"
       />
-      <div className="App">
-        <UserContainer users={users} search={searchValue} />
-      </div>
+      <UserContainer users={users} search={searchValue} />
     </>
   );
 }

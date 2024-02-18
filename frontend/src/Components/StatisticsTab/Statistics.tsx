@@ -8,12 +8,13 @@ import {
   ScrollAreaThumb,
   ScrollAreaViewport,
 } from "@radix-ui/react-scroll-area";
+import { Link } from "react-router-dom";
 
 export function Statistics() {
   const [history, setHistory] = useState<ShopHistoryEntry[]>([]);
 
   useEffect(() => {
-    getHistory(5).then((historyList) => {
+    getHistory(20).then((historyList) => {
       if (historyList) setHistory(historyList.reverse());
     });
   }, []);
@@ -22,7 +23,7 @@ export function Statistics() {
     <>
       <div className="CardContainer">
         <ScrollArea className="DisplayCard">
-          <ScrollAreaViewport>
+          <ScrollAreaViewport style={{ maxHeight: "20rem" }}>
             <div className="bold">Kürzlich:</div>
             <table>
               <tbody>
@@ -39,7 +40,11 @@ export function Statistics() {
             <ScrollAreaThumb className="ScrollbarThumb" />
           </ScrollAreaScrollbar>
         </ScrollArea>
-        <div className="DisplayCard">More STATS..</div>
+        <div className="DisplayCard">
+          <Link to={`/stats/users`} className="bold">
+            Nutzer
+          </Link>
+        </div>
         <div className="DisplayCard">More STATS..</div>
         <div className="DisplayCard">More STATS..</div>
         <div className="DisplayCard">More STATS..</div>

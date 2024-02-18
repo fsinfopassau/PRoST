@@ -10,14 +10,14 @@ export function UserContainer(props: { users: User[]; search: string }) {
 
     const result = users.filter((user) =>
       // Case-insensitive regex
-      new RegExp(escapedSearch, "i").test(user.username)
+      new RegExp(escapedSearch, "i").test(user.displayName)
     );
 
     if (useFuzzy) {
       // fuzzy
       const fuzzyRegex = escapedSearch.split("").join(".*");
       const fuzzyResult = users.filter((user) =>
-        new RegExp(fuzzyRegex, "i").test(user.username)
+        new RegExp(fuzzyRegex, "i").test(user.displayName)
       );
 
       return fuzzyResult;
@@ -28,7 +28,7 @@ export function UserContainer(props: { users: User[]; search: string }) {
 
   return (
     <>
-      <div className="users-container">
+      <div className="SelectionContainer">
         {filter(users, true).map((user, index) => (
           <UserBox key={index} user={user} />
         ))}
