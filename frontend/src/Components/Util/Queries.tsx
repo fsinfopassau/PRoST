@@ -2,7 +2,7 @@ import { ShopHistoryEntry } from "../../Types/ShopHistory";
 import { ShopItem } from "../../Types/ShopItem";
 import { User } from "../../Types/User";
 
-export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
+export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
 
 export async function getUser(userId: string) {
   const result = await (
@@ -63,7 +63,7 @@ export async function getHistory(amount: number) {
 
 export async function getUserHistory(user: User, amount: number) {
   const result = await (
-    await fetch(`${apiUrl}/api/history/${user.username}?n=${amount}`, {
+    await fetch(`${apiUrl}/api/history/${user.id}?n=${amount}`, {
       method: "GET",
     })
   ).json();

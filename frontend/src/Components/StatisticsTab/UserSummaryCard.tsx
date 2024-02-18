@@ -15,12 +15,16 @@ export function UserSummaryCard(props: { user: User }) {
     });
   }, []);
 
+  function getDisplayName(): string {
+    return user.displayName ? user.displayName : user.id;
+  }
+
   return (
     <div className="UserSummary">
       <div className="DisplayCard">
         <div className="TopHContainer">
-          <Link to={`/stats/users/${user.username}`} className="bold">
-            {user.username}
+          <Link to={`/stats/users/${user.id}`} className="bold">
+            {getDisplayName()}
           </Link>
           <div>👑 🍺</div>
         </div>
@@ -29,7 +33,7 @@ export function UserSummaryCard(props: { user: User }) {
           <div>
             <div className="bold">Letzte:</div>
             {history.map((entry) => (
-              <div key={entry.itemId}>{entry.itemId}</div>
+              <div key={entry.id}>{entry.itemId}</div>
             ))}
           </div>
           <Separator className="Separator" decorative orientation="vertical" />

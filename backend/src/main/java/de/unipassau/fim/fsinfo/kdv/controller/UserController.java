@@ -41,7 +41,7 @@ public class UserController {
   @PostMapping
   public ResponseEntity<String> create(@RequestBody User user) {
 
-    if (userRepository.findById(user.getUsername()).isPresent()) {
+    if (userRepository.findById(user.getId()).isPresent()) {
       return ResponseEntity.badRequest().build();
     }
 
@@ -51,7 +51,7 @@ public class UserController {
       return ResponseEntity.internalServerError().build();
     }
 
-    return ResponseEntity.ok(user.getUsername());
+    return ResponseEntity.ok(user.getId());
   }
 
   @GetMapping("/{id}")

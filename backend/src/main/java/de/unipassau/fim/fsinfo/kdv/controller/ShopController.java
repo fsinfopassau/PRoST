@@ -137,7 +137,7 @@ public class ShopController {
         user.setBalance(user.getBalance() - item.getPrice());
         userRepository.save(user);
 
-        ShopHistoryEntry history = new ShopHistoryEntry(user.getUsername(), item.getId(), item.getPrice());
+        ShopHistoryEntry history = new ShopHistoryEntry(user.getId(), item.getId(), item.getPrice());
         historyRepository.save(history);
       }
 

@@ -26,7 +26,7 @@ public class ShopHistoryController {
   @GetMapping("/{userId}")
   public ResponseEntity<List<ShopHistoryEntry>> historyUser(@PathVariable String userId,
       @RequestParam(required = false) Integer n) {
-    return getSizedHistory(n, historyRepository.findByUsernameEquals(userId));
+    return getSizedHistory(n, historyRepository.findByUserIdEquals(userId));
   }
 
   private ResponseEntity<List<ShopHistoryEntry>> getSizedHistory(

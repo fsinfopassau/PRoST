@@ -19,11 +19,13 @@ public class KdVApplication {
   @Bean
   CommandLineRunner userTestInit(UserRepository repository) {
     return args -> {
-      User a = new User("admin", UserRole.ADMINISTRATOR, true);
-      User a2 = new User("normalUser", UserRole.USER, true);
+      User a = new User("admin", "Kai Nepanik", UserRole.ADMINISTRATOR, true);
+      User a2 = new User("mod", "Lasse Maranda",UserRole.MODERATOR, true);
+      User a3 = new User("normalUser", "Erhart Haramasch",UserRole.USER, true);
       try {
         repository.save(a);
         repository.save(a2);
+        repository.save(a3);
       } catch (Exception e) {
         e.printStackTrace();
       }

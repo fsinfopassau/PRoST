@@ -15,7 +15,7 @@ public class ShopHistoryEntry {
   private Long id;
 
   @Column(nullable = false)
-  private String username;
+  private String userId;
 
   @Column(nullable = false)
   private String itemId;
@@ -26,8 +26,8 @@ public class ShopHistoryEntry {
   @Column(nullable = false)
   private Long timestamp;
 
-  public ShopHistoryEntry(String username, String itemId, Double price) {
-    this.username = username;
+  public ShopHistoryEntry(String userId, String itemId, Double price) {
+    this.userId = userId;
     this.itemId = itemId;
     this.price = price;
     this.timestamp = Instant.now().getEpochSecond();
@@ -40,12 +40,12 @@ public class ShopHistoryEntry {
   public ShopHistoryEntry() {
   }
 
-  public String getUserName() {
-    return username;
+  public String getUserId() {
+    return userId;
   }
 
-  public void setUserName(String username) {
-    this.username = username;
+  public void setUserId(String username) {
+    this.userId = username;
   }
 
   public String getItemId() {

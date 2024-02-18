@@ -12,18 +12,24 @@ public class User {
 
   @Id
   @Column(nullable = false, unique = true)
-  private String name;
+  private String id;
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private UserRole role;
   @Column(nullable = false)
   private Double balance;
+  private String displayName;
   private Boolean enabled;
 
-  public User(String name, UserRole role,
+  public User(String id, UserRole role,
       Boolean enabled) {
+    this(id, null,role,enabled);
+  }
+
+  public User(String id, String displayName, UserRole role, Boolean enabled){
     this.role = role;
-    this.name = name;
+    this.id = id;
+    this.displayName = displayName;
     this.enabled = enabled;
     this.balance = 0D;
   }
@@ -32,8 +38,8 @@ public class User {
   public User() {
   }
 
-  public String getUsername() {
-    return name;
+  public String getId() {
+    return id;
   }
 
   public boolean isEnabled() {
@@ -48,8 +54,8 @@ public class User {
     this.balance = balance;
   }
 
-  public void setName(String username) {
-    this.name = username;
+  public void setId(String username) {
+    this.id = username;
   }
 
   public Boolean getEnabled() {
@@ -68,10 +74,19 @@ public class User {
     this.role = userRole;
   }
 
+  public String getDisplayName() {
+    return displayName;
+  }
+
+  public void setDisplayName(String displayName) {
+    this.displayName = displayName;
+  }
+
   @Override
   public String toString() {
     return "User{" +
-        ", name='" + name + '\'' +
+        ", id='" + id + '\'' +
+        ", displayName=" + displayName +
         ", role=" + role +
         ", balance=" + balance +
         ", enabled=" + enabled +
