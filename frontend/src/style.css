@@ -1,12 +1,12 @@
-@import '@radix-ui/colors/black-alpha.css';
-@import '@radix-ui/colors/blue.css';
-@import '@radix-ui/colors/mauve.css';
-@import '@radix-ui/colors/violet.css';
+@import "@radix-ui/colors/black-alpha.css";
+@import "@radix-ui/colors/blue.css";
+@import "@radix-ui/colors/mauve.css";
+@import "@radix-ui/colors/violet.css";
 /*add new radix-ui colors used for themes*/
 
 * {
-    font-family: Arial, Helvetica, sans-serif;
-    box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
 }
 
 /* reset */
@@ -15,7 +15,7 @@ fieldset,
 input {
   all: unset;
 }
-  
+
 body {
   justify-content: center;
   align-items: center;
@@ -37,7 +37,7 @@ h2 {
   align-items: center;
   text-align: center;
   justify-content: center;
-  margin: .3rem 0;
+  margin: 0.3rem 0;
 }
 
 h3 {
@@ -45,12 +45,16 @@ h3 {
   align-items: center;
   text-align: center;
   justify-content: center;
-  margin: .2rem 0;
+  margin: 0.2rem 0;
 }
 
 h1 > img {
   height: 5rem;
   padding: 0 1rem;
+}
+
+svg {
+  margin: 5px;
 }
 
 #search {
@@ -92,39 +96,49 @@ Main Classes
 
 .SelectionContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(14rem,  10fr)); /* Adjust the minmax values as needed */
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(14rem, 10fr)
+  ); /* Adjust the minmax values as needed */
   grid-auto-rows: auto;
-  gap:  1rem;
+  gap: 1rem;
   padding: 20px 0px;
   max-width: 1000%;
 }
 
 .CardContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(25.5rem,  1fr));
+  grid-template-columns: repeat(auto-fill, minmax(25.5rem, 1fr));
   max-width: 100%;
 }
 
 .DisplayCard {
   overflow: hidden;
-  padding: .7rem 1rem;  
-  margin: .5rem .8rem;
+  padding: 0.7rem 1rem;
+  margin: 0.5rem 0.8rem;
   --scrollbar-size: 12px;
-  flex-grow:  1; /* Grow to fill available space */
+  flex-grow: 1; /* Grow to fill available space */
 }
 
+.SpreadContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
 
 /*
 Tabs
 */
 
-#tab-changer{
+#tab-changer {
   display: flex;
-  margin-bottom: .6rem;
+  margin-bottom: 0.6rem;
 }
 
-#tab-changer > img{
-  margin-right: .6rem;
+#tab-changer > img {
+  margin-right: 0.6rem;
   height: 2.8rem;
 }
 
@@ -152,7 +166,7 @@ Tabs
   user-select: none;
 }
 
-.TabsTrigger:active{
+.TabsTrigger:active {
   position: relative;
 }
 
@@ -161,7 +175,7 @@ History
 */
 
 .history-container {
-  overflow: hidden;  
+  overflow: hidden;
   max-width: 30rem;
 }
 
@@ -169,24 +183,24 @@ History
   display: flex;
   table-layout: fixed; /* Fixed table layout */
   justify-content: space-evenly; /* or space-around, space-evenly, etc. */
-  margin: .4rem 0;
+  margin: 0.4rem 0;
   font-size: 1rem;
   height: 2.7rem;
   min-width: 21em;
   width: 100%;
 }
-.history-entry th{
+.history-entry th {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin: 0 .8rem;
+  margin: 0 0.8rem;
   width: 20%;
-  max-width:  5rem;
+  max-width: 5rem;
 }
-.history-entry th.last{
+.history-entry th.last {
   justify-content: flex-end;
 }
-table{
+table {
   width: 100%;
 }
 
@@ -198,10 +212,10 @@ table{
   touch-action: none;
   padding: 2px;
 }
-.Scrollbar[data-orientation='vertical'] {
+.Scrollbar[data-orientation="vertical"] {
   width: var(--scrollbar-size);
 }
-.Scrollbar[data-orientation='horizontal'] {
+.Scrollbar[data-orientation="horizontal"] {
   flex-direction: column;
   height: var(--scrollbar-size);
 }
@@ -212,7 +226,7 @@ table{
 }
 /* increase target size for touch devices https://www.w3.org/WAI/WCAG21/Understanding/target-size.html */
 .ScrollbarThumb::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -222,7 +236,6 @@ table{
   min-width: 44px;
   min-height: 44px;
 }
-
 
 /*
 UserSummary
@@ -234,27 +247,19 @@ UserSummary
   max-width: 40rem;
   width: 100%;
 }
-.UserSummary .Balance{
+.UserSummary .Balance {
   font-size: 4rem;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  
-  @media screen and (max-width:  450px) {
-    font-size:  2rem;
-  }
-  @media screen and (max-width:  350px) {
-    font-size:  1rem;
-  }
-}
-.SpreadContainer{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-}
 
+  @media screen and (max-width: 450px) {
+    font-size: 2rem;
+  }
+  @media screen and (max-width: 350px) {
+    font-size: 1rem;
+  }
+}
 
 /*
 Separator
@@ -262,51 +267,38 @@ Separator
 .Separator {
   background-color: var(--violet-11);
 }
-.Separator[data-orientation='horizontal'] {
+.Separator[data-orientation="horizontal"] {
   height: 2px;
-  margin: .6rem 0
+  margin: 0.6rem 0;
 }
-.Separator[data-orientation='vertical'] {
+.Separator[data-orientation="vertical"] {
   width: 2px;
-  margin: 0 1rem
+  margin: 0 1rem;
 }
 
 /*
-Toggle
+Switch
 */
 
 .SwitchRoot {
-  width: 4rem;
-  height: 2rem;
-  background-color: var(--violet-5);
-  border-radius: 9999px;
   position: relative;
-  box-shadow: 0 2px 10px var(--black-a7);
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-.SwitchRoot:focus {
-  box-shadow: 0 0 0 2px black;
-}
-.SwitchRoot[data-state='checked'] {
-  background-color: var(--violet-11);
+  width: 2.3rem;
+  height: 1.4rem;
+  border-radius: 9999px;
 }
 
 .SwitchThumb {
   display: block;
-  width: 2rem;
-  height: 2rem;
-  background-color: white;
-  border-radius: 9999px;
+  width: 1rem;
+  height: 1rem;
   transition: transform 100ms;
-  transform: translateX(4px);
   will-change: transform;
+  transform: translateX(4px);
+  border-radius: 9999px;
 }
-.SwitchThumb[data-state='checked'] {
+.SwitchThumb[data-state="checked"] {
   transform: translateX(19px);
 }
-
-
-
 
 /* 
 Montserrat Font stuff

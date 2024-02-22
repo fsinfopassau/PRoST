@@ -10,6 +10,7 @@ import { Statistics } from "./StatisticsTab/Statistics";
 import { Settings } from "./SettingsTab/Settings";
 import { UserStatistics } from "./StatisticsTab/UserStatistics";
 import { AllUsersStatistics } from "./StatisticsTab/AllUsersStatistics";
+import { ItemSettings } from "./SettingsTab/ItemSettings";
 
 const stylesAvailable = ["purple", "blue"];
 
@@ -61,6 +62,7 @@ export function App() {
             <Route path="/stats/users" element={<AllUsersStatistics />} />
             <Route path="/stats/users/:userId" element={<UserStatistics />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/settings/items" element={<ItemSettings />} />
             <Route
               path="*"
               element={<ErrorComponent switchTheme={switchTheme} />}

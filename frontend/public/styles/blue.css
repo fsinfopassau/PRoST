@@ -4,7 +4,7 @@ Body{
   color: hsl(240, 100%, 92%);
 }
 
-a {
+* {
   color: #000080;
 }
 
@@ -93,4 +93,24 @@ Tabs
 }
 .TabsTrigger:active {
   box-shadow: 0 0 0 2px black;
+}
+
+
+/*
+Switch
+*/
+
+.SwitchRoot {
+  background-color: var(--blue-5);
+  box-shadow: 0 2px 10px var(--black-a7);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.SwitchRoot:focus {
+  box-shadow: 0 0 0 2px black;
+}
+.SwitchRoot[data-state='checked'] {
+  background-color: #000080;
+}
+.SwitchThumb{
+  background-color: white;
 }

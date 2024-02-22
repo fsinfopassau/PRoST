@@ -23,20 +23,14 @@ export function Statistics() {
     <>
       <div className="CardContainer">
         <div className="DisplayCard">
-          <h3 className="bold">
-          Sprungbrett
-          </h3>
+          <h3 className="bold">Sprungbrett</h3>
           <div className="SelectionContainer">
-          <div className="Button">
-            <Link to={`/stats/users`} className="bold">
+            <Link to={`/stats/users`} className="bold Button">
               Nutzer
             </Link>
-          </div>
-          <div className="Button">
-            <Link to={`/stats/users/admin`} className="bold">
+            <Link to={`/stats/users/admin`} className="bold Button">
               Admin TEMP
             </Link>
-          </div>
           </div>
         </div>
         <ScrollArea className="DisplayCard">

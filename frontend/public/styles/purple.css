@@ -1,14 +1,12 @@
-
-Body{
-  color: var(--violet-11);
+Body {
   background: hsl(268, 100%, 91%);
 }
 
-a {
+* {
   color: var(--violet-11);
 }
 
-.Input{
+.Input {
   color: white;
   background-color: var(--black-a5);
   box-shadow: 0 2px 18px var(--mauve-10);
@@ -66,7 +64,6 @@ History
   border-radius: 12px;
 }
 
-
 /*
 Tabs
 */
@@ -86,10 +83,30 @@ Tabs
 .TabsTrigger:hover {
   color: var(--violet-11);
 }
-.TabsTrigger[data-state='active'] {
+.TabsTrigger[data-state="active"] {
   color: var(--violet-11);
   box-shadow: inset 0 -1px 0 0 currentColor, 0 1px 0 0 currentColor;
 }
 .TabsTrigger:active {
   box-shadow: 0 0 0 2px black;
+}
+
+/*
+Switch
+*/
+
+.SwitchRoot {
+  background-color: var(--violet-5);
+  box-shadow: 0 2px 10px var(--mauve-8);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  border: 4 solid var(--violet-11);
+}
+.SwitchRoot:focus {
+  box-shadow: 0 0 0 2px black;
+}
+.SwitchRoot[data-state="checked"] {
+  background-color: var(--violet-11);
+}
+.SwitchThumb {
+  background-color: white;
 }
