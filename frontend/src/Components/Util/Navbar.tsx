@@ -35,16 +35,15 @@ export function TabChanger(props: { switchTheme: () => void }) {
         <Tabs
           defaultValue={getSelectedTabValue()}
           className="TabsRoot"
-          onValueChange={tabUpdate}
         >
           <TabsList className="TabsList">
-            <TabsTrigger value="shop" className="TabsTrigger">
+            <TabsTrigger value="shop" className="TabsTrigger" onClick={() => tabUpdate('shop')}>
               <MagnifyingGlassIcon />
             </TabsTrigger>
-            <TabsTrigger value="stats" className="TabsTrigger">
+            <TabsTrigger value="stats" className="TabsTrigger" onClick={() => tabUpdate('stats')}>
               <BarChartIcon />
             </TabsTrigger>
-            <TabsTrigger value="settings" className="TabsTrigger">
+            <TabsTrigger value="settings" className="TabsTrigger" onClick={() => tabUpdate('settings')}>
               <GearIcon />
             </TabsTrigger>
           </TabsList>

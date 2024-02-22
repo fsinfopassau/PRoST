@@ -6,6 +6,7 @@ import de.unipassau.fim.fsinfo.kdv.data.dao.User;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopHistoryRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
+import de.unipassau.fim.fsinfo.kdv.service.FileStorageService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/shop")
 public class ShopController {
+
+  @Autowired
+  FileStorageService fileStorageService;
 
   @Autowired
   ShopItemRepository itemRepository;
@@ -57,7 +62,7 @@ public class ShopController {
   @GetMapping("/{id}")
   public ResponseEntity<Optional<ShopItem>> get(@PathVariable String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
-    if(item.isPresent()){
+    if (item.isPresent()) {
       return ResponseEntity.ok(item);
     }
     return ResponseEntity.badRequest().build();
@@ -101,6 +106,26 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
+  @GetMapping("/{id}/display-picture")
+  public ResponseEntity<MultipartFile> getDisplayImage(@PathVariable String id) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    if (item.isPresent()) {
+      return ResponseEntity.ok(fileStorageService.getItemPicture(item.get().getId()));
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/{id}/display-picture")
+  public ResponseEntity<String> setDisplayImage(@PathVariable String id,
+      @RequestParam("file") MultipartFile file) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    if (item.isPresent()) {
+      fileStorageService.saveItemPicture(item.get().getId(), file);
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
   @PostMapping("/{id}/enable")
   public ResponseEntity<String> enable(@PathVariable String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
@@ -126,18 +151,23 @@ public class ShopController {
   @PostMapping("/{id}/consume")
   public ResponseEntity<String> consume(@PathVariable String id, @RequestParam String userId,
       @RequestParam(required = false) Integer n) {
-    Optional<ShopItem> itemOptional = itemRepository.findById(id);
-    Optional<User> userOption = userRepository.findById(userId);
+    Optional<ShopItem> itemO = itemRepository.findById(id);
+    Optional<User> userO = userRepository.findById(userId);
 
-    if (userOption.isPresent() && itemOptional.isPresent()) {
-      User user = userOption.get();
-      ShopItem item = itemOptional.get();
+    if (userO.isPresent() && itemO.isPresent()) {
+      User user = userO.get();
+      ShopItem item = itemO.get();
+
+      if (!item.getEnabled()) {
+        return ResponseEntity.badRequest().build();
+      }
 
       for (int i = 0; i < (n == null ? 1 : n); i++) {
         user.setBalance(user.getBalance() - item.getPrice());
         userRepository.save(user);
 
-        ShopHistoryEntry history = new ShopHistoryEntry(user.getId(), item.getId(), item.getPrice());
+        ShopHistoryEntry history = new ShopHistoryEntry(user.getId(), item.getId(),
+            item.getPrice());
         historyRepository.save(history);
       }
 

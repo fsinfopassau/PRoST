@@ -1,4 +1,3 @@
-import { Label } from "@radix-ui/react-label";
 import { User } from "../../Types/User";
 import { useNavigate } from "react-router-dom";
 
@@ -15,10 +14,8 @@ export function UserBox(props: { user: User }) {
   }
 
   return (
-    <button className="Button large" onClick={() => selectUser(props.user)}>
-      <Label className="bold" htmlFor="username">
-        {getDisplayName()}
-      </Label>
+    <button className="Button large bold" onClick={() => selectUser(props.user)}>
+      {getDisplayName()}
     </button>
   );
 }

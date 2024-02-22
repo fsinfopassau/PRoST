@@ -32,6 +32,22 @@ h1 {
   margin: 4rem 0;
 }
 
+h2 {
+  font-size: 4rem;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  margin: .3rem 0;
+}
+
+h3 {
+  font-size: 2rem;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  margin: .2rem 0;
+}
+
 h1 > img {
   height: 5rem;
   padding: 0 1rem;
@@ -76,7 +92,7 @@ Main Classes
 
 .SelectionContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(17rem,  10fr)); /* Adjust the minmax values as needed */
+  grid-template-columns: repeat(auto-fill, minmax(14rem,  10fr)); /* Adjust the minmax values as needed */
   grid-auto-rows: auto;
   gap:  1rem;
   padding: 20px 0px;
@@ -233,7 +249,10 @@ UserSummary
 }
 .SpreadContainer{
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
 }
 
 
@@ -252,6 +271,41 @@ Separator
   margin: 0 1rem
 }
 
+/*
+Toggle
+*/
+
+.SwitchRoot {
+  width: 4rem;
+  height: 2rem;
+  background-color: var(--violet-5);
+  border-radius: 9999px;
+  position: relative;
+  box-shadow: 0 2px 10px var(--black-a7);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.SwitchRoot:focus {
+  box-shadow: 0 0 0 2px black;
+}
+.SwitchRoot[data-state='checked'] {
+  background-color: var(--violet-11);
+}
+
+.SwitchThumb {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+  background-color: white;
+  border-radius: 9999px;
+  transition: transform 100ms;
+  transform: translateX(4px);
+  will-change: transform;
+}
+.SwitchThumb[data-state='checked'] {
+  transform: translateX(19px);
+}
+
+
 
 
 /* 
@@ -269,5 +323,12 @@ Montserrat Font stuff
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: 600;
+  font-style: bold;
+}
+
+.thin {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
   font-style: bold;
 }

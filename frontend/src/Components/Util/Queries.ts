@@ -31,6 +31,15 @@ export async function getShopItem(itemId: string) {
   return result as ShopItem;
 }
 
+export async function enableItem(item: ShopItem, enable: boolean): Promise<boolean> {
+  const result = await (
+    await fetch(`${apiUrl}/api/shop/${item.id}/${enable ? 'enable' : 'disable'}`, {
+      method: "POST",
+    })
+  );
+  return result.ok;
+}
+
 export async function getAllShopItems() {
   const result = await (
     await fetch(`${apiUrl}/api/shop`, {

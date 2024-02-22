@@ -6,16 +6,16 @@ import { formatMoney } from "../../Types/User";
 
 export function ItemCheckout() {
   const { userId, itemId } = useParams();
-  const navigate = useNavigate();
   const [item, setItem] = useState<ShopItem>();
+  const navigate = useNavigate();
 
-  if (itemId) {
-    useEffect(() => {
+  useEffect(() => {
+    if (itemId) {
       getShopItem(itemId).then((newItem) => {
         setItem(newItem);
       });
-    }, []);
-  }
+    }
+  }, []);
 
   function checkout() {
     console.log("checkout", userId, itemId);
@@ -23,7 +23,6 @@ export function ItemCheckout() {
       buyItem(userId, itemId, 1).then((balance) => {
         console.log("new Balance:", balance);
       });
-
     navigate("/");
   }
 
@@ -36,7 +35,7 @@ export function ItemCheckout() {
 
   return (
     <>
-      <h2>{itemId}</h2>
+      <h2>{item?.displayName}</h2>
       <p> Preis: {getPrice()}</p>
       <button className="Button" onClick={checkout}>
         Fertig

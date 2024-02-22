@@ -1,4 +1,4 @@
-package de.unipassau.fim.fsinfo.kdv.data;
+package de.unipassau.fim.fsinfo.kdv.config;
 
 import de.unipassau.fim.fsinfo.kdv.UserRole;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
@@ -36,9 +36,12 @@ public class DataInit {
     return args -> {
       ShopItem a = new ShopItem("bier", "drink", "Bier", 1.50);
       ShopItem a2 = new ShopItem("spezi", "drink", "Spezi", 1.00);
+      ShopItem a3 = new ShopItem("uran-235", "snack", "Uran 235", 1.00);
+      a3.setEnabled(false);
       try {
         repository.save(a);
         repository.save(a2);
+        repository.save(a3);
       } catch (Exception e) {
         e.printStackTrace();
       }
