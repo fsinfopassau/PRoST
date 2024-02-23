@@ -21,7 +21,7 @@ export function ItemDisplay(props: { item: ShopItem }) {
         console.log("path: " + image);
       }
     });
-  }, []);
+  }, [item]);
 
   return (
     <>

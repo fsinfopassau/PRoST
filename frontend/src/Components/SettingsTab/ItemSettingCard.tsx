@@ -10,8 +10,11 @@ import { Separator } from "@radix-ui/react-separator";
 import { Switch, SwitchThumb } from "@radix-ui/react-switch";
 import { changeShopItem, deleteShopItem, enableItem } from "../Util/Queries";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
-import { useState } from "react";
-import { uploadItemDisplayPicture } from "../Util/FileUploadService";
+import { useEffect, useRef, useState } from "react";
+import {
+  getItemDisplayPicture,
+  uploadItemDisplayPicture,
+} from "../Util/FileUploadService";
 import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
 
 export function ItemSettingCard(props: {
@@ -19,7 +22,6 @@ export function ItemSettingCard(props: {
   onUpdate: () => void;
 }) {
   const { item, onUpdate } = props;
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>("/Beer.jpg");
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -27,17 +29,18 @@ export function ItemSettingCard(props: {
     getItemDisplayPicture(item).then((image) => {
       if (image) {
         setImageUrl(image);
-        console.log("path: " + image);
       }
     });
-  }, []);
+  }, [item]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0];
       if (file) {
         console.log("upload " + file.name + " " + item.id);
-        uploadItemDisplayPicture(item, file);
+        uploadItemDisplayPicture(item, file).then(() => {
+          onUpdate();
+        });
       }
     }
   };
@@ -45,7 +48,6 @@ export function ItemSettingCard(props: {
   function setImage() {
     if (fileInput.current) {
       fileInput.current.click();
-      console.log("upload " + item.id);
     }
   }
 
@@ -132,7 +134,7 @@ export function ItemSettingCard(props: {
               key={"CategoryChanger"}
             />
           </div>
-          <div className="Button" onClick={setPrice}>
+          <div className="Button">
             <LightningBoltIcon />
             <ButtonDialogChanger
               name={formatMoney(item.price)}

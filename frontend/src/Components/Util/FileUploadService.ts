@@ -15,7 +15,7 @@ const uploadFile = (path: string, file: File) => {
   });
 };
 
-export function uploadItemDisplayPicture(item: ShopItem, file: File) {
+export async function uploadItemDisplayPicture(item: ShopItem, file: File) {
   uploadFile(`/api/shop/${item.id}/display-picture`, file);
 }
 

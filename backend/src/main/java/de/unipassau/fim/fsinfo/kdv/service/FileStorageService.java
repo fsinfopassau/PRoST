@@ -2,15 +2,9 @@ package de.unipassau.fim.fsinfo.kdv.service;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileStorageService {
 
   public static final String ITEM_LOCATION = "/tmp/kdv/items/";
-  public static final String allowedFiletypes[] = {"png"};
 
   public boolean saveItemPicture(ShopItem item, MultipartFile file) throws IOException {
     if (file.getContentType().endsWith("png")) {
