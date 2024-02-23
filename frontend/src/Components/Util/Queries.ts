@@ -80,12 +80,10 @@ export async function getUserHistory(user: User, amount: number) {
 }
 
 export async function deleteShopItem(item: ShopItem) {
-  const result = await (
-    await fetch(`${apiUrl}/api/shop/${item.id}/delete`, {
-      method: "DELETE",
-    })
-  )
-    return result.ok;
+  const result = await await fetch(`${apiUrl}/api/shop/${item.id}/delete`, {
+    method: "DELETE",
+  });
+  return result.ok;
 }
 
 export async function changeShopItem(item: ShopItem, value: string, path: string) {

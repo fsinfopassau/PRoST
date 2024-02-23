@@ -1,27 +1,49 @@
 package de.unipassau.fim.fsinfo.kdv.service;
 
+import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
 import java.io.File;
-import jdk.jfr.ContentType;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FileStorageService {
 
-  public static final String SAVE_LOCATION = "/tmp/kdv/img";
+  public static final String ITEM_LOCATION = "/tmp/kdv/items/";
   public static final String allowedFiletypes[] = {"png"};
 
-  public void saveItemPicture(String itemId, MultipartFile file) {
-    if(file.getContentType().endsWith("png")){
-
+  public boolean saveItemPicture(ShopItem item, MultipartFile file) throws IOException {
+    if (file.getContentType().endsWith("png")) {
+      String path = getItemPicturePath(item);
+      saveFile(file, path);
+      System.out.println(
+          "[FileStorageService] :: Save file to " + path);
+      return true;
     }
-    System.out.println(file.getContentType());
-    System.out.println("[FileStorageService] :: Save file to "+SAVE_LOCATION+"/items/"+itemId);
+    return false;
   }
 
-  public MultipartFile getItemPicture(String itemId){
-    System.out.println("[FileStorageService] :: Get file from "+SAVE_LOCATION+"/items/"+itemId);
-    return null;
+  public void saveFile(MultipartFile multipartFile, String destinationPath) throws IOException {
+    File file = new File(destinationPath);
+    multipartFile.transferTo(file);
+  }
+
+  public File getItemPicture(ShopItem item) throws MalformedURLException {
+    String filePath = getItemPicturePath(item);
+    System.out.println("[FileStorageService] :: Get file from " + filePath);
+    return new File(filePath);
+  }
+
+  private String getItemPicturePath(ShopItem item) {
+    return URI.create(ITEM_LOCATION).resolve(item.getId() + ".png").normalize().toString();
   }
 
 }

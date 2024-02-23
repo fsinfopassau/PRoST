@@ -20,20 +20,33 @@ export function ItemSettingCard(props: {
 }) {
   const { item, onUpdate } = props;
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("/Beer.jpg");
+  const fileInput = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    getItemDisplayPicture(item).then((image) => {
+      if (image) {
+        setImageUrl(image);
+        console.log("path: " + image);
+      }
+    });
+  }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setSelectedFile(event.target.files[0]);
-
-      if (selectedFile) {
-        console.log("upload " + selectedFile.name);
-        uploadItemDisplayPicture(item, selectedFile);
+      const file = event.target.files[0];
+      if (file) {
+        console.log("upload " + file.name + " " + item.id);
+        uploadItemDisplayPicture(item, file);
       }
     }
   };
 
   function setImage() {
-    document.getElementById("filekevin")?.click();
+    if (fileInput.current) {
+      fileInput.current.click();
+      console.log("upload " + item.id);
+    }
   }
 
   function setPrice(newPrice: string) {
@@ -119,7 +132,7 @@ export function ItemSettingCard(props: {
               key={"CategoryChanger"}
             />
           </div>
-          <div className="Button">
+          <div className="Button" onClick={setPrice}>
             <LightningBoltIcon />
             <ButtonDialogChanger
               name={formatMoney(item.price)}
@@ -134,17 +147,17 @@ export function ItemSettingCard(props: {
           <AspectRatio ratio={1 / 1} onClick={setImage}>
             <img
               className="Image"
-              src="/Beer.jpg"
+              src={imageUrl}
               alt="Landscape photograph by Tobias Tullius"
               width={"100%"}
             />
-            <input
-              type="file"
-              onChange={handleFileChange}
-              id="filekevin"
-              style={{ display: "none" }}
-            ></input>
           </AspectRatio>
+          <input
+            type="file"
+            ref={fileInput}
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+          />
         </div>
       </div>
     </div>
