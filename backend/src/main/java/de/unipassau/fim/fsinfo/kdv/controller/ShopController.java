@@ -11,13 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -68,7 +62,7 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/delete")
+  @DeleteMapping("/{id}/delete")
   public ResponseEntity<Optional<ShopItem>> delete(@PathVariable String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
@@ -80,10 +74,10 @@ public class ShopController {
 
   @PostMapping("/{id}/displayname")
   public ResponseEntity<String> displayName(@PathVariable String id,
-      @RequestBody String displayName) {
+      @RequestParam String value) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
-      item.get().setDisplayName(displayName);
+      item.get().setDisplayName(value);
       itemRepository.save(item.get());
       return ResponseEntity.ok().build();
     }

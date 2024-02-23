@@ -8,13 +8,13 @@ import { ShopItem } from "../../Types/ShopItem";
 import { formatMoney } from "../../Types/User";
 import { Separator } from "@radix-ui/react-separator";
 import { Switch, SwitchThumb } from "@radix-ui/react-switch";
-import { enableItem } from "../Util/Queries";
+import { deleteShopItem, enableItem } from "../Util/Queries";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { useState } from "react";
 import { uploadItemDisplayPicture } from "../Util/FileUploadService";
 
-export function ItemSettingCard(props: { item: ShopItem }) {
-  const { item } = props;
+export function ItemSettingCard(props: { item: ShopItem , onDelete: ()=> void}) {
+  const { item , onDelete} = props;
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +41,11 @@ export function ItemSettingCard(props: { item: ShopItem }) {
   }
 
   function deleteItem() {
-    console.log("TODO Delete");
+    deleteShopItem(item).then((result)=>{
+        if(result) {
+          onDelete();
+        }
+    });
   }
 
   function setCategory() {

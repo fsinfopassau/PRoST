@@ -78,3 +78,21 @@ export async function getUserHistory(user: User, amount: number) {
   ).json();
   return result as ShopHistoryEntry[];
 }
+
+export async function deleteShopItem(item: ShopItem) {
+  const result = await (
+    await fetch(`${apiUrl}/api/shop/${item.id}/delete`, {
+      method: "DELETE",
+    })
+  )
+    return result.ok;
+}
+
+export async function renameShopItem(item: ShopItem, name: String) {
+  const result = await (
+    await fetch(`${apiUrl}/api/shop/${item.id}/displayname?value=${name}`, {
+    method: "POST",
+    })
+  )
+  return result.ok;
+}

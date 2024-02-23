@@ -12,10 +12,16 @@ export function ItemSettings() {
     });
   }, []);
 
+  function onDelete () {
+      getAllShopItems().then((itemList)=>{
+        setItems(itemList);
+      })
+  }
+
   return (
     <div className="CardContainer">
       {items.map((item, index) => (
-        <ItemSettingCard item={item} key={index} />
+        <ItemSettingCard item={item} key={index} onDelete={onDelete} />
       ))}
     </div>
   );
