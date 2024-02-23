@@ -10,15 +10,28 @@ import { Separator } from "@radix-ui/react-separator";
 import { Switch, SwitchThumb } from "@radix-ui/react-switch";
 import { deleteShopItem, enableItem } from "../Util/Queries";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
-import { uploadItemDisplayPicture } from "../Util/FileUploadService";
-import { useRef } from "react";
+import {
+  getItemDisplayPicture,
+  uploadItemDisplayPicture,
+} from "../Util/FileUploadService";
+import { useEffect, useRef, useState } from "react";
 
 export function ItemSettingCard(props: {
   item: ShopItem;
   onDelete: () => void;
 }) {
   const { item, onDelete } = props;
+  const [imageUrl, setImageUrl] = useState<string>("/Beer.jpg");
   const fileInput = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    getItemDisplayPicture(item).then((image) => {
+      if (image) {
+        setImageUrl(image);
+        console.log("path: " + image);
+      }
+    });
+  }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -104,17 +117,17 @@ export function ItemSettingCard(props: {
           <AspectRatio ratio={1 / 1} onClick={setImage}>
             <img
               className="Image"
-              src="/Beer.jpg"
+              src={imageUrl}
               alt="Landscape photograph by Tobias Tullius"
               width={"100%"}
             />
-            <input
-              type="file"
-              ref={fileInput}
-              onChange={handleFileChange}
-              style={{ display: "none" }}
-            ></input>
           </AspectRatio>
+          <input
+            type="file"
+            ref={fileInput}
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+          />
         </div>
       </div>
     </div>
