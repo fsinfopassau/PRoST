@@ -25,7 +25,7 @@ export function UserSelection(props: { switchTheme: () => void }) {
       <input
         type="text"
         onChange={(e) => setSearchValue(e.target.value)}
-        className="Input"
+        className="SearchInput"
         id="search"
         placeholder="Search"
       />

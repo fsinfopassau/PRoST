@@ -88,9 +88,9 @@ export async function deleteShopItem(item: ShopItem) {
     return result.ok;
 }
 
-export async function renameShopItem(item: ShopItem, name: String) {
+export async function changeShopItem(item: ShopItem, value: string, path: string) {
   const result = await (
-    await fetch(`${apiUrl}/api/shop/${item.id}/displayname?value=${name}`, {
+    await fetch(`${apiUrl}/api/shop/${item.id}/${path}?value=${value}`, {
     method: "POST",
     })
   )

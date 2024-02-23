@@ -8,13 +8,17 @@ import { ShopItem } from "../../Types/ShopItem";
 import { formatMoney } from "../../Types/User";
 import { Separator } from "@radix-ui/react-separator";
 import { Switch, SwitchThumb } from "@radix-ui/react-switch";
-import { deleteShopItem, enableItem } from "../Util/Queries";
+import { changeShopItem, deleteShopItem, enableItem } from "../Util/Queries";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { useState } from "react";
 import { uploadItemDisplayPicture } from "../Util/FileUploadService";
+import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
 
-export function ItemSettingCard(props: { item: ShopItem , onDelete: ()=> void}) {
-  const { item , onDelete} = props;
+export function ItemSettingCard(props: {
+  item: ShopItem;
+  onUpdate: () => void;
+}) {
+  const { item, onUpdate } = props;
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,24 +36,37 @@ export function ItemSettingCard(props: { item: ShopItem , onDelete: ()=> void}) 
     document.getElementById("filekevin")?.click();
   }
 
-  function setPrice() {
-    console.log("TODO Price");
-  }
-
-  function setName() {
-    console.log("TODO Name");
-  }
-
-  function deleteItem() {
-    deleteShopItem(item).then((result)=>{
-        if(result) {
-          onDelete();
-        }
+  function setPrice(newPrice: string) {
+    console.log("Price = " + newPrice);
+    changeShopItem(item, newPrice, "price").then((result) => {
+      if (result) {
+        onUpdate();
+      }
     });
   }
 
-  function setCategory() {
-    console.log("TODO Category");
+  function setName(newName: string) {
+    changeShopItem(item, newName, "displayname").then((result) => {
+      if (result) {
+        onUpdate();
+      }
+    });
+  }
+
+  function deleteItem() {
+    deleteShopItem(item).then((result) => {
+      if (result) {
+        onUpdate();
+      }
+    });
+  }
+
+  function setCategory(newCategory: string) {
+    changeShopItem(item, newCategory, "category").then((result) => {
+      if (result) {
+        onUpdate();
+      }
+    });
   }
 
   function toggleEnable() {
@@ -82,17 +99,35 @@ export function ItemSettingCard(props: { item: ShopItem , onDelete: ()=> void}) 
       <Separator className="Separator" />
       <div className="SpreadContainer">
         <div className="SelectionContainer" style={{ width: "60%" }}>
-          <div className="Button" onClick={setName}>
+          <div className="Button">
             <Pencil2Icon />
-            {item.displayName}
+            <ButtonDialogChanger
+              name={item.displayName}
+              dialogName="Namen ändern"
+              dialogDesc="Ändere hier den Namen des Items"
+              onSubmit={setName}
+              key={"NameChanger"}
+            />
           </div>
-          <div className="Button" onClick={setCategory}>
+          <div className="Button">
             <BookmarkIcon />
-            {item.category}
+            <ButtonDialogChanger
+              name={item.category}
+              dialogName="Kategorie ändern"
+              dialogDesc="Ändere hier die Kategorie des Items"
+              onSubmit={setCategory}
+              key={"CategoryChanger"}
+            />
           </div>
-          <div className="Button" onClick={setPrice}>
+          <div className="Button">
             <LightningBoltIcon />
-            {formatMoney(item.price)}
+            <ButtonDialogChanger
+              name={formatMoney(item.price)}
+              dialogName="Preis ändern"
+              dialogDesc="Ändere hier den Preis des Items"
+              onSubmit={setPrice}
+              key={"PriceChanger"}
+            />
           </div>
         </div>
         <div style={{ width: "40%" }}>

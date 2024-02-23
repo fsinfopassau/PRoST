@@ -84,9 +84,21 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
+  @PostMapping("/{id}/category")
+  public ResponseEntity<String> displayCategory(@PathVariable String id,
+                                            @RequestParam String value) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    if (item.isPresent()) {
+      item.get().setCategory(value);
+      itemRepository.save(item.get());
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
   @PostMapping("/{id}/price")
   public ResponseEntity<String> price(@PathVariable String id,
-      @RequestBody String value) {
+      @RequestParam String value) {
     Optional<ShopItem> item = itemRepository.findById(id);
     try {
       Double price = Double.parseDouble(value);
