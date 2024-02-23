@@ -12,10 +12,10 @@ export function ItemSettings() {
     });
   }, []);
 
-  function onDelete () {
-      getAllShopItems().then((itemList)=>{
-        setItems(itemList);
-      })
+  function onDelete() {
+    getAllShopItems().then((itemList) => {
+      setItems(itemList);
+    });
   }
 
   return (

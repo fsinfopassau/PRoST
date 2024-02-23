@@ -10,26 +10,31 @@ import { Separator } from "@radix-ui/react-separator";
 import { Switch, SwitchThumb } from "@radix-ui/react-switch";
 import { deleteShopItem, enableItem } from "../Util/Queries";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
-import { useState } from "react";
 import { uploadItemDisplayPicture } from "../Util/FileUploadService";
+import { useRef } from "react";
 
-export function ItemSettingCard(props: { item: ShopItem , onDelete: ()=> void}) {
-  const { item , onDelete} = props;
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+export function ItemSettingCard(props: {
+  item: ShopItem;
+  onDelete: () => void;
+}) {
+  const { item, onDelete } = props;
+  const fileInput = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setSelectedFile(event.target.files[0]);
-
-      if (selectedFile) {
-        console.log("upload " + selectedFile.name);
-        uploadItemDisplayPicture(item, selectedFile);
+      const file = event.target.files[0];
+      if (file) {
+        console.log("upload " + file.name + " " + item.id);
+        uploadItemDisplayPicture(item, file);
       }
     }
   };
 
   function setImage() {
-    document.getElementById("filekevin")?.click();
+    if (fileInput.current) {
+      fileInput.current.click();
+      console.log("upload " + item.id);
+    }
   }
 
   function setPrice() {
@@ -41,10 +46,10 @@ export function ItemSettingCard(props: { item: ShopItem , onDelete: ()=> void}) 
   }
 
   function deleteItem() {
-    deleteShopItem(item).then((result)=>{
-        if(result) {
-          onDelete();
-        }
+    deleteShopItem(item).then((result) => {
+      if (result) {
+        onDelete();
+      }
     });
   }
 
@@ -105,8 +110,8 @@ export function ItemSettingCard(props: { item: ShopItem , onDelete: ()=> void}) 
             />
             <input
               type="file"
+              ref={fileInput}
               onChange={handleFileChange}
-              id="filekevin"
               style={{ display: "none" }}
             ></input>
           </AspectRatio>

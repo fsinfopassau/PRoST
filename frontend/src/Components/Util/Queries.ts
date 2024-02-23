@@ -31,11 +31,15 @@ export async function getShopItem(itemId: string) {
   return result as ShopItem;
 }
 
-export async function enableItem(item: ShopItem, enable: boolean): Promise<boolean> {
-  const result = await (
-    await fetch(`${apiUrl}/api/shop/${item.id}/${enable ? 'enable' : 'disable'}`, {
+export async function enableItem(
+  item: ShopItem,
+  enable: boolean
+): Promise<boolean> {
+  const result = await await fetch(
+    `${apiUrl}/api/shop/${item.id}/${enable ? "enable" : "disable"}`,
+    {
       method: "POST",
-    })
+    }
   );
   return result.ok;
 }
@@ -80,19 +84,18 @@ export async function getUserHistory(user: User, amount: number) {
 }
 
 export async function deleteShopItem(item: ShopItem) {
-  const result = await (
-    await fetch(`${apiUrl}/api/shop/${item.id}/delete`, {
-      method: "DELETE",
-    })
-  )
-    return result.ok;
+  const result = await await fetch(`${apiUrl}/api/shop/${item.id}/delete`, {
+    method: "DELETE",
+  });
+  return result.ok;
 }
 
-export async function renameShopItem(item: ShopItem, name: String) {
-  const result = await (
-    await fetch(`${apiUrl}/api/shop/${item.id}/displayname?value=${name}`, {
-    method: "POST",
-    })
-  )
+export async function renameShopItem(item: ShopItem, name: string) {
+  const result = await await fetch(
+    `${apiUrl}/api/shop/${item.id}/displayname?value=${name}`,
+    {
+      method: "POST",
+    }
+  );
   return result.ok;
 }

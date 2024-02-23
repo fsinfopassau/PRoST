@@ -7,9 +7,16 @@ import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopHistoryRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.service.FileStorageService;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -101,10 +108,20 @@ public class ShopController {
   }
 
   @GetMapping("/{id}/display-picture")
-  public ResponseEntity<MultipartFile> getDisplayImage(@PathVariable String id) {
+  public ResponseEntity<FileSystemResource> getDisplayImage(@PathVariable String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
-      return ResponseEntity.ok(fileStorageService.getItemPicture(item.get().getId()));
+
+      try {
+        File file = fileStorageService.getItemPicture(item.get());
+        return ResponseEntity.ok()
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+            .body(new FileSystemResource(file));
+      } catch (MalformedURLException e) {
+        e.printStackTrace();
+        return ResponseEntity.internalServerError().build();
+      }
     }
     return ResponseEntity.badRequest().build();
   }
@@ -113,9 +130,14 @@ public class ShopController {
   public ResponseEntity<String> setDisplayImage(@PathVariable String id,
       @RequestParam("file") MultipartFile file) {
     Optional<ShopItem> item = itemRepository.findById(id);
-    if (item.isPresent()) {
-      fileStorageService.saveItemPicture(item.get().getId(), file);
-      return ResponseEntity.ok().build();
+
+    try {
+      if (item.isPresent() && fileStorageService.saveItemPicture(item.get(), file)) {
+        return ResponseEntity.ok().build();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      return ResponseEntity.internalServerError().build();
     }
     return ResponseEntity.badRequest().build();
   }
