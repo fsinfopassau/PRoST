@@ -93,7 +93,7 @@ public class ShopController {
 
   @PostMapping("/{id}/category")
   public ResponseEntity<String> displayCategory(@PathVariable String id,
-                                            @RequestParam String value) {
+      @RequestParam String value) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
       item.get().setCategory(value);
@@ -124,14 +124,14 @@ public class ShopController {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
 
-      try {
-        File file = fileStorageService.getItemPicture(item.get());
+      File file = fileStorageService.getItemPicture(item.get());
+      if (file != null) {
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+            .header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + file.getName() + "\"")
             .body(new FileSystemResource(file));
-      } catch (MalformedURLException e) {
-        e.printStackTrace();
+      } else {
         return ResponseEntity.internalServerError().build();
       }
     }

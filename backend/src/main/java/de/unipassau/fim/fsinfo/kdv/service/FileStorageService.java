@@ -3,7 +3,6 @@ package de.unipassau.fim.fsinfo.kdv.service;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,10 +28,15 @@ public class FileStorageService {
     multipartFile.transferTo(file);
   }
 
-  public File getItemPicture(ShopItem item) throws MalformedURLException {
+  public File getItemPicture(ShopItem item) {
     String filePath = getItemPicturePath(item);
     System.out.println("[FileStorageService] :: Get file from " + filePath);
-    return new File(filePath);
+
+    File f = new File(filePath);
+    if(f.exists() && f.isFile()){
+      return f;
+    }
+    return null;
   }
 
   private String getItemPicturePath(ShopItem item) {
