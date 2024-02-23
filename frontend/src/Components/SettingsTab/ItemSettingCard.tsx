@@ -10,12 +10,26 @@ import { Separator } from "@radix-ui/react-separator";
 import { Switch, SwitchThumb } from "@radix-ui/react-switch";
 import { enableItem } from "../Util/Queries";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
+import { useState } from "react";
+import { uploadItemDisplayPicture } from "../Util/FileUploadService";
 
 export function ItemSettingCard(props: { item: ShopItem }) {
   const { item } = props;
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setSelectedFile(event.target.files[0]);
+
+      if (selectedFile) {
+        console.log("upload " + selectedFile.name);
+        uploadItemDisplayPicture(item, selectedFile);
+      }
+    }
+  };
 
   function setImage() {
-    console.log("TODO Image");
+    document.getElementById("filekevin")?.click();
   }
 
   function setPrice() {
@@ -85,6 +99,12 @@ export function ItemSettingCard(props: { item: ShopItem }) {
               alt="Landscape photograph by Tobias Tullius"
               width={"100%"}
             />
+            <input
+              type="file"
+              onChange={handleFileChange}
+              id="filekevin"
+              style={{ display: "none" }}
+            ></input>
           </AspectRatio>
         </div>
       </div>
