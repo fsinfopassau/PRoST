@@ -1,12 +1,11 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
-import de.unipassau.fim.fsinfo.kdv.data.dao.ShopHistoryEntry;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
-import de.unipassau.fim.fsinfo.kdv.data.dao.User;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopHistoryRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.service.FileStorageService;
+import de.unipassau.fim.fsinfo.kdv.service.ShopService;
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +30,8 @@ public class ShopController {
 
   @Autowired
   FileStorageService fileStorageService;
+  @Autowired
+  ShopService shopService;
 
   @Autowired
   ShopItemRepository itemRepository;
@@ -182,27 +183,8 @@ public class ShopController {
   @PostMapping("/{id}/consume")
   public ResponseEntity<String> consume(@PathVariable String id, @RequestParam String userId,
       @RequestParam(required = false) Integer n) {
-    Optional<ShopItem> itemO = itemRepository.findById(id);
-    Optional<User> userO = userRepository.findById(userId);
-
-    if (userO.isPresent() && itemO.isPresent()) {
-      User user = userO.get();
-      ShopItem item = itemO.get();
-
-      if (!item.getEnabled()) {
-        return ResponseEntity.badRequest().build();
-      }
-
-      for (int i = 0; i < (n == null ? 1 : n); i++) {
-        user.setBalance(user.getBalance() - item.getPrice());
-        userRepository.save(user);
-
-        ShopHistoryEntry history = new ShopHistoryEntry(user.getId(), item.getId(),
-            item.getPrice());
-        historyRepository.save(history);
-      }
-
-      return ResponseEntity.ok(user.getBalance() + "");
+    if (shopService.consume(id, userId, (n == null ? 1 : n))) {
+      return ResponseEntity.ok().build();
     }
     return ResponseEntity.badRequest().build();
   }

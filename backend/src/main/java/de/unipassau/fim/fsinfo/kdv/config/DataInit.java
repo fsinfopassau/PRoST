@@ -15,7 +15,7 @@ public class DataInit {
   @Bean
   CommandLineRunner userTestInit(UserRepository repository) {
     return args -> {
-      User a = new User("admin", "Kai Nepanik", UserRole.ADMINISTRATOR, true);
+      User a = new User("admin", "Kai Nepanik", UserRole.ADMINISTRATOR, false);
       User a2 = new User("mod", "Lasse Maranda", UserRole.MODERATOR, true);
       User a3 = new User("normalUser", "Erhart Haramasch", UserRole.USER, true);
       try {

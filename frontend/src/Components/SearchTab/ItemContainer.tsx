@@ -4,8 +4,8 @@ import { ItemDisplay } from "./ItemDisplay";
 export function ItemContainer(props: { items: ShopItem[] }) {
   const items = props.items;
 
-  function filter(itemList: ShopItem[]){
-    return itemList.filter(item => item.enabled);
+  function filter(itemList: ShopItem[]) {
+    return itemList.filter((item) => item.enabled);
   }
 
   return (
