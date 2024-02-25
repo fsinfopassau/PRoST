@@ -16,19 +16,13 @@ export function UserContainer(props: { users: User[]; search: string }) {
     if (useFuzzy) {
       // fuzzy
       const fuzzyRegex = escapedSearch.split("").join(".*");
-      const fuzzyResult = users.filter(
+      return users.filter(
         (user) =>
           new RegExp(fuzzyRegex, "i").test(user.displayName) && user.enabled
       );
-
-      return fuzzyResult;
     }
 
     return result;
-  }
-
-  function filter2(itemList: User[]) {
-    return itemList.filter((item) => item.enabled);
   }
 
   return (
