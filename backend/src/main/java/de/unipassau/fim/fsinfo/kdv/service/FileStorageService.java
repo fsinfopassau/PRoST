@@ -25,6 +25,7 @@ public class FileStorageService {
 
   public void saveFile(MultipartFile multipartFile, String destinationPath) throws IOException {
     File file = new File(destinationPath);
+    file.getParentFile().mkdirs();
     multipartFile.transferTo(file);
   }
 
