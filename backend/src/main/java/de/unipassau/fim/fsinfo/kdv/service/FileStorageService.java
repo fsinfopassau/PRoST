@@ -4,6 +4,7 @@ import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,10 +29,10 @@ public class FileStorageService {
   }
 
   public boolean saveItemPicture(ShopItem item, MultipartFile file) throws IOException {
-    if (file.getContentType().endsWith("png")) {
+    if (item != null && file != null && file.getContentType() != null && file.getContentType()
+        .endsWith("png")) {
       String path = getItemPicturePath(item);
       saveFile(file, path);
-      // System.out.println("[FileStorageService] :: Save file to " + path);
       return true;
     }
     return false;
@@ -41,17 +42,18 @@ public class FileStorageService {
     File file = new File(destinationPath);
     file.getParentFile().mkdirs();
     multipartFile.transferTo(file);
+    // System.out.println("[FileStorageService] :: Save file to " + destinationPath);
   }
 
-  public File getItemPicture(ShopItem item) {
+  public Optional<File> getItemPicture(ShopItem item) {
     String filePath = getItemPicturePath(item);
     // System.out.println("[FileStorageService] :: Get file from " + filePath);
 
     File f = new File(filePath);
     if (f.exists() && f.isFile()) {
-      return f;
+      return Optional.of(f);
     }
-    return null;
+    return Optional.empty();
   }
 
   private String getItemPicturePath(ShopItem item) {

@@ -1,6 +1,6 @@
 package de.unipassau.fim.fsinfo.kdv.config;
 
-import de.unipassau.fim.fsinfo.kdv.UserRole;
+import de.unipassau.fim.fsinfo.kdv.data.UserRole;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.kdv.data.dao.User;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
@@ -16,14 +16,14 @@ public class DataInit {
   CommandLineRunner userTestInit(UserRepository repository) {
     return args -> {
       User a = new User("admin", "Kai Nepanik", UserRole.ADMINISTRATOR, true);
-      User a2 = new User("mod", "Lasse Maranda",UserRole.MODERATOR, true);
-      User a3 = new User("normalUser", "Erhart Haramasch",UserRole.USER, true);
+      User a2 = new User("mod", "Lasse Maranda", UserRole.MODERATOR, true);
+      User a3 = new User("normalUser", "Erhart Haramasch", UserRole.USER, true);
       try {
         repository.save(a);
         repository.save(a2);
         repository.save(a3);
-        for(int i=1;i<=20;i++) {
-          repository.save(new User("testN"+i,"KekW "+i,UserRole.USER,true));
+        for (int i = 1; i <= 20; i++) {
+          repository.save(new User("testN" + i, "KekW " + i, UserRole.USER, true));
         }
       } catch (Exception e) {
         e.printStackTrace();

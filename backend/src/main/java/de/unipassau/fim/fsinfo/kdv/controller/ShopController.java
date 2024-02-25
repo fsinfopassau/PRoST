@@ -9,16 +9,21 @@ import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.service.FileStorageService;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -51,10 +56,7 @@ public class ShopController {
     if (item.getEnabled() == null) {
       item.setEnabled(true);
     }
-
-    if (item.getPrice() == null) {
-      item.setPrice(0.0);
-    }
+    item.setPrice(0.0);
 
     itemRepository.save(item);
     return ResponseEntity.ok(item);
@@ -115,6 +117,7 @@ public class ShopController {
         return ResponseEntity.ok().build();
       }
     } catch (NumberFormatException e) {
+      return ResponseEntity.badRequest().body("NumberFormatException");
     }
     return ResponseEntity.badRequest().build();
   }
@@ -124,13 +127,15 @@ public class ShopController {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
 
-      File file = fileStorageService.getItemPicture(item.get());
-      if (file != null) {
+      Optional<File> file = fileStorageService.getItemPicture(item.get());
+      if (file.isPresent()) {
+        FileSystemResource resource = new FileSystemResource(file.get());
+
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
             .header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + file.getName() + "\"")
-            .body(new FileSystemResource(file));
+                "attachment; filename=\"" + file.get().getName() + "\"")
+            .body(resource);
       } else {
         return ResponseEntity.internalServerError().build();
       }

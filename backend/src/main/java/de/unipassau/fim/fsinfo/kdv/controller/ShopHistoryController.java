@@ -1,12 +1,15 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopHistoryEntry;
+import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
+import de.unipassau.fim.fsinfo.kdv.data.dao.User;
 import de.unipassau.fim.fsinfo.kdv.data.dto.ShopHistoryEntryDTO;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopHistoryRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,14 +30,16 @@ public class ShopHistoryController {
   UserRepository userRepository;
 
   @GetMapping
-  public ResponseEntity<List<ShopHistoryEntryDTO>> history(@RequestParam(required = false) Integer n) {
+  public ResponseEntity<List<ShopHistoryEntryDTO>> history(
+      @RequestParam(required = false) Integer n) {
     return ResponseEntity.ok(getDTO(getSizedHistory(n, historyRepository.findAll())));
   }
 
   @GetMapping("/{userId}")
   public ResponseEntity<List<ShopHistoryEntryDTO>> historyUser(@PathVariable String userId,
       @RequestParam(required = false) Integer n) {
-    return ResponseEntity.ok(getDTO(getSizedHistory(n, historyRepository.findByUserIdEquals(userId))));
+    return ResponseEntity.ok(
+        getDTO(getSizedHistory(n, historyRepository.findByUserIdEquals(userId))));
   }
 
   private List<ShopHistoryEntry> getSizedHistory(
@@ -51,16 +56,24 @@ public class ShopHistoryController {
     }
   }
 
-  private List<ShopHistoryEntryDTO> getDTO(List<ShopHistoryEntry> entryList){
+  private List<ShopHistoryEntryDTO> getDTO(List<ShopHistoryEntry> entryList) {
     List<ShopHistoryEntryDTO> entryDTOs = new ArrayList<>();
-    for(ShopHistoryEntry entry : entryList) {
+    if (entryList != null) {
+      for (ShopHistoryEntry entry : entryList) {
 
-      String userDisplayName = userRepository.findById(entry.getUserId()).get().getDisplayName();
-      String itemDisplayName = itemRepository.findById(entry.getItemId()).get().getDisplayName();
+        Optional<User> userO = userRepository.findById(entry.getUserId());
+        Optional<ShopItem> itemO = itemRepository.findById(entry.getItemId());
 
-      entryDTOs.add(new ShopHistoryEntryDTO(entry.getId(), entry.getUserId(), userDisplayName, entry.getItemId(), itemDisplayName,
-          entry.getPrice(),
-          entry.getTimestamp()));
+        if (userO.isPresent() && itemO.isPresent()) {
+          String userDisplayName = userO.get().getDisplayName();
+          String itemDisplayName = itemO.get().getDisplayName();
+
+          entryDTOs.add(new ShopHistoryEntryDTO(entry.getId(), entry.getUserId(), userDisplayName,
+              entry.getItemId(), itemDisplayName,
+              entry.getPrice(),
+              entry.getTimestamp()));
+        }
+      }
     }
     return entryDTOs;
   }

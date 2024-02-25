@@ -1,6 +1,6 @@
 package de.unipassau.fim.fsinfo.kdv.data.dao;
 
-import de.unipassau.fim.fsinfo.kdv.UserRole;
+import de.unipassau.fim.fsinfo.kdv.data.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,10 +23,10 @@ public class User {
 
   public User(String id, UserRole role,
       Boolean enabled) {
-    this(id, null,role,enabled);
+    this(id, null, role, enabled);
   }
 
-  public User(String id, String displayName, UserRole role, Boolean enabled){
+  public User(String id, String displayName, UserRole role, Boolean enabled) {
     this.role = role;
     this.id = id;
     this.displayName = displayName;

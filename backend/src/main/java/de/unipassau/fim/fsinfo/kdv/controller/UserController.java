@@ -1,6 +1,6 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
-import de.unipassau.fim.fsinfo.kdv.UserRole;
+import de.unipassau.fim.fsinfo.kdv.data.UserRole;
 import de.unipassau.fim.fsinfo.kdv.data.dao.User;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import java.util.List;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -42,27 +43,17 @@ public class UserController {
   public ResponseEntity<String> create(@RequestBody User user) {
 
     if (userRepository.findById(user.getId()).isPresent()) {
-      return ResponseEntity.badRequest().build();
+      return ResponseEntity.badRequest().body("user already present");
     }
 
-    try {
-      userRepository.save(user);
-    } catch (Exception e) {
-      return ResponseEntity.internalServerError().build();
-    }
-
+    userRepository.save(user);
     return ResponseEntity.ok(user.getId());
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<User> get(@PathVariable String id) {
     Optional<User> user = userRepository.findById(id);
-
-    if (user.isPresent()) {
-      return ResponseEntity.ok(user.get());
-    }
-
-    return ResponseEntity.badRequest().build();
+    return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
   @DeleteMapping("/{id}")
@@ -78,7 +69,7 @@ public class UserController {
   }
 
   @PostMapping("/{id}/balance")
-  public ResponseEntity<Double> balance(@PathVariable String id, @RequestBody String value) {
+  public ResponseEntity<Double> balance(@PathVariable String id, @RequestParam String value) {
     Optional<User> user = userRepository.findById(id);
 
     try {
@@ -89,6 +80,7 @@ public class UserController {
         return ResponseEntity.ok(user.get().getBalance());
       }
     } catch (NumberFormatException e) {
+      return ResponseEntity.badRequest().build();
     }
 
     return ResponseEntity.badRequest().build();
@@ -121,7 +113,7 @@ public class UserController {
   }
 
   @PostMapping("/{id}/role")
-  public ResponseEntity<String> role(@PathVariable String id, @RequestBody UserRole role) {
+  public ResponseEntity<String> role(@PathVariable String id, @RequestParam UserRole role) {
     Optional<User> user = userRepository.findById(id);
 
     if (user.isPresent()) {
