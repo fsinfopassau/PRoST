@@ -6,7 +6,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 @Entity(name = "KDV_User")
 public class User {
 
@@ -21,11 +25,6 @@ public class User {
   private String displayName;
   private Boolean enabled;
 
-  public User(String id, UserRole role,
-      Boolean enabled) {
-    this(id, null, role, enabled);
-  }
-
   public User(String id, String displayName, UserRole role, Boolean enabled) {
     this.role = role;
     this.id = id;
@@ -33,63 +32,5 @@ public class User {
     this.enabled = enabled;
     this.balance = 0D;
   }
-
-  @Deprecated
-  public User() {
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public boolean isEnabled() {
-    return enabled;
-  }
-
-  public Double getBalance() {
-    return balance;
-  }
-
-  public void setBalance(Double balance) {
-    this.balance = balance;
-  }
-
-  public void setId(String username) {
-    this.id = username;
-  }
-
-  public Boolean getEnabled() {
-    return enabled;
-  }
-
-  public void setEnabled(Boolean enabled) {
-    this.enabled = enabled;
-  }
-
-  public UserRole getRole() {
-    return role;
-  }
-
-  public void setRole(UserRole userRole) {
-    this.role = userRole;
-  }
-
-  public String getDisplayName() {
-    return displayName;
-  }
-
-  public void setDisplayName(String displayName) {
-    this.displayName = displayName;
-  }
-
-  @Override
-  public String toString() {
-    return "User{" +
-        ", id='" + id + '\'' +
-        ", displayName=" + displayName +
-        ", role=" + role +
-        ", balance=" + balance +
-        ", enabled=" + enabled +
-        '}';
-  }
 }
+

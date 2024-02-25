@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Optional;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,11 @@ public class FileStorageService {
   private final String itemLocation;
 
   @Autowired
-  public FileStorageService(@Value("${kdv.save-location}") String saveLocation) {
+  public FileStorageService(@Value("${kdv.save-location}") @NonNull String saveLocation) {
     itemLocation = saveLocation + "/items";
   }
 
-  public FileStorageService(String customSave, boolean printLocation) throws IOException {
+  public FileStorageService(@NonNull String customSave, boolean printLocation) throws IOException {
     itemLocation = customSave + "/items";
     Files.createDirectories(new File(itemLocation).toPath());
     if (printLocation) {
@@ -28,8 +29,9 @@ public class FileStorageService {
     }
   }
 
-  public boolean saveItemPicture(ShopItem item, MultipartFile file) throws IOException {
-    if (item != null && file != null && file.getContentType() != null && file.getContentType()
+  public boolean saveItemPicture(@NonNull ShopItem item, @NonNull MultipartFile file)
+      throws IOException {
+    if (file.getContentType() != null && file.getContentType()
         .endsWith("png")) {
       String path = getItemPicturePath(item);
       saveFile(file, path);
@@ -38,16 +40,15 @@ public class FileStorageService {
     return false;
   }
 
-  private void saveFile(MultipartFile multipartFile, String destinationPath) throws IOException {
+  private void saveFile(@NonNull MultipartFile multipartFile, @NonNull String destinationPath)
+      throws IOException {
     File file = new File(destinationPath);
     file.getParentFile().mkdirs();
     multipartFile.transferTo(file);
-    // System.out.println("[FileStorageService] :: Save file to " + destinationPath);
   }
 
-  public Optional<File> getItemPicture(ShopItem item) {
+  public Optional<File> getItemPicture(@NonNull ShopItem item) {
     String filePath = getItemPicturePath(item);
-    // System.out.println("[FileStorageService] :: Get file from " + filePath);
 
     File f = new File(filePath);
     if (f.exists() && f.isFile()) {
@@ -56,7 +57,7 @@ public class FileStorageService {
     return Optional.empty();
   }
 
-  private String getItemPicturePath(ShopItem item) {
+  private String getItemPicturePath(@NonNull ShopItem item) {
     return itemLocation + "/" + item.getId() + ".png";
   }
 

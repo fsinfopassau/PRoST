@@ -6,7 +6,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.Instant;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 @Entity(name = "KDV_ShopHistoryEntry")
 public class ShopHistoryEntry {
 
@@ -31,48 +35,5 @@ public class ShopHistoryEntry {
     this.itemId = itemId;
     this.price = price;
     this.timestamp = Instant.now().getEpochSecond();
-  }
-
-  /**
-   * Do not use to create new entries. Unless Timestamp is added manually
-   */
-  @Deprecated
-  public ShopHistoryEntry() {
-  }
-
-  public String getUserId() {
-    return userId;
-  }
-
-  public void setUserId(String username) {
-    this.userId = username;
-  }
-
-  public String getItemId() {
-    return itemId;
-  }
-
-  public void setItemId(String itemId) {
-    this.itemId = itemId;
-  }
-
-  public Double getPrice() {
-    return price;
-  }
-
-  public void setPrice(Double price) {
-    this.price = price;
-  }
-
-  public Long getTimestamp() {
-    return timestamp;
-  }
-
-  public void setTimestamp(Long timestamp) {
-    this.timestamp = timestamp;
-  }
-
-  public Long getId() {
-    return id;
   }
 }

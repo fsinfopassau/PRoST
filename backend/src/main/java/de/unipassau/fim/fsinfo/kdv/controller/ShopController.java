@@ -8,7 +8,6 @@ import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.service.FileStorageService;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,9 +151,8 @@ public class ShopController {
       if (item.isPresent() && fileStorageService.saveItemPicture(item.get(), file)) {
         return ResponseEntity.ok().build();
       }
-    } catch (IOException e) {
-      e.printStackTrace();
-      return ResponseEntity.internalServerError().build();
+    } catch (Exception e) {
+      return ResponseEntity.internalServerError().body(e.getMessage());
     }
     return ResponseEntity.badRequest().build();
   }
