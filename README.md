@@ -5,10 +5,32 @@
 Ein digitales Kaffeekassen-System
 der [Fachschaft für Informatik und Mathematik der Universität Passau](https://fsinfo.fim.uni-passau.de/).
 
-**IMPORTANT**:
+## Deployment
+
+Docker-Compose-Environment:
+
+- VITE_API_URL: URL für die Backend-API
+- /tmp/kdv : Ordner für Datenbank und Item-Bilder
+
+**Build & Run Compose**:
+
+```bash
+docker compose build
+```
+
+```bash
+docker compose up
+```
+
+## Development
+
+**Frontend**:
+
+```bash
+cd frontend && npm install && npm run dev
+```
+
+**Backend**:
+
 - H2-Datenbank benötigt `/tmp`-Ordner mit Nutzer-Rechten zum lokalen testen!
-
-## API
-
-- Java-JPA mit H2-Datenbank
-- H2-Online Interface (sofern Konfiguriert) unter `http://localhost:8080/h2-console` erreichbar
+- Run backend mit Maven...
