@@ -12,7 +12,7 @@
 
   <groupId>de.unipassau.fim.fsinfo</groupId>
   <artifactId>KdV</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>KdV</name>
   <description>KdV</description>
 
@@ -67,6 +67,7 @@
   </dependencies>
 
   <build>
+    <defaultGoal>package</defaultGoal>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
