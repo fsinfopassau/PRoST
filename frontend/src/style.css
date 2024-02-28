@@ -48,13 +48,13 @@ h3 {
   margin: 0.2rem 0;
 }
 
-h1 > img {
-  height: 5rem;
-  padding: 0 1rem;
-}
-
 svg {
   margin: 5px;
+}
+
+#SearchTitle {
+  height: 5rem;
+  padding: 0 1rem;
 }
 
 #search {
@@ -79,53 +79,62 @@ svg {
   line-height: 1;
 }
 
-.Button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 15px;
-  font-size: 1.5rem;
-  line-height: 1;
-  font-weight: 500;
-  height: 3rem;
-}
-
-/**
-Main Classes
+/*
+History
 */
 
-.SelectionContainer {
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(14rem, 10fr)
-  ); /* Adjust the minmax values as needed */
-  grid-auto-rows: auto;
-  gap: 1rem;
-  padding: 20px 0;
-  max-width: 1000%;
-}
-
-.CardContainer {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(25.5rem, 1fr));
-  max-width: 100%;
-}
-
-.DisplayCard {
+.history-container {
   overflow: hidden;
-  padding: 0.7rem 1rem;
-  margin: 0.5rem 0.8rem;
-  --scrollbar-size: 12px;
-  flex-grow: 1; /* Grow to fill available space */
+  max-width: 30rem;
 }
 
-.SpreadContainer {
+.history-entry {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  table-layout: fixed; /* Fixed table layout */
+  justify-content: space-evenly; /* or space-around, space-evenly, etc. */
+  margin: 0.4rem 0;
+  font-size: 1rem;
+  height: 2.7rem;
+  min-width: 21em;
+  width: 100%;
+}
+.history-entry th {
+  display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: flex-start;
+  margin: 0 0.8rem;
+  width: 20%;
+  max-width: 5rem;
+}
+.history-entry th.last {
+  justify-content: flex-end;
+}
+table {
+  width: 100%;
+}
+
+/*
+UserSummary
+*/
+.UserSummary {
+  max-height: 30rem;
+  display: flex;
+  margin: 0 auto;
+  max-width: 40rem;
+  width: 100%;
+}
+.UserSummary .Balance {
+  font-size: 4rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  @media screen and (max-width: 450px) {
+    font-size: 2rem;
+  }
+  @media screen and (max-width: 350px) {
+    font-size: 1rem;
+  }
 }
 
 /*
@@ -171,37 +180,65 @@ Tabs
 }
 
 /*
-History
+General
 */
 
-.history-container {
-  overflow: hidden;
-  max-width: 30rem;
+.Button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 15px;
+  font-size: 1.5rem;
+  line-height: 1;
+  font-weight: 500;
+  height: 3rem;
 }
 
-.history-entry {
-  display: flex;
-  table-layout: fixed; /* Fixed table layout */
-  justify-content: space-evenly; /* or space-around, space-evenly, etc. */
-  margin: 0.4rem 0;
-  font-size: 1rem;
-  height: 2.7rem;
-  min-width: 21em;
+.Input {
   width: 100%;
-}
-.history-entry th {
-  display: flex;
+  flex: 1;
+  display: inline-flex;
   align-items: center;
-  justify-content: flex-start;
-  margin: 0 0.8rem;
-  width: 20%;
-  max-width: 5rem;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 0 10px;
+  font-size: 15px;
+  line-height: 1;
+  height: 35px;
 }
-.history-entry th.last {
-  justify-content: flex-end;
+
+.DisplayCard {
+  overflow: hidden;
+  padding: 0.7rem 1rem;
+  margin: 0.5rem 0.8rem;
+  --scrollbar-size: 12px;
+  flex-grow: 1; /* Grow to fill available space */
 }
-table {
-  width: 100%;
+
+.SelectionContainer {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(14rem, 10fr)
+  ); /* Adjust the minmax values as needed */
+  grid-auto-rows: auto;
+  gap: 1rem;
+  padding: 20px 0;
+  max-width: 1000%;
+}
+
+.CardContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(25.5rem, 1fr));
+  max-width: 100%;
+}
+
+.SpreadContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
 }
 
 .Scrollbar {
@@ -237,33 +274,6 @@ table {
   min-height: 44px;
 }
 
-/*
-UserSummary
-*/
-.UserSummary {
-  max-height: 30rem;
-  display: flex;
-  margin: 0 auto;
-  max-width: 40rem;
-  width: 100%;
-}
-.UserSummary .Balance {
-  font-size: 4rem;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
-  @media screen and (max-width: 450px) {
-    font-size: 2rem;
-  }
-  @media screen and (max-width: 350px) {
-    font-size: 1rem;
-  }
-}
-
-/*
-Separator
-*/
 .Separator {
   background-color: var(--violet-11);
 }
@@ -276,17 +286,12 @@ Separator
   margin: 0 1rem;
 }
 
-/*
-Switch
-*/
-
 .SwitchRoot {
   position: relative;
   width: 2.3rem;
   height: 1.4rem;
   border-radius: 9999px;
 }
-
 .SwitchThumb {
   display: block;
   width: 1rem;
@@ -300,18 +305,14 @@ Switch
   transform: translateX(19px);
 }
 
-
 .DialogOverlay {
-  background-color: var(--black-a9);
   position: fixed;
   inset: 0;
   animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .DialogContent {
-  background-color: white;
   border-radius: 6px;
-  box-shadow: hsl(206 22% 7% / 35%) 0 10px 38px -10px, hsl(206 22% 7% / 20%) 0 10px 20px -15px;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -329,13 +330,11 @@ Switch
 .DialogTitle {
   margin: 0;
   font-weight: 500;
-  color: var(--mauve-12);
   font-size: 17px;
 }
 
 .DialogDescription {
   margin: 10px 0 20px;
-  color: var(--mauve-11);
   font-size: 15px;
   line-height: 1.5;
 }
@@ -348,28 +347,8 @@ Switch
   width: 100%;
 }
 
-
-.Input {
-  width: 100%;
-  flex: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  padding: 0 10px;
-  font-size: 15px;
-  line-height: 1;
-  color: var(--violet-11);
-  box-shadow: 0 0 0 1px var(--violet-7);
-  height: 35px;
-}
-.Input:focus {
-  box-shadow: 0 0 0 2px var(--violet-8);
-}
-
-
 /* 
-Montserrat Font stuff
+Font stuff
 */
 
 * {

@@ -19,6 +19,7 @@ export function UserSelection(props: { switchTheme: () => void }) {
         <img
           onClick={props.switchTheme}
           src="/icons/happy-manje/happy beer.svg"
+          id="SearchTitle"
         />
         KdV
       </h1>

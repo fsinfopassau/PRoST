@@ -35,21 +35,18 @@ Body {
   box-shadow: 0 0 0 2px black;
 }
 
-/*
-History
-*/
+.Input {
+  color: var(--violet-11);
+  box-shadow: 0 0 0 1px var(--violet-7);
+}
+.Input:focus {
+  box-shadow: 0 0 0 2px var(--violet-8);
+}
 
 .DisplayCard {
   border: 2px solid var(--violet-11);
   background-color: var(--violet-2);
   box-shadow: 0 2px 10px var(--mauve-8);
-  border-radius: 12px;
-}
-
-.history-entry {
-  background-color: var(--violet-4);
-  color: var(--violet-11);
-  border: 2px solid var(--violet-8);
   border-radius: 12px;
 }
 
@@ -61,6 +58,17 @@ History
 }
 .ScrollbarThumb {
   background: var(--violet-11);
+  border-radius: 12px;
+}
+
+/*
+History
+*/
+
+.history-entry {
+  background-color: var(--violet-4);
+  color: var(--violet-11);
+  border: 2px solid var(--violet-8);
   border-radius: 12px;
 }
 
@@ -109,4 +117,25 @@ Switch
 }
 .SwitchThumb {
   background-color: white;
+}
+
+/*
+Dialog
+*/
+.DialogOverlay {
+  background-color: var(--black-a9);
+}
+
+.DialogContent {
+  background-color: white;
+  box-shadow: hsl(206 22% 7% / 35%) 0 10px 38px -10px,
+    hsl(206 22% 7% / 20%) 0 10px 20px -15px;
+}
+
+.DialogTitle {
+  color: var(--mauve-12);
+}
+
+.DialogDescription {
+  color: var(--mauve-11);
 }

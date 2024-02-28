@@ -36,6 +36,14 @@ Body {
   box-shadow: 0 0 0 2px black;
 }
 
+.Input {
+  color: var(--blue-11);
+  box-shadow: 0 0 0 1px var(--blue-7);
+}
+.Input:focus {
+  box-shadow: 0 0 0 2px var(--blue-8);
+}
+
 /*
 History
 */
@@ -109,4 +117,25 @@ Switch
 }
 .SwitchThumb {
   background-color: white;
+}
+
+/*
+Dialog
+*/
+.DialogOverlay {
+  background-color: var(--black-a9);
+}
+
+.DialogContent {
+  background-color: white;
+  box-shadow: hsl(206 22% 7% / 35%) 0 10px 38px -10px,
+    hsl(206 22% 7% / 20%) 0 10px 20px -15px;
+}
+
+.DialogTitle {
+  color: var(--mauve-12);
+}
+
+.DialogDescription {
+  color: var(--mauve-11);
 }

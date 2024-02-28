@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 export function Settings() {
   return (
     <div className="CardContainer">
-      <div className="DisplayCard SelectionContainer">
-        <div className="Button">
-          <Link to={"/settings/items"}>Items</Link>
-        </div>
-        <div className="Button">
-          <Link to={"/settings/users"}>Benutzer</Link>
+      <div className="DisplayCard">
+        <div className="SelectionContainer">
+          <Link to={"/settings/items"} className="Button">
+            Items
+          </Link>
+          <Link to={"/settings/users"} className="Button">
+            Benutzer
+          </Link>
         </div>
       </div>
       <div className="DisplayCard">Settings TODO</div>
