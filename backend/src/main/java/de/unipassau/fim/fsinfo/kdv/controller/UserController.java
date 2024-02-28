@@ -39,7 +39,7 @@ public class UserController {
    * @param user with a unique username
    * @return the ID of the new user - nothing if User can not be created
    */
-  @PostMapping
+  @PostMapping("/create")
   public ResponseEntity<String> create(@RequestBody User user) {
 
     if (userRepository.findById(user.getId()).isPresent()) {
@@ -56,7 +56,7 @@ public class UserController {
     return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/{id}/delete")
   public ResponseEntity<User> delete(@PathVariable String id) {
     Optional<User> user = userRepository.findById(id);
 

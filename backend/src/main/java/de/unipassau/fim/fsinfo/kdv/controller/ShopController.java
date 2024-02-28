@@ -45,7 +45,7 @@ public class ShopController {
     return ResponseEntity.ok(itemRepository.findAll());
   }
 
-  @PostMapping
+  @PostMapping("/create")
   public ResponseEntity<ShopItem> create(@RequestBody ShopItem item) {
     if (item.getId() == null || itemRepository.existsById(item.getId())
         || item.getDisplayName() == null
@@ -122,7 +122,7 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @GetMapping("/{id}/display-picture")
+  @GetMapping("/{id}/picture")
   public ResponseEntity<FileSystemResource> getDisplayImage(@PathVariable String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {

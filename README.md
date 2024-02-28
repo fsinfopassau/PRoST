@@ -26,6 +26,8 @@ docker compose up
 
 **Frontend**:
 
+- ESLint addon
+
 ```bash
 cd frontend && npm install && npm run dev
 ```
@@ -33,4 +35,6 @@ cd frontend && npm install && npm run dev
 **Backend**:
 
 - H2-Datenbank benötigt `/tmp`-Ordner mit Nutzer-Rechten zum lokalen testen!
+- [Google-Java-Codestyle](https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml)
+    - Intellij: Settings > Editor > Codestyle > Scheme
 - Run backend mit Maven...

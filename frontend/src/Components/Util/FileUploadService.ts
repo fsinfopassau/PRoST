@@ -23,12 +23,9 @@ export async function getItemDisplayPicture(
   item: ShopItem
 ): Promise<string | null> {
   try {
-    const result = await fetch(
-      apiUrl + `/api/shop/${item.id}/display-picture`,
-      {
-        method: "GET",
-      }
-    );
+    const result = await fetch(apiUrl + `/api/shop/${item.id}/picture`, {
+      method: "GET",
+    });
 
     if (!result.ok) {
       return null;
