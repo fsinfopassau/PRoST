@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity(name = "KDV_User")
-public class User {
+public class KdvUser {
 
   @Id
   @Column(nullable = false, unique = true)
@@ -25,7 +25,7 @@ public class User {
   private String displayName;
   private Boolean enabled;
 
-  public User(String id, String displayName, UserRole role, Boolean enabled) {
+  public KdvUser(String id, String displayName, UserRole role, Boolean enabled) {
     this.role = role;
     this.id = id;
     this.displayName = displayName;

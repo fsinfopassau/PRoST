@@ -31,11 +31,15 @@ export async function getShopItem(itemId: string) {
   return result as ShopItem;
 }
 
-export async function enableItem(item: ShopItem, enable: boolean): Promise<boolean> {
-  const result = await (
-    await fetch(`${apiUrl}/api/shop/${item.id}/${enable ? 'enable' : 'disable'}`, {
+export async function enableItem(
+  item: ShopItem,
+  enable: boolean
+): Promise<boolean> {
+  const result = await await fetch(
+    `${apiUrl}/api/shop/${item.id}/${enable ? "enable" : "disable"}`,
+    {
       method: "POST",
-    })
+    }
   );
   return result.ok;
 }
@@ -86,11 +90,43 @@ export async function deleteShopItem(item: ShopItem) {
   return result.ok;
 }
 
-export async function changeShopItem(item: ShopItem, value: string, path: string) {
-  const result = await (
-    await fetch(`${apiUrl}/api/shop/${item.id}/${path}?value=${value}`, {
-    method: "POST",
-    })
-  )
+export async function changeShopItem(
+  item: ShopItem,
+  value: string,
+  path: string
+) {
+  const result = await await fetch(
+    `${apiUrl}/api/shop/${item.id}/${path}?value=${value}`,
+    {
+      method: "POST",
+    }
+  );
   return result.ok;
+}
+
+export async function login(username: string, password: string) {
+  const encodedCredentials = window.btoa(`${username}:${password}`);
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Basic ${encodedCredentials}`,
+    },
+  };
+
+  try {
+    const response = await fetch(
+      `${apiUrl}/api/authentication`,
+      requestOptions
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const user = await response.json();
+    console.log("login success: " + user);
+    return user;
+  } catch (error) {
+    console.error("There was an error!", error);
+    throw error;
+  }
 }

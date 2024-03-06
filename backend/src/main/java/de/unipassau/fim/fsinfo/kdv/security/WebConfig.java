@@ -1,0 +1,88 @@
+package de.unipassau.fim.fsinfo.kdv.security;
+
+import de.unipassau.fim.fsinfo.kdv.data.UserRole;
+import de.unipassau.fim.fsinfo.kdv.service.UserService;
+import java.util.Arrays;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+@EnableWebSecurity
+public class WebConfig implements WebMvcConfigurer {
+
+  @Value("${ALLOWED_ORIGINS:*,localhost}")
+  private String[] allowedOrigins;
+  private final UserService userService;
+
+  public static String[] AUTH_WHITELIST = {
+      "/api/users/**",
+      "/api/shop/**",
+      "/api/history/**",
+  };
+
+  public static String[] ADMIN_WHITELIST = {
+      "**",
+  };
+
+  @Autowired
+  public WebConfig(UserService userService) {
+    this.userService = userService;
+  }
+
+  @Bean
+  CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
+    configuration.setAllowedMethods(List.of("*"));
+    configuration.setAllowedHeaders(List.of("*"));
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
+
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    return http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(AUTH_WHITELIST).permitAll()
+            .requestMatchers(ADMIN_WHITELIST).hasAuthority(UserRole.ADMINISTRATOR.name())
+            .anyRequest().authenticated() // Require authentication for all other requests
+        )
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .httpBasic(Customizer.withDefaults())
+        .build();
+  }
+
+  @Bean
+  public AuthenticationProvider daoAuthenticationProvider() {
+    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+    provider.setPasswordEncoder(passwordEncoder());
+    provider.setUserDetailsService(userService);
+    return provider;
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+}

@@ -1,8 +1,8 @@
 package de.unipassau.fim.fsinfo.kdv.service;
 
+import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopHistoryEntry;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
-import de.unipassau.fim.fsinfo.kdv.data.dao.User;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopHistoryRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
@@ -22,13 +22,13 @@ public class ShopService {
 
   public boolean consume(String itemId, String userId, int amount) {
     Optional<ShopItem> itemO = itemRepository.findById(itemId);
-    Optional<User> userO = userRepository.findById(userId);
+    Optional<KdvUser> userO = userRepository.findById(userId);
 
     if (userO.isEmpty() || itemO.isEmpty()) {
       return false;
     }
 
-    User user = userO.get();
+    KdvUser user = userO.get();
     ShopItem item = itemO.get();
 
     if (!item.getEnabled() || !user.getEnabled()) {

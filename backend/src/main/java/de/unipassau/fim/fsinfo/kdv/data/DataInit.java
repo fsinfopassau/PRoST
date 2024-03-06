@@ -1,8 +1,7 @@
-package de.unipassau.fim.fsinfo.kdv.config;
+package de.unipassau.fim.fsinfo.kdv.data;
 
-import de.unipassau.fim.fsinfo.kdv.data.UserRole;
+import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
-import de.unipassau.fim.fsinfo.kdv.data.dao.User;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -15,15 +14,12 @@ public class DataInit {
   @Bean
   CommandLineRunner userTestInit(UserRepository repository) {
     return args -> {
-      User a = new User("admin", "Kai Nepanik", UserRole.ADMINISTRATOR, false);
-      User a2 = new User("mod", "Lasse Maranda", UserRole.MODERATOR, true);
-      User a3 = new User("normalUser", "Erhart Haramasch", UserRole.USER, true);
       try {
-        repository.save(a);
-        repository.save(a2);
-        repository.save(a3);
+        repository.save(new KdvUser("admin", "Kai Nepanik", UserRole.ADMINISTRATOR, true));
+        repository.save(new KdvUser("mod", "Lasse Maranda", UserRole.MODERATOR, true));
+        repository.save(new KdvUser("normalUser", "Erhart Haramasch", UserRole.USER, false));
         for (int i = 1; i <= 20; i++) {
-          repository.save(new User("testN" + i, "KekW " + i, UserRole.USER, true));
+          repository.save(new KdvUser("testN" + i, "KekW " + i, UserRole.USER, true));
         }
       } catch (Exception e) {
         e.printStackTrace();

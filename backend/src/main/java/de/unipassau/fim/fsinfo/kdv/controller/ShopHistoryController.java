@@ -1,8 +1,8 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
+import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopHistoryEntry;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
-import de.unipassau.fim.fsinfo.kdv.data.dao.User;
 import de.unipassau.fim.fsinfo.kdv.data.dto.ShopHistoryEntryDTO;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopHistoryRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
@@ -61,7 +61,7 @@ public class ShopHistoryController {
     if (entryList != null) {
       for (ShopHistoryEntry entry : entryList) {
 
-        Optional<User> userO = userRepository.findById(entry.getUserId());
+        Optional<KdvUser> userO = userRepository.findById(entry.getUserId());
         Optional<ShopItem> itemO = itemRepository.findById(entry.getItemId());
 
         if (userO.isPresent() && itemO.isPresent()) {

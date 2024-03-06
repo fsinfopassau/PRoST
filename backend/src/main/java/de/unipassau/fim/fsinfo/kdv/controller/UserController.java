@@ -1,7 +1,7 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
 import de.unipassau.fim.fsinfo.kdv.data.UserRole;
-import de.unipassau.fim.fsinfo.kdv.data.dao.User;
+import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +29,7 @@ public class UserController {
    * @return List of all Users
    */
   @GetMapping
-  public ResponseEntity<List<User>> list() {
+  public ResponseEntity<List<KdvUser>> list() {
     return ResponseEntity.ok(userRepository.findAll());
   }
 
@@ -40,7 +40,7 @@ public class UserController {
    * @return the ID of the new user - nothing if User can not be created
    */
   @PostMapping("/create")
-  public ResponseEntity<String> create(@RequestBody User user) {
+  public ResponseEntity<String> create(@RequestBody KdvUser user) {
 
     if (userRepository.findById(user.getId()).isPresent()) {
       return ResponseEntity.badRequest().body("user already present");
@@ -51,14 +51,14 @@ public class UserController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<User> get(@PathVariable String id) {
-    Optional<User> user = userRepository.findById(id);
+  public ResponseEntity<KdvUser> get(@PathVariable String id) {
+    Optional<KdvUser> user = userRepository.findById(id);
     return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
   @DeleteMapping("/{id}/delete")
-  public ResponseEntity<User> delete(@PathVariable String id) {
-    Optional<User> user = userRepository.findById(id);
+  public ResponseEntity<KdvUser> delete(@PathVariable String id) {
+    Optional<KdvUser> user = userRepository.findById(id);
 
     if (user.isPresent()) {
       userRepository.delete(user.get());
@@ -70,7 +70,7 @@ public class UserController {
 
   @PostMapping("/{id}/balance")
   public ResponseEntity<Double> balance(@PathVariable String id, @RequestParam String value) {
-    Optional<User> user = userRepository.findById(id);
+    Optional<KdvUser> user = userRepository.findById(id);
 
     try {
       Double d = Double.parseDouble(value);
@@ -88,7 +88,7 @@ public class UserController {
 
   @PostMapping("/{id}/enable")
   public ResponseEntity<String> enable(@PathVariable String id) {
-    Optional<User> user = userRepository.findById(id);
+    Optional<KdvUser> user = userRepository.findById(id);
 
     if (user.isPresent()) {
       user.get().setEnabled(true);
@@ -101,7 +101,7 @@ public class UserController {
 
   @PostMapping("/{id}/disable")
   public ResponseEntity<String> disable(@PathVariable String id) {
-    Optional<User> user = userRepository.findById(id);
+    Optional<KdvUser> user = userRepository.findById(id);
 
     if (user.isPresent()) {
       user.get().setEnabled(false);
@@ -114,7 +114,7 @@ public class UserController {
 
   @PostMapping("/{id}/role")
   public ResponseEntity<String> role(@PathVariable String id, @RequestParam UserRole role) {
-    Optional<User> user = userRepository.findById(id);
+    Optional<KdvUser> user = userRepository.findById(id);
 
     if (user.isPresent()) {
       user.get().setRole(role);
