@@ -19,6 +19,7 @@ public class FileStorageService {
   @Autowired
   public FileStorageService(@Value("${kdv.save-location}") @NonNull String saveLocation) {
     itemLocation = saveLocation + "/items";
+    System.out.println("[FSS] :: item-location: " + itemLocation);
   }
 
   public FileStorageService(@NonNull String customSave, boolean printLocation) throws IOException {

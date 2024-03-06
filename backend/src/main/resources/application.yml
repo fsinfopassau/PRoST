@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:file:/tmp/kdv/kdv
+    url: jdbc:h2:file:${data_location:./kdv-data}/kdv
     driverClassName: org.h2.Driver
     username: sa
     password: password
@@ -23,4 +23,4 @@ server:
   error:
     include-stacktrace: never
 kdv:
-  save-location: /tmp/kdv
+  save-location: ${data_location:kdv-data}
