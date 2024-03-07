@@ -8,13 +8,16 @@ import { ShopItem } from "../../Types/ShopItem";
 import { formatMoney } from "../../Types/User";
 import { Separator } from "@radix-ui/react-separator";
 import { Switch, SwitchThumb } from "@radix-ui/react-switch";
-import { changeShopItem, deleteShopItem, enableItem } from "../Util/Queries";
-import { AspectRatio } from "@radix-ui/react-aspect-ratio";
-import { useEffect, useRef, useState } from "react";
 import {
+  changeShopItem,
+  deleteShopItem,
+  enableItem,
   getItemDisplayPicture,
   uploadItemDisplayPicture,
-} from "../Util/FileUploadService";
+} from "../Util/Queries";
+import { AspectRatio } from "@radix-ui/react-aspect-ratio";
+import { useEffect, useRef, useState } from "react";
+
 import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
 
 export function ItemSettingCard(props: {
@@ -86,11 +89,17 @@ export function ItemSettingCard(props: {
 
   function toggleEnable() {
     const newVal = !item.enabled;
-    enableItem(item, newVal).then((result) => {
-      if (result) {
-        item.enabled = newVal;
-      }
-    });
+    enableItem(item, newVal)
+      .then((result) => {
+        if (result) {
+          item.enabled = newVal;
+        } else {
+          console.log("ne");
+        }
+      })
+      .catch(() => {
+        console.log("ne2");
+      });
   }
 
   return (
@@ -150,7 +159,7 @@ export function ItemSettingCard(props: {
             <img
               className="Image"
               src={imageUrl}
-              alt="Landscape photograph by Tobias Tullius"
+              alt="Item Image"
               width={"100%"}
             />
           </AspectRatio>

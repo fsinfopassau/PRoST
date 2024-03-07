@@ -19,10 +19,7 @@ export function ItemCheckout() {
 
   function checkout() {
     console.log("checkout", userId, itemId);
-    if (userId && itemId)
-      buyItem(userId, itemId, 1).then((balance) => {
-        console.log("new Balance:", balance);
-      });
+    if (userId && itemId) buyItem(userId, itemId, 1);
     navigate("/");
   }
 

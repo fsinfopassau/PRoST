@@ -137,7 +137,7 @@ public class ShopController {
                 "attachment; filename=\"" + file.get().getName() + "\"")
             .body(resource);
       } else {
-        return ResponseEntity.internalServerError().build();
+        return ResponseEntity.noContent().build();
       }
     }
     return ResponseEntity.badRequest().build();
@@ -181,7 +181,7 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/consume")
+  @PostMapping("/consume/{id}")
   public ResponseEntity<String> consume(@PathVariable String id, @RequestParam String userId,
       @RequestParam(required = false) Integer n) {
     if (shopService.consume(id, userId, (n == null ? 1 : n))) {

@@ -1,8 +1,40 @@
+import axios from "axios";
 import { ShopHistoryEntry } from "../../Types/ShopHistory";
 import { ShopItem } from "../../Types/ShopItem";
 import { User } from "../../Types/User";
+import {
+  getEncodedCredentials,
+  resetCredentials,
+  setEncodedCredentials,
+} from "./SessionInfo";
 
 export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
+
+export async function loginNew(username: string, password: string) {
+  const cred = window.btoa(`${username}:${password}`);
+  return login(cred);
+}
+
+export async function login(cred: string) {
+  try {
+    const response = await fetch(`${apiUrl}/api/authentication`, {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${cred}`,
+      },
+    });
+    if (!response.ok) {
+      resetCredentials();
+      return false;
+    } else {
+      setEncodedCredentials(cred);
+      return true;
+    }
+  } catch (error) {
+    console.error("There was an error!", error);
+    return false;
+  }
+}
 
 export async function getUser(userId: string) {
   const result = await (
@@ -31,19 +63,6 @@ export async function getShopItem(itemId: string) {
   return result as ShopItem;
 }
 
-export async function enableItem(
-  item: ShopItem,
-  enable: boolean
-): Promise<boolean> {
-  const result = await await fetch(
-    `${apiUrl}/api/shop/${item.id}/${enable ? "enable" : "disable"}`,
-    {
-      method: "POST",
-    }
-  );
-  return result.ok;
-}
-
 export async function getAllShopItems() {
   const result = await (
     await fetch(`${apiUrl}/api/shop`, {
@@ -54,15 +73,13 @@ export async function getAllShopItems() {
 }
 
 export async function buyItem(userId: string, itemId: string, amount: number) {
-  const result = await (
-    await fetch(
-      `${apiUrl}/api/shop/${itemId}/consume?userId=${userId}&n=${amount}`,
-      {
-        method: "POST",
-      }
-    )
-  ).json();
-  return result as number;
+  const result = await await fetch(
+    `${apiUrl}/api/shop/consume/${itemId}?userId=${userId}&n=${amount}`,
+    {
+      method: "POST",
+    }
+  );
+  return result.ok;
 }
 
 export async function getHistory(amount: number) {
@@ -83,9 +100,28 @@ export async function getUserHistory(user: User, amount: number) {
   return result as ShopHistoryEntry[];
 }
 
+export async function enableItem(
+  item: ShopItem,
+  enable: boolean
+): Promise<boolean> {
+  const result = await await fetch(
+    `${apiUrl}/api/shop/${item.id}/${enable ? "enable" : "disable"}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+      },
+    }
+  );
+  return result.ok;
+}
+
 export async function deleteShopItem(item: ShopItem) {
   const result = await await fetch(`${apiUrl}/api/shop/${item.id}/delete`, {
     method: "DELETE",
+    headers: {
+      Authorization: `Basic ${getEncodedCredentials()}`,
+    },
   });
   return result.ok;
 }
@@ -99,34 +135,51 @@ export async function changeShopItem(
     `${apiUrl}/api/shop/${item.id}/${path}?value=${value}`,
     {
       method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+      },
     }
   );
   return result.ok;
 }
 
-export async function login(username: string, password: string) {
-  const encodedCredentials = window.btoa(`${username}:${password}`);
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Basic ${encodedCredentials}`,
-    },
-  };
+export async function uploadItemDisplayPicture(item: ShopItem, file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
 
+  axios
+    .post(apiUrl + `/api/shop/${item.id}/display-picture`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Basic ${getEncodedCredentials()}`,
+      },
+    })
+    .then(() => {
+      return true;
+    })
+    .catch(() => {
+      return false;
+    });
+
+  return true;
+}
+
+export async function getItemDisplayPicture(
+  item: ShopItem
+): Promise<string | null> {
   try {
-    const response = await fetch(
-      `${apiUrl}/api/authentication`,
-      requestOptions
-    );
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    const result = await fetch(apiUrl + `/api/shop/${item.id}/picture`, {
+      method: "GET",
+    });
+
+    if (result.ok && result.status === 200) {
+      const blob = await result.blob();
+      const url = URL.createObjectURL(blob);
+      return url;
     }
-    const user = await response.json();
-    console.log("login success: " + user);
-    return user;
   } catch (error) {
-    console.error("There was an error!", error);
-    throw error;
+    // If there's a network error or any other error, return null
+    return null;
   }
+  return null;
 }

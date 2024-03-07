@@ -33,12 +33,23 @@ public class WebConfig implements WebMvcConfigurer {
 
   public static String[] AUTH_WHITELIST = {
       "/api/users/**",
-      "/api/shop/**",
+      "/api/shop",
+      "/api/shop/*",
+      "/api/shop/*/picture",
+      "/api/shop/consume/**",
       "/api/history/**",
   };
 
-  public static String[] ADMIN_WHITELIST = {
-      "**",
+  public static String[] USER_SPACE = {
+      "/api/",
+  };
+
+  public static String[] MOD_SPACE = {
+      "/api/shop/**",
+  };
+
+  public static String[] ADMIN_SPACE = {
+      "/api/**",
   };
 
   @Autowired
@@ -63,7 +74,12 @@ public class WebConfig implements WebMvcConfigurer {
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(AUTH_WHITELIST).permitAll()
-            .requestMatchers(ADMIN_WHITELIST).hasAuthority(UserRole.ADMINISTRATOR.name())
+            .requestMatchers(USER_SPACE)
+            .hasAnyAuthority(UserRole.USER.name(), UserRole.MODERATOR.name(),
+                UserRole.ADMINISTRATOR.name())
+            .requestMatchers(MOD_SPACE)
+            .hasAnyAuthority(UserRole.MODERATOR.name(), UserRole.ADMINISTRATOR.name())
+            .requestMatchers(ADMIN_SPACE).hasAnyAuthority(UserRole.ADMINISTRATOR.name())
             .anyRequest().authenticated() // Require authentication for all other requests
         )
         .sessionManagement(

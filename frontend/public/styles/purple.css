@@ -133,9 +133,5 @@ Dialog
 }
 
 .DialogTitle {
-  color: var(--mauve-12);
-}
-
-.DialogDescription {
-  color: var(--mauve-11);
+  color: var(--violet-11);
 }

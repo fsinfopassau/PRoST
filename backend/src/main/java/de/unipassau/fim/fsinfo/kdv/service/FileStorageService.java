@@ -49,9 +49,6 @@ public class FileStorageService {
   private void saveFile(@NonNull MultipartFile multipartFile, @NonNull String destinationPath)
       throws IOException {
     File file = new File(destinationPath);
-
-    System.out.println("dest: " + file.getAbsolutePath() + " " + destinationPath);
-
     file.getParentFile().mkdirs();
     multipartFile.transferTo(file);
   }

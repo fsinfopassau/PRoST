@@ -146,6 +146,17 @@ Tabs
   margin-bottom: 0.6rem;
 }
 
+#login {
+  justify-content: right;
+  width: 100%;
+  display: flex;
+}
+
+#login > Button {
+  justify-content: right;
+  width: 100%;
+}
+
 #tab-changer > img {
   margin-right: 0.6rem;
   height: 2.8rem;
@@ -195,7 +206,6 @@ General
 }
 
 .Input {
-  width: 100%;
   flex: 1;
   display: inline-flex;
   align-items: center;
@@ -330,12 +340,12 @@ General
 .DialogTitle {
   margin: 0;
   font-weight: 500;
-  font-size: 17px;
+  font-size: 3rem;
 }
 
 .DialogDescription {
-  margin: 10px 0 20px;
-  font-size: 15px;
+  margin: 10px 0 10px;
+  font-size: 1rem;
   line-height: 1.5;
 }
 
@@ -345,6 +355,14 @@ General
   justify-content: right;
   align-items: center;
   width: 100%;
+}
+
+.Fieldset {
+  width: 100%;
+  height: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 /* 

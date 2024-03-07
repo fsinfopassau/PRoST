@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ShopItem } from "../../Types/ShopItem";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { useEffect, useState } from "react";
-import { getItemDisplayPicture } from "../Util/FileUploadService";
+import { getItemDisplayPicture } from "../Util/Queries";
 
 export function ItemDisplay(props: { item: ShopItem }) {
   const { item } = props;
@@ -18,7 +18,6 @@ export function ItemDisplay(props: { item: ShopItem }) {
     getItemDisplayPicture(item).then((image) => {
       if (image) {
         setImageUrl(image);
-        console.log("path: " + image);
       }
     });
   }, [item]);
@@ -30,7 +29,7 @@ export function ItemDisplay(props: { item: ShopItem }) {
           <img
             className="Image"
             src={imageUrl}
-            alt="Landscape photograph by Tobias Tullius"
+            alt="Item Image"
             width={"100%"}
           />
         </AspectRatio>

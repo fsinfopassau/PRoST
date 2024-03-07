@@ -5,6 +5,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { useLocation, useNavigate } from "react-router-dom";
+import { LoginDialog } from "./LoginDialog";
 
 export function TabChanger(props: { switchTheme: () => void }) {
   const { switchTheme } = props;
@@ -32,22 +33,32 @@ export function TabChanger(props: { switchTheme: () => void }) {
     <>
       <div id="tab-changer">
         <img onClick={switchTheme} src="/icons/happy-manje/happy beer.svg" />
-        <Tabs
-          defaultValue={getSelectedTabValue()}
-          className="TabsRoot"
-        >
+        <Tabs defaultValue={getSelectedTabValue()} className="TabsRoot">
           <TabsList className="TabsList">
-            <TabsTrigger value="shop" className="TabsTrigger" onClick={() => tabUpdate('shop')}>
+            <TabsTrigger
+              value="shop"
+              className="TabsTrigger"
+              onClick={() => tabUpdate("shop")}
+            >
               <MagnifyingGlassIcon />
             </TabsTrigger>
-            <TabsTrigger value="stats" className="TabsTrigger" onClick={() => tabUpdate('stats')}>
+            <TabsTrigger
+              value="stats"
+              className="TabsTrigger"
+              onClick={() => tabUpdate("stats")}
+            >
               <BarChartIcon />
             </TabsTrigger>
-            <TabsTrigger value="settings" className="TabsTrigger" onClick={() => tabUpdate('settings')}>
+            <TabsTrigger
+              value="settings"
+              className="TabsTrigger"
+              onClick={() => tabUpdate("settings")}
+            >
               <GearIcon />
             </TabsTrigger>
           </TabsList>
         </Tabs>
+        <LoginDialog />
       </div>
     </>
   );

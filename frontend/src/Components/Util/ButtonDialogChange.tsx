@@ -8,14 +8,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@radix-ui/react-dialog";
-import { Cross2Icon } from "@radix-ui/react-icons";
+import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { useState } from "react";
 
 export function ButtonDialogChanger(props: {
   name: string;
   dialogName: string;
   dialogDesc: string;
-  onSubmit: (value: any) => void;
+  onSubmit: (value: string) => void;
 }) {
   const { name, dialogName, dialogDesc, onSubmit } = props;
   const [inputValue, setInputValue] = useState<string>("");
@@ -58,7 +58,9 @@ export function ButtonDialogChanger(props: {
             }}
           >
             <DialogClose asChild onClick={submit}>
-              <button className="Button">Speichern</button>
+              <button className="Button">
+                <CheckIcon />
+              </button>
             </DialogClose>
           </div>
         </DialogContent>
