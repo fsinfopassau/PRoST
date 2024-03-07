@@ -1,7 +1,7 @@
 import { login } from "./Queries";
 
-const localCred = localStorage.getItem("cred");
-let encodedCredentials = localCred !== null ? localCred : "";
+const firstCred = localStorage.getItem("cred");
+let encodedCredentials = firstCred !== null ? firstCred : "";
 
 if (encodedCredentials !== "") {
   login(encodedCredentials);
@@ -12,11 +12,16 @@ export function getEncodedCredentials(): string {
 }
 
 export function setEncodedCredentials(cred: string) {
-  encodedCredentials = cred;
+  encodedCredentials = cred !== null ? cred : "";
   localStorage.setItem("cred", encodedCredentials);
 }
 
 export function resetCredentials() {
   encodedCredentials = "";
   localStorage.setItem("cred", encodedCredentials);
+}
+
+export function validCredentials(): boolean {
+  // Platzhalter für Validierung (Sowie der Rest von Basic-Auth🙃..)
+  return encodedCredentials !== "";
 }

@@ -32,7 +32,8 @@ public class WebConfig implements WebMvcConfigurer {
   private final UserService userService;
 
   public static String[] AUTH_WHITELIST = {
-      "/api/users/**",
+      "/api/users",
+      "/api/users/*",
       "/api/shop",
       "/api/shop/*",
       "/api/shop/*/picture",
@@ -46,6 +47,7 @@ public class WebConfig implements WebMvcConfigurer {
 
   public static String[] MOD_SPACE = {
       "/api/shop/**",
+      "/api/users/**",
   };
 
   public static String[] ADMIN_SPACE = {

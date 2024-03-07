@@ -16,17 +16,12 @@ import {
 } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { loginNew } from "./Queries";
-import { getEncodedCredentials, resetCredentials } from "./SessionInfo";
+import { resetCredentials, validCredentials } from "./SessionInfo";
 
 export function LoginDialog() {
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [isLogged, setLogged] = useState(() => {
-    if (getEncodedCredentials() !== "" || getEncodedCredentials !== null) {
-      return true;
-    }
-    return false;
-  });
+  const [isLogged, setLogged] = useState(validCredentials());
 
   const handleUserChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUserName(event.target.value);
