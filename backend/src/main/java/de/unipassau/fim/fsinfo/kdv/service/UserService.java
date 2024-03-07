@@ -27,8 +27,6 @@ public class UserService implements UserDetailsService {
         .authorities(user.getRole().name())
         .build();
 
-    System.out.println(u.toString()); // TODO remove user printout
-
     return u;
   }
 }

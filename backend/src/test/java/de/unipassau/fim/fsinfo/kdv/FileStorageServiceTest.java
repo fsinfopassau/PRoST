@@ -26,10 +26,10 @@ class FileStorageServiceTest {
     when(mockFile.getContentType()).thenReturn("hallo Welt");
 
     FileStorageService service = new FileStorageService(path.toString(), true);
-    File savedImage = new File(path + "/items/test.png");
+    File expectedFile = new File(path + "/items/test");
 
     Assertions.assertFalse(service.saveItemPicture(item, mockFile));
-    Assertions.assertFalse(savedImage.exists());
+    Assertions.assertFalse(expectedFile.exists());
   }
 
   @Test
@@ -41,7 +41,7 @@ class FileStorageServiceTest {
         "image/png", // content type
         new byte[0] // file content
     );
-    File expectedFile = new File(path + "/items/test.png");
+    File expectedFile = new File(path + "/items/test");
 
     FileStorageService service = new FileStorageService(path.toString(), true);
 
@@ -58,7 +58,7 @@ class FileStorageServiceTest {
         "image/png", // content type
         new byte[0] // file content
     );
-    File expectedFile = new File(path + "/items/test.png");
+    File expectedFile = new File(path + "/items/test");
 
     FileStorageService service = new FileStorageService(path.toString(), true);
 
