@@ -22,6 +22,7 @@ export function LoginDialog() {
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLogged, setLogged] = useState(validCredentials());
+  const [open, setOpen] = useState(false);
 
   const handleUserChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUserName(event.target.value);
@@ -53,72 +54,88 @@ export function LoginDialog() {
   }
 
   function logout() {
+    setUserName("");
+    setPassword("");
     resetCredentials();
     setLogged(false);
+  }
+
+  function handleKeyDown(event: React.KeyboardEvent) {
+    if (event.key === "Enter") {
+      submit();
+      setOpen(false);
+    }
   }
 
   return (
     <>
       <div id="login">
-        <div className="Button">
-          {isLogged ? (
-            <button onClick={logout}>
+        {isLogged ? (
+          <div>
+            <button onClick={logout} className="Button">
               <ExitIcon />
             </button>
-          ) : (
-            <Dialog>
-              <DialogTrigger asChild>
-                <button onClick={buttonClickHandler}>
+          </div>
+        ) : (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <div>
+                <button onClick={buttonClickHandler} className="Button">
                   <PersonIcon />
                 </button>
-              </DialogTrigger>
-              <DialogPortal>
-                <DialogOverlay className="DialogOverlay" />
-                <DialogContent className="DialogContent">
-                  <div>
-                    <DialogClose asChild className="DialogClose">
-                      <button className="IconButton" aria-label="Close">
-                        <Cross2Icon />
-                      </button>
-                    </DialogClose>
-                  </div>
-                  <DialogTitle className="DialogTitle">Login</DialogTitle>
-                  <DialogDescription className="DialogDescription">
-                    Username
-                  </DialogDescription>
-                  <fieldset className="Fieldset">
-                    <input className="Input" onChange={handleUserChange} />
-                  </fieldset>
-                  <DialogDescription className="DialogDescription">
-                    Password
-                  </DialogDescription>
-                  <fieldset className="Fieldset">
-                    <input
-                      className="Input"
-                      onChange={handlePasswordChange}
-                      id="newPassword"
-                      type="password"
-                    />
-                  </fieldset>
+              </div>
+            </DialogTrigger>
+            <DialogPortal>
+              <DialogOverlay className="DialogOverlay" />
+              <DialogContent className="DialogContent">
+                <div>
+                  <DialogClose asChild className="DialogClose">
+                    <button className="IconButton" aria-label="Close">
+                      <Cross2Icon />
+                    </button>
+                  </DialogClose>
+                </div>
+                <DialogTitle className="DialogTitle">Login</DialogTitle>
+                <DialogDescription className="DialogDescription">
+                  Username
+                </DialogDescription>
+                <fieldset className="Fieldset">
+                  <input
+                    className="Input"
+                    onChange={handleUserChange}
+                    onKeyDown={handleKeyDown}
+                  />
+                </fieldset>
+                <DialogDescription className="DialogDescription">
+                  Password
+                </DialogDescription>
+                <fieldset className="Fieldset">
+                  <input
+                    className="Input"
+                    onChange={handlePasswordChange}
+                    id="newPassword"
+                    type="password"
+                    onKeyDown={handleKeyDown}
+                  />
+                </fieldset>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      marginTop: 25,
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    <DialogClose asChild onClick={submit}>
-                      <button className="Button">
-                        <PaperPlaneIcon />
-                      </button>
-                    </DialogClose>
-                  </div>
-                </DialogContent>
-              </DialogPortal>
-            </Dialog>
-          )}
-        </div>
+                <div
+                  style={{
+                    display: "flex",
+                    marginTop: 25,
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <DialogClose asChild onClick={submit}>
+                    <button className="Button">
+                      <PaperPlaneIcon />
+                    </button>
+                  </DialogClose>
+                </div>
+              </DialogContent>
+            </DialogPortal>
+          </Dialog>
+        )}
       </div>
     </>
   );

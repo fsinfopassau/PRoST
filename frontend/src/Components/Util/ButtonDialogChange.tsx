@@ -19,6 +19,7 @@ export function ButtonDialogChanger(props: {
 }) {
   const { name, dialogName, dialogDesc, onSubmit } = props;
   const [inputValue, setInputValue] = useState<string>("");
+  const [open, setOpen] = useState(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -28,8 +29,15 @@ export function ButtonDialogChanger(props: {
     onSubmit(inputValue);
   }
 
+  function handleKeyDown(event: React.KeyboardEvent) {
+    if (event.key === "Enter") {
+      submit();
+      setOpen(false);
+    }
+  }
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button>{name}</button>
       </DialogTrigger>
@@ -48,7 +56,11 @@ export function ButtonDialogChanger(props: {
             {dialogDesc}
           </DialogDescription>
           <fieldset className="Fieldset">
-            <input className="Input" onChange={handleInputChange} />
+            <input
+              className="Input"
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+            />
           </fieldset>
           <div
             style={{
