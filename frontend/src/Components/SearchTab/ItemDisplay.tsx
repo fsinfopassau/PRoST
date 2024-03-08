@@ -3,6 +3,7 @@ import { ShopItem } from "../../Types/ShopItem";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { useEffect, useState } from "react";
 import { getItemDisplayPicture } from "../Util/Queries";
+import { formatMoney } from "../../Types/User";
 
 export function ItemDisplay(props: { item: ShopItem }) {
   const { item } = props;
@@ -11,7 +12,7 @@ export function ItemDisplay(props: { item: ShopItem }) {
   const [imageUrl, setImageUrl] = useState<string>("/Beer.jpg");
 
   function selectItem() {
-    navigate(`/shop/${userId}/${props.item.id}`);
+    navigate(`/shop/${userId}/${item.id}`);
   }
 
   useEffect(() => {
@@ -26,14 +27,14 @@ export function ItemDisplay(props: { item: ShopItem }) {
     <>
       <div className="DisplayCard" onClick={selectItem}>
         <AspectRatio ratio={1 / 1}>
-          <img
-            className="Image"
-            src={imageUrl}
-            alt="Item Image"
-            width={"100%"}
-          />
+          <div className="AspectRatio">
+            <img src={imageUrl} alt="Item Image" width={"100%"} />
+          </div>
         </AspectRatio>
-        {props.item.displayName}
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div>{item.displayName}</div>
+          <div className="bold">{formatMoney(item.price)}</div>
+        </div>
       </div>
     </>
   );

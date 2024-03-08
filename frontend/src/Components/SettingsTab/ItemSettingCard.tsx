@@ -170,12 +170,14 @@ export function ItemSettingCard(props: {
         </div>
         <div style={{ width: "40%" }}>
           <AspectRatio ratio={1 / 1} onClick={setImage}>
-            <img
-              className="Image"
-              src={imageUrl}
-              alt="Item Image"
-              width={"100%"}
-            />
+            <div className="AspectRatio">
+              <img
+                className="Image"
+                src={imageUrl}
+                alt="Item Image"
+                width={"100%"}
+              />
+            </div>
           </AspectRatio>
           <input
             type="file"

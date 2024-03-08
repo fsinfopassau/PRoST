@@ -9,10 +9,10 @@ import {
   DialogTrigger,
 } from "@radix-ui/react-dialog";
 import {
+  AvatarIcon,
   Cross2Icon,
   ExitIcon,
   PaperPlaneIcon,
-  PersonIcon,
 } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { loginNew } from "./Queries";
@@ -82,7 +82,7 @@ export function LoginDialog() {
             <DialogTrigger asChild>
               <div>
                 <button onClick={buttonClickHandler} className="Button">
-                  <PersonIcon />
+                  <AvatarIcon />
                 </button>
               </div>
             </DialogTrigger>

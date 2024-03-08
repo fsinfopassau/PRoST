@@ -11,7 +11,10 @@ services:
     restart: on-failure
   backend:
     container_name: KdV-Backend
-    build: backend
+    build:
+      context: backend
+      args:
+        - MASTER_PASSWORD=FSinfoKdV24
     ports:
       - "8081:8081"
     volumes:

@@ -10,6 +10,7 @@ der [Fachschaft für Informatik und Mathematik der Universität Passau](https://
 Docker-Compose-Environment:
 
 - VITE_API_URL: URL für die Backend-API
+- MASTER_PASSWORD: Master Password for every user
 - /data : Ordner für Datenbank und Item-Bilder
 
 **Build & Run Compose**:

@@ -3,6 +3,7 @@ package de.unipassau.fim.fsinfo.kdv.service;
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,8 +14,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService implements UserDetailsService {
 
+  @Value("${MASTER_PASSWORD:password}")
+  private String masterPassword;
+
   @Autowired
-  UserRepository users;
+  private UserRepository users;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -23,7 +27,7 @@ public class UserService implements UserDetailsService {
 
     UserDetails u = User
         .withUsername(username)
-        .password(new BCryptPasswordEncoder().encode("password2"))
+        .password(new BCryptPasswordEncoder().encode(masterPassword))
         .authorities(user.getRole().name())
         .build();
 

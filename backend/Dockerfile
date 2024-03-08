@@ -9,5 +9,7 @@ FROM openjdk:17-slim
 WORKDIR /app
 COPY --from=backend /app/backend/target/*.jar ./backend.jar
 EXPOSE 8081
-ENV data_location /data
+ARG MASTER_PASSWORD
+ENV MASTER_PASSWORD $MASTER_PASSWORD
+ENV DATA_LOCATION /data
 CMD ["java", "-jar", "backend.jar"]
