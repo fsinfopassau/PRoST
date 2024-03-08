@@ -50,40 +50,42 @@ export function App() {
   return (
     <>
       <React.StrictMode>
-        <BrowserRouter>
-          <TabChanger switchTheme={switchTheme} />
-          <ToastContainer
-            position="bottom-left"
-            autoClose={4000}
-            //limit={3}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss={false}
-            draggable
-            pauseOnHover
-            theme="light"
-            transition={Bounce}
-          />
-          <Routes>
-            <Route
-              path="/"
-              element={<UserSelection switchTheme={switchTheme} />}
+        <div className="Main">
+          <BrowserRouter>
+            <TabChanger switchTheme={switchTheme} />
+            <ToastContainer
+              position="bottom-left"
+              autoClose={4000}
+              //limit={3}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss={false}
+              draggable
+              pauseOnHover
+              theme="light"
+              transition={Bounce}
             />
-            <Route path="/shop/:userId" element={<ItemSelection />} />
-            <Route path="/shop/:userId/:itemId" element={<ItemCheckout />} />
-            <Route path="/stats" element={<Statistics />} />
-            <Route path="/stats/users" element={<AllUsersStatistics />} />
-            <Route path="/stats/users/:userId" element={<UserStatistics />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/settings/items" element={<ItemSettings />} />
-            <Route
-              path="*"
-              element={<ErrorComponent switchTheme={switchTheme} />}
-            />
-          </Routes>
-        </BrowserRouter>
+            <Routes>
+              <Route
+                path="/"
+                element={<UserSelection switchTheme={switchTheme} />}
+              />
+              <Route path="/shop/:userId" element={<ItemSelection />} />
+              <Route path="/shop/:userId/:itemId" element={<ItemCheckout />} />
+              <Route path="/stats" element={<Statistics />} />
+              <Route path="/stats/users" element={<AllUsersStatistics />} />
+              <Route path="/stats/users/:userId" element={<UserStatistics />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/settings/items" element={<ItemSettings />} />
+              <Route
+                path="*"
+                element={<ErrorComponent switchTheme={switchTheme} />}
+              />
+            </Routes>
+          </BrowserRouter>
+        </div>
       </React.StrictMode>
     </>
   );

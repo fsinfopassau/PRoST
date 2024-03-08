@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
 import { ShopItem } from "../../Types/ShopItem";
-import { ItemContainer } from "./ItemContainer";
 import { useEffect, useState } from "react";
 import { getAllShopItems, getUser } from "../Util/Queries";
 import { User } from "../../Types/User";
 import { UserSummaryCard } from "../StatisticsTab/UserSummaryCard";
 import { ErrorComponent } from "../Util/ErrorTab";
+import { ItemDisplay } from "./ItemDisplay";
 
 export function ItemSelection() {
   const { userId } = useParams();
@@ -22,11 +22,19 @@ export function ItemSelection() {
       });
   }, []);
 
+  function filter(itemList: ShopItem[]) {
+    return itemList.filter((item) => item.enabled);
+  }
+
   if (user) {
     return (
       <>
         <UserSummaryCard user={user} />
-        <ItemContainer items={items} />
+        <div className="SelectionContainer">
+          {filter(items).map((item, index) => (
+            <ItemDisplay key={index} item={item} />
+          ))}
+        </div>
       </>
     );
   } else {
