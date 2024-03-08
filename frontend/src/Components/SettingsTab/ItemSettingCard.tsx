@@ -19,6 +19,7 @@ import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { useEffect, useRef, useState } from "react";
 
 import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
+import { toast } from "react-toastify";
 
 export function ItemSettingCard(props: {
   item: ShopItem;
@@ -40,9 +41,13 @@ export function ItemSettingCard(props: {
     if (event.target.files) {
       const file = event.target.files[0];
       if (file) {
-        console.log("upload " + file.name + " " + item.id);
-        uploadItemDisplayPicture(item, file).then(() => {
-          onUpdate();
+        uploadItemDisplayPicture(item, file).then((result) => {
+          if (result) {
+            toast.success("Bild geändert.");
+            onUpdate();
+          } else {
+            toast.error("upload fehlgeschlagen!");
+          }
         });
       }
     }
@@ -58,7 +63,10 @@ export function ItemSettingCard(props: {
     console.log("Price = " + newPrice);
     changeShopItem(item, newPrice, "price").then((result) => {
       if (result) {
+        toast.success("Preis geändert.");
         onUpdate();
+      } else {
+        toast.error("Änderung fehlgeschlagen!");
       }
     });
   }
@@ -66,15 +74,10 @@ export function ItemSettingCard(props: {
   function setName(newName: string) {
     changeShopItem(item, newName, "displayname").then((result) => {
       if (result) {
+        toast.success("Name geändert.");
         onUpdate();
-      }
-    });
-  }
-
-  function deleteItem() {
-    deleteShopItem(item).then((result) => {
-      if (result) {
-        onUpdate();
+      } else {
+        toast.error("Änderung fehlgeschlagen!");
       }
     });
   }
@@ -82,24 +85,35 @@ export function ItemSettingCard(props: {
   function setCategory(newCategory: string) {
     changeShopItem(item, newCategory, "category").then((result) => {
       if (result) {
+        toast.success("Kategorie geändert.");
         onUpdate();
+      } else {
+        toast.error("Änderung fehlgeschlagen!");
       }
     });
   }
 
   function toggleEnable() {
     const newVal = !item.enabled;
-    enableItem(item, newVal)
-      .then((result) => {
-        if (result) {
-          item.enabled = newVal;
-        } else {
-          console.log("ne");
-        }
-      })
-      .catch(() => {
-        console.log("ne2");
-      });
+    enableItem(item, newVal).then((result) => {
+      if (result) {
+        toast.success(item.id + (newVal ? " aktiviert!" : " deaktiviert!"));
+        onUpdate();
+      } else {
+        toast.error("Änderung fehlgeschlagen!");
+      }
+    });
+  }
+
+  function deleteItem() {
+    deleteShopItem(item).then((result) => {
+      if (result) {
+        toast.warning(item.id + " gelöscht!");
+        onUpdate();
+      } else {
+        toast.error("Löschen fehlgeschlagen!");
+      }
+    });
   }
 
   return (

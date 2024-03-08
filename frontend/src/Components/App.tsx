@@ -11,6 +11,7 @@ import { Settings } from "./SettingsTab/Settings";
 import { UserStatistics } from "./StatisticsTab/UserStatistics";
 import { AllUsersStatistics } from "./StatisticsTab/AllUsersStatistics";
 import { ItemSettings } from "./SettingsTab/ItemSettings";
+import { Bounce, ToastContainer } from "react-toastify";
 
 const stylesAvailable = ["purple", "blue"];
 
@@ -51,6 +52,20 @@ export function App() {
       <React.StrictMode>
         <BrowserRouter>
           <TabChanger switchTheme={switchTheme} />
+          <ToastContainer
+            position="bottom-left"
+            autoClose={4000}
+            //limit={3}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable
+            pauseOnHover
+            theme="light"
+            transition={Bounce}
+          />
           <Routes>
             <Route
               path="/"

@@ -3,6 +3,7 @@ import { buyItem, getShopItem } from "../Util/Queries";
 import { ShopItem } from "../../Types/ShopItem";
 import { useEffect, useState } from "react";
 import { formatMoney } from "../../Types/User";
+import { toast } from "react-toastify";
 
 export function ItemCheckout() {
   const { userId, itemId } = useParams();
@@ -19,7 +20,15 @@ export function ItemCheckout() {
 
   function checkout() {
     console.log("checkout", userId, itemId);
-    if (userId && itemId) buyItem(userId, itemId, 1);
+    if (userId && itemId) {
+      buyItem(userId, itemId, 1).then((result) => {
+        if (result) {
+          toast(item?.displayName + " gekauft!");
+        } else {
+          toast.error(item?.displayName + " konnte nicht gekauft werden!");
+        }
+      });
+    }
     navigate("/");
   }
 

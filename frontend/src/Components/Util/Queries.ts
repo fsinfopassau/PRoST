@@ -73,7 +73,7 @@ export async function getAllShopItems() {
 }
 
 export async function buyItem(userId: string, itemId: string, amount: number) {
-  const result = await await fetch(
+  const result = await fetch(
     `${apiUrl}/api/shop/consume/${itemId}?userId=${userId}&n=${amount}`,
     {
       method: "POST",
@@ -104,7 +104,7 @@ export async function enableItem(
   item: ShopItem,
   enable: boolean
 ): Promise<boolean> {
-  const result = await await fetch(
+  const result = await fetch(
     `${apiUrl}/api/shop/${item.id}/${enable ? "enable" : "disable"}`,
     {
       method: "POST",
@@ -117,7 +117,7 @@ export async function enableItem(
 }
 
 export async function deleteShopItem(item: ShopItem) {
-  const result = await await fetch(`${apiUrl}/api/shop/${item.id}/delete`, {
+  const result = await fetch(`${apiUrl}/api/shop/${item.id}/delete`, {
     method: "DELETE",
     headers: {
       Authorization: `Basic ${getEncodedCredentials()}`,
@@ -131,7 +131,7 @@ export async function changeShopItem(
   value: string,
   path: string
 ) {
-  const result = await await fetch(
+  const result = await fetch(
     `${apiUrl}/api/shop/${item.id}/${path}?value=${value}`,
     {
       method: "POST",
@@ -147,21 +147,17 @@ export async function uploadItemDisplayPicture(item: ShopItem, file: File) {
   const formData = new FormData();
   formData.append("file", file);
 
-  axios
-    .post(apiUrl + `/api/shop/${item.id}/display-picture`, formData, {
+  try{
+    const result = await axios.post(apiUrl + `/api/shop/${item.id}/display-picture`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Basic ${getEncodedCredentials()}`,
       },
-    })
-    .then(() => {
-      return true;
-    })
-    .catch(() => {
-      return false;
     });
-
-  return true;
+    return result.status == 200;
+  }catch (e){
+    return false;
+  }
 }
 
 export async function getItemDisplayPicture(

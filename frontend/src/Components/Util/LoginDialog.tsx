@@ -17,6 +17,7 @@ import {
 import { useState } from "react";
 import { loginNew } from "./Queries";
 import { resetCredentials, validCredentials } from "./SessionInfo";
+import { toast } from "react-toastify";
 
 export function LoginDialog() {
   const [userName, setUserName] = useState<string>("");
@@ -38,22 +39,21 @@ export function LoginDialog() {
   function submit() {
     loginNew(userName, password)
       .then((result) => {
-        console.log(
-          "login with " +
-            userName +
-            ":" +
-            password +
-            " " +
-            (result ? "success" : "false")
-        );
+        if (result) {
+          toast.success("Hallo " + userName);
+        } else {
+          toast.error("Login fehlgeschlagen!");
+        }
+
         setLogged(result);
       })
       .catch(() => {
-        setLogged(false);
+        toast.error("Login Error!");
       });
   }
 
   function logout() {
+    toast.success("Tschüss " + userName);
     setUserName("");
     setPassword("");
     resetCredentials();
@@ -73,6 +73,7 @@ export function LoginDialog() {
         {isLogged ? (
           <div>
             <button onClick={logout} className="Button">
+              {userName}
               <ExitIcon />
             </button>
           </div>
@@ -126,11 +127,9 @@ export function LoginDialog() {
                     justifyContent: "flex-end",
                   }}
                 >
-                  <DialogClose asChild onClick={submit}>
-                    <button className="Button">
-                      <PaperPlaneIcon />
-                    </button>
-                  </DialogClose>
+                  <button className="Button" onClick={submit}>
+                    <PaperPlaneIcon />
+                  </button>
                 </div>
               </DialogContent>
             </DialogPortal>
