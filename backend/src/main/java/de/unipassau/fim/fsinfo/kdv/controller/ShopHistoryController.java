@@ -1,10 +1,10 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
-import de.unipassau.fim.fsinfo.kdv.data.dao.ShopHistoryEntry;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
-import de.unipassau.fim.fsinfo.kdv.data.dto.ShopHistoryEntryDTO;
-import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopHistoryRepository;
+import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItemHistoryEntry;
+import de.unipassau.fim.fsinfo.kdv.data.dto.ShopItemHistoryEntryDTO;
+import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import java.util.ArrayList;
@@ -23,28 +23,28 @@ import org.springframework.web.bind.annotation.RestController;
 public class ShopHistoryController {
 
   @Autowired
-  ShopHistoryRepository historyRepository;
+  ShopItemHistoryRepository historyRepository;
   @Autowired
   ShopItemRepository itemRepository;
   @Autowired
   UserRepository userRepository;
 
   @GetMapping
-  public ResponseEntity<List<ShopHistoryEntryDTO>> history(
+  public ResponseEntity<List<ShopItemHistoryEntryDTO>> history(
       @RequestParam(required = false) Integer n) {
     return ResponseEntity.ok(getDTO(getSizedHistory(n, historyRepository.findAll())));
   }
 
   @GetMapping("/{userId}")
-  public ResponseEntity<List<ShopHistoryEntryDTO>> historyUser(@PathVariable String userId,
+  public ResponseEntity<List<ShopItemHistoryEntryDTO>> historyUser(@PathVariable String userId,
       @RequestParam(required = false) Integer n) {
     return ResponseEntity.ok(
         getDTO(getSizedHistory(n, historyRepository.findByUserIdEquals(userId))));
   }
 
-  private List<ShopHistoryEntry> getSizedHistory(
+  private List<ShopItemHistoryEntry> getSizedHistory(
       @RequestParam(required = false) Integer amount,
-      List<ShopHistoryEntry> history) {
+      List<ShopItemHistoryEntry> history) {
     if (amount == null || amount < 0) {
       return history;
     }
@@ -56,10 +56,10 @@ public class ShopHistoryController {
     }
   }
 
-  private List<ShopHistoryEntryDTO> getDTO(List<ShopHistoryEntry> entryList) {
-    List<ShopHistoryEntryDTO> entryDTOs = new ArrayList<>();
+  private List<ShopItemHistoryEntryDTO> getDTO(List<ShopItemHistoryEntry> entryList) {
+    List<ShopItemHistoryEntryDTO> entryDTOs = new ArrayList<>();
     if (entryList != null) {
-      for (ShopHistoryEntry entry : entryList) {
+      for (ShopItemHistoryEntry entry : entryList) {
 
         Optional<KdvUser> userO = userRepository.findById(entry.getUserId());
         Optional<ShopItem> itemO = itemRepository.findById(entry.getItemId());
@@ -68,10 +68,11 @@ public class ShopHistoryController {
           String userDisplayName = userO.get().getDisplayName();
           String itemDisplayName = itemO.get().getDisplayName();
 
-          entryDTOs.add(new ShopHistoryEntryDTO(entry.getId(), entry.getUserId(), userDisplayName,
-              entry.getItemId(), itemDisplayName,
-              entry.getPrice(),
-              entry.getTimestamp()));
+          entryDTOs.add(
+              new ShopItemHistoryEntryDTO(entry.getId(), entry.getUserId(), userDisplayName,
+                  entry.getItemId(), itemDisplayName,
+                  entry.getPrice(),
+                  entry.getTimestamp()));
         }
       }
     }

@@ -3,6 +3,7 @@ package de.unipassau.fim.fsinfo.kdv.controller;
 import de.unipassau.fim.fsinfo.kdv.data.UserRole;
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
+import de.unipassau.fim.fsinfo.kdv.service.UserService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class UserController {
   @Autowired
   UserRepository userRepository;
 
+  @Autowired
+  UserService userService;
+
   /**
    * List all Users
    *
@@ -41,13 +45,11 @@ public class UserController {
    */
   @PostMapping("/create")
   public ResponseEntity<String> create(@RequestBody KdvUser user) {
-
-    if (userRepository.findById(user.getId()).isPresent()) {
-      return ResponseEntity.badRequest().body("user already present");
+    if (userService.createUser(user)) {
+      return ResponseEntity.ok(user.getId());
+    } else {
+      return ResponseEntity.badRequest().build();
     }
-
-    userRepository.save(user);
-    return ResponseEntity.ok(user.getId());
   }
 
   @GetMapping("/{id}")

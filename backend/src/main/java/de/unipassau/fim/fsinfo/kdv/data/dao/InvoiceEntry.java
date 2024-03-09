@@ -1,5 +1,6 @@
 package de.unipassau.fim.fsinfo.kdv.data.dao;
 
+import de.unipassau.fim.fsinfo.kdv.data.Invoice;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,8 +12,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@Entity(name = "KDV_ShopHistoryEntry")
-public class ShopHistoryEntry {
+@Entity(name = "KDV_InvoiceHistoryEntry")
+public class InvoiceEntry {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,18 +23,15 @@ public class ShopHistoryEntry {
   private String userId;
 
   @Column(nullable = false)
-  private String itemId;
-
-  @Column(nullable = false)
   private Double price;
 
   @Column(nullable = false)
   private Long timestamp;
 
-  public ShopHistoryEntry(String userId, String itemId, Double price) {
-    this.userId = userId;
-    this.itemId = itemId;
-    this.price = price;
+  public InvoiceEntry(Invoice invoice) {
+    this.userId = invoice.getUserId();
+    this.price = invoice.getPrice();
     this.timestamp = Instant.now().getEpochSecond();
   }
+
 }

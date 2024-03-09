@@ -1,7 +1,7 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
-import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopHistoryRepository;
+import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.service.FileStorageService;
@@ -36,7 +36,7 @@ public class ShopController {
   @Autowired
   ShopItemRepository itemRepository;
   @Autowired
-  ShopHistoryRepository historyRepository;
+  ShopItemHistoryRepository historyRepository;
   @Autowired
   UserRepository userRepository;
 

@@ -1,9 +1,9 @@
 package de.unipassau.fim.fsinfo.kdv.service;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
-import de.unipassau.fim.fsinfo.kdv.data.dao.ShopHistoryEntry;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
-import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopHistoryRepository;
+import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItemHistoryEntry;
+import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import java.util.Optional;
@@ -16,7 +16,7 @@ public class ShopService {
   @Autowired
   ShopItemRepository itemRepository;
   @Autowired
-  ShopHistoryRepository historyRepository;
+  ShopItemHistoryRepository historyRepository;
   @Autowired
   UserRepository userRepository;
 
@@ -40,7 +40,7 @@ public class ShopService {
       user.setBalance(user.getBalance() - item.getPrice());
 
       userRepository.save(user);
-      historyRepository.save(new ShopHistoryEntry(user.getId(), item.getId(), item.getPrice()));
+      historyRepository.save(new ShopItemHistoryEntry(user.getId(), item.getId(), item.getPrice()));
     }
 
     return true;

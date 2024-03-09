@@ -23,12 +23,15 @@ public class KdvUser {
   @Column(nullable = false)
   private Double balance;
   private String displayName;
+  @Column(nullable = false)
+  private String email;
   private Boolean enabled;
 
-  public KdvUser(String id, String displayName, UserRole role, Boolean enabled) {
+  public KdvUser(String id, String displayName, String email, UserRole role, Boolean enabled) {
     this.role = role;
     this.id = id;
     this.displayName = displayName;
+    this.email = email;
     this.enabled = enabled;
     this.balance = 0D;
   }

@@ -15,11 +15,15 @@ public class DataInit {
   CommandLineRunner userTestInit(UserRepository repository) {
     return args -> {
       try {
-        repository.save(new KdvUser("admin", "Kai Nepanik", UserRole.ADMINISTRATOR, true));
-        repository.save(new KdvUser("mod", "Lasse Maranda", UserRole.MODERATOR, true));
-        repository.save(new KdvUser("normalUser", "Erhart Haramasch", UserRole.USER, false));
+        repository.save(
+            new KdvUser("admin", "Kai Nepanik", "it@paulsenik.de", UserRole.ADMINISTRATOR, true));
+        repository.save(
+            new KdvUser("mod", "Lasse Maranda", "it@paulsenik.de", UserRole.MODERATOR, true));
+        repository.save(
+            new KdvUser("normalUser", "Erhart Haramasch", "it@paulsenik.de", UserRole.USER, false));
         for (int i = 1; i <= 20; i++) {
-          repository.save(new KdvUser("testN" + i, "KekW " + i, UserRole.USER, true));
+          repository.save(
+              new KdvUser("testN" + i, "KekW " + i, "it@paulsenik.de", UserRole.USER, true));
         }
       } catch (Exception e) {
         e.printStackTrace();

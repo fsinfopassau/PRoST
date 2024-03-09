@@ -39,6 +39,7 @@ public class WebConfig implements WebMvcConfigurer {
       "/api/shop/*/picture",
       "/api/shop/consume/**",
       "/api/history/**",
+      "/api/invoice/**",
   };
 
   public static String[] USER_SPACE = {

@@ -17,18 +17,20 @@ public class FileStorageService {
 
   private static final String[] PICTURE_TYPES = {"image/jpeg", "image/png"};
 
+  private static final String sep = System.getProperty("file.separator");
+
   private final File itemLocation;
 
   @Autowired
   public FileStorageService(@Value("${kdv.save-location}") @NonNull String saveLocation)
       throws IOException {
-    itemLocation = new File(saveLocation + "/items").getAbsoluteFile();
+    itemLocation = new File(saveLocation + sep + "items").getAbsoluteFile();
     Files.createDirectories(itemLocation.toPath());
     System.out.println("[FSS] :: item-location: " + itemLocation);
   }
 
   public FileStorageService(@NonNull String customSave, boolean printLocation) throws IOException {
-    itemLocation = new File(customSave + "/items").getAbsoluteFile();
+    itemLocation = new File(customSave + sep + "items").getAbsoluteFile();
     Files.createDirectories(itemLocation.toPath());
     if (printLocation) {
       System.out.println("item-location: " + itemLocation);
@@ -64,7 +66,7 @@ public class FileStorageService {
   }
 
   private String getItemPicturePath(@NonNull ShopItem item) {
-    return itemLocation.getAbsolutePath() + "/" + item.getId();
+    return itemLocation.getAbsolutePath() + sep + item.getId();
   }
 
   private boolean isValidImageType(MultipartFile file) {
