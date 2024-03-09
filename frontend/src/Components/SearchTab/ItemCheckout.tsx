@@ -67,17 +67,16 @@ export function ItemCheckout() {
 
   return (
     <>
-      <h2>{item?.displayName}</h2>
-      <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-        <div>
+      <div id="Checkout">
+        <div id="Checkout-Item">
+          <h2>{item?.displayName}</h2>
           <img
             className="Image"
             src={imageUrl}
             alt="Item Image"
-            width={"100%"}
-            style={{ maxWidth: "20rem" }}
+            style={{ width: "100%" }}
           />
-          <div className="SpreadContainer" style={{ fontSize: "1.5rem" }}>
+          <div className="SpreadContainer">
             <div style={{ display: "flex", alignItems: "center" }}>
               <BookmarkIcon />
               {item?.category}
@@ -91,22 +90,22 @@ export function ItemCheckout() {
             </div>
           </div>
         </div>
-      </div>
-      <div id="CheckoutBar">
-        <div className="CheckoutCounter">
-          <button className="Button" onClick={decrement}>
-            <ChevronLeftIcon height={60} width={60} />
-          </button>
-          <div>
-            <div>{amount}</div>
+        <div id="CheckoutBar">
+          <div className="CheckoutCounter">
+            <button className="Button" onClick={decrement}>
+              <ChevronLeftIcon height={60} width={60} />
+            </button>
+            <div>
+              <div>{amount}</div>
+            </div>
+            <button className="Button" onClick={increment}>
+              <ChevronRightIcon height={60} width={60} />
+            </button>
           </div>
-          <button className="Button" onClick={increment}>
-            <ChevronRightIcon height={60} width={60} />
+          <button id="Checkout-Complete" className="Button" onClick={checkout}>
+            <PaperPlaneIcon width={50} height={35} />
           </button>
         </div>
-        <button className="Button" onClick={checkout}>
-          <PaperPlaneIcon width={50} height={35} />
-        </button>
       </div>
     </>
   );
