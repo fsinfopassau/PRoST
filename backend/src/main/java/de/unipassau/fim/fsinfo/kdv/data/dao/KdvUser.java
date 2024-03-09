@@ -6,6 +6,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +25,7 @@ public class KdvUser {
   @Enumerated(EnumType.STRING)
   private UserRole role;
   @Column(nullable = false)
-  private Double balance;
+  private BigDecimal balance;
   private String displayName;
   @Column(nullable = false)
   private String email;
@@ -33,7 +37,17 @@ public class KdvUser {
     this.displayName = displayName;
     this.email = email;
     this.enabled = enabled;
-    this.balance = 0D;
+    this.balance = new BigDecimal(0);
+  }
+
+  public static String formatMoney(BigDecimal amount) {
+    if (amount == null) {
+      amount = new BigDecimal(0);
+    }
+    DecimalFormat df = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.GERMANY);
+    df.setMinimumFractionDigits(2); // Ensure two decimal places
+    df.setMaximumFractionDigits(2); // Ensure two decimal places
+    return df.format(amount);
   }
 }
 

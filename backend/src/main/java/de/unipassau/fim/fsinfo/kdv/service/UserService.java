@@ -2,6 +2,7 @@ package de.unipassau.fim.fsinfo.kdv.service;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
+import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class UserService implements UserDetailsService {
       return false;
     }
 
-    userTemplate.setBalance(0d);
+    userTemplate.setBalance(new BigDecimal(0));
     users.save(userTemplate);
     return true;
   }

@@ -4,6 +4,7 @@ import de.unipassau.fim.fsinfo.kdv.data.UserRole;
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.service.UserService;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,11 +72,11 @@ public class UserController {
   }
 
   @PostMapping("/{id}/balance")
-  public ResponseEntity<Double> balance(@PathVariable String id, @RequestParam String value) {
+  public ResponseEntity<BigDecimal> balance(@PathVariable String id, @RequestParam String value) {
     Optional<KdvUser> user = userRepository.findById(id);
 
     try {
-      Double d = Double.parseDouble(value);
+      BigDecimal d = new BigDecimal(value);
       if (user.isPresent()) {
         user.get().setBalance(d);
         userRepository.save(user.get());

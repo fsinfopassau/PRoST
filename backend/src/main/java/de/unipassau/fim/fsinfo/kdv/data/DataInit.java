@@ -4,6 +4,7 @@ import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
+import java.math.BigDecimal;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,9 +35,9 @@ public class DataInit {
   @Bean
   CommandLineRunner shopItemTestInit(ShopItemRepository repository) {
     return args -> {
-      ShopItem a = new ShopItem("bier", "drink", "Bier", 1.50);
-      ShopItem a2 = new ShopItem("spezi", "drink", "Spezi", 1.00);
-      ShopItem a3 = new ShopItem("uran-235", "snack", "Uran 235", 1.00);
+      ShopItem a = new ShopItem("bier", "drink", "Bier", new BigDecimal(1.50));
+      ShopItem a2 = new ShopItem("spezi", "drink", "Spezi", new BigDecimal(1.00));
+      ShopItem a3 = new ShopItem("uran-235", "snack", "Uran 235", new BigDecimal(1.00));
       a3.setEnabled(false);
       try {
         repository.save(a);

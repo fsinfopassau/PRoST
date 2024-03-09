@@ -82,6 +82,16 @@ export async function buyItem(userId: string, itemId: string, amount: number) {
   return result.ok;
 }
 
+export async function createInvoice(userId: string) {
+  const result = await fetch(
+    `${apiUrl}/api/invoice/create/${userId}`,
+    {
+      method: "POST",
+    }
+  );
+  return result.ok;
+}
+
 export async function getHistory(amount: number) {
   const result = await (
     await fetch(`${apiUrl}/api/history?n=${amount}`, {

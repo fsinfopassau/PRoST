@@ -1,7 +1,7 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
-import de.unipassau.fim.fsinfo.kdv.data.Invoice;
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
+import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceDTO;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.service.InvoiceService;
 import java.util.Optional;
@@ -23,11 +23,11 @@ public class InvoiceController {
   private UserRepository users;
 
   @PostMapping("/create/{id}")
-  public ResponseEntity<Invoice> create(@PathVariable String id) {
+  public ResponseEntity<InvoiceDTO> create(@PathVariable String id) {
     Optional<KdvUser> user = users.findById(id);
 
     if (user.isPresent()) {
-      Optional<Invoice> invoice = invoiceService.createInvoice(user.get());
+      Optional<InvoiceDTO> invoice = invoiceService.createInvoice(user.get());
 
       if (invoice.isPresent()) {
         return ResponseEntity.ok(invoice.get());

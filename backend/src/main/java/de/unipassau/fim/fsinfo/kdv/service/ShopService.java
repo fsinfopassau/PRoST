@@ -37,7 +37,7 @@ public class ShopService {
 
     // Create single entries for every item
     for (int i = 0; i < amount; i++) {
-      user.setBalance(user.getBalance() - item.getPrice());
+      user.setBalance(user.getBalance().subtract(item.getPrice()));
 
       userRepository.save(user);
       historyRepository.save(new ShopItemHistoryEntry(user.getId(), item.getId(), item.getPrice()));

@@ -1,12 +1,12 @@
 package de.unipassau.fim.fsinfo.kdv.data.dao;
 
-import de.unipassau.fim.fsinfo.kdv.data.Invoice;
+import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.time.Instant;
+import java.math.BigDecimal;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,15 +23,21 @@ public class InvoiceEntry {
   private String userId;
 
   @Column(nullable = false)
-  private Double price;
+  private BigDecimal balance;
 
   @Column(nullable = false)
   private Long timestamp;
 
-  public InvoiceEntry(Invoice invoice) {
+  @Column(nullable = false)
+  private Long previousInvoiceTimestamp;
+
+  private boolean mailed = false;
+
+  public InvoiceEntry(InvoiceDTO invoice, Long previousInvoiceTimestamp, Long currentTimestamp) {
+    this.previousInvoiceTimestamp = previousInvoiceTimestamp;
     this.userId = invoice.getUserId();
-    this.price = invoice.getPrice();
-    this.timestamp = Instant.now().getEpochSecond();
+    this.balance = invoice.getBalance();
+    this.timestamp = currentTimestamp;
   }
 
 }

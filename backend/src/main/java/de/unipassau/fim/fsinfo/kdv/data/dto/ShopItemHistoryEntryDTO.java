@@ -1,6 +1,7 @@
 package de.unipassau.fim.fsinfo.kdv.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -12,7 +13,7 @@ public class ShopItemHistoryEntryDTO {
   private String userDisplayName;
   private String itemId;
   private String itemDisplayName;
-  private Double price;
+  private BigDecimal price;
   private Long timestamp;
-  
+
 }

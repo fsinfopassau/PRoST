@@ -3,6 +3,7 @@ package de.unipassau.fim.fsinfo.kdv.data.dao;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import java.math.BigDecimal;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,11 +18,11 @@ public class ShopItem {
   @Column(nullable = false)
   private String displayName;
   @Column(nullable = false)
-  private Double price;
+  private BigDecimal price;
   @Column(nullable = false)
   private Boolean enabled;
 
-  public ShopItem(String id, String category, String displayName, double price) {
+  public ShopItem(String id, String category, String displayName, BigDecimal price) {
     this.id = id;
     this.category = category;
     this.displayName = displayName;

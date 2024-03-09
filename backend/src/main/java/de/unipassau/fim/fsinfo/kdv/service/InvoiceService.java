@@ -1,11 +1,12 @@
 package de.unipassau.fim.fsinfo.kdv.service;
 
-import de.unipassau.fim.fsinfo.kdv.data.Invoice;
 import de.unipassau.fim.fsinfo.kdv.data.dao.InvoiceEntry;
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItemHistoryEntry;
+import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceDTO;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.InvoiceRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemHistoryRepository;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,10 +21,21 @@ import org.springframework.stereotype.Service;
 public class InvoiceService {
 
   @Autowired
-  ShopItemHistoryRepository shopHistory;
+  private ShopItemHistoryRepository shopHistory;
 
   @Autowired
-  InvoiceRepository invoiceHistory;
+  private InvoiceRepository invoiceHistory;
+
+  @Autowired
+  private MailService mail;
+
+  public InvoiceDTO getInvoiceData(InvoiceEntry entry) {
+    List<ShopItemHistoryEntry> entries = shopHistory.findByUserIdAndTimestampBetween(
+        entry.getUserId(),
+        entry.getPreviousInvoiceTimestamp(), entry.getTimestamp());
+
+    return new InvoiceDTO(entry.getUserId(), entry.getBalance(), getItemAmounts(entries));
+  }
 
   /**
    * Creates and saves a new Invoice.
@@ -33,11 +45,12 @@ public class InvoiceService {
    * @param user the invoiced user.
    * @return optional
    */
-  public Optional<Invoice> createInvoice(KdvUser user) {
+  public Optional<InvoiceDTO> createInvoice(KdvUser user) {
 
     List<InvoiceEntry> previousInvoices = invoiceHistory.findByUserIdEquals(user.getId());
 
     Long lastInvoiceTimestamp = 0L; // No previous invoice
+    Long currentTimestamp = Instant.now().getEpochSecond();
 
     if (!previousInvoices.isEmpty()) {
       Optional<InvoiceEntry> entry = getLastEntry(previousInvoices);
@@ -48,17 +61,19 @@ public class InvoiceService {
     }
 
     List<ShopItemHistoryEntry> entries = shopHistory.findByUserIdAndTimestampBetween(user.getId(),
-        lastInvoiceTimestamp, Instant.now().getEpochSecond());
+        lastInvoiceTimestamp, currentTimestamp);
 
     if (!entries.isEmpty()) {
-      Invoice invoice = new Invoice(user.getId(), user.getBalance(), getItemAmounts(entries));
+      InvoiceDTO invoice = new InvoiceDTO(user.getId(), user.getBalance(), getItemAmounts(entries));
 
-      invoiceHistory.save(new InvoiceEntry(invoice));
+      invoiceHistory.save(new InvoiceEntry(invoice, lastInvoiceTimestamp, currentTimestamp));
+
+      mail.sendInvoice(invoice);
 
       return Optional.of(invoice);
-      
-    } else if (user.getBalance() != 0) {
-      return Optional.of(new Invoice(user.getId(), user.getBalance(), new HashMap<>()));
+
+    } else if (user.getBalance().compareTo(new BigDecimal(0)) == 0) {
+      return Optional.of(new InvoiceDTO(user.getId(), user.getBalance(), new HashMap<>()));
     }
 
     return Optional.empty();

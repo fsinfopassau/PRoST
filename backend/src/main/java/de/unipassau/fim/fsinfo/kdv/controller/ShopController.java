@@ -7,6 +7,7 @@ import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.service.FileStorageService;
 import de.unipassau.fim.fsinfo.kdv.service.ShopService;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,9 @@ public class ShopController {
     if (item.getEnabled() == null) {
       item.setEnabled(true);
     }
-    item.setPrice(0.0);
+    if (item.getPrice() == null) {
+      item.setPrice(new BigDecimal(0));
+    }
 
     itemRepository.save(item);
     return ResponseEntity.ok(item);
@@ -110,7 +113,7 @@ public class ShopController {
       @RequestParam String value) {
     Optional<ShopItem> item = itemRepository.findById(id);
     try {
-      Double price = Double.parseDouble(value);
+      BigDecimal price = new BigDecimal(value);
       if (item.isPresent()) {
         item.get().setPrice(price);
         itemRepository.save(item.get());

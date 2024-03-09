@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.math.BigDecimal;
 import java.time.Instant;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,12 +26,12 @@ public class ShopItemHistoryEntry {
   private String itemId;
 
   @Column(nullable = false)
-  private Double price;
+  private BigDecimal price;
 
   @Column(nullable = false)
   private Long timestamp;
 
-  public ShopItemHistoryEntry(String userId, String itemId, Double price) {
+  public ShopItemHistoryEntry(String userId, String itemId, BigDecimal price) {
     this.userId = userId;
     this.itemId = itemId;
     this.price = price;
