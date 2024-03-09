@@ -19,14 +19,19 @@ input {
 
 body {
   margin: 0 0rem;
+  height: 100vh;
+}
+
+#root {
+  height: 100%;
 }
 
 .Main {
   justify-content: center;
   align-items: center;
-  max-width: 1300px;
-  padding: 0 1rem;
+  padding: 0 1rem 1rem 1rem;
   margin: 0 auto;
+  height: 100%;
 }
 
 h1 {
@@ -57,17 +62,42 @@ svg {
   margin: 5px;
 }
 
+#Checkout {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#Checkout-Item{
+  font-size: 2rem;
+  width: 25rem;
+  max-width: 50vw;
+}
+
 #CheckoutBar {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   gap: 50px;
-  margin-top: 2rem;
+  margin: 2rem;
   font-size: 4rem;
+  position: fixed;
+  bottom: 0;
+  flex-shrink: 1;
+  width: 100%;
 }
 #CheckoutBar Button{
   padding: .7rem;
 }
+
+#Checkout-Complete{
+  margin: 1rem;
+  position: absolute;
+  right: 0;
+}
+
 .CheckoutCounter {
   display: flex;
   align-content: center;
@@ -227,6 +257,7 @@ Tabs
   align-items: center;
 }
 #login-button {
+  display: flex;
   align-items: center;  
   padding: 0 10px;
   height: 100%;

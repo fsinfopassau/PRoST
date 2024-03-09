@@ -72,7 +72,7 @@ export function LoginDialog() {
       <div id="login">
         {isLogged ? (
           <button onClick={logout} id="login-button">
-            {userName}
+            <div>{userName}</div>
             <ExitIcon width={35} height={25} />
           </button>
         ) : (
