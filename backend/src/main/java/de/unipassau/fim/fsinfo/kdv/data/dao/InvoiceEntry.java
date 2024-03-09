@@ -31,7 +31,8 @@ public class InvoiceEntry {
   @Column(nullable = false)
   private Long previousInvoiceTimestamp;
 
-  private boolean mailed = false;
+  private boolean shouldMail = false;
+  private boolean isMailed = false;
 
   public InvoiceEntry(InvoiceDTO invoice, Long previousInvoiceTimestamp, Long currentTimestamp) {
     this.previousInvoiceTimestamp = previousInvoiceTimestamp;

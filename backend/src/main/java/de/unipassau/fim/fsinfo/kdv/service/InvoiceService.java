@@ -47,6 +47,10 @@ public class InvoiceService {
    */
   public Optional<InvoiceDTO> createInvoice(KdvUser user) {
 
+    if (user.getBalance().compareTo(new BigDecimal(0)) == 0) {
+      return Optional.empty();
+    }
+
     List<InvoiceEntry> previousInvoices = invoiceHistory.findByUserIdEquals(user.getId());
 
     Long lastInvoiceTimestamp = 0L; // No previous invoice
@@ -63,20 +67,21 @@ public class InvoiceService {
     List<ShopItemHistoryEntry> entries = shopHistory.findByUserIdAndTimestampBetween(user.getId(),
         lastInvoiceTimestamp, currentTimestamp);
 
+    InvoiceDTO invoice;
     if (!entries.isEmpty()) {
-      InvoiceDTO invoice = new InvoiceDTO(user.getId(), user.getBalance(), getItemAmounts(entries));
-
-      invoiceHistory.save(new InvoiceEntry(invoice, lastInvoiceTimestamp, currentTimestamp));
-
-      mail.sendInvoice(invoice);
-
-      return Optional.of(invoice);
-
-    } else if (user.getBalance().compareTo(new BigDecimal(0)) == 0) {
-      return Optional.of(new InvoiceDTO(user.getId(), user.getBalance(), new HashMap<>()));
+      invoice = new InvoiceDTO(user.getId(), user.getBalance(), getItemAmounts(entries));
+    } else {
+      invoice = new InvoiceDTO(user.getId(), user.getBalance(), getItemAmounts(entries));
     }
 
-    return Optional.empty();
+    InvoiceEntry entry = new InvoiceEntry(invoice, lastInvoiceTimestamp, currentTimestamp);
+
+    if (mail.sendInvoice(invoice)) {
+      entry.setMailed(true);
+    }
+
+    invoiceHistory.save(entry);
+    return Optional.of(invoice);
   }
 
   /**

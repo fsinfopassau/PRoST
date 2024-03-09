@@ -1,7 +1,9 @@
 package de.unipassau.fim.fsinfo.kdv.service;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
+import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceDTO;
+import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import java.util.HashMap;
 import java.util.Optional;
@@ -34,7 +36,8 @@ public class MailService {
 
   @Autowired
   private UserRepository users;
-
+  @Autowired
+  private ShopItemRepository items;
 
   public boolean sendInvoice(@NonNull InvoiceDTO invoice) {
     Optional<KdvUser> user = users.findById(invoice.getUserId());
@@ -42,10 +45,11 @@ public class MailService {
       return false;
     }
 
-    String text = "Servus " + user.get().getDisplayName() + ",\n" +
+    String text = "Servus " + user.get().getDisplayName() + ",\n\n" +
         "dein aktueller Kontostand bei der Kaffeekasse beträgt " + KdvUser.formatMoney(
-        invoice.getBalance()) + "\n"
-        + "Bitte überweise den Betrag mittels PayPal [1] oder gib ihn mir bei der nächsten Gelegenheit persönlich in bar.\n"
+        invoice.getBalance()) + ".\n"
+        + formattedAmounts(invoice)
+        + "\nBitte überweise den Betrag mittels PayPal [1] oder gib ihn mir bei der nächsten Gelegenheit persönlich in bar.\n"
         + "\n"
         + "Viele Grüße\n"
         + "Bierjam\n"
@@ -55,7 +59,6 @@ public class MailService {
 
     return sendMail(user.get().getEmail(), "Kaffeekasse - Neue Abrechnung", text);
   }
-
 
   /**
    * Sent Mail over predefined host and user.
@@ -94,6 +97,39 @@ public class MailService {
       return false;
     }
     return true;
+  }
+
+  public String formattedAmounts(InvoiceDTO invoice) {
+
+    StringBuilder b = new StringBuilder();
+
+    if (!invoice.getAmounts().isEmpty()) {
+      b.append("\n");
+      b.append("Deine Einkäufe seit letzter Abrechnung:");
+      b.append("\n");
+    }
+
+    for (String k : invoice.getAmounts().keySet()) {
+
+      Optional<ShopItem> item = items.findById(k);
+      String itemName = k;
+
+      if (item.isPresent()) {
+        itemName = item.get().getDisplayName();
+      }
+
+      int amount = invoice.getAmounts().get(k);
+
+      if (amount < 10) {
+        b.append(" ");
+      }
+      b.append(amount);
+      b.append(" x ");
+      b.append(itemName);
+      b.append("\n");
+    }
+
+    return b.toString();
   }
 
 }
