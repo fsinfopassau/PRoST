@@ -11,7 +11,7 @@ public class AuthenticationController {
 
   @GetMapping
   public ResponseEntity<String> auth() {
-    return ResponseEntity.ok("Alles klärchen Bärchen. \uD83D\uDC4D");
+    return ResponseEntity.ok("Alles Klärchen Bärchen. \uD83D\uDC4D");
   }
 
 }

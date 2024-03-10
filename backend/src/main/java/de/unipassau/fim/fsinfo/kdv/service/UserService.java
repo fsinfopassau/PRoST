@@ -20,10 +20,14 @@ public class UserService implements UserDetailsService {
   @Value("${MASTER_PASSWORD:password}")
   private String masterPassword;
 
-  @Autowired
-  private UserRepository users;
+  private final UserRepository users;
 
   private static final String EMAIL_PATTERN = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$";
+
+  @Autowired
+  public UserService(UserRepository users) {
+    this.users = users;
+  }
 
   public static boolean isValidEmail(String email) {
     if (email == null) {
@@ -54,12 +58,10 @@ public class UserService implements UserDetailsService {
     KdvUser user = users.findById(username)
         .orElseThrow(() -> new UsernameNotFoundException("User \"" + username + "\" not found!"));
 
-    UserDetails u = User
+    return User
         .withUsername(username)
         .password(new BCryptPasswordEncoder().encode(masterPassword))
         .authorities(user.getRole().name())
         .build();
-
-    return u;
   }
 }

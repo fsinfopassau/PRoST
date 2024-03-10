@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,7 @@ public class FileStorageService {
   private void saveFile(@NonNull MultipartFile multipartFile, @NonNull String destinationPath)
       throws IOException {
     File file = new File(destinationPath);
+    //noinspection ResultOfMethodCallIgnored
     file.getParentFile().mkdirs();
     multipartFile.transferTo(file);
   }
@@ -70,8 +72,8 @@ public class FileStorageService {
   }
 
   private boolean isValidImageType(MultipartFile file) {
-    return Arrays.asList(PICTURE_TYPES).stream()
-        .anyMatch(s -> file.getContentType().equals(s));
+    return Arrays.stream(PICTURE_TYPES)
+        .anyMatch(s -> Objects.equals(file.getContentType(), s));
   }
 
 }

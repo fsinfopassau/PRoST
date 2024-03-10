@@ -6,6 +6,7 @@ import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.kdv.service.FileStorageService;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -21,7 +22,7 @@ class FileStorageServiceTest {
 
   @Test
   void saveItemPictureNonPng(@TempDir Path path) throws IOException {
-    ShopItem item = new ShopItem("test", "testCategory", "Test Item", 420.69d);
+    ShopItem item = new ShopItem("test", "testCategory", "Test Item", new BigDecimal("420.69"));
     MultipartFile mockFile = Mockito.mock(MultipartFile.class);
     when(mockFile.getContentType()).thenReturn("hallo Welt");
 
@@ -34,7 +35,7 @@ class FileStorageServiceTest {
 
   @Test
   void saveItemPicture(@TempDir Path path) throws IOException {
-    ShopItem item = new ShopItem("test", "testCategory", "Test Item", 420.69d);
+    ShopItem item = new ShopItem("test", "testCategory", "Test Item", new BigDecimal("420.69"));
     MockMultipartFile multipartFile = new MockMultipartFile(
         "do-not-show", // request parameter name
         "unimportant.png", // original file name
@@ -50,8 +51,8 @@ class FileStorageServiceTest {
   }
 
   @Test
-  void getItemPicture(@TempDir Path path) throws IOException, InterruptedException {
-    ShopItem item = new ShopItem("test", "testCategory", "Test Item", 420.69d);
+  void getItemPicture(@TempDir Path path) throws IOException {
+    ShopItem item = new ShopItem("test", "testCategory", "Test Item", new BigDecimal("420.69"));
     MockMultipartFile multipartFile = new MockMultipartFile(
         "do-not-show", // request parameter name
         "unimportant.png", // original file name
@@ -71,7 +72,7 @@ class FileStorageServiceTest {
 
   @Test
   void getItemPictureMissing(@TempDir Path path) throws IOException {
-    ShopItem item = new ShopItem("test", "testCategory", "Test Item", 420.69d);
+    ShopItem item = new ShopItem("test", "testCategory", "Test Item", new BigDecimal("420.69"));
     FileStorageService service = new FileStorageService(path.toString(), true);
 
     Optional<File> picture = service.getItemPicture(item);

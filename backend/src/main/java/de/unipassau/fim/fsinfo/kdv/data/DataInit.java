@@ -26,8 +26,7 @@ public class DataInit {
           repository.save(
               new KdvUser("testN" + i, "KekW " + i, "it@paulsenik.de", UserRole.USER, true));
         }
-      } catch (Exception e) {
-        e.printStackTrace();
+      } catch (Exception ignored) {
       }
     };
   }
@@ -35,16 +34,15 @@ public class DataInit {
   @Bean
   CommandLineRunner shopItemTestInit(ShopItemRepository repository) {
     return args -> {
-      ShopItem a = new ShopItem("bier", "drink", "Bier", new BigDecimal(1.50));
-      ShopItem a2 = new ShopItem("spezi", "drink", "Spezi", new BigDecimal(1.00));
-      ShopItem a3 = new ShopItem("uran-235", "snack", "Uran 235", new BigDecimal(1.00));
+      ShopItem a = new ShopItem("bier", "drink", "Bier", new BigDecimal("1.5"));
+      ShopItem a2 = new ShopItem("spezi", "drink", "Spezi", new BigDecimal("1.00"));
+      ShopItem a3 = new ShopItem("uran-235", "snack", "Uran 235", new BigDecimal("1.00"));
       a3.setEnabled(false);
       try {
         repository.save(a);
         repository.save(a2);
         repository.save(a3);
-      } catch (Exception e) {
-        e.printStackTrace();
+      } catch (Exception ignored) {
       }
     };
   }

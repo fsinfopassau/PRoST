@@ -3,7 +3,6 @@ package de.unipassau.fim.fsinfo.kdv.service;
 import de.unipassau.fim.fsinfo.kdv.data.dao.InvoiceEntry;
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
-import de.unipassau.fim.fsinfo.kdv.data.repositories.InvoiceRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import java.util.HashMap;
@@ -36,12 +35,14 @@ public class MailService {
 
   private final HashMap<String, Long> mailCooldown = new HashMap<>();
 
+  private final UserRepository users;
+  private final ShopItemRepository items;
+
   @Autowired
-  private UserRepository users;
-  @Autowired
-  private ShopItemRepository items;
-  @Autowired
-  private InvoiceRepository invoices;
+  public MailService(UserRepository users, ShopItemRepository items) {
+    this.users = users;
+    this.items = items;
+  }
 
   public boolean sendInvoice(@NonNull InvoiceEntry invoice, Map<String, Integer> amounts) {
     Optional<KdvUser> user = users.findById(invoice.getUserId());
@@ -111,6 +112,7 @@ public class MailService {
       email.send();
       mailCooldown.put(address, System.currentTimeMillis() + mailCooldownTime);
     } catch (EmailException e) {
+      // TODO PSE set to false - true: testing only
       return true;
     }
     return true;

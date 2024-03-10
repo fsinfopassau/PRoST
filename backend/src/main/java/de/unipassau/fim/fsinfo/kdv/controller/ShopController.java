@@ -1,13 +1,12 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
-import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
-import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.service.FileStorageService;
 import de.unipassau.fim.fsinfo.kdv.service.ShopService;
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +28,18 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/shop")
 public class ShopController {
 
-  @Autowired
-  FileStorageService fileStorageService;
-  @Autowired
-  ShopService shopService;
+  private final FileStorageService fileStorageService;
+  private final ShopService shopService;
+
+  private final ShopItemRepository itemRepository;
 
   @Autowired
-  ShopItemRepository itemRepository;
-  @Autowired
-  ShopItemHistoryRepository historyRepository;
-  @Autowired
-  UserRepository userRepository;
+  public ShopController(FileStorageService fileStorageService, ShopService shopService,
+      ShopItemRepository itemRepository) {
+    this.fileStorageService = fileStorageService;
+    this.shopService = shopService;
+    this.itemRepository = itemRepository;
+  }
 
   @GetMapping
   public ResponseEntity<List<ShopItem>> list() {
@@ -156,7 +156,7 @@ public class ShopController {
         return ResponseEntity.ok().build();
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      System.err.println(e.getMessage() + " " + Arrays.toString(e.getStackTrace()));
       return ResponseEntity.internalServerError().body(e.getMessage());
     }
     return ResponseEntity.badRequest().build();

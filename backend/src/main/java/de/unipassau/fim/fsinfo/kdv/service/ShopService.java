@@ -13,12 +13,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class ShopService {
 
-  @Autowired
+  final
   ShopItemRepository itemRepository;
-  @Autowired
+  final
   ShopItemHistoryRepository historyRepository;
-  @Autowired
+  final
   UserRepository userRepository;
+
+  @Autowired
+  public ShopService(ShopItemRepository itemRepository, ShopItemHistoryRepository historyRepository,
+      UserRepository userRepository) {
+    this.itemRepository = itemRepository;
+    this.historyRepository = historyRepository;
+    this.userRepository = userRepository;
+  }
 
   public boolean consume(String itemId, String userId, int amount) {
     Optional<ShopItem> itemO = itemRepository.findById(itemId);

@@ -25,14 +25,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class InvoiceService {
 
-  @Autowired
-  private ShopItemHistoryRepository shopHistory;
+  private final ShopItemHistoryRepository shopHistory;
+
+  private final InvoiceRepository invoiceRepository;
+
+  private final MailService mail;
 
   @Autowired
-  private InvoiceRepository invoiceRepository;
-
-  @Autowired
-  private MailService mail;
+  public InvoiceService(ShopItemHistoryRepository shopHistory, InvoiceRepository invoiceRepository,
+      MailService mail) {
+    this.shopHistory = shopHistory;
+    this.invoiceRepository = invoiceRepository;
+    this.mail = mail;
+  }
 
   public Page<InvoiceDTO> getInvoices(int pageNumber, int pageSize, Boolean mailed,
       String userId) {
@@ -152,14 +157,14 @@ public class InvoiceService {
   }
 
   /**
-   * @param entrys to search through.
+   * @param entries to search through.
    * @return a map of itemIds and their amounts.
    */
-  private Map<String, Integer> getItemAmounts(List<ShopItemHistoryEntry> entrys) {
+  private Map<String, Integer> getItemAmounts(List<ShopItemHistoryEntry> entries) {
 
     Map<String, Integer> amounts = new HashMap<>();
 
-    entrys.forEach((entry) -> {
+    entries.forEach((entry) -> {
       if (amounts.containsKey(entry.getItemId())) {
         Integer lastAmount = amounts.get(entry.getItemId());
         amounts.put(entry.getItemId(), lastAmount + 1);

@@ -25,13 +25,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 public class UserController {
 
-  @Autowired
-  UserRepository userRepository;
+  private final UserRepository userRepository;
+
+  private final UserService userService;
+  private final InvoiceService invoiceService;
 
   @Autowired
-  UserService userService;
-  @Autowired
-  InvoiceService invoiceService;
+  public UserController(UserRepository userRepository, UserService userService,
+      InvoiceService invoiceService) {
+    this.userRepository = userRepository;
+    this.userService = userService;
+    this.invoiceService = invoiceService;
+  }
 
   /**
    * List all Users

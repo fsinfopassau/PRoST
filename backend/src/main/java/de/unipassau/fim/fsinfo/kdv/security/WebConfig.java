@@ -31,7 +31,7 @@ public class WebConfig implements WebMvcConfigurer {
   private String[] allowedOrigins;
   private final UserService userService;
 
-  public static String[] AUTH_WHITELIST = {
+  public static final String[] AUTH_WHITELIST = {
       "/api/users",
       "/api/users/*",
       "/api/shop",
@@ -41,18 +41,18 @@ public class WebConfig implements WebMvcConfigurer {
       "/api/history/**",
   };
 
-  public static String[] USER_SPACE = {
+  public static final String[] USER_SPACE = {
       "/api/",
       "/api/users/*/invoices",
   };
 
-  public static String[] MOD_SPACE = {
+  public static final String[] MOD_SPACE = {
       "/api/shop/**",
       "/api/users/**",
       "/api/invoice/**",
   };
 
-  public static String[] ADMIN_SPACE = {
+  public static final String[] ADMIN_SPACE = {
       "/api/**",
   };
 

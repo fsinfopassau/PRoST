@@ -22,11 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/invoice")
 public class InvoiceController {
 
-  @Autowired
-  private InvoiceService invoiceService;
+  private final InvoiceService invoiceService;
+
+  private final UserRepository users;
 
   @Autowired
-  private UserRepository users;
+  public InvoiceController(InvoiceService invoiceService, UserRepository users) {
+    this.invoiceService = invoiceService;
+    this.users = users;
+  }
 
   /**
    * @param p: Page-Number 0-MAX
