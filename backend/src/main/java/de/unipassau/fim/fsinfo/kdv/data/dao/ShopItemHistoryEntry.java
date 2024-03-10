@@ -26,15 +26,19 @@ public class ShopItemHistoryEntry {
   private String itemId;
 
   @Column(nullable = false)
+  private int amount = 1;
+
+  @Column(nullable = false)
   private BigDecimal price;
 
   @Column(nullable = false)
   private Long timestamp;
 
-  public ShopItemHistoryEntry(String userId, String itemId, BigDecimal price) {
+  public ShopItemHistoryEntry(String userId, String itemId, BigDecimal price, int amount) {
     this.userId = userId;
     this.itemId = itemId;
     this.price = price;
-    this.timestamp = Instant.now().getEpochSecond();
+    this.amount = amount;
+    this.timestamp = Instant.now().toEpochMilli();
   }
 }

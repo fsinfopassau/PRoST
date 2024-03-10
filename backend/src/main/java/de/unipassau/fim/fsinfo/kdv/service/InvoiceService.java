@@ -46,20 +46,24 @@ public class InvoiceService {
     Page<InvoiceEntry> entriesPage;
 
     if (userId != null && mailed != null) {
+      System.out.println("1");
       if (mailed) {
         entriesPage = invoiceRepository.findByUserIdAndMailedTrue(userId, pageable);
       } else {
         entriesPage = invoiceRepository.findByUserIdAndMailedFalse(userId, pageable);
       }
     } else if (mailed != null) {
+      System.out.println("2");
       if (mailed) {
         entriesPage = invoiceRepository.findByMailedTrue(pageable);
       } else {
         entriesPage = invoiceRepository.findByMailedFalse(pageable);
       }
     } else if (userId != null) {
+      System.out.println("3");
       entriesPage = invoiceRepository.findByUserId(userId, pageable);
     } else {
+      System.out.println("4");
       entriesPage = invoiceRepository.findAll(pageable);
     }
 
@@ -131,7 +135,7 @@ public class InvoiceService {
         user.getId());
 
     Long lastInvoiceTimestamp = 0L; // No previous invoice
-    Long currentTimestamp = Instant.now().getEpochSecond();
+    Long currentTimestamp = Instant.now().toEpochMilli();
 
     if (!previousInvoices.isEmpty()) {
       lastInvoiceTimestamp = previousInvoices.get(0).getTimestamp();

@@ -6,6 +6,7 @@ import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItemHistoryEntry;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
+import java.math.BigDecimal;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,13 +44,12 @@ public class ShopService {
       return false;
     }
 
-    // Create single entries for every item
-    for (int i = 0; i < amount; i++) {
-      user.setBalance(user.getBalance().subtract(item.getPrice()));
+    user.setBalance(
+        user.getBalance().subtract(item.getPrice().multiply(BigDecimal.valueOf(amount))));
 
-      userRepository.save(user);
-      historyRepository.save(new ShopItemHistoryEntry(user.getId(), item.getId(), item.getPrice()));
-    }
+    userRepository.save(user);
+    historyRepository.save(
+        new ShopItemHistoryEntry(user.getId(), item.getId(), item.getPrice(), amount));
 
     return true;
   }

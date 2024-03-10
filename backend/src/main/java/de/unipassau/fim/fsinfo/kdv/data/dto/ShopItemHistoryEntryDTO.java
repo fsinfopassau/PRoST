@@ -14,6 +14,7 @@ public class ShopItemHistoryEntryDTO {
   private String itemId;
   private String itemDisplayName;
   private BigDecimal price;
+  private int amount;
   private Long timestamp;
 
 }
