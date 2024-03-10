@@ -3,11 +3,11 @@ package de.unipassau.fim.fsinfo.kdv.service;
 import de.unipassau.fim.fsinfo.kdv.data.dao.InvoiceEntry;
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
-import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceDTO;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.InvoiceRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import lombok.NonNull;
 import org.apache.commons.mail.EmailException;
@@ -43,22 +43,23 @@ public class MailService {
   @Autowired
   private InvoiceRepository invoices;
 
-  public boolean sendInvoice(@NonNull InvoiceDTO invoice) {
+  public boolean sendInvoice(@NonNull InvoiceEntry invoice, Map<String, Integer> amounts) {
     Optional<KdvUser> user = users.findById(invoice.getUserId());
     if (user.isEmpty()) {
-      System.err.println("[MS] :: no user Found!");
+      System.err.println(
+          "[MS] :: invoice=" + invoice.getId() + " :: no user \"" + invoice.getUserId() + "\"!");
       return false;
     }
 
-    Optional<InvoiceEntry> entry = invoices.findById(invoice.getId());
-    if (entry.isEmpty() || entry.get().isMailed()) {
+    if (invoice.isMailed()) {
+      System.err.println("[MS] :: invoice=" + invoice.getId() + " :: already sent!");
       return false;
     }
 
     String text = "Servus " + user.get().getDisplayName() + ",\n\n" +
         "dein aktueller Kontostand bei der Kaffeekasse beträgt " + KdvUser.formatMoney(
         invoice.getBalance()) + ".\n"
-        + formattedAmounts(invoice)
+        + formattedAmounts(amounts)
         + "\nBitte überweise den Betrag mittels PayPal [1] oder gib ihn mir bei der nächsten Gelegenheit persönlich in bar.\n"
         + "\n"
         + "Viele Grüße\n"
@@ -67,7 +68,13 @@ public class MailService {
         + "[1] https://paypal.me/fsinfokaffee/" + Math.abs(invoice.getBalance().doubleValue())
         + "\n";
 
-    return sendMail(user.get().getEmail(), "Kaffeekasse - Neue Abrechnung", text);
+    if (sendMail(user.get().getEmail(), "Kaffeekasse - Neue Abrechnung", text)) {
+      System.out.println("[MS] :: invoice=" + invoice.getId() + " :: sent new invoice!");
+      return true;
+    } else {
+      System.err.println("[MS] :: invoice=" + invoice.getId() + " :: did not arrive!");
+      return false;
+    }
   }
 
   /**
@@ -87,7 +94,7 @@ public class MailService {
       }
     }
 
-    System.out.println("[MS] :: send mail :: " + address + " |\n" + subject + " |\n" + text);
+    // System.out.println("[MS] :: send mail :: " + address + " |\n" + subject + " |\n" + text);
 
     MultiPartEmail email = new MultiPartEmail();
     try {
@@ -109,17 +116,17 @@ public class MailService {
     return true;
   }
 
-  public String formattedAmounts(InvoiceDTO invoice) {
+  public String formattedAmounts(Map<String, Integer> amounts) {
 
     StringBuilder b = new StringBuilder();
 
-    if (!invoice.getAmounts().isEmpty()) {
+    if (!amounts.isEmpty()) {
       b.append("\n");
       b.append("Deine Einkäufe seit letzter Abrechnung:");
       b.append("\n");
     }
 
-    for (String k : invoice.getAmounts().keySet()) {
+    for (String k : amounts.keySet()) {
 
       Optional<ShopItem> item = items.findById(k);
       String itemName = k;
@@ -128,7 +135,7 @@ public class MailService {
         itemName = item.get().getDisplayName();
       }
 
-      int amount = invoice.getAmounts().get(k);
+      int amount = amounts.get(k);
 
       if (amount < 10) {
         b.append(" ");

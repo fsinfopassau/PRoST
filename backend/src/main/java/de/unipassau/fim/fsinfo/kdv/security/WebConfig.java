@@ -39,7 +39,6 @@ public class WebConfig implements WebMvcConfigurer {
       "/api/shop/*/picture",
       "/api/shop/consume/**",
       "/api/history/**",
-      "/api/invoice/**",
   };
 
   public static String[] USER_SPACE = {
@@ -49,6 +48,7 @@ public class WebConfig implements WebMvcConfigurer {
   public static String[] MOD_SPACE = {
       "/api/shop/**",
       "/api/users/**",
+      "/api/invoice/**",
   };
 
   public static String[] ADMIN_SPACE = {

@@ -72,8 +72,26 @@ svg {
 
 #Checkout-Item{
   font-size: 2rem;
-  width: 25rem;
-  max-width: 50vw;
+  width: 50rem;
+
+  @media screen and (max-height: 1500px) {
+    max-width: 70vh;
+  }
+
+  @media screen and (max-height: 1200px) {
+    max-width: 60vh;
+  }
+
+  @media screen and (max-height: 800px) {
+    max-width: 50vh;
+  }
+
+  @media screen and (max-height: 650px) {
+    max-width: 40vh;
+  }
+  @media screen and (max-height: 550px) {
+    max-width: 30vh;
+  }
 }
 
 #CheckoutBar {

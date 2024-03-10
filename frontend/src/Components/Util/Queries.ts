@@ -87,6 +87,9 @@ export async function createInvoice(userId: string) {
     `${apiUrl}/api/invoice/create/${userId}`,
     {
       method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+      },
     }
   );
   return result.ok;

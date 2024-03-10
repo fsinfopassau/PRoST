@@ -29,12 +29,35 @@ public class InvoiceService {
   @Autowired
   private MailService mail;
 
-  public InvoiceDTO getInvoiceData(InvoiceEntry entry) {
-    List<ShopItemHistoryEntry> entries = shopHistory.findByUserIdAndTimestampBetween(
-        entry.getUserId(),
-        entry.getPreviousInvoiceTimestamp(), entry.getTimestamp());
+  public Optional<List<Long>> mailInvoices(List<Long> invoiceIds) {
 
-    return new InvoiceDTO(entry, getItemAmounts(entries));
+    if (invoiceIds == null || invoiceIds.isEmpty()) {
+      return Optional.empty();
+    }
+
+    List<Long> successfulSends = new ArrayList<>();
+
+    for (Long id : invoiceIds) {
+
+      Optional<InvoiceEntry> invoiceO = invoiceHistory.findById(id);
+
+      if (invoiceO.isEmpty()) {
+        continue;
+      }
+
+      InvoiceEntry invoice = invoiceO.get();
+
+      List<ShopItemHistoryEntry> shopEntries = shopHistory.findByUserIdAndTimestampBetween(
+          invoice.getUserId(), invoice.getPreviousInvoiceTimestamp(), invoice.getTimestamp());
+
+      if (mail.sendInvoice(invoice, getItemAmounts(shopEntries))) {
+        successfulSends.add(id);
+        invoice.setMailed(true);
+        invoiceHistory.save(invoice);
+      }
+    }
+
+    return Optional.of(successfulSends);
   }
 
   /**
@@ -47,7 +70,8 @@ public class InvoiceService {
    */
   public Optional<InvoiceDTO> createInvoice(KdvUser user) {
 
-    if (user.getBalance().compareTo(new BigDecimal(0)) == 0) {
+    // Nur fortfahren, wenn Nutzer Schulden hat.
+    if (user.getBalance().compareTo(new BigDecimal(0)) != -1) {
       return Optional.empty();
     }
 
@@ -80,11 +104,6 @@ public class InvoiceService {
 
     invoiceHistory.save(invoice); // save in DB to get ID
     invoiceDTO.setId(invoice.getId());
-
-    if (mail.sendInvoice(invoiceDTO)) {
-      invoice.setMailed(true);
-      invoiceHistory.save(invoice);
-    }
 
     return Optional.of(invoiceDTO);
   }

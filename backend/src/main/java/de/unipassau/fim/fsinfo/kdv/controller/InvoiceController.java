@@ -4,11 +4,13 @@ import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceDTO;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.service.InvoiceService;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,6 +37,13 @@ public class InvoiceController {
     }
 
     return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/mail")
+  public ResponseEntity<List<Long>> mailToUser(@RequestBody List<Long> invoiceIds) {
+    Optional<List<Long>> sentInvoices = invoiceService.mailInvoices(invoiceIds);
+    return sentInvoices.map(ResponseEntity::ok)
+        .orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
 }
