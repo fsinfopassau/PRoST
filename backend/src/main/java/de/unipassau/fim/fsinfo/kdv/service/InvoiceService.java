@@ -9,12 +9,17 @@ import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemHistoryRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,10 +29,52 @@ public class InvoiceService {
   private ShopItemHistoryRepository shopHistory;
 
   @Autowired
-  private InvoiceRepository invoiceHistory;
+  private InvoiceRepository invoiceRepository;
 
   @Autowired
   private MailService mail;
+
+  public Page<InvoiceDTO> getInvoices(int pageNumber, int pageSize, Boolean mailed,
+      String userId) {
+
+    Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("timestamp").descending());
+    Page<InvoiceEntry> entriesPage;
+
+    if (userId != null && mailed != null) {
+      if (mailed) {
+        entriesPage = invoiceRepository.findByUserIdAndMailedTrue(userId, pageable);
+      } else {
+        entriesPage = invoiceRepository.findByUserIdAndMailedFalse(userId, pageable);
+      }
+    } else if (mailed != null) {
+      if (mailed) {
+        entriesPage = invoiceRepository.findByMailedTrue(pageable);
+      } else {
+        entriesPage = invoiceRepository.findByMailedFalse(pageable);
+      }
+    } else if (userId != null) {
+      entriesPage = invoiceRepository.findByUserId(userId, pageable);
+    } else {
+      entriesPage = invoiceRepository.findAll(pageable);
+    }
+
+    List<InvoiceDTO> invoiceDTOs = entriesPage.getContent().stream()
+        .map(this::getInvoiceDTO)
+        .collect(Collectors.toList());
+
+    return new PageImpl<>(invoiceDTOs, pageable, invoiceDTOs.size());
+  }
+
+  private InvoiceDTO getInvoiceDTO(InvoiceEntry invoice) {
+    List<ShopItemHistoryEntry> shopEntries = shopHistory.findByUserIdAndTimestampBetween(
+        invoice.getUserId(),
+        invoice.getPreviousInvoiceTimestamp(), invoice.getTimestamp());
+
+    if (shopEntries.isEmpty()) {
+      return new InvoiceDTO(invoice, new HashMap<>());
+    }
+    return new InvoiceDTO(invoice, getItemAmounts(shopEntries));
+  }
 
   public Optional<List<Long>> mailInvoices(List<Long> invoiceIds) {
 
@@ -39,7 +86,7 @@ public class InvoiceService {
 
     for (Long id : invoiceIds) {
 
-      Optional<InvoiceEntry> invoiceO = invoiceHistory.findById(id);
+      Optional<InvoiceEntry> invoiceO = invoiceRepository.findById(id);
 
       if (invoiceO.isEmpty()) {
         continue;
@@ -53,7 +100,7 @@ public class InvoiceService {
       if (mail.sendInvoice(invoice, getItemAmounts(shopEntries))) {
         successfulSends.add(id);
         invoice.setMailed(true);
-        invoiceHistory.save(invoice);
+        invoiceRepository.save(invoice);
       }
     }
 
@@ -75,37 +122,33 @@ public class InvoiceService {
       return Optional.empty();
     }
 
-    List<InvoiceEntry> previousInvoices = invoiceHistory.findByUserIdEquals(user.getId());
+    List<InvoiceEntry> previousInvoices = invoiceRepository.findByUserIdEqualsOrderByTimestampDesc(
+        user.getId());
 
     Long lastInvoiceTimestamp = 0L; // No previous invoice
     Long currentTimestamp = Instant.now().getEpochSecond();
 
     if (!previousInvoices.isEmpty()) {
-      Optional<InvoiceEntry> entry = getLastEntry(previousInvoices);
-
-      if (entry.isPresent()) {
-        lastInvoiceTimestamp = entry.get().getTimestamp();
-      }
+      lastInvoiceTimestamp = previousInvoices.get(0).getTimestamp();
     }
-
-    List<ShopItemHistoryEntry> shopEntries = shopHistory.findByUserIdAndTimestampBetween(
-        user.getId(),
-        lastInvoiceTimestamp, currentTimestamp);
 
     InvoiceEntry invoice = new InvoiceEntry(user.getId(), user.getBalance(), currentTimestamp,
         lastInvoiceTimestamp);
 
-    InvoiceDTO invoiceDTO;
-    if (shopEntries.isEmpty()) {
-      invoiceDTO = new InvoiceDTO(invoice, new HashMap<>());
-    } else {
-      invoiceDTO = new InvoiceDTO(invoice, getItemAmounts(shopEntries));
+    invoiceRepository.save(invoice); // save in DB to get ID
+
+    return Optional.of(getInvoiceDTO(invoice));
+  }
+
+  public boolean delete(Long invoiceId) {
+    Optional<InvoiceEntry> invoice = invoiceRepository.findById(invoiceId);
+
+    if (invoice.isEmpty()) {
+      return false;
     }
 
-    invoiceHistory.save(invoice); // save in DB to get ID
-    invoiceDTO.setId(invoice.getId());
-
-    return Optional.of(invoiceDTO);
+    invoiceRepository.delete(invoice.get());
+    return true;
   }
 
   /**
@@ -126,26 +169,6 @@ public class InvoiceService {
     });
 
     return amounts;
-  }
-
-  /**
-   * @return Entry with the most recent timestamp.
-   */
-  private Optional<InvoiceEntry> getLastEntry(List<InvoiceEntry> invoices) {
-    if (invoices.isEmpty()) {
-      return Optional.empty();
-    } else if (invoices.size() == 1) {
-      return Optional.of(invoices.get(0));
-    }
-
-    List<InvoiceEntry> sorted = new ArrayList<>(invoices);
-    sorted.sort(Comparator.comparing(InvoiceEntry::getTimestamp));
-
-    try {
-      return Optional.of(sorted.get(sorted.size() - 1));
-    } catch (IndexOutOfBoundsException maybe) {
-      return Optional.empty();
-    }
   }
 
 }

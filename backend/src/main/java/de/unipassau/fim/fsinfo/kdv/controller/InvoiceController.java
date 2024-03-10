@@ -7,11 +7,15 @@ import de.unipassau.fim.fsinfo.kdv.service.InvoiceService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,6 +27,20 @@ public class InvoiceController {
 
   @Autowired
   private UserRepository users;
+
+  /**
+   * @param p: Page-Number 0-MAX
+   * @param s: Page-Size
+   * @return Page + infos
+   */
+  @GetMapping
+  public Page<InvoiceDTO> getInvoices(
+      @RequestParam(defaultValue = "0") int p,
+      @RequestParam(defaultValue = "10") int s,
+      @RequestParam(required = false) String userId,
+      @RequestParam(required = false) Boolean mailed) {
+    return invoiceService.getInvoices(Math.max(0, p), Math.max(1, s), mailed, userId);
+  }
 
   @PostMapping("/create/{id}")
   public ResponseEntity<InvoiceDTO> create(@PathVariable String id) {
@@ -36,6 +54,14 @@ public class InvoiceController {
       }
     }
 
+    return ResponseEntity.badRequest().build();
+  }
+
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity<String> delete(@PathVariable Long id) {
+    if (invoiceService.delete(id)) {
+      return ResponseEntity.ok().build();
+    }
     return ResponseEntity.badRequest().build();
   }
 

@@ -30,8 +30,7 @@ public class InvoiceEntry {
   @Column(nullable = false)
   private Long previousInvoiceTimestamp;
 
-  private boolean shouldMail = false;
-  private boolean isMailed = false;
+  private boolean mailed = false;
 
   public InvoiceEntry(String userId, BigDecimal balance, Long currentTimestamp,
       Long previousInvoiceTimestamp) {

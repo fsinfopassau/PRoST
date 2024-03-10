@@ -43,6 +43,7 @@ public class WebConfig implements WebMvcConfigurer {
 
   public static String[] USER_SPACE = {
       "/api/",
+      "/api/users/*/invoices",
   };
 
   public static String[] MOD_SPACE = {

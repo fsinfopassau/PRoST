@@ -12,7 +12,7 @@ export function HistoryEntryDisplay(props: { entry: ShopHistoryEntry }) {
           {entry.userDisplayName}
         </Link>
       </th>
-      <th className="last">-{formatMoney(entry.price)}</th>
+      <th className="last">{formatMoney(-entry.price)}</th>
       <th className="">{entry.itemDisplayName}</th>
       <th className="last">{getTimeSince(entry.timestamp)}</th>
     </tr>

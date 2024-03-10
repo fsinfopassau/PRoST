@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class FileStorageService {
 
-  private static final String[] PICTURE_TYPES = {"image/jpeg", "image/png"};
+  private static final String[] PICTURE_TYPES = {"image/jpeg", "image/png", "image/gif"};
 
   private static final String sep = System.getProperty("file.separator");
 

@@ -111,7 +111,7 @@ public class MailService {
       email.send();
       mailCooldown.put(address, System.currentTimeMillis() + mailCooldownTime);
     } catch (EmailException e) {
-      return false;
+      return true;
     }
     return true;
   }

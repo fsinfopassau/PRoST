@@ -14,7 +14,6 @@ public class InvoiceDTO {
   private BigDecimal balance;
   private Long timestamp;
   private Long previousInvoiceTimestamp;
-  private boolean shouldMail;
   private boolean isMailed;
   private Map<String, Integer> amounts;
 
@@ -24,7 +23,6 @@ public class InvoiceDTO {
     balance = entry.getBalance();
     timestamp = entry.getTimestamp();
     previousInvoiceTimestamp = entry.getPreviousInvoiceTimestamp();
-    shouldMail = entry.isShouldMail();
     isMailed = entry.isMailed();
     this.amounts = amounts;
   }

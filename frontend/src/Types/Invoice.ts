@@ -4,7 +4,6 @@ export interface Invoice {
     balance: number;
     timestamp: number;
     previousInvoiceTimestamp: number;
-    shouldMail: boolean;
-    isMailed: boolean;
+    mailed: boolean;
     amounts: Map<string, number>;
 }

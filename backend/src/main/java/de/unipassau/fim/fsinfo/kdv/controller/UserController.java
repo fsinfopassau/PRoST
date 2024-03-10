@@ -2,12 +2,15 @@ package de.unipassau.fim.fsinfo.kdv.controller;
 
 import de.unipassau.fim.fsinfo.kdv.data.UserRole;
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
+import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceDTO;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
+import de.unipassau.fim.fsinfo.kdv.service.InvoiceService;
 import de.unipassau.fim.fsinfo.kdv.service.UserService;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +30,8 @@ public class UserController {
 
   @Autowired
   UserService userService;
+  @Autowired
+  InvoiceService invoiceService;
 
   /**
    * List all Users
@@ -57,6 +62,15 @@ public class UserController {
   public ResponseEntity<KdvUser> get(@PathVariable String id) {
     Optional<KdvUser> user = userRepository.findById(id);
     return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
+  }
+
+  @GetMapping("/{id}/invoices")
+  public Page<InvoiceDTO> getInvoices(
+      @PathVariable String id,
+      @RequestParam(defaultValue = "0") int p,
+      @RequestParam(defaultValue = "10") int s,
+      @RequestParam(required = false) Boolean mailed) {
+    return invoiceService.getInvoices(Math.max(0, p), Math.max(1, s), mailed, id);
   }
 
   @DeleteMapping("/{id}/delete")
