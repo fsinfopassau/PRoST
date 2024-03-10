@@ -1,6 +1,5 @@
 package de.unipassau.fim.fsinfo.kdv.data.dao;
 
-import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,11 +33,12 @@ public class InvoiceEntry {
   private boolean shouldMail = false;
   private boolean isMailed = false;
 
-  public InvoiceEntry(InvoiceDTO invoice, Long previousInvoiceTimestamp, Long currentTimestamp) {
-    this.previousInvoiceTimestamp = previousInvoiceTimestamp;
-    this.userId = invoice.getUserId();
-    this.balance = invoice.getBalance();
+  public InvoiceEntry(String userId, BigDecimal balance, Long currentTimestamp,
+      Long previousInvoiceTimestamp) {
+    this.userId = userId;
+    this.balance = balance;
     this.timestamp = currentTimestamp;
+    this.previousInvoiceTimestamp = previousInvoiceTimestamp;
   }
 
 }

@@ -1,8 +1,10 @@
 package de.unipassau.fim.fsinfo.kdv.service;
 
+import de.unipassau.fim.fsinfo.kdv.data.dao.InvoiceEntry;
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceDTO;
+import de.unipassau.fim.fsinfo.kdv.data.repositories.InvoiceRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import java.util.HashMap;
@@ -38,10 +40,18 @@ public class MailService {
   private UserRepository users;
   @Autowired
   private ShopItemRepository items;
+  @Autowired
+  private InvoiceRepository invoices;
 
   public boolean sendInvoice(@NonNull InvoiceDTO invoice) {
     Optional<KdvUser> user = users.findById(invoice.getUserId());
     if (user.isEmpty()) {
+      System.err.println("[MS] :: no user Found!");
+      return false;
+    }
+
+    Optional<InvoiceEntry> entry = invoices.findById(invoice.getId());
+    if (entry.isEmpty() || entry.get().isMailed()) {
       return false;
     }
 

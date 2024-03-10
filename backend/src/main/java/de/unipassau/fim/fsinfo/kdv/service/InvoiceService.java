@@ -34,7 +34,7 @@ public class InvoiceService {
         entry.getUserId(),
         entry.getPreviousInvoiceTimestamp(), entry.getTimestamp());
 
-    return new InvoiceDTO(entry.getUserId(), entry.getBalance(), getItemAmounts(entries));
+    return new InvoiceDTO(entry, getItemAmounts(entries));
   }
 
   /**
@@ -64,24 +64,29 @@ public class InvoiceService {
       }
     }
 
-    List<ShopItemHistoryEntry> entries = shopHistory.findByUserIdAndTimestampBetween(user.getId(),
+    List<ShopItemHistoryEntry> shopEntries = shopHistory.findByUserIdAndTimestampBetween(
+        user.getId(),
         lastInvoiceTimestamp, currentTimestamp);
 
-    InvoiceDTO invoice;
-    if (!entries.isEmpty()) {
-      invoice = new InvoiceDTO(user.getId(), user.getBalance(), getItemAmounts(entries));
+    InvoiceEntry invoice = new InvoiceEntry(user.getId(), user.getBalance(), currentTimestamp,
+        lastInvoiceTimestamp);
+
+    InvoiceDTO invoiceDTO;
+    if (shopEntries.isEmpty()) {
+      invoiceDTO = new InvoiceDTO(invoice, new HashMap<>());
     } else {
-      invoice = new InvoiceDTO(user.getId(), user.getBalance(), getItemAmounts(entries));
+      invoiceDTO = new InvoiceDTO(invoice, getItemAmounts(shopEntries));
     }
 
-    InvoiceEntry entry = new InvoiceEntry(invoice, lastInvoiceTimestamp, currentTimestamp);
+    invoiceHistory.save(invoice); // save in DB to get ID
+    invoiceDTO.setId(invoice.getId());
 
-    if (mail.sendInvoice(invoice)) {
-      entry.setMailed(true);
+    if (mail.sendInvoice(invoiceDTO)) {
+      invoice.setMailed(true);
+      invoiceHistory.save(invoice);
     }
 
-    invoiceHistory.save(entry);
-    return Optional.of(invoice);
+    return Optional.of(invoiceDTO);
   }
 
   /**
