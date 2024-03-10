@@ -1,4 +1,4 @@
-import { getAllUsers } from "../Components/Util/Queries";
+import { getAllUsers } from "../Queries";
 import { UserRole } from "./UserRole";
 
 export interface User {
@@ -9,23 +9,12 @@ export interface User {
   role: UserRole;
 }
 
-export function formatMoney(balance: number, decimalCount = 2): string {
-  const formatted = new Intl.NumberFormat("de-DE", {
-    minimumFractionDigits: decimalCount,
-    maximumFractionDigits: decimalCount,
-  }).format(balance);
-
-  return formatted + " €";
-}
-
 let cachedUsers = new Map<string, User>();
 
 /**
  * gets DisplayName from cached Users
  */
-export async function getUserDisplayName(
-  userId: string
-): Promise<string | undefined> {
+export async function getUserDisplayName(userId: string): Promise<string> {
   let user = cachedUsers.get(userId);
   if (user) {
     return user.displayName;
@@ -38,5 +27,5 @@ export async function getUserDisplayName(
       return user.displayName;
     }
   }
-  return undefined;
+  return userId;
 }

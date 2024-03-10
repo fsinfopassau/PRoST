@@ -62,6 +62,10 @@ svg {
   margin: 5px;
 }
 
+a {
+  cursor: pointer;
+}
+
 #Checkout {
   flex-grow: 1;
   display: flex;
@@ -170,7 +174,7 @@ History
   max-width: 30rem;
 }
 
-.history-entry {
+.table-entry {
   display: flex;
   table-layout: fixed; /* Fixed table layout */
   justify-content: space-evenly; /* or space-around, space-evenly, etc. */
@@ -180,7 +184,7 @@ History
   min-width: 21em;
   width: 100%;
 }
-.history-entry th {
+.table-entry th {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -188,7 +192,7 @@ History
   width: 20%;
   max-width: 5rem;
 }
-.history-entry th.last {
+.table-entry th.last {
   justify-content: flex-end;
 }
 table {
@@ -239,7 +243,6 @@ Tabs
 .TabsRoot {
   display: flex;
   flex-direction: column;
-  width: 13rem;
 }
 
 .TabsList {
@@ -288,6 +291,49 @@ Tabs
 }
 #login svg{
   margin: 0;
+}
+
+/*
+Invoice
+*/
+
+.InvoiceTable {
+
+  tr {
+    margin: 0.4rem 0;
+    font-size: 1rem;
+    height: 2.7rem;
+  }
+
+  .name {
+    text-align: left;
+    min-width: 6rem;
+  }
+
+  .mail {
+    min-width: 2rem;
+    width: 10%;
+    text-align: left;
+  }
+
+  .date {
+    width: 25%;
+    min-width: 10rem;
+    text-align: right;
+  }
+
+  .amount {
+    width: 5%;
+    min-width: 2rem;
+    text-align: right;
+  }
+
+  .balance{
+    width: 25%;
+    min-width: 6rem;
+    text-align: right;
+  }
+
 }
 
 /*

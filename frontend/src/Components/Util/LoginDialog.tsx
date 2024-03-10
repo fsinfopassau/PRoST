@@ -15,8 +15,8 @@ import {
   PaperPlaneIcon,
 } from "@radix-ui/react-icons";
 import { useState } from "react";
-import { loginNew } from "./Queries";
-import { resetCredentials, validCredentials } from "./SessionInfo";
+import { loginNew } from "../../Queries";
+import { resetCredentials, validCredentials } from "../../SessionInfo";
 import { toast } from "react-toastify";
 
 export function LoginDialog() {

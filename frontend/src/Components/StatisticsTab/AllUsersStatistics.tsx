@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { User } from "../../Types/User";
-import { getAllUsers } from "../Util/Queries";
+import { getAllUsers } from "../../Queries";
 import { UserSummaryCard } from "./UserSummaryCard";
 
 export function AllUsersStatistics() {

@@ -2,8 +2,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ShopItem } from "../../Types/ShopItem";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { useEffect, useState } from "react";
-import { getItemDisplayPicture } from "../Util/Queries";
-import { formatMoney } from "../../Types/User";
+import { getItemDisplayPicture } from "../../Queries";
+import { formatMoney } from "../../Format";
 
 export function ItemDisplay(props: { item: ShopItem }) {
   const { item } = props;

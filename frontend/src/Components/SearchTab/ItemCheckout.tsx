@@ -1,8 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { buyItem, getItemDisplayPicture, getShopItem } from "../Util/Queries";
+import { buyItem, getItemDisplayPicture, getShopItem } from "../../Queries";
 import { ShopItem } from "../../Types/ShopItem";
 import { useEffect, useState } from "react";
-import { formatMoney } from "../../Types/User";
 import { toast } from "react-toastify";
 import {
   BookmarkIcon,
@@ -11,6 +10,7 @@ import {
   LightningBoltIcon,
   PaperPlaneIcon,
 } from "@radix-ui/react-icons";
+import { formatMoney } from "../../Format";
 
 export function ItemCheckout() {
   const { userId, itemId } = useParams();

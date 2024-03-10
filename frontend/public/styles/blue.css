@@ -55,7 +55,7 @@ History
   border-radius: 12px;
 }
 
-.history-entry {
+.table-entry {
   background-color: white;
   color: #000080;
   border: 2px solid var(--blue-11);

@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { UserSummaryCard } from "./UserSummaryCard";
 import { useEffect, useState } from "react";
 import { User } from "../../Types/User";
-import { getUser } from "../Util/Queries";
+import { getUser } from "../../Queries";
 import { ErrorComponent } from "../Util/ErrorTab";
 
 export function UserStatistics() {

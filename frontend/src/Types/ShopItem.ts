@@ -1,4 +1,4 @@
-import { getAllShopItems } from "../Components/Util/Queries";
+import { getAllShopItems } from "../Queries";
 
 export interface ShopItem {
   id: string;

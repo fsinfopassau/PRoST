@@ -5,7 +5,6 @@ import {
   Pencil2Icon,
 } from "@radix-ui/react-icons";
 import { ShopItem } from "../../Types/ShopItem";
-import { formatMoney } from "../../Types/User";
 import { Separator } from "@radix-ui/react-separator";
 import { Switch, SwitchThumb } from "@radix-ui/react-switch";
 import {
@@ -14,12 +13,13 @@ import {
   enableItem,
   getItemDisplayPicture,
   uploadItemDisplayPicture,
-} from "../Util/Queries";
+} from "../../Queries";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { useEffect, useRef, useState } from "react";
 
 import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
 import { toast } from "react-toastify";
+import { formatMoney } from "../../Format";
 
 export function ItemSettingCard(props: {
   item: ShopItem;

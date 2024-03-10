@@ -12,6 +12,7 @@ import { UserStatistics } from "./StatisticsTab/UserStatistics";
 import { AllUsersStatistics } from "./StatisticsTab/AllUsersStatistics";
 import { ItemSettings } from "./SettingsTab/ItemSettings";
 import { Bounce, ToastContainer } from "react-toastify";
+import { InvoiceTab } from "./InvoiceTab/InvoiceTab";
 
 const stylesAvailable = ["purple", "blue"];
 
@@ -72,6 +73,7 @@ export function App() {
                 path="/"
                 element={<UserSelection switchTheme={switchTheme} />}
               />
+              <Route path="/invoice" element={<InvoiceTab />} />
               <Route path="/shop/:userId" element={<ItemSelection />} />
               <Route path="/shop/:userId/:itemId" element={<ItemCheckout />} />
               <Route path="/stats" element={<Statistics />} />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getHistory } from "../Util/Queries";
+import { getHistory } from "../../Queries";
 import { ShopHistoryEntry } from "../../Types/ShopHistory";
 import { HistoryEntryDisplay } from "./HistoryEntryDisplay";
 import {

@@ -2,7 +2,7 @@ body {
   background: hsl(268, 100%, 91%);
 }
 
-* {
+div {
   color: var(--violet-11);
 }
 
@@ -87,11 +87,32 @@ body {
 History
 */
 
-.history-entry {
+.table-entry {
   background-color: var(--violet-4);
   color: var(--violet-11);
   border: 2px solid var(--violet-8);
   border-radius: 12px;
+}
+
+/*
+Invoice
+*/
+
+.InvoiceTable {
+  background-color: var(--violet-4);
+  color: var(--violet-11);
+  border-radius: 12px;
+  border-collapse: collapse;
+}
+.InvoiceTable tr{
+  border-bottom: 1px solid black;
+}
+.InvoiceTable th{
+  padding: 0 .5rem;
+}
+
+.InvoiceTable tr:last-child {
+  border-bottom: none;
 }
 
 /*
@@ -158,4 +179,18 @@ Dialog
 
 .DialogTitle {
   color: var(--violet-11);
+}
+
+/*
+Colors
+*/
+
+.red {
+  color: red;
+  border-color: red;
+}
+
+.green {
+  color: green;
+  border-color: green;
 }

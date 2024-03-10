@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { User, formatMoney } from "../../Types/User";
+import { User } from "../../Types/User";
 import { Separator } from "@radix-ui/react-separator";
 import { ShopHistoryEntry } from "../../Types/ShopHistory";
 import { useEffect, useState } from "react";
-import { createInvoice, getUserHistory } from "../Util/Queries";
+import { createInvoice, getUserHistory } from "../../Queries";
+import { formatMoney } from "../../Format";
 
 export function UserSummaryCard(props: { user: User }) {
   const { user } = props;

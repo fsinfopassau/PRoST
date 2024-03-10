@@ -1,5 +1,6 @@
 import {
   BarChartIcon,
+  FileTextIcon,
   GearIcon,
   MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
@@ -48,6 +49,13 @@ export function TabChanger(props: { switchTheme: () => void }) {
               onClick={() => tabUpdate("stats")}
             >
               <BarChartIcon />
+            </TabsTrigger>
+            <TabsTrigger
+              value="invoice"
+              className="TabsTrigger"
+              onClick={() => tabUpdate("invoice")}
+            >
+              <FileTextIcon />
             </TabsTrigger>
             <TabsTrigger
               value="settings"

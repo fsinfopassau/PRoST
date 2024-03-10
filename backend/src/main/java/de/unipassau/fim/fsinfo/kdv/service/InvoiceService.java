@@ -46,24 +46,20 @@ public class InvoiceService {
     Page<InvoiceEntry> entriesPage;
 
     if (userId != null && mailed != null) {
-      System.out.println("1");
       if (mailed) {
         entriesPage = invoiceRepository.findByUserIdAndMailedTrue(userId, pageable);
       } else {
         entriesPage = invoiceRepository.findByUserIdAndMailedFalse(userId, pageable);
       }
     } else if (mailed != null) {
-      System.out.println("2");
       if (mailed) {
         entriesPage = invoiceRepository.findByMailedTrue(pageable);
       } else {
         entriesPage = invoiceRepository.findByMailedFalse(pageable);
       }
     } else if (userId != null) {
-      System.out.println("3");
       entriesPage = invoiceRepository.findByUserId(userId, pageable);
     } else {
-      System.out.println("4");
       entriesPage = invoiceRepository.findAll(pageable);
     }
 
@@ -171,9 +167,9 @@ public class InvoiceService {
     entries.forEach((entry) -> {
       if (amounts.containsKey(entry.getItemId())) {
         Integer lastAmount = amounts.get(entry.getItemId());
-        amounts.put(entry.getItemId(), lastAmount + 1);
+        amounts.put(entry.getItemId(), lastAmount + entry.getAmount());
       } else {
-        amounts.put(entry.getItemId(), 1);
+        amounts.put(entry.getItemId(), entry.getAmount());
       }
     });
 

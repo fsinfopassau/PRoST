@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { ShopItem } from "../../Types/ShopItem";
 import { useEffect, useState } from "react";
-import { getAllShopItems, getUser } from "../Util/Queries";
+import { getAllShopItems, getUser } from "../../Queries";
 import { User } from "../../Types/User";
 import { UserSummaryCard } from "../StatisticsTab/UserSummaryCard";
 import { ErrorComponent } from "../Util/ErrorTab";

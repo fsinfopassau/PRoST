@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllShopItems } from "../Util/Queries";
+import { getAllShopItems } from "../../Queries";
 import { ShopItem } from "../../Types/ShopItem";
 import { ItemSettingCard } from "./ItemSettingCard";
 

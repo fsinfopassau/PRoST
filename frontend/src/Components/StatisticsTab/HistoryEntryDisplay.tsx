@@ -1,18 +1,24 @@
 import { Link } from "react-router-dom";
-import { ShopHistoryEntry, getTimeSince } from "../../Types/ShopHistory";
-import { formatMoney } from "../../Types/User";
+import { ShopHistoryEntry } from "../../Types/ShopHistory";
+import { formatMoney, getTimeSince } from "../../Format";
 
 export function HistoryEntryDisplay(props: { entry: ShopHistoryEntry }) {
   const { entry } = props;
 
+  function getAmount(): string {
+    if (entry.amount == 1) return "";
+    return entry.amount + " x";
+  }
+
   return (
-    <tr className="history-entry">
-      <th className="bold">
+    <tr className="table-entry" style={{ display: "flex" }}>
+      <th>
         <Link to={`/stats/users/${entry.userId}`} className="bold">
           {entry.userDisplayName}
         </Link>
       </th>
-      <th className="last">{formatMoney(-entry.price)}</th>
+      <th className="last">{formatMoney(-entry.price * entry.amount)}</th>
+      <th className="last">{getAmount()}</th>
       <th className="">{entry.itemDisplayName}</th>
       <th className="last">{getTimeSince(entry.timestamp)}</th>
     </tr>
