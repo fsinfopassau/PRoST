@@ -7,8 +7,7 @@ import {
   resetCredentials,
   setEncodedCredentials,
 } from "./SessionInfo";
-import { Invoice } from "./Types/Invoice";
-import { InvoicePage } from "./Types/InvoicePage";
+import { InvoicePage } from "./Types/Invoice";
 
 export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
 
@@ -206,4 +205,28 @@ export async function getAllInvoices(): Promise<InvoicePage | undefined> {
     })
   ).json();
   return result as InvoicePage;
+}
+
+export async function deleteInvoices(ids: number[]): Promise<boolean> {
+  const result = await await fetch(`${apiUrl}/api/invoice/delete`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Basic ${getEncodedCredentials()}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(ids),
+  });
+  return result.ok;
+}
+
+export async function mailInvoices(ids: number[]): Promise<boolean> {
+  const result = await await fetch(`${apiUrl}/api/invoice/mail`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${getEncodedCredentials()}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(ids),
+  });
+  return result.ok;
 }

@@ -68,24 +68,32 @@ export function App() {
               theme="light"
               transition={Bounce}
             />
-            <Routes>
-              <Route
-                path="/"
-                element={<UserSelection switchTheme={switchTheme} />}
-              />
-              <Route path="/invoice" element={<InvoiceTab />} />
-              <Route path="/shop/:userId" element={<ItemSelection />} />
-              <Route path="/shop/:userId/:itemId" element={<ItemCheckout />} />
-              <Route path="/stats" element={<Statistics />} />
-              <Route path="/stats/users" element={<AllUsersStatistics />} />
-              <Route path="/stats/users/:userId" element={<UserStatistics />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/settings/items" element={<ItemSettings />} />
-              <Route
-                path="*"
-                element={<ErrorComponent switchTheme={switchTheme} />}
-              />
-            </Routes>
+            <div className="MainBody">
+              <Routes>
+                <Route
+                  path="/"
+                  element={<UserSelection switchTheme={switchTheme} />}
+                />
+                <Route path="/invoice" element={<InvoiceTab />} />
+                <Route path="/shop/:userId" element={<ItemSelection />} />
+                <Route
+                  path="/shop/:userId/:itemId"
+                  element={<ItemCheckout />}
+                />
+                <Route path="/stats" element={<Statistics />} />
+                <Route path="/stats/users" element={<AllUsersStatistics />} />
+                <Route
+                  path="/stats/users/:userId"
+                  element={<UserStatistics />}
+                />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/settings/items" element={<ItemSettings />} />
+                <Route
+                  path="*"
+                  element={<ErrorComponent switchTheme={switchTheme} />}
+                />
+              </Routes>
+            </div>
           </BrowserRouter>
         </div>
       </React.StrictMode>

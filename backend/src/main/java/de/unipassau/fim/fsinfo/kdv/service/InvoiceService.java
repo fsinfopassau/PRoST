@@ -98,6 +98,12 @@ public class InvoiceService {
       }
 
       InvoiceEntry invoice = invoiceO.get();
+      invoice.setPublic(true);
+      invoiceRepository.save(invoice);
+
+      if (invoice.isMailed()) {
+        continue;
+      }
 
       List<ShopItemHistoryEntry> shopEntries = shopHistory.findByUserIdAndTimestampBetween(
           invoice.getUserId(), invoice.getPreviousInvoiceTimestamp(), invoice.getTimestamp());
@@ -145,15 +151,31 @@ public class InvoiceService {
     return Optional.of(getInvoiceDTO(invoice));
   }
 
-  public boolean delete(Long invoiceId) {
-    Optional<InvoiceEntry> invoice = invoiceRepository.findById(invoiceId);
+  public Optional<List<Long>> delete(List<Long> invoiceIds) {
 
-    if (invoice.isEmpty()) {
-      return false;
+    if (invoiceIds == null || invoiceIds.isEmpty()) {
+      return Optional.empty();
     }
 
-    invoiceRepository.delete(invoice.get());
-    return true;
+    List<Long> successfulSends = new ArrayList<>();
+
+    for (Long id : invoiceIds) {
+      Optional<InvoiceEntry> invoice = invoiceRepository.findById(id);
+
+      if (invoice.isEmpty()) {
+        continue;
+      }
+
+      // Cant delete sent Invoices
+      if (invoice.get().isMailed()) {
+        continue;
+      }
+
+      invoiceRepository.delete(invoice.get());
+      successfulSends.add(id);
+    }
+
+    return Optional.of(successfulSends);
   }
 
   /**

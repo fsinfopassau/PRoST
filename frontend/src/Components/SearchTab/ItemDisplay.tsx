@@ -25,7 +25,7 @@ export function ItemDisplay(props: { item: ShopItem }) {
 
   return (
     <>
-      <div className="DisplayCard" onClick={selectItem}>
+      <div onClick={selectItem}>
         <AspectRatio ratio={1 / 1}>
           <div className="AspectRatio">
             <img src={imageUrl} alt="Item Image" width={"100%"} />

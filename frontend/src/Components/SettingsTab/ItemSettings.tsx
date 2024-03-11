@@ -6,11 +6,7 @@ import { ItemSettingCard } from "./ItemSettingCard";
 export function ItemSettings() {
   const [items, setItems] = useState<ShopItem[]>([]);
 
-  useEffect(() => {
-    getAllShopItems().then((itemList) => {
-      setItems(itemList);
-    });
-  }, []);
+  useEffect(reloadShopItems, []);
 
   function reloadShopItems() {
     getAllShopItems().then((itemList) => {

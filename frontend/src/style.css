@@ -27,11 +27,24 @@ body {
 }
 
 .Main {
-  justify-content: center;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
   padding: 0 1rem 1rem 1rem;
   margin: 0 auto;
   height: 100%;
+}
+
+.MainBody {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.MainBody > * {
+  width: 100%;
+  flex-grow: 1;
 }
 
 h1 {
@@ -72,9 +85,12 @@ a {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  overflow: hidden;
 }
 
 #Checkout-Item{
+  display: flex;
+  flex-direction: column;
   font-size: 2rem;
   width: 50rem;
 
@@ -103,11 +119,13 @@ a {
   justify-content: center;
   align-items: center;
   gap: 50px;
-  margin: 2rem;
+  padding: 2rem;
   font-size: 4rem;
-  position: fixed;
+  flex-grow: 1;
+  /*
+  position: sticky;
   bottom: 0;
-  flex-shrink: 1;
+  */
   width: 100%;
 }
 #CheckoutBar Button{
@@ -310,10 +328,16 @@ Invoice
     min-width: 6rem;
   }
 
-  .mail {
-    min-width: 2rem;
+  .icon {
+    min-width: 1rem;
     width: 10%;
     text-align: left;
+
+    div {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
   }
 
   .date {
@@ -355,6 +379,17 @@ General
   cursor: pointer;
 }
 
+.Toggle {
+  width: 25px;
+  height: 25px;
+  display: flex;
+
+  * {
+    padding: auto;
+    margin: auto;
+  }
+}
+
 .Input {
   flex: 1;
   display: inline-flex;
@@ -381,7 +416,7 @@ General
     auto-fill,
     minmax(14rem, 10fr)
   ); /* Adjust the minmax values as needed */
-  grid-auto-rows: auto;
+  grid-auto-rows: min-content;
   gap: 1rem;
   padding: 20px 0;
   max-width: 1000%;
@@ -389,8 +424,8 @@ General
 
 .CardContainer {
   display: grid;
+  grid-auto-rows: min-content;
   grid-template-columns: repeat(auto-fill, minmax(25.5rem, 1fr));
-  max-width: 100%;
 }
 
 .SpreadContainer {

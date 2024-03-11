@@ -57,6 +57,20 @@ div {
   box-shadow: 0 0 0 2px var(--black-a5);
 }
 
+.Toggle {
+  background-color: white;
+  border-radius: 100%;
+  box-shadow: 0 2px 10px var(--black-a3);
+  border: 2px solid var(--black-a5);
+}
+.Toggle:hover {
+  background-color: var(--violet-7);
+}
+.Toggle:active {
+  background-color: var(--violet-5);
+  box-shadow: 0 0 0 2px var(--black-a5);
+}
+
 .Input {
   color: var(--violet-11);
   box-shadow: 0 0 0 1px var(--violet-7);
@@ -193,4 +207,9 @@ Colors
 .green {
   color: green;
   border-color: green;
+}
+
+.orange {
+  color: orange;
+  border-color: orange;
 }

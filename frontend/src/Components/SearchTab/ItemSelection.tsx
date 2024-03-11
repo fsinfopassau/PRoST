@@ -29,7 +29,9 @@ export function ItemSelection() {
   if (user) {
     return (
       <>
-        <UserSummaryCard user={user} />
+        <div style={{ flexGrow: "0" }}>
+          <UserSummaryCard user={user} />
+        </div>
         <div className="SelectionContainer">
           {filter(items).map((item, index) => (
             <ItemDisplay key={index} item={item} />

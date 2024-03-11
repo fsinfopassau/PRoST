@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
@@ -18,6 +17,7 @@ public class InvoiceDTO {
   private Long timestamp;
   private Long previousInvoiceTimestamp;
   private boolean isMailed;
+  private boolean isPublic;
   private List<AmountMapping> amounts;
 
   public InvoiceDTO(InvoiceEntry entry, Map<String, Integer> amounts) {
@@ -27,6 +27,7 @@ public class InvoiceDTO {
     timestamp = entry.getTimestamp();
     previousInvoiceTimestamp = entry.getPreviousInvoiceTimestamp();
     isMailed = entry.isMailed();
+    isPublic = entry.isPublic();
 
     List<AmountMapping> amountsList = new ArrayList<>();
     for (String k : amounts.keySet()) {
@@ -35,11 +36,8 @@ public class InvoiceDTO {
     this.amounts = amountsList;
   }
 
-  @AllArgsConstructor
-  public static class AmountMapping {
-
-    public String itemId;
-    public int amount;
+  public record AmountMapping(String itemId, int amount) {
+    // Needed for JSON-List
   }
 
 }

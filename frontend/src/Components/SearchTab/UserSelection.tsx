@@ -14,7 +14,7 @@ export function UserSelection(props: { switchTheme: () => void }) {
   }, []);
 
   return (
-    <>
+    <div>
       <h1>
         <img
           onClick={props.switchTheme}
@@ -31,6 +31,6 @@ export function UserSelection(props: { switchTheme: () => void }) {
         placeholder="Search"
       />
       <UserContainer users={users} search={searchValue} />
-    </>
+    </div>
   );
 }

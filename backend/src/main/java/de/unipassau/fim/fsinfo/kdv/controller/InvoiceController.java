@@ -61,12 +61,11 @@ public class InvoiceController {
     return ResponseEntity.badRequest().build();
   }
 
-  @DeleteMapping("/delete/{id}")
-  public ResponseEntity<String> delete(@PathVariable Long id) {
-    if (invoiceService.delete(id)) {
-      return ResponseEntity.ok().build();
-    }
-    return ResponseEntity.badRequest().build();
+  @DeleteMapping("/delete")
+  public ResponseEntity<List<Long>> delete(@RequestBody List<Long> invoiceIds) {
+    Optional<List<Long>> sentInvoices = invoiceService.delete(invoiceIds);
+    return sentInvoices.map(ResponseEntity::ok)
+        .orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
   @PostMapping("/mail")
