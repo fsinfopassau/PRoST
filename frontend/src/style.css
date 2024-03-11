@@ -509,6 +509,13 @@ General
 
 .DialogOverlay {
   position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
   inset: 0;
   animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -539,14 +546,7 @@ General
   margin: 10px 0 10px;
   font-size: 1rem;
   line-height: 1.5;
-}
-
-.DialogClose {
-  display: flex;
-  flex-direction: row;
-  justify-content: right;
-  align-items: center;
-  width: 100%;
+  --scrollbar-size: 12px;
 }
 
 .Fieldset {

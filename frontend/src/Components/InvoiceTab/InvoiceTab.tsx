@@ -60,43 +60,55 @@ export function InvoiceTab() {
   function publishSelected() {
     if (selectedItems.length === 0) return;
 
-    publishInvoices(selectedItems).then((result) => {
-      if (result) {
-        toast.success(result.length + " veröffentlicht!");
-        setSelectedItems([]);
-        reloadInvoices();
-      } else {
-        toast.error("Veröffentlichungsfehler!");
-      }
-    });
+    publishInvoices(selectedItems)
+      .then((result) => {
+        if (result) {
+          toast.success(result.length + " veröffentlicht!");
+          setSelectedItems([]);
+          reloadInvoices();
+        } else {
+          toast.error("Veröffentlichungsfehler!");
+        }
+      })
+      .catch(() => {
+        toast.error("Verbindungsfehler!");
+      });
   }
 
   function mailSelected() {
     if (selectedItems.length === 0) return;
 
-    mailInvoices(selectedItems).then((result) => {
-      if (result) {
-        toast.success(result.length + " versendet!");
-        setSelectedItems([]);
-        reloadInvoices();
-      } else {
-        toast.error("Mailfehler!");
-      }
-    });
+    mailInvoices(selectedItems)
+      .then((result) => {
+        if (result) {
+          toast.success(result.length + " versendet!");
+          setSelectedItems([]);
+          reloadInvoices();
+        } else {
+          toast.error("Mailfehler!");
+        }
+      })
+      .catch(() => {
+        toast.error("Verbindungsfehler!");
+      });
   }
 
   function deleteSelected() {
     if (selectedItems.length === 0) return;
 
-    deleteInvoices(selectedItems).then((result) => {
-      if (result) {
-        toast.warn(result.length + " gelöscht!");
-        setSelectedItems([]);
-        reloadInvoices();
-      } else {
-        toast.error("Löschfehler!");
-      }
-    });
+    deleteInvoices(selectedItems)
+      .then((result) => {
+        if (result) {
+          toast.warn(result.length + " gelöscht!");
+          setSelectedItems([]);
+          reloadInvoices();
+        } else {
+          toast.error("Löschfehler!");
+        }
+      })
+      .catch(() => {
+        toast.error("Verbindungsfehler!");
+      });
   }
 
   function isAllSelected(): boolean {

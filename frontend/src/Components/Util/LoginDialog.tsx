@@ -86,7 +86,7 @@ export function LoginDialog() {
               <DialogOverlay className="DialogOverlay" />
               <DialogContent className="DialogContent">
                 <div>
-                  <DialogClose asChild className="DialogClose">
+                  <DialogClose asChild>
                     <button className="IconButton" aria-label="Close">
                       <Cross2Icon />
                     </button>
