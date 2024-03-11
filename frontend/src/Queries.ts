@@ -230,3 +230,15 @@ export async function mailInvoices(ids: number[]): Promise<boolean> {
   });
   return result.ok;
 }
+
+export async function publishInvoices(ids: number[]): Promise<boolean> {
+  const result = await await fetch(`${apiUrl}/api/invoice/publish`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${getEncodedCredentials()}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(ids),
+  });
+  return result.ok;
+}

@@ -1,11 +1,12 @@
 export interface Invoice {
   id: number;
   userId: string;
+  userDisplayName: string;
   balance: number;
   timestamp: number;
   previousInvoiceTimestamp: number;
   mailed: boolean;
-  public: boolean;
+  published: boolean;
   amounts: Amount[];
 }
 

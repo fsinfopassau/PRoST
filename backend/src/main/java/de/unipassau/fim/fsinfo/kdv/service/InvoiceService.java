@@ -6,6 +6,7 @@ import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItemHistoryEntry;
 import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceDTO;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.InvoiceRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemHistoryRepository;
+import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -26,17 +27,18 @@ import org.springframework.stereotype.Service;
 public class InvoiceService {
 
   private final ShopItemHistoryRepository shopHistory;
-
   private final InvoiceRepository invoiceRepository;
+  private final UserRepository userRepository;
 
   private final MailService mail;
 
   @Autowired
   public InvoiceService(ShopItemHistoryRepository shopHistory, InvoiceRepository invoiceRepository,
-      MailService mail) {
+      MailService mail, UserRepository userRepository) {
     this.shopHistory = shopHistory;
     this.invoiceRepository = invoiceRepository;
     this.mail = mail;
+    this.userRepository = userRepository;
   }
 
   public Page<InvoiceDTO> getInvoices(int pageNumber, int pageSize, Boolean mailed,
@@ -75,10 +77,34 @@ public class InvoiceService {
         invoice.getUserId(),
         invoice.getPreviousInvoiceTimestamp(), invoice.getTimestamp());
 
+    Optional<KdvUser> user = userRepository.findById(invoice.getUserId());
+    String userName = user.isPresent() ? user.get().getDisplayName() : invoice.getUserId();
+
     if (shopEntries.isEmpty()) {
-      return new InvoiceDTO(invoice, new HashMap<>());
+      return new InvoiceDTO(invoice, userName,
+          new HashMap<>());
     }
-    return new InvoiceDTO(invoice, getItemAmounts(shopEntries));
+    return new InvoiceDTO(invoice, userName, getItemAmounts(shopEntries));
+  }
+
+  public boolean publish(List<Long> invoiceIds) {
+
+    if (invoiceIds == null || invoiceIds.isEmpty()) {
+      return false;
+    }
+
+    for (Long id : invoiceIds) {
+      Optional<InvoiceEntry> invoiceO = invoiceRepository.findById(id);
+      if (invoiceO.isEmpty()) {
+        continue;
+      }
+      
+      InvoiceEntry invoice = invoiceO.get();
+      invoice.setPublished(true);
+      invoiceRepository.save(invoice);
+    }
+
+    return true;
   }
 
   public Optional<List<Long>> mailInvoices(List<Long> invoiceIds) {
@@ -98,7 +124,7 @@ public class InvoiceService {
       }
 
       InvoiceEntry invoice = invoiceO.get();
-      invoice.setPublic(true);
+      invoice.setPublished(true);
       invoiceRepository.save(invoice);
 
       if (invoice.isMailed()) {

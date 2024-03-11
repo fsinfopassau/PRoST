@@ -13,21 +13,23 @@ public class InvoiceDTO {
 
   private Long id;
   private String userId;
+  private String userDisplayName;
   private BigDecimal balance;
   private Long timestamp;
   private Long previousInvoiceTimestamp;
   private boolean isMailed;
-  private boolean isPublic;
+  private boolean isPublished;
   private List<AmountMapping> amounts;
 
-  public InvoiceDTO(InvoiceEntry entry, Map<String, Integer> amounts) {
+  public InvoiceDTO(InvoiceEntry entry, String userDisplayName, Map<String, Integer> amounts) {
     id = entry.getId();
     userId = entry.getUserId();
+    this.userDisplayName = userDisplayName;
     balance = entry.getBalance();
     timestamp = entry.getTimestamp();
     previousInvoiceTimestamp = entry.getPreviousInvoiceTimestamp();
     isMailed = entry.isMailed();
-    isPublic = entry.isPublic();
+    isPublished = entry.isPublished();
 
     List<AmountMapping> amountsList = new ArrayList<>();
     for (String k : amounts.keySet()) {

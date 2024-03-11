@@ -2,27 +2,19 @@ import {
   CheckIcon,
   EnvelopeClosedIcon,
   EyeNoneIcon,
+  EyeOpenIcon,
   LockClosedIcon,
 } from "@radix-ui/react-icons";
 import { convertTimestampToTime, formatMoney } from "../../Format";
 import { Invoice } from "../../Types/Invoice";
-import { useEffect, useState } from "react";
-import { getUserDisplayName } from "../../Types/User";
 import { Link } from "react-router-dom";
 
-export function InvoiceEntryDisplay(props: {
+export function InvoiceSelectDisplay(props: {
   invoice: Invoice;
   onSelect: (id: number) => void;
   selected: boolean;
 }) {
   const { invoice, onSelect, selected } = props;
-  const [userName, setUserName] = useState<string>("");
-
-  useEffect(() => {
-    getUserDisplayName(invoice.userId).then((name) => {
-      setUserName(name);
-    });
-  }, []);
 
   function totalAmounts(): number {
     let count = 0;
@@ -65,10 +57,10 @@ export function InvoiceEntryDisplay(props: {
             <EnvelopeClosedIcon />
           </div>
         </th>
-      ) : invoice.public ? (
+      ) : invoice.published ? (
         <th className="icon">
-          <div className="red">
-            <EnvelopeClosedIcon />
+          <div className="orange">
+            <EyeOpenIcon />
           </div>
         </th>
       ) : (
@@ -80,7 +72,7 @@ export function InvoiceEntryDisplay(props: {
       )}
       <th className="name bold">
         <Link to={`/stats/users/${invoice.userId}`} className="bold">
-          {userName}
+          {invoice.userDisplayName}
         </Link>
       </th>
       <th className="amount">{totalAmounts()}</th>

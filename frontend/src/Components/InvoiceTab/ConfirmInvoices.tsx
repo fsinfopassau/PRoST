@@ -2,7 +2,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogOverlay,
   DialogPortal,
   DialogTitle,
@@ -10,17 +9,20 @@ import {
 } from "@radix-ui/react-dialog";
 import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { PropsWithChildren, useState } from "react";
+import { Invoice } from "../../Types/Invoice";
+import { convertTimestampToTime, formatMoney } from "../../Format";
+import { Link } from "react-router-dom";
 
 interface CustomComponentProps {
   dialogTitle: string;
-  dialogDesc: string;
+  invoices: Invoice[];
   onSubmit: () => void;
 }
 
-const ConfirmDialog: React.FC<PropsWithChildren<CustomComponentProps>> = ({
+const ConfirmInvoices: React.FC<PropsWithChildren<CustomComponentProps>> = ({
   children,
   dialogTitle,
-  dialogDesc,
+  invoices,
   onSubmit,
 }) => {
   const [open, setOpen] = useState(false);
@@ -33,6 +35,16 @@ const ConfirmDialog: React.FC<PropsWithChildren<CustomComponentProps>> = ({
     if (event.key === "Escape") {
       setOpen(false);
     }
+  }
+
+  function totalAmounts(invoice: Invoice): number {
+    let count = 0;
+
+    invoice.amounts.forEach((entry) => {
+      count += entry.amount;
+    });
+
+    return count;
   }
 
   return (
@@ -51,9 +63,31 @@ const ConfirmDialog: React.FC<PropsWithChildren<CustomComponentProps>> = ({
             </DialogClose>
           </div>
           <DialogTitle className="DialogTitle">{dialogTitle}</DialogTitle>
-          <DialogDescription className="DialogDescription">
-            {dialogDesc}
-          </DialogDescription>
+          <div className="DialogDescription">
+            <table className="InvoiceTable">
+              <tbody>
+                {invoices.map((invoice, index) => (
+                  <tr key={index}>
+                    <th className="name bold">
+                      <Link
+                        to={`/stats/users/${invoice.userId}`}
+                        className="bold"
+                      >
+                        {invoice.userDisplayName}
+                      </Link>
+                    </th>
+                    <th className="amount">{totalAmounts(invoice)}</th>
+                    <th className="balance bold">
+                      {formatMoney(invoice.balance)}
+                    </th>
+                    <th className="date">
+                      {convertTimestampToTime(invoice.timestamp)}
+                    </th>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <div
             style={{
               display: "flex",
@@ -73,4 +107,4 @@ const ConfirmDialog: React.FC<PropsWithChildren<CustomComponentProps>> = ({
   );
 };
 
-export default ConfirmDialog;
+export default ConfirmInvoices;

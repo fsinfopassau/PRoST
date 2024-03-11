@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { Invoice } from "../../Types/Invoice";
-import { deleteInvoices, getAllInvoices, mailInvoices } from "../../Queries";
-import { InvoiceEntryDisplay } from "./InvoiceEntryDisplay";
+import {
+  deleteInvoices,
+  getAllInvoices,
+  mailInvoices,
+  publishInvoices,
+} from "../../Queries";
+import { InvoiceSelectDisplay } from "./InvoiceSelectDisplay";
 import {
   ScrollArea,
   ScrollAreaScrollbar,
@@ -11,11 +16,12 @@ import {
 import { Separator } from "@radix-ui/react-separator";
 import {
   CheckIcon,
-  MinusIcon,
+  EyeOpenIcon,
+  FileMinusIcon,
+  FilePlusIcon,
   PaperPlaneIcon,
-  PlusIcon,
 } from "@radix-ui/react-icons";
-import ConfirmDialog from "../Util/ConfirmDialog";
+import ConfirmInvoices from "./ConfirmInvoices";
 
 export function InvoiceTab() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -49,8 +55,16 @@ export function InvoiceTab() {
     });
   }
 
+  function publishSelected() {
+    publishInvoices(selectedItems).then((result) => {
+      if (result) {
+        reloadInvoices();
+        setSelectedItems([]);
+      }
+    });
+  }
+
   function mailSelected() {
-    console.log("mail " + selectedItems);
     mailInvoices(selectedItems).then((result) => {
       if (result) {
         reloadInvoices();
@@ -60,7 +74,6 @@ export function InvoiceTab() {
   }
 
   function deleteSelected() {
-    console.log("delete " + selectedItems);
     deleteInvoices(selectedItems).then((result) => {
       if (result) {
         reloadInvoices();
@@ -87,8 +100,8 @@ export function InvoiceTab() {
     });
   }
 
-  function stringifiedSelection(): string {
-    return "  ";
+  function getSelectedInvoices(): Invoice[] {
+    return invoices.filter((invoice) => selectedItems.includes(invoice.id));
   }
 
   return (
@@ -106,30 +119,48 @@ export function InvoiceTab() {
               ) : (
                 <div className="Toggle" onClick={toggleAll}></div>
               )}
-              <ConfirmDialog
-                dialogTitle="Rechnungen Löschen?"
-                dialogDesc={stringifiedSelection()}
-                onSubmit={deleteSelected}
-              >
-                <button className="Button red">
-                  <MinusIcon />
-                </button>
-              </ConfirmDialog>
+
+              {selectedItems.length !== 0 ? (
+                <div className="SpreadContainer">
+                  <ConfirmInvoices
+                    dialogTitle="Rechnungen Löschen?"
+                    invoices={getSelectedInvoices()}
+                    onSubmit={deleteSelected}
+                  >
+                    <div className="Button red">
+                      <FileMinusIcon />
+                    </div>
+                  </ConfirmInvoices>
+
+                  <ConfirmInvoices
+                    dialogTitle="Rechnungen Veröffentlichen?"
+                    invoices={getSelectedInvoices()}
+                    onSubmit={publishSelected}
+                  >
+                    <div className="Button orange">
+                      <EyeOpenIcon />
+                    </div>
+                  </ConfirmInvoices>
+
+                  <ConfirmInvoices
+                    dialogTitle="Rechnungen Verschicken?"
+                    invoices={getSelectedInvoices()}
+                    onSubmit={mailSelected}
+                  >
+                    <div className="Button orange">
+                      <PaperPlaneIcon />
+                    </div>
+                  </ConfirmInvoices>
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
+
             <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
               <div className="Button green">
-                <PlusIcon />
+                <FilePlusIcon />
               </div>
-
-              <ConfirmDialog
-                dialogTitle="Rechnungen Verschicken?"
-                dialogDesc={stringifiedSelection()}
-                onSubmit={mailSelected}
-              >
-                <div className="Button orange">
-                  <PaperPlaneIcon />
-                </div>
-              </ConfirmDialog>
             </div>
           </div>
 
@@ -137,7 +168,7 @@ export function InvoiceTab() {
           <table className="InvoiceTable">
             <tbody>
               {invoices.map((invoice, index) => (
-                <InvoiceEntryDisplay
+                <InvoiceSelectDisplay
                   key={index}
                   invoice={invoice}
                   onSelect={handleSelect}

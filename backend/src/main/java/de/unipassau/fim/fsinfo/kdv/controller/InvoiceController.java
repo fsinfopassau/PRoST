@@ -75,4 +75,12 @@ public class InvoiceController {
         .orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
+  @PostMapping("/publish")
+  public ResponseEntity<String> publish(@RequestBody List<Long> invoiceIds) {
+    if (invoiceService.publish(invoiceIds)) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
 }
