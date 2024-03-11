@@ -87,28 +87,30 @@ public class InvoiceService {
     return new InvoiceDTO(invoice, userName, getItemAmounts(shopEntries));
   }
 
-  public boolean publish(List<Long> invoiceIds) {
-
+  public Optional<List<Long>> publish(List<Long> invoiceIds) {
     if (invoiceIds == null || invoiceIds.isEmpty()) {
-      return false;
+      return Optional.empty();
     }
 
+    List<Long> successful = new ArrayList<>();
     for (Long id : invoiceIds) {
       Optional<InvoiceEntry> invoiceO = invoiceRepository.findById(id);
       if (invoiceO.isEmpty()) {
         continue;
       }
-      
+
       InvoiceEntry invoice = invoiceO.get();
-      invoice.setPublished(true);
-      invoiceRepository.save(invoice);
+      if (!invoice.isPublished()) {
+        invoice.setPublished(true);
+        invoiceRepository.save(invoice);
+        successful.add(id);
+      }
     }
 
-    return true;
+    return Optional.of(successful);
   }
 
   public Optional<List<Long>> mailInvoices(List<Long> invoiceIds) {
-
     if (invoiceIds == null || invoiceIds.isEmpty()) {
       return Optional.empty();
     }
@@ -144,6 +146,27 @@ public class InvoiceService {
     return Optional.of(successfulSends);
   }
 
+  public Optional<List<String>> createInvoices(List<String> userIds) {
+    if (userIds == null || userIds.isEmpty()) {
+      return Optional.empty();
+    }
+
+    List<String> successful = new ArrayList<>();
+    for (String id : userIds) {
+      Optional<KdvUser> user0 = userRepository.findById(id);
+      if (user0.isEmpty()) {
+        continue;
+      }
+
+      KdvUser user = user0.get();
+      if (createInvoice(user).isPresent()) {
+        successful.add(id);
+      }
+    }
+
+    return Optional.of(successful);
+  }
+
   /**
    * Creates and saves a new Invoice.
    * <br>
@@ -152,7 +175,7 @@ public class InvoiceService {
    * @param user the invoiced user.
    * @return optional
    */
-  public Optional<InvoiceDTO> createInvoice(KdvUser user) {
+  private Optional<InvoiceDTO> createInvoice(KdvUser user) {
 
     // Nur fortfahren, wenn Nutzer Schulden hat.
     if (user.getBalance().compareTo(new BigDecimal(0)) != -1) {

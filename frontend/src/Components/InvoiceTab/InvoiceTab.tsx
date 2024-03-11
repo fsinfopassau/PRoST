@@ -22,6 +22,8 @@ import {
   PaperPlaneIcon,
 } from "@radix-ui/react-icons";
 import ConfirmInvoices from "./ConfirmInvoices";
+import InvoiceCreation from "./InvoiceCreation";
+import { toast } from "react-toastify";
 
 export function InvoiceTab() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -56,28 +58,43 @@ export function InvoiceTab() {
   }
 
   function publishSelected() {
+    if (selectedItems.length === 0) return;
+
     publishInvoices(selectedItems).then((result) => {
       if (result) {
-        reloadInvoices();
+        toast.success(result.length + " veröffentlicht!");
         setSelectedItems([]);
+        reloadInvoices();
+      } else {
+        toast.error("Veröffentlichungsfehler!");
       }
     });
   }
 
   function mailSelected() {
+    if (selectedItems.length === 0) return;
+
     mailInvoices(selectedItems).then((result) => {
       if (result) {
-        reloadInvoices();
+        toast.success(result.length + " versendet!");
         setSelectedItems([]);
+        reloadInvoices();
+      } else {
+        toast.error("Mailfehler!");
       }
     });
   }
 
   function deleteSelected() {
+    if (selectedItems.length === 0) return;
+
     deleteInvoices(selectedItems).then((result) => {
       if (result) {
-        reloadInvoices();
+        toast.warn(result.length + " gelöscht!");
         setSelectedItems([]);
+        reloadInvoices();
+      } else {
+        toast.error("Löschfehler!");
       }
     });
   }
@@ -106,7 +123,10 @@ export function InvoiceTab() {
 
   return (
     <>
-      <ScrollArea className="DisplayCard" style={{ height: "100%" }}>
+      <ScrollArea
+        className="DisplayCard"
+        style={{ height: "100%", maxWidth: "60rem" }}
+      >
         <ScrollAreaViewport>
           <h2>Rechnungen</h2>
 
@@ -158,9 +178,11 @@ export function InvoiceTab() {
             </div>
 
             <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-              <div className="Button green">
-                <FilePlusIcon />
-              </div>
+              <InvoiceCreation onSubmit={reloadInvoices}>
+                <div className="Button green">
+                  <FilePlusIcon />
+                </div>
+              </InvoiceCreation>
             </div>
           </div>
 

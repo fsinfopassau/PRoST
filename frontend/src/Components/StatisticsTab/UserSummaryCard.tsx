@@ -3,7 +3,7 @@ import { User } from "../../Types/User";
 import { Separator } from "@radix-ui/react-separator";
 import { ShopHistoryEntry } from "../../Types/ShopHistory";
 import { useEffect, useState } from "react";
-import { createInvoice, getUserHistory } from "../../Queries";
+import { getUserHistory } from "../../Queries";
 import { formatMoney } from "../../Format";
 
 export function UserSummaryCard(props: { user: User }) {
@@ -15,11 +15,6 @@ export function UserSummaryCard(props: { user: User }) {
       if (historyList) setHistory(historyList.reverse());
     });
   }, []);
-
-  // TODO remove
-  function invoice() {
-    createInvoice(user.id);
-  }
 
   function getDisplayName(): string {
     return user.displayName ? user.displayName : user.id;
@@ -43,9 +38,7 @@ export function UserSummaryCard(props: { user: User }) {
             ))}
           </div>
           <Separator className="Separator" decorative orientation="vertical" />
-          <div className="Balance" onClick={invoice}>
-            {formatMoney(user.balance)}
-          </div>
+          <div className="Balance">{formatMoney(user.balance)}</div>
         </div>
       </div>
     </div>

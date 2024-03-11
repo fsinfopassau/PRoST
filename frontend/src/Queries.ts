@@ -83,16 +83,6 @@ export async function buyItem(userId: string, itemId: string, amount: number) {
   return result.ok;
 }
 
-export async function createInvoice(userId: string) {
-  const result = await fetch(`${apiUrl}/api/invoice/create/${userId}`, {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${getEncodedCredentials()}`,
-    },
-  });
-  return result.ok;
-}
-
 export async function getHistory(amount: number) {
   const result = await (
     await fetch(`${apiUrl}/api/history?n=${amount}`, {
@@ -207,38 +197,66 @@ export async function getAllInvoices(): Promise<InvoicePage | undefined> {
   return result as InvoicePage;
 }
 
-export async function deleteInvoices(ids: number[]): Promise<boolean> {
-  const result = await await fetch(`${apiUrl}/api/invoice/delete`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Basic ${getEncodedCredentials()}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(ids),
-  });
-  return result.ok;
+export async function createInvoices(
+  userIds: string[]
+): Promise<string[] | undefined> {
+  const result = await (
+    await fetch(`${apiUrl}/api/invoice/create`, {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userIds),
+    })
+  ).json();
+  return result;
 }
 
-export async function mailInvoices(ids: number[]): Promise<boolean> {
-  const result = await await fetch(`${apiUrl}/api/invoice/mail`, {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${getEncodedCredentials()}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(ids),
-  });
-  return result.ok;
+export async function deleteInvoices(
+  ids: number[]
+): Promise<number[] | undefined> {
+  const result = await (
+    await fetch(`${apiUrl}/api/invoice/delete`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(ids),
+    })
+  ).json();
+  return result;
 }
 
-export async function publishInvoices(ids: number[]): Promise<boolean> {
-  const result = await await fetch(`${apiUrl}/api/invoice/publish`, {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${getEncodedCredentials()}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(ids),
-  });
-  return result.ok;
+export async function mailInvoices(
+  ids: number[]
+): Promise<number[] | undefined> {
+  const result = await (
+    await fetch(`${apiUrl}/api/invoice/mail`, {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(ids),
+    })
+  ).json();
+  return result;
+}
+
+export async function publishInvoices(
+  ids: number[]
+): Promise<number[] | undefined> {
+  const result = await (
+    await fetch(`${apiUrl}/api/invoice/publish`, {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(ids),
+    })
+  ).json();
+  return result;
 }
