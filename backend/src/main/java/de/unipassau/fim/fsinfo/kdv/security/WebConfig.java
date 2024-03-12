@@ -46,7 +46,7 @@ public class WebConfig implements WebMvcConfigurer {
       "/api/users/*/invoices",
   };
 
-  public static final String[] MOD_SPACE = {
+  public static final String[] KIOSK_SPACE = {
       "/api/shop/**",
       "/api/users/**",
       "/api/invoice/**",
@@ -79,10 +79,10 @@ public class WebConfig implements WebMvcConfigurer {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(AUTH_WHITELIST).permitAll()
             .requestMatchers(USER_SPACE)
-            .hasAnyAuthority(UserRole.USER.name(), UserRole.MODERATOR.name(),
+            .hasAnyAuthority(UserRole.USER.name(), UserRole.KIOSK.name(),
                 UserRole.ADMINISTRATOR.name())
-            .requestMatchers(MOD_SPACE)
-            .hasAnyAuthority(UserRole.MODERATOR.name(), UserRole.ADMINISTRATOR.name())
+            .requestMatchers(KIOSK_SPACE)
+            .hasAnyAuthority(UserRole.KIOSK.name(), UserRole.ADMINISTRATOR.name())
             .requestMatchers(ADMIN_SPACE).hasAnyAuthority(UserRole.ADMINISTRATOR.name())
             .anyRequest().authenticated() // Require authentication for all other requests
         )

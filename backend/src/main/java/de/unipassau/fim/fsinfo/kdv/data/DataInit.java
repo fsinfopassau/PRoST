@@ -19,7 +19,7 @@ public class DataInit {
         repository.save(
             new KdvUser("admin", "Kai Nepanik", "it@paulsenik.de", UserRole.ADMINISTRATOR, true));
         repository.save(
-            new KdvUser("mod", "Lasse Maranda", "it@paulsenik.de", UserRole.MODERATOR, true));
+            new KdvUser("mod", "Lasse Maranda", "it@paulsenik.de", UserRole.KIOSK, true));
         repository.save(
             new KdvUser("normalUser", "Erhart Haramasch", "it@paulsenik.de", UserRole.USER, false));
         for (int i = 1; i <= 20; i++) {

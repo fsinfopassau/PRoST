@@ -8,7 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LoginDialog } from "./LoginDialog";
 
-export function TabChanger(props: { switchTheme: () => void }) {
+export function Navbar(props: { switchTheme: () => void }) {
   const { switchTheme } = props;
   const navigate = useNavigate();
   const location = useLocation();

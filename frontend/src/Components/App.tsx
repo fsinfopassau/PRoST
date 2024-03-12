@@ -1,7 +1,7 @@
 import "../style.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { TabChanger } from "./Util/Navbar";
+import { Navbar } from "./Util/Navbar";
 import { ErrorComponent } from "./Util/ErrorTab";
 import { UserSelection } from "./SearchTab/UserSelection";
 import { ItemSelection } from "./SearchTab/ItemSelection";
@@ -53,7 +53,7 @@ export function App() {
       <React.StrictMode>
         <div className="Main">
           <BrowserRouter>
-            <TabChanger switchTheme={switchTheme} />
+            <Navbar switchTheme={switchTheme} />
             <ToastContainer
               position="bottom-left"
               autoClose={4000}

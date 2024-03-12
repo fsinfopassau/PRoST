@@ -92,7 +92,7 @@ const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({
   return (
     <>
       <ScrollDialog
-        title="HEYHO"
+        title="Neue Rechnungen"
         trigger={<div>{children} </div>}
         onSubmit={create}
       >
