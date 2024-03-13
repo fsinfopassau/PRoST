@@ -4,6 +4,6 @@ public enum UserRole {
 
   FSINFO,
   KIOSK,
-  ADMIN
+  KAFFEEKASSE
 
 }

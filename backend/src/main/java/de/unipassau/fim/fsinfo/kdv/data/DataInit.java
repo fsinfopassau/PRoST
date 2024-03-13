@@ -17,7 +17,7 @@ public class DataInit {
     return args -> {
       try {
         repository.save(
-            new KdvUser("admin", "Kai Nepanik", "it@paulsenik.de", UserRole.ADMIN, true));
+            new KdvUser("admin", "Kai Nepanik", "it@paulsenik.de", UserRole.KAFFEEKASSE, true));
         repository.save(
             new KdvUser("mod", "Lasse Maranda", "it@paulsenik.de", UserRole.KIOSK, true));
         repository.save(

@@ -1,4 +1,6 @@
 version: '3.8'
+volumes:
+  kdv-ldap:
 services:
   frontend:
     container_name: KdV-Frontend
@@ -13,10 +15,22 @@ services:
     container_name: KdV-Backend
     build:
       context: backend
-      args:
-        - MASTER_PASSWORD=FSinfoKdV24
     ports:
       - "8081:8081"
     volumes:
       - ./kdv-data:/data
     restart: on-failure
+  ldap:
+    container_name: KdV-LDAP
+    image: bitnami/openldap:latest
+    ports:
+      - 389:1389
+    volumes:
+      - kdv-ldap:/bitnami/openldap
+      - ./ldif:/ldif
+    environment:
+      LDAP_ADMIN_USERNAME: admin
+      LDAP_ADMIN_PASSWORD: adminpassword
+      LDAP_ROOT: dc=fsinfo,dc=fim,dc=uni-passau,dc=de
+      LDAP_ADMIN_DN: cn=admin,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
+      LDAP_CUSTOM_LDIF_DIR: /ldif

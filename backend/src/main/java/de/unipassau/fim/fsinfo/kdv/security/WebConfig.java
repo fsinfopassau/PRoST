@@ -7,16 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.ldap.core.support.BaseLdapPathContextSource;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
-import org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator;
-import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -80,10 +76,10 @@ public class WebConfig implements WebMvcConfigurer {
             .requestMatchers(AUTH_WHITELIST).permitAll()
             .requestMatchers(USER_SPACE)
             .hasAnyAuthority(UserRole.FSINFO.name(), UserRole.KIOSK.name(),
-                UserRole.ADMIN.name())
+                UserRole.KAFFEEKASSE.name())
             .requestMatchers(KIOSK_SPACE)
-            .hasAnyAuthority(UserRole.KIOSK.name(), UserRole.ADMIN.name())
-            .requestMatchers(ADMIN_SPACE).hasAnyAuthority(UserRole.ADMIN.name())
+            .hasAnyAuthority(UserRole.KIOSK.name(), UserRole.KAFFEEKASSE.name())
+            .requestMatchers(ADMIN_SPACE).hasAnyAuthority(UserRole.KAFFEEKASSE.name())
             .anyRequest().authenticated() // Require authentication for all other requests
         )
         .sessionManagement(
