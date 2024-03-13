@@ -15,10 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService implements UserDetailsService {
-
-  @Value("${MASTER_PASSWORD:password}")
-  private String masterPassword;
+public class UserService {
 
   private final UserRepository users;
 
@@ -51,17 +48,5 @@ public class UserService implements UserDetailsService {
     userTemplate.setBalance(new BigDecimal(0));
     users.save(userTemplate);
     return true;
-  }
-
-  @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    KdvUser user = users.findById(username)
-        .orElseThrow(() -> new UsernameNotFoundException("User \"" + username + "\" not found!"));
-
-    return User
-        .withUsername(username)
-        .password(new BCryptPasswordEncoder().encode(masterPassword))
-        .authorities(user.getRole().name())
-        .build();
   }
 }

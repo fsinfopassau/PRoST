@@ -17,14 +17,14 @@ public class DataInit {
     return args -> {
       try {
         repository.save(
-            new KdvUser("admin", "Kai Nepanik", "it@paulsenik.de", UserRole.ADMINISTRATOR, true));
+            new KdvUser("admin", "Kai Nepanik", "it@paulsenik.de", UserRole.ADMIN, true));
         repository.save(
             new KdvUser("mod", "Lasse Maranda", "it@paulsenik.de", UserRole.KIOSK, true));
         repository.save(
-            new KdvUser("normalUser", "Erhart Haramasch", "it@paulsenik.de", UserRole.USER, false));
+            new KdvUser("normalUser", "Erhart Haramasch", "it@paulsenik.de", UserRole.FSINFO, false));
         for (int i = 1; i <= 20; i++) {
           repository.save(
-              new KdvUser("testN" + i, "KekW " + i, "it@paulsenik.de", UserRole.USER, true));
+              new KdvUser("testN" + i, "KekW " + i, "it@paulsenik.de", UserRole.FSINFO, true));
         }
       } catch (Exception ignored) {
       }
