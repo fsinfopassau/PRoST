@@ -1,7 +1,10 @@
 import { User } from "../../Types/User";
 import { UserBox } from "./UserSelectionDisplay";
 
-export function UserContainer(props: { users: User[]; search: string }) {
+export function UserContainer(props: {
+  users: User[] | undefined;
+  search: string;
+}) {
   const { users, search } = props;
 
   function filter(users: User[], useFuzzy: boolean): User[] {
@@ -28,9 +31,13 @@ export function UserContainer(props: { users: User[]; search: string }) {
   return (
     <>
       <div className="SelectionContainer">
-        {filter(users, true).map((user, index) => (
-          <UserBox key={index} user={user} />
-        ))}
+        {users === undefined ? (
+          <></>
+        ) : (
+          filter(users, true).map((user, index) => (
+            <UserBox key={index} user={user} />
+          ))
+        )}
       </div>
     </>
   );

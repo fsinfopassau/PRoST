@@ -60,7 +60,6 @@ export function ItemSettingCard(props: {
   }
 
   function setPrice(newPrice: string) {
-    console.log("Price = " + newPrice);
     changeShopItem(item, newPrice, "price").then((result) => {
       if (result) {
         toast.success("Preis geändert.");

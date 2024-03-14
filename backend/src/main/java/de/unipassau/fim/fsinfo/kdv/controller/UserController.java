@@ -43,8 +43,14 @@ public class UserController {
    * @return List of all Users
    */
   @GetMapping
-  public ResponseEntity<List<KdvUser>> list() {
-    return ResponseEntity.ok(userRepository.findAll());
+  public ResponseEntity<List<KdvUser>> list(@RequestParam(required = false) String id) {
+    if (id == null) {
+      return ResponseEntity.ok(userRepository.findAll());
+    } else {
+      Optional<KdvUser> user = userRepository.findById(id);
+      return user.map(kdvUser -> ResponseEntity.ok(List.of(kdvUser)))
+          .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
   }
 
   @PostMapping("/create")
@@ -54,12 +60,6 @@ public class UserController {
         userTemplate.getDisplayName(),
         userTemplate.getEmail());
 
-    return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
-  }
-
-  @GetMapping("/{id}")
-  public ResponseEntity<KdvUser> get(@PathVariable String id) {
-    Optional<KdvUser> user = userRepository.findById(id);
     return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
   }
 

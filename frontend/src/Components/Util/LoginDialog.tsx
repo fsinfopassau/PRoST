@@ -40,16 +40,13 @@ export function LoginDialog() {
     setPassword(event.target.value);
   };
 
-  function buttonClickHandler() {
-    console.log("log");
-  }
-
   function submit() {
     loginNew(userName, password)
       .then((result) => {
         if (result) {
           toast.success("Hallo " + result.displayName);
           setLogged(true);
+          window.location.reload();
         } else {
           toast.error("Login fehlgeschlagen!");
           setLogged(false);
@@ -67,6 +64,7 @@ export function LoginDialog() {
     setPassword("");
     resetCredentials();
     setLogged(false);
+    window.location.reload();
   }
 
   function handleKeyDown(event: React.KeyboardEvent) {
@@ -87,7 +85,7 @@ export function LoginDialog() {
         ) : (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <button onClick={buttonClickHandler} id="login-button">
+              <button id="login-button">
                 <AvatarIcon width={35} height={25} />
               </button>
             </DialogTrigger>

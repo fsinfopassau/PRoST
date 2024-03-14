@@ -88,10 +88,7 @@ export function App() {
                 />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/settings/items" element={<ItemSettings />} />
-                <Route
-                  path="*"
-                  element={<ErrorComponent switchTheme={switchTheme} />}
-                />
+                <Route path="*" element={<ErrorComponent />} />
               </Routes>
             </div>
           </BrowserRouter>

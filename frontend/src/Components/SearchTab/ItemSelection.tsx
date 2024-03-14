@@ -14,7 +14,7 @@ export function ItemSelection() {
 
   useEffect(() => {
     getAllShopItems().then((itemList) => {
-      setItems(itemList);
+      if (itemList) setItems(itemList);
     });
     if (userId)
       getUser(userId).then((user) => {

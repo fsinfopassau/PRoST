@@ -2,11 +2,7 @@ import axios from "axios";
 import { ShopHistoryEntry } from "./Types/ShopHistory";
 import { ShopItem } from "./Types/ShopItem";
 import { User } from "./Types/User";
-import {
-  getEncodedCredentials,
-  resetCredentials,
-  setEncodedCredentials,
-} from "./SessionInfo";
+import { getEncodedCredentials, setEncodedCredentials } from "./SessionInfo";
 import { InvoicePage } from "./Types/Invoice";
 
 export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
@@ -18,77 +14,112 @@ export async function loginNew(username: string, password: string) {
 
 export async function login(cred: string): Promise<User | undefined> {
   try {
-    const response = await (
-      await fetch(`${apiUrl}/api/authentication`, {
-        method: "GET",
-        headers: {
-          Authorization: `Basic ${cred}`,
-        },
-      })
-    ).json();
+    const result = await fetch(`${apiUrl}/api/authentication`, {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${cred}`,
+      },
+    });
 
-    const user = response as User;
+    if (!result.ok) {
+      return undefined;
+    }
+
     setEncodedCredentials(cred);
-    return user;
+    console.log((await result.json()) as User);
+    return (await result.json()) as User;
   } catch (error) {
-    resetCredentials();
     return undefined;
   }
 }
 
-export async function getUser(userId: string) {
-  const result = await (
-    await fetch(`${apiUrl}/api/users/${userId}`, {
+export async function getUser(userId: string): Promise<User | undefined> {
+  try {
+    const result = await fetch(`${apiUrl}/api/users?id=${userId}`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
         "Content-Type": "application/json",
       },
-    })
-  ).json();
-  return result as User;
+    });
+
+    if (!result.ok) {
+      return undefined;
+    }
+
+    return ((await result.json()) as User[])[0];
+  } catch (exception) {
+    return undefined;
+  }
 }
 
-export async function getAllUsers() {
-  const result = await (
-    await fetch(`${apiUrl}/api/users`, {
+export async function getAllUsers(): Promise<User[] | undefined> {
+  try {
+    const result = await fetch(`${apiUrl}/api/users`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
         "Content-Type": "application/json",
       },
-    })
-  ).json();
-  return result as User[];
+    });
+
+    if (!result.ok) {
+      return undefined;
+    }
+
+    return (await result.json()) as User[];
+  } catch (error) {
+    return undefined;
+  }
 }
 
-export async function getShopItem(itemId: string) {
-  const result = await (
-    await fetch(`${apiUrl}/api/shop/${itemId}`, {
+export async function getShopItem(
+  itemId: string
+): Promise<ShopItem | undefined> {
+  try {
+    const response = await fetch(`${apiUrl}/api/shop/${itemId}`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
         "Content-Type": "application/json",
       },
-    })
-  ).json();
-  return result as ShopItem;
+    });
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as ShopItem;
+  } catch (error) {
+    return undefined;
+  }
 }
 
-export async function getAllShopItems() {
-  const result = await (
-    await fetch(`${apiUrl}/api/shop`, {
+export async function getAllShopItems(): Promise<ShopItem[] | undefined> {
+  try {
+    const response = await fetch(`${apiUrl}/api/shop`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
         "Content-Type": "application/json",
       },
-    })
-  ).json();
-  return result as ShopItem[];
+    });
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as ShopItem[];
+  } catch (error) {
+    return undefined;
+  }
 }
 
-export async function buyItem(userId: string, itemId: string, amount: number) {
+export async function buyItem(
+  userId: string,
+  itemId: string,
+  amount: number
+): Promise<boolean> {
   const result = await fetch(
     `${apiUrl}/api/shop/consume/${itemId}?userId=${userId}&n=${amount}`,
     {
@@ -102,26 +133,49 @@ export async function buyItem(userId: string, itemId: string, amount: number) {
   return result.ok;
 }
 
-export async function getHistory(amount: number) {
-  const result = await (
-    await fetch(`${apiUrl}/api/history?n=${amount}`, {
-      method: "GET",
-    })
-  ).json();
-  return result as ShopHistoryEntry[];
-}
-
-export async function getUserHistory(user: User, amount: number) {
-  const result = await (
-    await fetch(`${apiUrl}/api/history/${user.id}?n=${amount}`, {
+export async function getHistory(
+  amount: number
+): Promise<ShopHistoryEntry[] | undefined> {
+  try {
+    const response = await fetch(`${apiUrl}/api/history?n=${amount}`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
         "Content-Type": "application/json",
       },
-    })
-  ).json();
-  return result as ShopHistoryEntry[];
+    });
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as ShopHistoryEntry[];
+  } catch (error) {
+    return undefined;
+  }
+}
+
+export async function getUserHistory(user: User, amount: number) {
+  try {
+    const response = await fetch(
+      `${apiUrl}/api/history/${user.id}?n=${amount}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${getEncodedCredentials()}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as ShopHistoryEntry[];
+  } catch (error) {
+    return undefined;
+  }
 }
 
 export async function enableItem(
@@ -140,7 +194,7 @@ export async function enableItem(
   return result.ok;
 }
 
-export async function deleteShopItem(item: ShopItem) {
+export async function deleteShopItem(item: ShopItem): Promise<boolean> {
   const result = await fetch(`${apiUrl}/api/shop/${item.id}/delete`, {
     method: "DELETE",
     headers: {
@@ -154,7 +208,7 @@ export async function changeShopItem(
   item: ShopItem,
   value: string,
   path: string
-) {
+): Promise<boolean> {
   const result = await fetch(
     `${apiUrl}/api/shop/${item.id}/${path}?value=${value}`,
     {
@@ -167,7 +221,10 @@ export async function changeShopItem(
   return result.ok;
 }
 
-export async function uploadItemDisplayPicture(item: ShopItem, file: File) {
+export async function uploadItemDisplayPicture(
+  item: ShopItem,
+  file: File
+): Promise<boolean> {
   const formData = new FormData();
   formData.append("file", file);
 
@@ -213,77 +270,113 @@ export async function getItemDisplayPicture(
 }
 
 export async function getAllInvoices(): Promise<InvoicePage | undefined> {
-  const result = await (
-    await fetch(`${apiUrl}/api/invoice`, {
+  try {
+    const response = await fetch(`${apiUrl}/api/invoice`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
       },
-    })
-  ).json();
-  return result as InvoicePage;
+    });
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as InvoicePage;
+  } catch (error) {
+    return undefined;
+  }
 }
 
 export async function createInvoices(
   userIds: string[]
 ): Promise<string[] | undefined> {
-  const result = await (
-    await fetch(`${apiUrl}/api/invoice/create`, {
+  try {
+    const response = await fetch(`${apiUrl}/api/invoice/create`, {
       method: "POST",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(userIds),
-    })
-  ).json();
-  return result;
+    });
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as string[];
+  } catch (error) {
+    return undefined;
+  }
 }
 
 export async function deleteInvoices(
   ids: number[]
 ): Promise<number[] | undefined> {
-  const result = await (
-    await fetch(`${apiUrl}/api/invoice/delete`, {
+  try {
+    const response = await fetch(`${apiUrl}/api/invoice/delete`, {
       method: "DELETE",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(ids),
-    })
-  ).json();
-  return result;
+    });
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as number[];
+  } catch (error) {
+    return undefined;
+  }
 }
 
 export async function mailInvoices(
   ids: number[]
 ): Promise<number[] | undefined> {
-  const result = await (
-    await fetch(`${apiUrl}/api/invoice/mail`, {
+  try {
+    const response = await fetch(`${apiUrl}/api/invoice/mail`, {
       method: "POST",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(ids),
-    })
-  ).json();
-  return result;
+    });
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as number[];
+  } catch (error) {
+    return undefined;
+  }
 }
 
 export async function publishInvoices(
   ids: number[]
 ): Promise<number[] | undefined> {
-  const result = await (
-    await fetch(`${apiUrl}/api/invoice/publish`, {
+  try {
+    const response = await fetch(`${apiUrl}/api/invoice/publish`, {
       method: "POST",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(ids),
-    })
-  ).json();
-  return result;
+    });
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as number[];
+  } catch (error) {
+    return undefined;
+  }
 }

@@ -10,7 +10,7 @@ export function ItemSettings() {
 
   function reloadShopItems() {
     getAllShopItems().then((itemList) => {
-      setItems(itemList);
+      if (itemList) setItems(itemList);
     });
   }
 

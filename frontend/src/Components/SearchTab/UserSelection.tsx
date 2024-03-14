@@ -5,12 +5,16 @@ import { UserContainer } from "./UserContainer";
 
 export function UserSelection(props: { switchTheme: () => void }) {
   const [searchValue, setSearchValue] = useState("");
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<User[] | undefined>([]);
 
   useEffect(() => {
-    getAllUsers().then((userList) => {
-      setUsers(userList);
-    });
+    getAllUsers()
+      .then((userList) => {
+        setUsers(userList);
+      })
+      .catch(() => {
+        setUsers([]);
+      });
   }, []);
 
   return (
