@@ -16,6 +16,10 @@ export function setEncodedCredentials(cred: string) {
   localStorage.setItem("cred", encodedCredentials);
 }
 
+export function getSessionUserName(): string {
+  return window.atob(encodedCredentials).split(":")[0];
+}
+
 export function resetCredentials() {
   encodedCredentials = "";
   localStorage.setItem("cred", encodedCredentials);

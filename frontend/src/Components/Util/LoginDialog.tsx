@@ -14,9 +14,13 @@ import {
   ExitIcon,
   PaperPlaneIcon,
 } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { loginNew } from "../../Queries";
-import { resetCredentials, validCredentials } from "../../SessionInfo";
+import {
+  getSessionUserName,
+  resetCredentials,
+  validCredentials,
+} from "../../SessionInfo";
 import { toast } from "react-toastify";
 
 export function LoginDialog() {
@@ -24,6 +28,10 @@ export function LoginDialog() {
   const [password, setPassword] = useState<string>("");
   const [isLogged, setLogged] = useState(validCredentials());
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setUserName(getSessionUserName());
+  }, []);
 
   const handleUserChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUserName(event.target.value);
