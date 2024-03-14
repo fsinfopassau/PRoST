@@ -16,24 +16,23 @@ export async function loginNew(username: string, password: string) {
   return login(cred);
 }
 
-export async function login(cred: string) {
+export async function login(cred: string): Promise<User | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/authentication`, {
-      method: "GET",
-      headers: {
-        Authorization: `Basic ${cred}`,
-      },
-    });
-    if (!response.ok) {
-      resetCredentials();
-      return false;
-    } else {
-      setEncodedCredentials(cred);
-      return true;
-    }
+    const response = await (
+      await fetch(`${apiUrl}/api/authentication`, {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${cred}`,
+        },
+      })
+    ).json();
+
+    const user = response as User;
+    setEncodedCredentials(cred);
+    return user;
   } catch (error) {
-    console.error("There was an error!", error);
-    return false;
+    resetCredentials();
+    return undefined;
   }
 }
 
@@ -41,6 +40,10 @@ export async function getUser(userId: string) {
   const result = await (
     await fetch(`${apiUrl}/api/users/${userId}`, {
       method: "GET",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
     })
   ).json();
   return result as User;
@@ -50,6 +53,10 @@ export async function getAllUsers() {
   const result = await (
     await fetch(`${apiUrl}/api/users`, {
       method: "GET",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
     })
   ).json();
   return result as User[];
@@ -59,6 +66,10 @@ export async function getShopItem(itemId: string) {
   const result = await (
     await fetch(`${apiUrl}/api/shop/${itemId}`, {
       method: "GET",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
     })
   ).json();
   return result as ShopItem;
@@ -68,6 +79,10 @@ export async function getAllShopItems() {
   const result = await (
     await fetch(`${apiUrl}/api/shop`, {
       method: "GET",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
     })
   ).json();
   return result as ShopItem[];
@@ -78,6 +93,10 @@ export async function buyItem(userId: string, itemId: string, amount: number) {
     `${apiUrl}/api/shop/consume/${itemId}?userId=${userId}&n=${amount}`,
     {
       method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
     }
   );
   return result.ok;
@@ -96,6 +115,10 @@ export async function getUserHistory(user: User, amount: number) {
   const result = await (
     await fetch(`${apiUrl}/api/history/${user.id}?n=${amount}`, {
       method: "GET",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
     })
   ).json();
   return result as ShopHistoryEntry[];
@@ -171,6 +194,10 @@ export async function getItemDisplayPicture(
   try {
     const result = await fetch(apiUrl + `/api/shop/${item.id}/picture`, {
       method: "GET",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
     });
 
     if (result.ok && result.status === 200) {

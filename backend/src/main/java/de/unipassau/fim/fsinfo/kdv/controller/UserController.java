@@ -1,6 +1,5 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
-import de.unipassau.fim.fsinfo.kdv.data.UserRole;
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceDTO;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
@@ -48,19 +47,14 @@ public class UserController {
     return ResponseEntity.ok(userRepository.findAll());
   }
 
-  /**
-   * Create a new User
-   *
-   * @param user with a unique username
-   * @return the ID of the new user - nothing if User can not be created
-   */
   @PostMapping("/create")
-  public ResponseEntity<String> create(@RequestBody KdvUser user) {
-    if (userService.createUser(user)) {
-      return ResponseEntity.ok(user.getId());
-    } else {
-      return ResponseEntity.badRequest().build();
-    }
+  public ResponseEntity<KdvUser> create(@RequestBody KdvUser userTemplate) {
+
+    Optional<KdvUser> user = userService.createUser(userTemplate.getId(),
+        userTemplate.getDisplayName(),
+        userTemplate.getEmail());
+
+    return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
   @GetMapping("/{id}")
@@ -127,19 +121,6 @@ public class UserController {
 
     if (user.isPresent()) {
       user.get().setEnabled(false);
-      userRepository.save(user.get());
-      return ResponseEntity.ok().build();
-    }
-
-    return ResponseEntity.badRequest().build();
-  }
-
-  @PostMapping("/{id}/role")
-  public ResponseEntity<String> role(@PathVariable String id, @RequestParam UserRole role) {
-    Optional<KdvUser> user = userRepository.findById(id);
-
-    if (user.isPresent()) {
-      user.get().setRole(role);
       userRepository.save(user.get());
       return ResponseEntity.ok().build();
     }

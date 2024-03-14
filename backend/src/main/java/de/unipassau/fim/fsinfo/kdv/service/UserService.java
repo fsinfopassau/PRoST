@@ -2,16 +2,10 @@ package de.unipassau.fim.fsinfo.kdv.service;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
-import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,17 +30,23 @@ public class UserService {
     return matcher.matches();
   }
 
-  public boolean createUser(KdvUser userTemplate) {
-    if (users.findById(userTemplate.getId()).isPresent()) {
-      return false;
+  public Optional<KdvUser> createUser(String userName, String displayName, String email) {
+    System.out.println("[US] :: attempting user-creation");
+
+    if (users.findById(userName).isPresent()) {
+      return Optional.empty();
     }
 
-    if (!isValidEmail(userTemplate.getEmail())) {
-      return false;
+    if (!isValidEmail(email)) {
+      return Optional.empty();
     }
 
-    userTemplate.setBalance(new BigDecimal(0));
-    users.save(userTemplate);
-    return true;
+    if (displayName == null || displayName.isBlank()) {
+      return Optional.empty();
+    }
+
+    KdvUser user = new KdvUser(userName, displayName, email, true);
+    users.save(user);
+    return Optional.of(user);
   }
 }

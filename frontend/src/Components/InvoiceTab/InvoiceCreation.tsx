@@ -69,7 +69,7 @@ const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({
 
     createInvoices(selectedUsers)
       .then((result) => {
-        if (result) {
+        if (result && result.length !== undefined) {
           if (result.length !== 0) {
             toast.success(
               result.length +

@@ -1,10 +1,7 @@
 package de.unipassau.fim.fsinfo.kdv.data.dao;
 
-import de.unipassau.fim.fsinfo.kdv.data.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -22,17 +19,13 @@ public class KdvUser {
   @Column(nullable = false, unique = true)
   private String id;
   @Column(nullable = false)
-  @Enumerated(EnumType.STRING)
-  private UserRole role;
-  @Column(nullable = false)
   private BigDecimal balance;
   private String displayName;
   @Column(nullable = false)
   private String email;
   private Boolean enabled;
 
-  public KdvUser(String id, String displayName, String email, UserRole role, Boolean enabled) {
-    this.role = role;
+  public KdvUser(String id, String displayName, String email, Boolean enabled) {
     this.id = id;
     this.displayName = displayName;
     this.email = email;

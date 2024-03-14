@@ -20,9 +20,10 @@ public class LdapConfig {
 
   @Bean
   public LdapAuthoritiesPopulator ldapAuthoritiesPopulator() {
-    DefaultLdapAuthoritiesPopulator authorities = new DefaultLdapAuthoritiesPopulator(contextSource(), "ou=groups");
+    DefaultLdapAuthoritiesPopulator authorities = new DefaultLdapAuthoritiesPopulator(
+        contextSource(), "ou=groups");
     authorities.setGroupRoleAttribute("cn");
-    authorities.setGroupSearchFilter("member={0}");
+    authorities.setGroupSearchFilter("(member={0})");
     authorities.setConvertToUpperCase(true);
     authorities.setRolePrefix("");
     return authorities;

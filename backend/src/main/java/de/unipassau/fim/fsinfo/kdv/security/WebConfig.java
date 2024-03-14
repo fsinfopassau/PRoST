@@ -26,35 +26,31 @@ public class WebConfig implements WebMvcConfigurer {
   @Value("${ALLOWED_ORIGINS:*,localhost}")
   private String[] allowedOrigins;
   private final LdapConfig ldapConfig;
+  private CustomUserDetailsContextMapper userDetailsContextMapper;
 
   public static final String[] AUTH_WHITELIST = {
-      "/api/users",
-      "/api/users/*",
-      "/api/shop",
-      "/api/shop/*",
-      "/api/shop/*/picture",
-      "/api/shop/consume/**",
-      "/api/history/**",
+      "/api/authentication"
   };
 
   public static final String[] USER_SPACE = {
-      "/api/",
-      "/api/users/*/invoices",
+      "/api/shop",
+      "/api/shop/consume/**",
+      "/api/shop/*/picture",
   };
 
   public static final String[] KIOSK_SPACE = {
-      "/api/shop/**",
-      "/api/users/**",
-      "/api/invoice/**",
+      "/api/users",
+      "/api/history",
+      "/api/history/**",
   };
 
   public static final String[] ADMIN_SPACE = {
-      "/api/**",
   };
 
   @Autowired
   public WebConfig(LdapConfig ldapConfig) {
     this.ldapConfig = ldapConfig;
+    this.userDetailsContextMapper = new CustomUserDetailsContextMapper();
   }
 
   @Bean
@@ -96,7 +92,8 @@ public class WebConfig implements WebMvcConfigurer {
         .groupSearchBase("ou=groups")
         .rolePrefix("")
         .contextSource(ldapConfig.contextSource())
-        .ldapAuthoritiesPopulator(ldapConfig.ldapAuthoritiesPopulator());
+        .ldapAuthoritiesPopulator(ldapConfig.ldapAuthoritiesPopulator())
+        .userDetailsContextMapper(userDetailsContextMapper);
   }
 
 }

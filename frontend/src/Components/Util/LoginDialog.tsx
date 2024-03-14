@@ -40,15 +40,16 @@ export function LoginDialog() {
     loginNew(userName, password)
       .then((result) => {
         if (result) {
-          toast.success("Hallo " + userName);
+          toast.success("Hallo " + result.displayName);
+          setLogged(true);
         } else {
           toast.error("Login fehlgeschlagen!");
+          setLogged(false);
         }
-
-        setLogged(result);
       })
       .catch(() => {
         toast.error("Login Error!");
+        setLogged(false);
       });
   }
 
