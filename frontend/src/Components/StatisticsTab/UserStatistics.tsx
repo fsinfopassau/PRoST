@@ -14,7 +14,7 @@ export function UserStatistics() {
       getUser(userId).then((user) => {
         setUser(user);
       });
-  }, []);
+  });
 
   if (user) {
     return (

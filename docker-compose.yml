@@ -9,10 +9,10 @@ services:
       args:
         - VITE_API_URL=http://localhost:8081
     ports:
-      - "80:8080"
+      - "8080:8080"
     restart: on-failure
   backend:
-    depends_on: [ldap]
+    depends_on: [ ldap ]
     container_name: KdV-Backend
     build:
       context: backend
@@ -25,7 +25,7 @@ services:
     container_name: KdV-LDAP
     image: bitnami/openldap:latest
     ports:
-      - 389:1389
+      - "389:1389"
     volumes:
       - kdv-ldap:/bitnami/openldap
       - ./ldif:/ldif

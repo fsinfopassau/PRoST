@@ -30,7 +30,8 @@ export function LoginDialog() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setUserName(getSessionUserName());
+    const name = getSessionUserName();
+    if (name) setUserName(name);
   }, []);
 
   const handleUserChange = (event: React.ChangeEvent<HTMLInputElement>) => {

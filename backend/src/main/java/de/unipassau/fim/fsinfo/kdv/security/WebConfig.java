@@ -26,7 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
   @Value("${ALLOWED_ORIGINS:*,localhost}")
   private String[] allowedOrigins;
   private final LdapConfig ldapConfig;
-  private CustomUserDetailsContextMapper userDetailsContextMapper;
+  private final CustomUserDetailsContextMapper userDetailsContextMapper;
 
   public static final String[] AUTH_WHITELIST = {
       "/api/authentication"

@@ -20,7 +20,7 @@ export function ItemSelection() {
       getUser(userId).then((user) => {
         setUser(user);
       });
-  }, []);
+  });
 
   function filter(itemList: ShopItem[]) {
     return itemList.filter((item) => item.enabled);
