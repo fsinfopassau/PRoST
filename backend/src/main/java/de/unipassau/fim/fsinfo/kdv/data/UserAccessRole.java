@@ -1,9 +1,8 @@
 package de.unipassau.fim.fsinfo.kdv.data;
 
-public enum UserRole {
-
+public enum UserAccessRole {
+  UNASSIGNED,
   FSINFO,
   KIOSK,
   KAFFEEKASSE
-
 }

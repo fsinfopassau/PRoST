@@ -1,12 +1,24 @@
 import { getAllUsers } from "../Queries";
-import { UserRole } from "./UserRole";
-
 export interface User {
   id: string; // id
   displayName: string;
   balance: number;
   enabled: boolean;
-  role: UserRole;
+}
+
+export enum UserRole {
+  UNASSIGNED,
+  FSINFO,
+  KIOSK,
+  KAFFEEKASSE,
+}
+
+// Session-Data
+export interface AuthorizedUser {
+  email: string;
+  displayName: string;
+  accessRole: UserRole;
+  credentials: string; // Basic-Auth (base 64)
 }
 
 const cachedUsers = new Map<string, User>();

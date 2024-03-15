@@ -18,15 +18,15 @@ import { useEffect, useState } from "react";
 import { loginNew } from "../../Queries";
 import {
   getSessionUserName,
-  resetCredentials,
-  validCredentials,
+  resetSession,
+  existCredentials,
 } from "../../SessionInfo";
 import { toast } from "react-toastify";
 
 export function LoginDialog() {
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [isLogged, setLogged] = useState(validCredentials());
+  const [isLogged, setLogged] = useState(existCredentials());
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export function LoginDialog() {
   function submit() {
     loginNew(userName, password)
       .then((result) => {
-        if (result) {
+        if (result !== undefined) {
           toast.success("Hallo " + result.displayName);
           setLogged(true);
           window.location.reload();
@@ -62,7 +62,7 @@ export function LoginDialog() {
     toast.success("Tschüss " + userName);
     setUserName("");
     setPassword("");
-    resetCredentials();
+    resetSession();
     setLogged(false);
     window.location.reload();
   }

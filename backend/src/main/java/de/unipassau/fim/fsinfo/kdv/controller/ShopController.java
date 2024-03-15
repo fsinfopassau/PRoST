@@ -41,31 +41,12 @@ public class ShopController {
     this.itemRepository = itemRepository;
   }
 
-  @GetMapping
+  @GetMapping("/item")
   public ResponseEntity<List<ShopItem>> list() {
     return ResponseEntity.ok(itemRepository.findAll());
   }
 
-  @PostMapping("/create")
-  public ResponseEntity<ShopItem> create(@RequestBody ShopItem item) {
-    if (item.getId() == null || itemRepository.existsById(item.getId())
-        || item.getDisplayName() == null
-        || item.getDisplayName().isBlank()) {
-      return ResponseEntity.badRequest().build();
-    }
-
-    if (item.getEnabled() == null) {
-      item.setEnabled(true);
-    }
-    if (item.getPrice() == null) {
-      item.setPrice(new BigDecimal(0));
-    }
-
-    itemRepository.save(item);
-    return ResponseEntity.ok(item);
-  }
-
-  @GetMapping("/{id}")
+  @GetMapping("/item/{id}")
   public ResponseEntity<Optional<ShopItem>> get(@PathVariable String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
@@ -74,58 +55,7 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @DeleteMapping("/{id}/delete")
-  public ResponseEntity<Optional<ShopItem>> delete(@PathVariable String id) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    if (item.isPresent()) {
-      itemRepository.delete(item.get());
-      return ResponseEntity.ok(item);
-    }
-    return ResponseEntity.badRequest().build();
-  }
-
-  @PostMapping("/{id}/displayname")
-  public ResponseEntity<String> displayName(@PathVariable String id,
-      @RequestParam String value) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    if (item.isPresent()) {
-      item.get().setDisplayName(value);
-      itemRepository.save(item.get());
-      return ResponseEntity.ok().build();
-    }
-    return ResponseEntity.badRequest().build();
-  }
-
-  @PostMapping("/{id}/category")
-  public ResponseEntity<String> displayCategory(@PathVariable String id,
-      @RequestParam String value) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    if (item.isPresent()) {
-      item.get().setCategory(value);
-      itemRepository.save(item.get());
-      return ResponseEntity.ok().build();
-    }
-    return ResponseEntity.badRequest().build();
-  }
-
-  @PostMapping("/{id}/price")
-  public ResponseEntity<String> price(@PathVariable String id,
-      @RequestParam String value) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    try {
-      BigDecimal price = new BigDecimal(value);
-      if (item.isPresent()) {
-        item.get().setPrice(price);
-        itemRepository.save(item.get());
-        return ResponseEntity.ok().build();
-      }
-    } catch (NumberFormatException e) {
-      return ResponseEntity.badRequest().body("NumberFormatException");
-    }
-    return ResponseEntity.badRequest().build();
-  }
-
-  @GetMapping("/{id}/picture")
+  @GetMapping("/item/{id}/picture")
   public ResponseEntity<FileSystemResource> getDisplayImage(@PathVariable String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
@@ -146,7 +76,86 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/display-picture")
+  @PostMapping("/item/{id}/consume")
+  public ResponseEntity<String> consume(@PathVariable String id, @RequestParam String userId,
+      @RequestParam(required = false) Integer n) {
+    if (shopService.consume(id, userId, (n == null ? 1 : n))) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/settings/create")
+  public ResponseEntity<ShopItem> create(@RequestBody ShopItem item) {
+    if (item.getId() == null || itemRepository.existsById(item.getId())
+        || item.getDisplayName() == null
+        || item.getDisplayName().isBlank()) {
+      return ResponseEntity.badRequest().build();
+    }
+
+    if (item.getEnabled() == null) {
+      item.setEnabled(true);
+    }
+    if (item.getPrice() == null) {
+      item.setPrice(new BigDecimal(0));
+    }
+
+    itemRepository.save(item);
+    return ResponseEntity.ok(item);
+  }
+
+  @DeleteMapping("/settings/item/{id}/delete")
+  public ResponseEntity<Optional<ShopItem>> delete(@PathVariable String id) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    if (item.isPresent()) {
+      itemRepository.delete(item.get());
+      return ResponseEntity.ok(item);
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/settings/item/{id}/displayname")
+  public ResponseEntity<String> displayName(@PathVariable String id,
+      @RequestParam String value) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    if (item.isPresent()) {
+      item.get().setDisplayName(value);
+      itemRepository.save(item.get());
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/settings/item/{id}/category")
+  public ResponseEntity<String> displayCategory(@PathVariable String id,
+      @RequestParam String value) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    if (item.isPresent()) {
+      item.get().setCategory(value);
+      itemRepository.save(item.get());
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/settings/item/{id}/price")
+  public ResponseEntity<String> price(@PathVariable String id,
+      @RequestParam String value) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    try {
+      BigDecimal price = new BigDecimal(value);
+      if (item.isPresent()) {
+        item.get().setPrice(price);
+        itemRepository.save(item.get());
+        return ResponseEntity.ok().build();
+      }
+    } catch (NumberFormatException e) {
+      return ResponseEntity.badRequest().body("NumberFormatException");
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/settings/item/{id}/picture")
   public ResponseEntity<String> setDisplayImage(@PathVariable String id,
       @RequestParam("file") MultipartFile file) {
     Optional<ShopItem> item = itemRepository.findById(id);
@@ -162,7 +171,7 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/enable")
+  @PostMapping("/settings/item/{id}/enable")
   public ResponseEntity<String> enable(@PathVariable String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
@@ -173,21 +182,12 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/disable")
+  @PostMapping("/settings/item/{id}/disable")
   public ResponseEntity<String> disable(@PathVariable String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
       item.get().setEnabled(false);
       itemRepository.save(item.get());
-      return ResponseEntity.ok().build();
-    }
-    return ResponseEntity.badRequest().build();
-  }
-
-  @PostMapping("/consume/{id}")
-  public ResponseEntity<String> consume(@PathVariable String id, @RequestParam String userId,
-      @RequestParam(required = false) Integer n) {
-    if (shopService.consume(id, userId, (n == null ? 1 : n))) {
       return ResponseEntity.ok().build();
     }
     return ResponseEntity.badRequest().build();

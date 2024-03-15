@@ -1,6 +1,6 @@
 package de.unipassau.fim.fsinfo.kdv.security;
 
-import de.unipassau.fim.fsinfo.kdv.data.UserRole;
+import de.unipassau.fim.fsinfo.kdv.data.UserAccessRole;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +33,8 @@ public class WebConfig implements WebMvcConfigurer {
   };
 
   public static final String[] USER_SPACE = {
-      "/api/shop",
-      "/api/shop/consume/**",
-      "/api/shop/*/picture",
+      "/api/shop/item",
+      "/api/shop/item/**",
   };
 
   public static final String[] KIOSK_SPACE = {
@@ -45,6 +44,10 @@ public class WebConfig implements WebMvcConfigurer {
   };
 
   public static final String[] ADMIN_SPACE = {
+      "/api/shop/settings/**",
+      "/api/users/**",
+      "/api/invoices",
+      "/api/invoices/**"
   };
 
   @Autowired
@@ -71,11 +74,11 @@ public class WebConfig implements WebMvcConfigurer {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(AUTH_WHITELIST).permitAll()
             .requestMatchers(USER_SPACE)
-            .hasAnyAuthority(UserRole.FSINFO.name(), UserRole.KIOSK.name(),
-                UserRole.KAFFEEKASSE.name())
+            .hasAnyAuthority(UserAccessRole.FSINFO.name(), UserAccessRole.KIOSK.name(),
+                UserAccessRole.KAFFEEKASSE.name())
             .requestMatchers(KIOSK_SPACE)
-            .hasAnyAuthority(UserRole.KIOSK.name(), UserRole.KAFFEEKASSE.name())
-            .requestMatchers(ADMIN_SPACE).hasAnyAuthority(UserRole.KAFFEEKASSE.name())
+            .hasAnyAuthority(UserAccessRole.KIOSK.name(), UserAccessRole.KAFFEEKASSE.name())
+            .requestMatchers(ADMIN_SPACE).hasAnyAuthority(UserAccessRole.KAFFEEKASSE.name())
             .anyRequest().authenticated() // Require authentication for all other requests
         )
         .sessionManagement(

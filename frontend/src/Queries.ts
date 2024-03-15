@@ -1,18 +1,21 @@
 import axios from "axios";
 import { ShopHistoryEntry } from "./Types/ShopHistory";
 import { ShopItem } from "./Types/ShopItem";
-import { User } from "./Types/User";
-import { getEncodedCredentials, setEncodedCredentials } from "./SessionInfo";
+import { AuthorizedUser, User } from "./Types/User";
+import { getEncodedCredentials, setAuthorizedUser } from "./SessionInfo";
 import { InvoicePage } from "./Types/Invoice";
 
 export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
 
-export async function loginNew(username: string, password: string) {
+export async function loginNew(
+  username: string,
+  password: string
+): Promise<AuthorizedUser | undefined> {
   const cred = window.btoa(`${username}:${password}`);
   return login(cred);
 }
 
-export async function login(cred: string): Promise<User | undefined> {
+export async function login(cred: string): Promise<AuthorizedUser | undefined> {
   try {
     const result = await fetch(`${apiUrl}/api/authentication`, {
       method: "GET",
@@ -25,10 +28,13 @@ export async function login(cred: string): Promise<User | undefined> {
       return undefined;
     }
 
-    setEncodedCredentials(cred);
-    console.log((await result.json()) as User);
-    return (await result.json()) as User;
+    const authorizedUser = (await result.json()) as AuthorizedUser;
+    authorizedUser.credentials = cred;
+
+    setAuthorizedUser(authorizedUser);
+    return authorizedUser;
   } catch (error) {
+    console.log(error);
     return undefined;
   }
 }
@@ -77,7 +83,7 @@ export async function getShopItem(
   itemId: string
 ): Promise<ShopItem | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/shop/${itemId}`, {
+    const response = await fetch(`${apiUrl}/api/shop/item/${itemId}`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -97,7 +103,7 @@ export async function getShopItem(
 
 export async function getAllShopItems(): Promise<ShopItem[] | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/shop`, {
+    const response = await fetch(`${apiUrl}/api/shop/item`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -121,7 +127,7 @@ export async function buyItem(
   amount: number
 ): Promise<boolean> {
   const result = await fetch(
-    `${apiUrl}/api/shop/consume/${itemId}?userId=${userId}&n=${amount}`,
+    `${apiUrl}/api/shop/item/${itemId}/consume?userId=${userId}&n=${amount}`,
     {
       method: "POST",
       headers: {
@@ -183,7 +189,9 @@ export async function enableItem(
   enable: boolean
 ): Promise<boolean> {
   const result = await fetch(
-    `${apiUrl}/api/shop/${item.id}/${enable ? "enable" : "disable"}`,
+    `${apiUrl}/api/shop/settings/item/${item.id}/${
+      enable ? "enable" : "disable"
+    }`,
     {
       method: "POST",
       headers: {
@@ -195,12 +203,15 @@ export async function enableItem(
 }
 
 export async function deleteShopItem(item: ShopItem): Promise<boolean> {
-  const result = await fetch(`${apiUrl}/api/shop/${item.id}/delete`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Basic ${getEncodedCredentials()}`,
-    },
-  });
+  const result = await fetch(
+    `${apiUrl}/api/shop/settings/item/${item.id}/delete`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+      },
+    }
+  );
   return result.ok;
 }
 
@@ -210,7 +221,7 @@ export async function changeShopItem(
   path: string
 ): Promise<boolean> {
   const result = await fetch(
-    `${apiUrl}/api/shop/${item.id}/${path}?value=${value}`,
+    `${apiUrl}/api/shop/settings/item/${item.id}/${path}?value=${value}`,
     {
       method: "POST",
       headers: {
@@ -230,7 +241,7 @@ export async function uploadItemDisplayPicture(
 
   try {
     const result = await axios.post(
-      apiUrl + `/api/shop/${item.id}/display-picture`,
+      apiUrl + `/api/shop/settings/item/${item.id}/picture`,
       formData,
       {
         headers: {
@@ -249,7 +260,7 @@ export async function getItemDisplayPicture(
   item: ShopItem
 ): Promise<string | undefined> {
   try {
-    const result = await fetch(apiUrl + `/api/shop/${item.id}/picture`, {
+    const result = await fetch(apiUrl + `/api/shop/item/${item.id}/picture`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -271,7 +282,7 @@ export async function getItemDisplayPicture(
 
 export async function getAllInvoices(): Promise<InvoicePage | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/invoice`, {
+    const response = await fetch(`${apiUrl}/api/invoices`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -293,7 +304,7 @@ export async function createInvoices(
   userIds: string[]
 ): Promise<string[] | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/invoice/create`, {
+    const response = await fetch(`${apiUrl}/api/invoices/create`, {
       method: "POST",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -316,7 +327,7 @@ export async function deleteInvoices(
   ids: number[]
 ): Promise<number[] | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/invoice/delete`, {
+    const response = await fetch(`${apiUrl}/api/invoices/delete`, {
       method: "DELETE",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -339,7 +350,7 @@ export async function mailInvoices(
   ids: number[]
 ): Promise<number[] | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/invoice/mail`, {
+    const response = await fetch(`${apiUrl}/api/invoices/mail`, {
       method: "POST",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -362,7 +373,7 @@ export async function publishInvoices(
   ids: number[]
 ): Promise<number[] | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/invoice/publish`, {
+    const response = await fetch(`${apiUrl}/api/invoices/publish`, {
       method: "POST",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
