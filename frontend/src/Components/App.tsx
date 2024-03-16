@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Navbar } from "./Util/Navbar";
 import { ErrorComponent } from "./Util/ErrorTab";
-import { UserSelection } from "./SearchTab/UserSelection";
 import { ItemSelection } from "./SearchTab/ItemSelection";
 import { ItemCheckout } from "./SearchTab/ItemCheckout";
 import { Statistics } from "./StatisticsTab/Statistics";
@@ -13,6 +12,7 @@ import { AllUsersStatistics } from "./StatisticsTab/AllUsersStatistics";
 import { ItemSettings } from "./SettingsTab/ItemSettings";
 import { Bounce, ToastContainer } from "react-toastify";
 import { InvoiceTab } from "./InvoiceTab/InvoiceTab";
+import { MainTab } from "./MainTab";
 
 const stylesAvailable = ["purple", "blue"];
 
@@ -72,7 +72,7 @@ export function App() {
               <Routes>
                 <Route
                   path="/"
-                  element={<UserSelection switchTheme={switchTheme} />}
+                  element={<MainTab switchTheme={switchTheme} />}
                 />
                 <Route path="/invoice" element={<InvoiceTab />} />
                 <Route path="/shop/:userId" element={<ItemSelection />} />
