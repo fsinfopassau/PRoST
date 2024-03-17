@@ -10,10 +10,12 @@ public class AuthorizedKdVUserDTO {
   private String displayName;
   private String email;
   private UserAccessRole accessRole;
+  private String id;
 
   public AuthorizedKdVUserDTO(KdvUser user, UserAccessRole role) {
     displayName = user.getDisplayName();
     email = user.getEmail();
+    id = user.getId();
     this.accessRole = role;
   }
 }

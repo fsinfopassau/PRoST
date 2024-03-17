@@ -15,8 +15,9 @@ export enum UserRole {
 
 // Session-Data
 export interface AuthorizedUser {
-  email: string;
+  id: string;
   displayName: string;
+  email: string;
   accessRole: UserRole;
   credentials: string; // Basic-Auth (base 64)
 }

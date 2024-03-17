@@ -39,6 +39,26 @@ export async function login(cred: string): Promise<AuthorizedUser | undefined> {
   }
 }
 
+export async function getOwnUser(): Promise<User | undefined> {
+  try {
+    const result = await fetch(`${apiUrl}/api/users/me`, {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!result.ok) {
+      return undefined;
+    }
+
+    return (await result.json()) as User;
+  } catch (exception) {
+    return undefined;
+  }
+}
+
 export async function getUser(userId: string): Promise<User | undefined> {
   try {
     const result = await fetch(`${apiUrl}/api/users?id=${userId}`, {

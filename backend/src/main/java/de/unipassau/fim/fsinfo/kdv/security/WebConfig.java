@@ -35,6 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
   public static final String[] USER_SPACE = {
       "/api/shop/item",
       "/api/shop/item/**",
+      "/api/users/me",
   };
 
   public static final String[] KIOSK_SPACE = {

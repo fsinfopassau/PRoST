@@ -12,7 +12,7 @@ import { AllUsersStatistics } from "./StatisticsTab/AllUsersStatistics";
 import { ItemSettings } from "./SettingsTab/ItemSettings";
 import { Bounce, ToastContainer } from "react-toastify";
 import { InvoiceTab } from "./InvoiceTab/InvoiceTab";
-import { MainTab } from "./MainTab";
+import { RootTab } from "./RootTab";
 
 const stylesAvailable = ["purple", "blue"];
 
@@ -72,7 +72,7 @@ export function App() {
               <Routes>
                 <Route
                   path="/"
-                  element={<MainTab switchTheme={switchTheme} />}
+                  element={<RootTab switchTheme={switchTheme} />}
                 />
                 <Route path="/invoice" element={<InvoiceTab />} />
                 <Route path="/shop/:userId" element={<ItemSelection />} />

@@ -25,7 +25,7 @@ export function ItemCheckout() {
         setItem(newItem);
       });
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (item) {

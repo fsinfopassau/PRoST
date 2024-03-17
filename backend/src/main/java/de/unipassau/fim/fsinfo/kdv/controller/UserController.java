@@ -2,6 +2,7 @@ package de.unipassau.fim.fsinfo.kdv.controller;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
+import de.unipassau.fim.fsinfo.kdv.security.CustomUserDetailsContextMapper.CustomUserDetails;
 import de.unipassau.fim.fsinfo.kdv.service.InvoiceService;
 import de.unipassau.fim.fsinfo.kdv.service.UserService;
 import java.math.BigDecimal;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +51,14 @@ public class UserController {
       return user.map(kdvUser -> ResponseEntity.ok(List.of(kdvUser)))
           .orElseGet(() -> ResponseEntity.badRequest().build());
     }
+  }
+
+  @GetMapping("/me")
+  public ResponseEntity<KdvUser> me(Authentication authentication) {
+    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+    Optional<KdvUser> user = userRepository.findById(userDetails.getUsername());
+    return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
   @PostMapping("/create")
