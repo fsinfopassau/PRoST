@@ -1,14 +1,16 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
-import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItemHistoryEntry;
+import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.dto.ShopItemHistoryEntryDTO;
-import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemHistoryRepository;
+import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
+import de.unipassau.fim.fsinfo.kdv.security.CustomUserDetailsContextMapper.CustomUserDetails;
 import de.unipassau.fim.fsinfo.kdv.service.ShopHistoryService;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,42 +19,37 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/history")
 public class ShopHistoryController {
 
-  private final ShopItemHistoryRepository historyRepository;
   private final ShopHistoryService shopHistoryService;
+  private final UserRepository userRepository;
 
   @Autowired
-  public ShopHistoryController(ShopItemHistoryRepository historyRepository,
-      ShopHistoryService shopHistoryService) {
-    this.historyRepository = historyRepository;
+  public ShopHistoryController(ShopHistoryService shopHistoryService,
+      UserRepository userRepository) {
     this.shopHistoryService = shopHistoryService;
+    this.userRepository = userRepository;
   }
 
   @GetMapping
   public ResponseEntity<List<ShopItemHistoryEntryDTO>> history(
+      @RequestParam(required = false) String userId,
       @RequestParam(required = false) Integer n) {
-    return ResponseEntity.ok(
-        shopHistoryService.getDTO(getSizedHistory(n, historyRepository.findAll())));
-  }
-
-  @GetMapping("/{userId}")
-  public ResponseEntity<List<ShopItemHistoryEntryDTO>> historyUser(@PathVariable String userId,
-      @RequestParam(required = false) Integer n) {
-    return ResponseEntity.ok(
-        shopHistoryService.getDTO(
-            getSizedHistory(n, historyRepository.findByUserIdEquals(userId))));
-  }
-
-  private List<ShopItemHistoryEntry> getSizedHistory(
-      @RequestParam(required = false) Integer amount,
-      List<ShopItemHistoryEntry> history) {
-    if (amount == null || amount < 0) {
-      return history;
-    }
-
-    if (history.size() <= amount) {
-      return history;
+    if (userId == null) {
+      return ResponseEntity.ok(shopHistoryService.getLastHistory(n));
     } else {
-      return history.subList(history.size() - amount, history.size());
+      return ResponseEntity.ok(shopHistoryService.getLastUserHistory(n, userId));
     }
+  }
+
+  @GetMapping("/me")
+  public ResponseEntity<List<ShopItemHistoryEntryDTO>> historyMe(
+      @RequestParam(required = false) Integer n, Authentication authentication) {
+    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+    Optional<KdvUser> user = userRepository.findById(userDetails.getUsername());
+    if (user.isPresent()) {
+      return ResponseEntity.ok(shopHistoryService.getLastUserHistory(n, userDetails.getUsername()));
+    }
+    return ResponseEntity.notFound().build();
+
   }
 }

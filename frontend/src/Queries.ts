@@ -184,7 +184,7 @@ export async function getHistory(
 export async function getUserHistory(user: User, amount: number) {
   try {
     const response = await fetch(
-      `${apiUrl}/api/history/${user.id}?n=${amount}`,
+      `${apiUrl}/api/history?userId=${user.id}&n=${amount}`,
       {
         method: "GET",
         headers: {
@@ -193,6 +193,26 @@ export async function getUserHistory(user: User, amount: number) {
         },
       }
     );
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as ShopHistoryEntry[];
+  } catch (error) {
+    return undefined;
+  }
+}
+
+export async function getOwnHistory(amount: number) {
+  try {
+    const response = await fetch(`${apiUrl}/api/history/me?n=${amount}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
       return undefined;

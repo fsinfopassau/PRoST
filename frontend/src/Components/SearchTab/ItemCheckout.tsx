@@ -45,17 +45,17 @@ export function ItemCheckout() {
   }
 
   function checkout() {
-    console.log("checkout", userId, itemId);
     if (userId && itemId) {
+      console.log("checkout", userId, itemId);
       buyItem(userId, itemId, amount).then((result) => {
         if (result) {
           toast(amount + "x " + item?.displayName + " gekauft!");
         } else {
           toast.error(item?.displayName + " konnte nicht gekauft werden!");
         }
+        navigate("/");
       });
     }
-    navigate("/");
   }
 
   function getPrice(amount: number): string {

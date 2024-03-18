@@ -15,7 +15,7 @@ export function Statistics() {
 
   useEffect(() => {
     getHistory(20).then((historyList) => {
-      if (historyList) setHistory(historyList.reverse());
+      if (historyList) setHistory(historyList);
     });
   }, []);
 

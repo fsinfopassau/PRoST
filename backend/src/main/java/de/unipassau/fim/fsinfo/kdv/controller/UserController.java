@@ -1,9 +1,11 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
+import de.unipassau.fim.fsinfo.kdv.data.dto.ShopItemHistoryEntryDTO;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.security.CustomUserDetailsContextMapper.CustomUserDetails;
 import de.unipassau.fim.fsinfo.kdv.service.InvoiceService;
+import de.unipassau.fim.fsinfo.kdv.service.ShopHistoryService;
 import de.unipassau.fim.fsinfo.kdv.service.UserService;
 import java.math.BigDecimal;
 import java.util.List;
@@ -28,13 +30,15 @@ public class UserController {
 
   private final UserService userService;
   private final InvoiceService invoiceService;
+  private final ShopHistoryService shopHistoryService;
 
   @Autowired
   public UserController(UserRepository userRepository, UserService userService,
-      InvoiceService invoiceService) {
+      InvoiceService invoiceService, ShopHistoryService shopHistoryService) {
     this.userRepository = userRepository;
     this.userService = userService;
     this.invoiceService = invoiceService;
+    this.shopHistoryService = shopHistoryService;
   }
 
   /**
@@ -59,6 +63,12 @@ public class UserController {
 
     Optional<KdvUser> user = userRepository.findById(userDetails.getUsername());
     return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
+  }
+
+  @GetMapping("/me/history")
+  public ResponseEntity<List<ShopItemHistoryEntryDTO>> historyUser(@PathVariable String userId,
+      @RequestParam(required = false) Integer n) {
+    return ResponseEntity.badRequest().build();
   }
 
   @PostMapping("/create")

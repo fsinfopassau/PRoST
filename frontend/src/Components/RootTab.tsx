@@ -41,7 +41,7 @@ export function RootTab(props: { switchTheme: () => void }) {
           <ErrorComponent />
         ) : (
           <>
-            <UserSummaryCard user={user}></UserSummaryCard>
+            <UserSummaryCard user={user} isSelf={true}></UserSummaryCard>
           </>
         )}
       </div>

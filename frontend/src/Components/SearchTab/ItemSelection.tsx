@@ -14,23 +14,18 @@ export function ItemSelection() {
   const [user, setUser] = useState<User>();
 
   useEffect(() => {
-    if (isUser())
+    getAllShopItems().then((itemList) => {
+      if (itemList) setItems(itemList);
+    });
+    if (isUser() && userId)
       if (isKiosk()) {
-        getAllShopItems().then((itemList) => {
-          if (itemList) setItems(itemList);
+        getUser(userId).then((user) => {
+          setUser(user);
         });
-        if (userId)
-          getUser(userId).then((user) => {
-            setUser(user);
-          });
       } else {
-        getAllShopItems().then((itemList) => {
-          if (itemList) setItems(itemList);
+        getOwnUser().then((user) => {
+          setUser(user);
         });
-        if (userId)
-          getOwnUser().then((user) => {
-            setUser(user);
-          });
       }
   }, []);
 
