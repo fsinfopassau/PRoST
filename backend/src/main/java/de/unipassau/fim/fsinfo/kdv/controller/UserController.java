@@ -1,7 +1,6 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
-import de.unipassau.fim.fsinfo.kdv.data.dto.ShopItemHistoryEntryDTO;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.security.CustomUserDetailsContextMapper.CustomUserDetails;
 import de.unipassau.fim.fsinfo.kdv.service.InvoiceService;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
 public class UserController {
 
   private final UserRepository userRepository;
@@ -46,7 +44,7 @@ public class UserController {
    *
    * @return List of all Users
    */
-  @GetMapping
+  @GetMapping("/info")
   public ResponseEntity<List<KdvUser>> list(@RequestParam(required = false) String id) {
     if (id == null) {
       return ResponseEntity.ok(userRepository.findAll());
@@ -65,12 +63,6 @@ public class UserController {
     return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
-  @GetMapping("/me/history")
-  public ResponseEntity<List<ShopItemHistoryEntryDTO>> historyUser(@PathVariable String userId,
-      @RequestParam(required = false) Integer n) {
-    return ResponseEntity.badRequest().build();
-  }
-
   @PostMapping("/create")
   public ResponseEntity<KdvUser> create(@RequestBody KdvUser userTemplate) {
 
@@ -81,8 +73,8 @@ public class UserController {
     return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
-  @DeleteMapping("/{id}/delete")
-  public ResponseEntity<KdvUser> delete(@PathVariable String id) {
+  @DeleteMapping("/delete")
+  public ResponseEntity<KdvUser> delete(@RequestParam String id) {
     Optional<KdvUser> user = userRepository.findById(id);
 
     if (user.isPresent()) {
@@ -93,8 +85,8 @@ public class UserController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/balance")
-  public ResponseEntity<BigDecimal> balance(@PathVariable String id, @RequestParam String value) {
+  @PostMapping("/balance")
+  public ResponseEntity<BigDecimal> balance(@RequestParam String id, @RequestParam String value) {
     Optional<KdvUser> user = userRepository.findById(id);
 
     try {
@@ -111,8 +103,8 @@ public class UserController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/enable")
-  public ResponseEntity<String> enable(@PathVariable String id) {
+  @PostMapping("/enable")
+  public ResponseEntity<String> enable(@RequestParam String id) {
     Optional<KdvUser> user = userRepository.findById(id);
 
     if (user.isPresent()) {
@@ -124,8 +116,8 @@ public class UserController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/disable")
-  public ResponseEntity<String> disable(@PathVariable String id) {
+  @PostMapping("/disable")
+  public ResponseEntity<String> disable(@RequestParam String id) {
     Optional<KdvUser> user = userRepository.findById(id);
 
     if (user.isPresent()) {

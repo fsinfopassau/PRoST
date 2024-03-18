@@ -29,7 +29,7 @@ public class ShopHistoryController {
     this.userRepository = userRepository;
   }
 
-  @GetMapping
+  @GetMapping("/last")
   public ResponseEntity<List<ShopItemHistoryEntryDTO>> history(
       @RequestParam(required = false) String userId,
       @RequestParam(required = false) Integer n) {

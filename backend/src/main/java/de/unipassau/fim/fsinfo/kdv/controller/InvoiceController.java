@@ -1,7 +1,6 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
 import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceDTO;
-import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.service.InvoiceService;
 import java.util.List;
 import java.util.Optional;
@@ -17,17 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/invoices")
+@RequestMapping("/api/invoice")
 public class InvoiceController {
 
   private final InvoiceService invoiceService;
 
-  private final UserRepository users;
-
   @Autowired
-  public InvoiceController(InvoiceService invoiceService, UserRepository users) {
+  public InvoiceController(InvoiceService invoiceService) {
     this.invoiceService = invoiceService;
-    this.users = users;
   }
 
   /**
@@ -35,7 +31,7 @@ public class InvoiceController {
    * @param s: Page-Size
    * @return Page + infos
    */
-  @GetMapping
+  @GetMapping("/list")
   public Page<InvoiceDTO> getInvoices(
       @RequestParam(defaultValue = "0") int p,
       @RequestParam(defaultValue = "10") int s,

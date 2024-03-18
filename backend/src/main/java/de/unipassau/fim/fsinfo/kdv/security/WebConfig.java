@@ -33,24 +33,21 @@ public class WebConfig implements WebMvcConfigurer {
   };
 
   public static final String[] USER_SPACE = {
-      "/api/users/me",
-      "/api/users/me/**",
-      "/api/shop/item",
-      "/api/shop/item/**",
+      "/api/user/me",
       "/api/history/me",
+      "/api/shop/item/**",
   };
 
   public static final String[] KIOSK_SPACE = {
-      "/api/users",
-      "/api/history",
+      "/api/user/info",
+      "/api/user/list",
       "/api/history/**",
   };
 
   public static final String[] ADMIN_SPACE = {
-      "/api/shop/settings/**",
-      "/api/users/**",
-      "/api/invoices",
-      "/api/invoices/**"
+      "/api/user/**",
+      "/api/shop/**",
+      "/api/invoice/**",
   };
 
   @Autowired

@@ -41,7 +41,7 @@ export async function login(cred: string): Promise<AuthorizedUser | undefined> {
 
 export async function getOwnUser(): Promise<User | undefined> {
   try {
-    const result = await fetch(`${apiUrl}/api/users/me`, {
+    const result = await fetch(`${apiUrl}/api/user/me`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -61,7 +61,7 @@ export async function getOwnUser(): Promise<User | undefined> {
 
 export async function getUser(userId: string): Promise<User | undefined> {
   try {
-    const result = await fetch(`${apiUrl}/api/users?id=${userId}`, {
+    const result = await fetch(`${apiUrl}/api/user/info?id=${userId}`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -81,7 +81,7 @@ export async function getUser(userId: string): Promise<User | undefined> {
 
 export async function getAllUsers(): Promise<User[] | undefined> {
   try {
-    const result = await fetch(`${apiUrl}/api/users`, {
+    const result = await fetch(`${apiUrl}/api/user/info`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -103,7 +103,7 @@ export async function getShopItem(
   itemId: string
 ): Promise<ShopItem | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/shop/item/${itemId}`, {
+    const response = await fetch(`${apiUrl}/api/shop/item/info?id=${itemId}`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -123,7 +123,7 @@ export async function getShopItem(
 
 export async function getAllShopItems(): Promise<ShopItem[] | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/shop/item`, {
+    const response = await fetch(`${apiUrl}/api/shop/item/list`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -147,7 +147,7 @@ export async function buyItem(
   amount: number
 ): Promise<boolean> {
   const result = await fetch(
-    `${apiUrl}/api/shop/item/${itemId}/consume?userId=${userId}&n=${amount}`,
+    `${apiUrl}/api/shop/item/consume?id=${itemId}&userId=${userId}&n=${amount}`,
     {
       method: "POST",
       headers: {
@@ -163,7 +163,7 @@ export async function getHistory(
   amount: number
 ): Promise<ShopHistoryEntry[] | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/history?n=${amount}`, {
+    const response = await fetch(`${apiUrl}/api/history/last?n=${amount}`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -184,7 +184,7 @@ export async function getHistory(
 export async function getUserHistory(user: User, amount: number) {
   try {
     const response = await fetch(
-      `${apiUrl}/api/history?userId=${user.id}&n=${amount}`,
+      `${apiUrl}/api/history/last?userId=${user.id}&n=${amount}`,
       {
         method: "GET",
         headers: {
@@ -229,8 +229,8 @@ export async function enableItem(
   enable: boolean
 ): Promise<boolean> {
   const result = await fetch(
-    `${apiUrl}/api/shop/settings/item/${item.id}/${
-      enable ? "enable" : "disable"
+    `${apiUrl}/api/shop/settings/item/${enable ? "enable" : "disable"}?id=${
+      item.id
     }`,
     {
       method: "POST",
@@ -244,7 +244,7 @@ export async function enableItem(
 
 export async function deleteShopItem(item: ShopItem): Promise<boolean> {
   const result = await fetch(
-    `${apiUrl}/api/shop/settings/item/${item.id}/delete`,
+    `${apiUrl}/api/shop/settings/item/delete?id=${item.id}`,
     {
       method: "DELETE",
       headers: {
@@ -261,7 +261,7 @@ export async function changeShopItem(
   path: string
 ): Promise<boolean> {
   const result = await fetch(
-    `${apiUrl}/api/shop/settings/item/${item.id}/${path}?value=${value}`,
+    `${apiUrl}/api/shop/settings/item/${path}?id=${item.id}&value=${value}`,
     {
       method: "POST",
       headers: {
@@ -281,7 +281,7 @@ export async function uploadItemDisplayPicture(
 
   try {
     const result = await axios.post(
-      apiUrl + `/api/shop/settings/item/${item.id}/picture`,
+      apiUrl + `/api/shop/settings/item/picture?id=${item.id}`,
       formData,
       {
         headers: {
@@ -300,13 +300,16 @@ export async function getItemDisplayPicture(
   item: ShopItem
 ): Promise<string | undefined> {
   try {
-    const result = await fetch(apiUrl + `/api/shop/item/${item.id}/picture`, {
-      method: "GET",
-      headers: {
-        Authorization: `Basic ${getEncodedCredentials()}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const result = await fetch(
+      apiUrl + `/api/shop/item/picture?id=${item.id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${getEncodedCredentials()}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (result.ok && result.status === 200) {
       const blob = await result.blob();
@@ -322,7 +325,7 @@ export async function getItemDisplayPicture(
 
 export async function getAllInvoices(): Promise<InvoicePage | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/invoices`, {
+    const response = await fetch(`${apiUrl}/api/invoice/list`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -344,7 +347,7 @@ export async function createInvoices(
   userIds: string[]
 ): Promise<string[] | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/invoices/create`, {
+    const response = await fetch(`${apiUrl}/api/invoice/create`, {
       method: "POST",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -367,7 +370,7 @@ export async function deleteInvoices(
   ids: number[]
 ): Promise<number[] | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/invoices/delete`, {
+    const response = await fetch(`${apiUrl}/api/invoice/delete`, {
       method: "DELETE",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -390,7 +393,7 @@ export async function mailInvoices(
   ids: number[]
 ): Promise<number[] | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/invoices/mail`, {
+    const response = await fetch(`${apiUrl}/api/invoice/mail`, {
       method: "POST",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -413,7 +416,7 @@ export async function publishInvoices(
   ids: number[]
 ): Promise<number[] | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/invoices/publish`, {
+    const response = await fetch(`${apiUrl}/api/invoice/publish`, {
       method: "POST",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
