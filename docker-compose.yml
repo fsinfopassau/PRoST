@@ -1,6 +1,8 @@
 version: '3.8'
 volumes:
   kdv-ldap:
+networks:
+  kdv:
 services:
   frontend:
     container_name: KdV-Frontend
@@ -18,6 +20,8 @@ services:
       context: backend
     ports:
       - "8081:8081"
+    networks:
+      - kdv
     volumes:
       - ./kdv-data:/data
     restart: on-failure
@@ -26,6 +30,8 @@ services:
     image: bitnami/openldap:latest
     ports:
       - "389:1389"
+    networks:
+      - kdv
     volumes:
       - kdv-ldap:/bitnami/openldap
       - ./ldif:/ldif
