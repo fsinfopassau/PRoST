@@ -2,7 +2,6 @@ package de.unipassau.fim.fsinfo.kdv.controller;
 
 import de.unipassau.fim.fsinfo.kdv.data.dto.AuthorizedKdVUserDTO;
 import de.unipassau.fim.fsinfo.kdv.service.AuthenticationService;
-import de.unipassau.fim.fsinfo.kdv.service.UserService;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/authentication")
 public class AuthenticationController {
 
-  private final UserService userService;
   private final AuthenticationService authService;
 
   @Autowired
-  public AuthenticationController(UserService userService, AuthenticationService authService) {
-    this.userService = userService;
+  public AuthenticationController(AuthenticationService authService) {
     this.authService = authService;
   }
 

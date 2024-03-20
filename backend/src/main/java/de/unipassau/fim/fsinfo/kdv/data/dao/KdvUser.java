@@ -20,8 +20,8 @@ public class KdvUser {
   private String id;
   @Column(nullable = false)
   private BigDecimal balance;
-  private String displayName;
   @Column(nullable = false)
+  private String displayName;
   private String email;
   private Boolean enabled;
 

@@ -17,8 +17,18 @@ public class CustomUserDetailsContextMapper implements UserDetailsContextMapper 
     CustomUserDetails userDetails = new CustomUserDetails();
     userDetails.setAuthorities(authorities);
     userDetails.setUsername(username);
-    userDetails.setDisplayName(ctx.getStringAttribute("uid"));
-    userDetails.setEmail("it@paulsenik.de");
+
+    String displayName = ctx.getStringAttribute("displayName");
+    if (displayName != null) {
+      userDetails.setDisplayName(displayName);
+    } else {
+      userDetails.setDisplayName(username);
+    }
+
+    String[] mails = ctx.getStringAttributes("email");
+    if (mails != null && mails.length > 0) {
+      userDetails.setEmail(mails[0]);
+    }
 
     return userDetails;
   }

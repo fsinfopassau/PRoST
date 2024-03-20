@@ -31,21 +31,26 @@ public class UserService {
   }
 
   public Optional<KdvUser> createUser(String userName, String displayName, String email) {
-    System.out.println("[US] :: attempting user-creation");
 
     if (users.findById(userName).isPresent()) {
+      System.out.println("[US] :: " + userName + " :: user-creation failed :: exists ");
       return Optional.empty();
     }
 
-    if (!isValidEmail(email)) {
+    // Allow only valid or no mail.
+    if (!isValidEmail(email) && email != null) {
+      System.out.println("[US] :: " + userName + " :: user-creation failed [mail=" + email + "] ");
       return Optional.empty();
     }
 
     if (displayName == null || displayName.isBlank()) {
+      System.out.println(
+          "[US] :: " + userName + " :: user-creation failed [displayName=" + displayName + "] ");
       return Optional.empty();
     }
 
     KdvUser user = new KdvUser(userName, displayName, email, true);
+    System.out.println("[US] :: " + userName + " :: user-creation succeeded");
     users.save(user);
     return Optional.of(user);
   }
