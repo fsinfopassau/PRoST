@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { isKiosk, isUser } from "../SessionInfo";
-import { UserSummaryCard } from "./StatisticsTab/UserSummaryCard";
 import { User } from "../Types/User";
 import { getOwnUser } from "../Queries";
 import { ErrorComponent } from "./Util/ErrorTab";
 import { UserContainer } from "./SearchTab/UserContainer";
+import { PersonalUserOverview } from "./RootUserTab/PersonalUserOverview";
 
 export function RootTab(props: { switchTheme: () => void }) {
   const [user, setUser] = useState<User | undefined>(undefined);
@@ -40,9 +40,7 @@ export function RootTab(props: { switchTheme: () => void }) {
         ) : user === undefined ? (
           <ErrorComponent />
         ) : (
-          <>
-            <UserSummaryCard user={user} isSelf={true}></UserSummaryCard>
-          </>
+          <PersonalUserOverview user={user} invoices={undefined} />
         )}
       </div>
     </>
