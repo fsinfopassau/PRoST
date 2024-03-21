@@ -13,7 +13,6 @@ export function RootTab(props: { switchTheme: () => void }) {
     if (!isKiosk() && isUser()) {
       getOwnUser()
         .then((user) => {
-          console.log("lol", user);
           setUser(user);
         })
         .catch(() => {
@@ -40,7 +39,7 @@ export function RootTab(props: { switchTheme: () => void }) {
         ) : user === undefined ? (
           <ErrorComponent />
         ) : (
-          <PersonalUserOverview user={user} invoices={undefined} />
+          <PersonalUserOverview user={user} />
         )}
       </div>
     </>

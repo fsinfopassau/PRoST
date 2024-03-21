@@ -3,12 +3,22 @@ import { Invoice } from "../../Types/Invoice";
 import { User } from "../../Types/User";
 import { UserSummaryCard } from "../StatisticsTab/UserSummaryCard";
 import { convertTimestampToTime, formatMoney } from "../../Format";
+import { useEffect, useState } from "react";
+import { getPersonalInvoices } from "../../Queries";
 
-export function PersonalUserOverview(props: {
-  user: User;
-  invoices: Invoice[] | undefined;
-}) {
-  const { user, invoices } = props;
+export function PersonalUserOverview(props: { user: User }) {
+  const { user } = props;
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+
+  useEffect(reloadInvoices, []);
+
+  function reloadInvoices() {
+    getPersonalInvoices().then((result) => {
+      if (result && result.content) {
+        setInvoices(result.content);
+      }
+    });
+  }
 
   function totalAmounts(invoice: Invoice): number {
     let count = 0;
@@ -25,12 +35,11 @@ export function PersonalUserOverview(props: {
       <UserSummaryCard user={user} isSelf={true} />
       <div className="CardContainer">
         <div className="DisplayCard">
-          <h3>Statistics</h3>
+          <h3>Statistiken</h3>
           <p>...</p>
         </div>
         <div className="DisplayCard">
-          <h3>Invoices</h3>
-          <p>...</p>
+          <h3>Rechnungen</h3>
           <table className="InvoiceTable">
             <tbody>
               {invoices?.map((invoice, index) => (

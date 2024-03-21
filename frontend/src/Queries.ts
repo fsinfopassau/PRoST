@@ -323,6 +323,26 @@ export async function getItemDisplayPicture(
   return undefined;
 }
 
+export async function getPersonalInvoices(): Promise<InvoicePage | undefined> {
+  try {
+    const response = await fetch(`${apiUrl}/api/invoice/me`, {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as InvoicePage;
+  } catch (error) {
+    return undefined;
+  }
+}
+
 export async function getAllInvoices(): Promise<InvoicePage | undefined> {
   try {
     const response = await fetch(`${apiUrl}/api/invoice/list`, {
