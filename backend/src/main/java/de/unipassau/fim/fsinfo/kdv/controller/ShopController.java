@@ -1,12 +1,16 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
+import de.unipassau.fim.fsinfo.kdv.data.UserAccessRole;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
+import de.unipassau.fim.fsinfo.kdv.security.CustomUserDetailsContextMapper.CustomUserDetails;
+import de.unipassau.fim.fsinfo.kdv.service.AuthenticationService;
 import de.unipassau.fim.fsinfo.kdv.service.FileStorageService;
 import de.unipassau.fim.fsinfo.kdv.service.ShopService;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +18,9 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,43 +34,26 @@ public class ShopController {
 
   private final FileStorageService fileStorageService;
   private final ShopService shopService;
+  private final AuthenticationService authService;
 
   private final ShopItemRepository itemRepository;
 
   @Autowired
   public ShopController(FileStorageService fileStorageService, ShopService shopService,
-      ShopItemRepository itemRepository) {
+      ShopItemRepository itemRepository, AuthenticationService authService) {
     this.fileStorageService = fileStorageService;
     this.shopService = shopService;
     this.itemRepository = itemRepository;
+    this.authService = authService;
   }
 
-  @GetMapping
+  @GetMapping("/item/list")
   public ResponseEntity<List<ShopItem>> list() {
     return ResponseEntity.ok(itemRepository.findAll());
   }
 
-  @PostMapping("/create")
-  public ResponseEntity<ShopItem> create(@RequestBody ShopItem item) {
-    if (item.getId() == null || itemRepository.existsById(item.getId())
-        || item.getDisplayName() == null
-        || item.getDisplayName().isBlank()) {
-      return ResponseEntity.badRequest().build();
-    }
-
-    if (item.getEnabled() == null) {
-      item.setEnabled(true);
-    }
-    if (item.getPrice() == null) {
-      item.setPrice(new BigDecimal(0));
-    }
-
-    itemRepository.save(item);
-    return ResponseEntity.ok(item);
-  }
-
-  @GetMapping("/{id}")
-  public ResponseEntity<Optional<ShopItem>> get(@PathVariable String id) {
+  @GetMapping("/item/info")
+  public ResponseEntity<Optional<ShopItem>> get(@RequestParam String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
       return ResponseEntity.ok(item);
@@ -74,59 +61,8 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @DeleteMapping("/{id}/delete")
-  public ResponseEntity<Optional<ShopItem>> delete(@PathVariable String id) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    if (item.isPresent()) {
-      itemRepository.delete(item.get());
-      return ResponseEntity.ok(item);
-    }
-    return ResponseEntity.badRequest().build();
-  }
-
-  @PostMapping("/{id}/displayname")
-  public ResponseEntity<String> displayName(@PathVariable String id,
-      @RequestParam String value) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    if (item.isPresent()) {
-      item.get().setDisplayName(value);
-      itemRepository.save(item.get());
-      return ResponseEntity.ok().build();
-    }
-    return ResponseEntity.badRequest().build();
-  }
-
-  @PostMapping("/{id}/category")
-  public ResponseEntity<String> displayCategory(@PathVariable String id,
-      @RequestParam String value) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    if (item.isPresent()) {
-      item.get().setCategory(value);
-      itemRepository.save(item.get());
-      return ResponseEntity.ok().build();
-    }
-    return ResponseEntity.badRequest().build();
-  }
-
-  @PostMapping("/{id}/price")
-  public ResponseEntity<String> price(@PathVariable String id,
-      @RequestParam String value) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    try {
-      BigDecimal price = new BigDecimal(value);
-      if (item.isPresent()) {
-        item.get().setPrice(price);
-        itemRepository.save(item.get());
-        return ResponseEntity.ok().build();
-      }
-    } catch (NumberFormatException e) {
-      return ResponseEntity.badRequest().body("NumberFormatException");
-    }
-    return ResponseEntity.badRequest().build();
-  }
-
-  @GetMapping("/{id}/picture")
-  public ResponseEntity<FileSystemResource> getDisplayImage(@PathVariable String id) {
+  @GetMapping("/item/picture")
+  public ResponseEntity<FileSystemResource> getDisplayImage(@RequestParam String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
 
@@ -146,8 +82,99 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/display-picture")
-  public ResponseEntity<String> setDisplayImage(@PathVariable String id,
+  @PostMapping("/item/consume")
+  public ResponseEntity<String> consume(@RequestParam String id, @RequestParam String userId,
+      @RequestParam(required = false) Integer n, Authentication authentication) {
+    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+    Collection<UserAccessRole> roles = authService.getRoles(authentication);
+
+    boolean permited =
+        roles.contains(UserAccessRole.KIOSK) || roles.contains(UserAccessRole.KAFFEEKASSE);
+
+    if (!permited && roles.contains(UserAccessRole.FSINFO)) { // Check if user is buying for himself
+      permited = userId.equals(userDetails.getUsername());
+    }
+
+    if (permited && shopService.consume(id, userId,
+        (n == null ? 1 : n))) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.status(403).body("No buying for others...");
+  }
+
+  @PostMapping("/settings/create")
+  public ResponseEntity<ShopItem> create(@RequestBody ShopItem item) {
+    if (item.getId() == null || itemRepository.existsById(item.getId())
+        || item.getDisplayName() == null
+        || item.getDisplayName().isBlank()) {
+      return ResponseEntity.badRequest().build();
+    }
+
+    if (item.getEnabled() == null) {
+      item.setEnabled(true);
+    }
+    if (item.getPrice() == null) {
+      item.setPrice(new BigDecimal(0));
+    }
+
+    itemRepository.save(item);
+    return ResponseEntity.ok(item);
+  }
+
+  @DeleteMapping("/settings/item/delete")
+  public ResponseEntity<Optional<ShopItem>> delete(@RequestParam String id) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    if (item.isPresent()) {
+      itemRepository.delete(item.get());
+      return ResponseEntity.ok(item);
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/settings/item/displayname")
+  public ResponseEntity<String> displayName(@RequestParam String id,
+      @RequestParam String value) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    if (item.isPresent()) {
+      item.get().setDisplayName(value);
+      itemRepository.save(item.get());
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/settings/item/category")
+  public ResponseEntity<String> displayCategory(@RequestParam String id,
+      @RequestParam String value) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    if (item.isPresent()) {
+      item.get().setCategory(value);
+      itemRepository.save(item.get());
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/settings/item/price")
+  public ResponseEntity<String> price(@RequestParam String id,
+      @RequestParam String value) {
+    Optional<ShopItem> item = itemRepository.findById(id);
+    try {
+      BigDecimal price = new BigDecimal(value);
+      if (item.isPresent()) {
+        item.get().setPrice(price);
+        itemRepository.save(item.get());
+        return ResponseEntity.ok().build();
+      }
+    } catch (NumberFormatException e) {
+      return ResponseEntity.badRequest().body("NumberFormatException");
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/settings/item/picture")
+  public ResponseEntity<String> setDisplayImage(@RequestParam String id,
       @RequestParam("file") MultipartFile file) {
     Optional<ShopItem> item = itemRepository.findById(id);
 
@@ -162,8 +189,8 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/enable")
-  public ResponseEntity<String> enable(@PathVariable String id) {
+  @PostMapping("/settings/item/enable")
+  public ResponseEntity<String> enable(@RequestParam String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
       item.get().setEnabled(true);
@@ -173,21 +200,12 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
-  @PostMapping("/{id}/disable")
-  public ResponseEntity<String> disable(@PathVariable String id) {
+  @PostMapping("/settings/item/disable")
+  public ResponseEntity<String> disable(@RequestParam String id) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
       item.get().setEnabled(false);
       itemRepository.save(item.get());
-      return ResponseEntity.ok().build();
-    }
-    return ResponseEntity.badRequest().build();
-  }
-
-  @PostMapping("/consume/{id}")
-  public ResponseEntity<String> consume(@PathVariable String id, @RequestParam String userId,
-      @RequestParam(required = false) Integer n) {
-    if (shopService.consume(id, userId, (n == null ? 1 : n))) {
       return ResponseEntity.ok().build();
     }
     return ResponseEntity.badRequest().build();

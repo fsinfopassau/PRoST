@@ -1,27 +1,53 @@
-import { login } from "./Queries";
+import { AuthorizedUser } from "./Types/User";
 
-const firstCred = localStorage.getItem("cred");
-let encodedCredentials = firstCred !== null ? firstCred : "";
-
-if (encodedCredentials !== "") {
-  login(encodedCredentials);
-}
+const firstUser = localStorage.getItem("user");
+let authorizedUser =
+  firstUser !== null ? (JSON.parse(firstUser) as AuthorizedUser) : undefined;
 
 export function getEncodedCredentials(): string {
-  return encodedCredentials;
+  return authorizedUser === undefined ? "" : authorizedUser.credentials;
 }
 
-export function setEncodedCredentials(cred: string) {
-  encodedCredentials = cred !== null ? cred : "";
-  localStorage.setItem("cred", encodedCredentials);
+export function getSessionUserName(): string | undefined {
+  if (authorizedUser === undefined) {
+    return undefined;
+  }
+
+  return window.atob(authorizedUser.credentials).split(":")[0];
 }
 
-export function resetCredentials() {
-  encodedCredentials = "";
-  localStorage.setItem("cred", encodedCredentials);
+export function resetSession() {
+  authorizedUser = undefined;
+  localStorage.removeItem("user");
 }
 
-export function validCredentials(): boolean {
-  // Platzhalter für Validierung (Sowie der Rest von Basic-Auth🙃..)
-  return encodedCredentials !== "";
+export function existCredentials(): boolean {
+  return authorizedUser !== undefined;
+}
+
+export function setAuthorizedUser(user: AuthorizedUser) {
+  authorizedUser = user;
+  localStorage.setItem("user", JSON.stringify(user));
+  console.log("Current User: " + JSON.stringify(user));
+}
+
+export function getAuthorizedUser(): AuthorizedUser | undefined {
+  return authorizedUser;
+}
+
+// JS-Enum-Comparison is Shit! (normal comp of two enums always returned false)
+
+export function isAdmin(): boolean {
+  if (authorizedUser === undefined) return false;
+  return authorizedUser.accessRole.toString() === "KAFFEEKASSE";
+}
+
+export function isKiosk(): boolean {
+  if (authorizedUser === undefined) return false;
+  return isAdmin() || authorizedUser.accessRole.toString() === "KIOSK";
+}
+
+export function isUser(): boolean {
+  if (authorizedUser === undefined) return false;
+  return isKiosk() || authorizedUser.accessRole.toString() === "FSINFO";
 }

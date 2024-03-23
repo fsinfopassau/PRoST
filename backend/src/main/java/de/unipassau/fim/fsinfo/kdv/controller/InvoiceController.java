@@ -1,13 +1,14 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
 import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceDTO;
-import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
+import de.unipassau.fim.fsinfo.kdv.security.CustomUserDetailsContextMapper.CustomUserDetails;
 import de.unipassau.fim.fsinfo.kdv.service.InvoiceService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,12 +23,9 @@ public class InvoiceController {
 
   private final InvoiceService invoiceService;
 
-  private final UserRepository users;
-
   @Autowired
-  public InvoiceController(InvoiceService invoiceService, UserRepository users) {
+  public InvoiceController(InvoiceService invoiceService) {
     this.invoiceService = invoiceService;
-    this.users = users;
   }
 
   /**
@@ -35,13 +33,29 @@ public class InvoiceController {
    * @param s: Page-Size
    * @return Page + infos
    */
-  @GetMapping
+  @GetMapping("/list")
   public Page<InvoiceDTO> getInvoices(
       @RequestParam(defaultValue = "0") int p,
       @RequestParam(defaultValue = "10") int s,
       @RequestParam(required = false) String userId,
       @RequestParam(required = false) Boolean mailed) {
     return invoiceService.getInvoices(Math.max(0, p), Math.max(1, s), mailed, userId);
+  }
+
+  /**
+   * @param p: Page-Number 0-MAX
+   * @param s: Page-Size
+   * @return Page + infos
+   */
+  @GetMapping("/me")
+  public Page<InvoiceDTO> getPersonalInvoices(
+      @RequestParam(defaultValue = "0") int p,
+      @RequestParam(defaultValue = "10") int s,
+      @RequestParam(required = false) Boolean mailed, Authentication authentication) {
+    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+    return invoiceService.getPersonalInvoices(Math.max(0, p), Math.max(1, s), mailed,
+        userDetails.getUsername());
   }
 
   @PostMapping("/create")

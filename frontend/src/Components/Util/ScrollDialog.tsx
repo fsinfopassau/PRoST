@@ -18,7 +18,7 @@ import { PropsWithChildren, useState } from "react";
 
 interface CustomComponentProps {
   title: string;
-  trigger: any;
+  trigger: React.ReactNode;
   onSubmit: () => void;
 }
 

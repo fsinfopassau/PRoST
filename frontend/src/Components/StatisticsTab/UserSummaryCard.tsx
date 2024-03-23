@@ -3,17 +3,28 @@ import { User } from "../../Types/User";
 import { Separator } from "@radix-ui/react-separator";
 import { ShopHistoryEntry } from "../../Types/ShopHistory";
 import { useEffect, useState } from "react";
-import { getUserHistory } from "../../Queries";
+import { getOwnHistory, getUserHistory } from "../../Queries";
 import { formatMoney } from "../../Format";
 
-export function UserSummaryCard(props: { user: User }) {
-  const { user } = props;
+interface Props {
+  user: User;
+  isSelf?: boolean;
+}
+
+export function UserSummaryCard(props: Props) {
+  const { user, isSelf = false } = props;
   const [history, setHistory] = useState<ShopHistoryEntry[]>([]);
 
   useEffect(() => {
-    getUserHistory(user, 3).then((historyList) => {
-      if (historyList) setHistory(historyList.reverse());
-    });
+    if (isSelf) {
+      getOwnHistory(3).then((historyList) => {
+        if (historyList) setHistory(historyList);
+      });
+    } else {
+      getUserHistory(user, 3).then((historyList) => {
+        if (historyList) setHistory(historyList);
+      });
+    }
   }, []);
 
   function getDisplayName(): string {

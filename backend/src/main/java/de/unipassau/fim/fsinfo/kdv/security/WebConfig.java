@@ -1,22 +1,18 @@
 package de.unipassau.fim.fsinfo.kdv.security;
 
-import de.unipassau.fim.fsinfo.kdv.data.UserRole;
-import de.unipassau.fim.fsinfo.kdv.service.UserService;
+import de.unipassau.fim.fsinfo.kdv.data.UserAccessRole;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -29,36 +25,36 @@ public class WebConfig implements WebMvcConfigurer {
 
   @Value("${ALLOWED_ORIGINS:*,localhost}")
   private String[] allowedOrigins;
-  private final UserService userService;
+  private final LdapConfig ldapConfig;
+  private final CustomUserDetailsContextMapper userDetailsContextMapper;
 
   public static final String[] AUTH_WHITELIST = {
-      "/api/users",
-      "/api/users/*",
-      "/api/shop",
-      "/api/shop/*",
-      "/api/shop/*/picture",
-      "/api/shop/consume/**",
-      "/api/history/**",
+      "/api/authentication"
   };
 
   public static final String[] USER_SPACE = {
-      "/api/",
-      "/api/users/*/invoices",
+      "/api/user/me",
+      "/api/history/me",
+      "/api/invoice/me",
+      "/api/shop/item/**",
   };
 
   public static final String[] KIOSK_SPACE = {
-      "/api/shop/**",
-      "/api/users/**",
-      "/api/invoice/**",
+      "/api/user/info",
+      "/api/user/list",
+      "/api/history/**",
   };
 
   public static final String[] ADMIN_SPACE = {
-      "/api/**",
+      "/api/user/**",
+      "/api/shop/**",
+      "/api/invoice/**",
   };
 
   @Autowired
-  public WebConfig(UserService userService) {
-    this.userService = userService;
+  public WebConfig(LdapConfig ldapConfig) {
+    this.ldapConfig = ldapConfig;
+    this.userDetailsContextMapper = new CustomUserDetailsContextMapper();
   }
 
   @Bean
@@ -79,11 +75,11 @@ public class WebConfig implements WebMvcConfigurer {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(AUTH_WHITELIST).permitAll()
             .requestMatchers(USER_SPACE)
-            .hasAnyAuthority(UserRole.USER.name(), UserRole.KIOSK.name(),
-                UserRole.ADMINISTRATOR.name())
+            .hasAnyAuthority(UserAccessRole.FSINFO.name(), UserAccessRole.KIOSK.name(),
+                UserAccessRole.KAFFEEKASSE.name())
             .requestMatchers(KIOSK_SPACE)
-            .hasAnyAuthority(UserRole.KIOSK.name(), UserRole.ADMINISTRATOR.name())
-            .requestMatchers(ADMIN_SPACE).hasAnyAuthority(UserRole.ADMINISTRATOR.name())
+            .hasAnyAuthority(UserAccessRole.KIOSK.name(), UserAccessRole.KAFFEEKASSE.name())
+            .requestMatchers(ADMIN_SPACE).hasAnyAuthority(UserAccessRole.KAFFEEKASSE.name())
             .anyRequest().authenticated() // Require authentication for all other requests
         )
         .sessionManagement(
@@ -92,17 +88,16 @@ public class WebConfig implements WebMvcConfigurer {
         .build();
   }
 
-  @Bean
-  public AuthenticationProvider daoAuthenticationProvider() {
-    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-    provider.setPasswordEncoder(passwordEncoder());
-    provider.setUserDetailsService(userService);
-    return provider;
-  }
-
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
+  @Autowired
+  public void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth
+        .ldapAuthentication()
+        .userDnPatterns("uid={0},ou=users", "uid={0},ou=serviceAccounts")
+        .groupSearchBase("ou=groups")
+        .rolePrefix("")
+        .contextSource(ldapConfig.contextSource())
+        .ldapAuthoritiesPopulator(ldapConfig.ldapAuthoritiesPopulator())
+        .userDetailsContextMapper(userDetailsContextMapper);
   }
 
 }

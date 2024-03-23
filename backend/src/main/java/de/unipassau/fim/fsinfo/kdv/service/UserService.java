@@ -2,23 +2,14 @@ package de.unipassau.fim.fsinfo.kdv.service;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
-import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService implements UserDetailsService {
-
-  @Value("${MASTER_PASSWORD:password}")
-  private String masterPassword;
+public class UserService {
 
   private final UserRepository users;
 
@@ -39,29 +30,28 @@ public class UserService implements UserDetailsService {
     return matcher.matches();
   }
 
-  public boolean createUser(KdvUser userTemplate) {
-    if (users.findById(userTemplate.getId()).isPresent()) {
-      return false;
+  public Optional<KdvUser> createUser(String userName, String displayName, String email) {
+
+    if (users.findById(userName).isPresent()) {
+      System.out.println("[US] :: " + userName + " :: user-creation failed :: exists ");
+      return Optional.empty();
     }
 
-    if (!isValidEmail(userTemplate.getEmail())) {
-      return false;
+    // Allow only valid or no mail.
+    if (!isValidEmail(email) && email != null) {
+      System.out.println("[US] :: " + userName + " :: user-creation failed [mail=" + email + "] ");
+      return Optional.empty();
     }
 
-    userTemplate.setBalance(new BigDecimal(0));
-    users.save(userTemplate);
-    return true;
-  }
+    if (displayName == null || displayName.isBlank()) {
+      System.out.println(
+          "[US] :: " + userName + " :: user-creation failed [displayName=" + displayName + "] ");
+      return Optional.empty();
+    }
 
-  @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    KdvUser user = users.findById(username)
-        .orElseThrow(() -> new UsernameNotFoundException("User \"" + username + "\" not found!"));
-
-    return User
-        .withUsername(username)
-        .password(new BCryptPasswordEncoder().encode(masterPassword))
-        .authorities(user.getRole().name())
-        .build();
+    KdvUser user = new KdvUser(userName, displayName, email, true);
+    System.out.println("[US] :: " + userName + " :: user-creation succeeded");
+    users.save(user);
+    return Optional.of(user);
   }
 }

@@ -14,16 +14,25 @@ import {
   ExitIcon,
   PaperPlaneIcon,
 } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { loginNew } from "../../Queries";
-import { resetCredentials, validCredentials } from "../../SessionInfo";
+import {
+  getSessionUserName,
+  resetSession,
+  existCredentials,
+} from "../../SessionInfo";
 import { toast } from "react-toastify";
 
 export function LoginDialog() {
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [isLogged, setLogged] = useState(validCredentials());
+  const [isLogged, setLogged] = useState(existCredentials());
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const name = getSessionUserName();
+    if (name) setUserName(name);
+  }, []);
 
   const handleUserChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUserName(event.target.value);
@@ -32,23 +41,21 @@ export function LoginDialog() {
     setPassword(event.target.value);
   };
 
-  function buttonClickHandler() {
-    console.log("log");
-  }
-
   function submit() {
     loginNew(userName, password)
       .then((result) => {
-        if (result) {
-          toast.success("Hallo " + userName);
+        if (result !== undefined) {
+          toast.success("Hallo " + result.displayName);
+          setLogged(true);
+          window.location.reload();
         } else {
           toast.error("Login fehlgeschlagen!");
+          setLogged(false);
         }
-
-        setLogged(result);
       })
       .catch(() => {
         toast.error("Login Error!");
+        setLogged(false);
       });
   }
 
@@ -56,8 +63,9 @@ export function LoginDialog() {
     toast.success("Tschüss " + userName);
     setUserName("");
     setPassword("");
-    resetCredentials();
+    resetSession();
     setLogged(false);
+    window.location.reload();
   }
 
   function handleKeyDown(event: React.KeyboardEvent) {
@@ -78,7 +86,7 @@ export function LoginDialog() {
         ) : (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <button onClick={buttonClickHandler} id="login-button">
+              <button id="login-button">
                 <AvatarIcon width={35} height={25} />
               </button>
             </DialogTrigger>

@@ -20,13 +20,13 @@ const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({
 
   useEffect(() => {
     getAllUsers().then((userList) => {
-      setUsers(userList);
+      if (userList) {
+        setUsers(userList);
+      }
     });
   }, []);
 
   function handleSelect(id: string) {
-    console.log("select " + id);
-
     setSelectedUsers((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
@@ -69,7 +69,7 @@ const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({
 
     createInvoices(selectedUsers)
       .then((result) => {
-        if (result) {
+        if (result && result.length !== undefined) {
           if (result.length !== 0) {
             toast.success(
               result.length +

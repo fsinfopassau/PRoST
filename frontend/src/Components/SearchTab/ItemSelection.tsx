@@ -1,11 +1,12 @@
 import { useParams } from "react-router-dom";
 import { ShopItem } from "../../Types/ShopItem";
 import { useEffect, useState } from "react";
-import { getAllShopItems, getUser } from "../../Queries";
+import { getAllShopItems, getOwnUser, getUser } from "../../Queries";
 import { User } from "../../Types/User";
 import { UserSummaryCard } from "../StatisticsTab/UserSummaryCard";
 import { ErrorComponent } from "../Util/ErrorTab";
 import { ItemDisplay } from "./ItemDisplay";
+import { isKiosk, isUser } from "../../SessionInfo";
 
 export function ItemSelection() {
   const { userId } = useParams();
@@ -14,12 +15,18 @@ export function ItemSelection() {
 
   useEffect(() => {
     getAllShopItems().then((itemList) => {
-      setItems(itemList);
+      if (itemList) setItems(itemList);
     });
-    if (userId)
-      getUser(userId).then((user) => {
-        setUser(user);
-      });
+    if (isUser() && userId)
+      if (isKiosk()) {
+        getUser(userId).then((user) => {
+          setUser(user);
+        });
+      } else {
+        getOwnUser().then((user) => {
+          setUser(user);
+        });
+      }
   }, []);
 
   function filter(itemList: ShopItem[]) {

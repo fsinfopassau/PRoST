@@ -31,7 +31,7 @@ public class InvoiceEntry {
   private Long previousInvoiceTimestamp;
 
   private boolean mailed = false;
-  private boolean isPublished = false;
+  private boolean published = false;
 
   public InvoiceEntry(String userId, BigDecimal balance, Long currentTimestamp,
       Long previousInvoiceTimestamp) {
