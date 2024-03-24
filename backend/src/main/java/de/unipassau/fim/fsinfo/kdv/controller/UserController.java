@@ -85,6 +85,40 @@ public class UserController {
     return ResponseEntity.badRequest().build();
   }
 
+  @PostMapping("/name")
+  public ResponseEntity<String> name(@RequestParam String id, @RequestParam String value) {
+    Optional<KdvUser> user = userRepository.findById(id);
+
+    try {
+      if (user.isPresent()) {
+        user.get().setDisplayName(value);
+        userRepository.save(user.get());
+        return ResponseEntity.ok().build();
+      }
+    } catch (NumberFormatException e) {
+      return ResponseEntity.badRequest().build();
+    }
+
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/email")
+  public ResponseEntity<String> email(@RequestParam String id, @RequestParam String value) {
+    Optional<KdvUser> user = userRepository.findById(id);
+
+    try {
+      if (user.isPresent() && UserService.isValidEmail(value)) {
+        user.get().setEmail(value);
+        userRepository.save(user.get());
+        return ResponseEntity.ok().build();
+      }
+    } catch (NumberFormatException e) {
+      return ResponseEntity.badRequest().build();
+    }
+
+    return ResponseEntity.badRequest().build();
+  }
+
   @PostMapping("/balance")
   public ResponseEntity<BigDecimal> balance(@RequestParam String id, @RequestParam String value) {
     Optional<KdvUser> user = userRepository.findById(id);

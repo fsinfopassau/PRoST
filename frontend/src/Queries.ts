@@ -99,6 +99,55 @@ export async function getAllUsers(): Promise<User[] | undefined> {
   }
 }
 
+
+export async function enableUser(
+  user: User,
+  enable: boolean
+): Promise<boolean> {
+  const result = await fetch(
+    `${apiUrl}/api/user/${enable ? "enable" : "disable"}?id=${
+      user.id
+    }`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+      },
+    }
+  );
+  return result.ok;
+}
+
+export async function deleteUser(user: User): Promise<boolean> {
+  const result = await fetch(
+    `${apiUrl}/api/user/delete?id=${user.id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+      },
+    }
+  );
+  return result.ok;
+}
+
+export async function changeUser(
+  user: User,
+  value: string,
+  path: string,
+): Promise<boolean> {
+  const result = await fetch(
+    `${apiUrl}/api/user/${path}?id=${user.id}&value=${value}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+      },
+    }
+  );
+  return result.ok;
+}
+
 export async function getShopItem(
   itemId: string
 ): Promise<ShopItem | undefined> {

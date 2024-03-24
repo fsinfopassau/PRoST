@@ -13,6 +13,7 @@ import { ItemSettings } from "./SettingsTab/ItemSettings";
 import { Bounce, ToastContainer } from "react-toastify";
 import { InvoiceTab } from "./InvoiceTab/InvoiceTab";
 import { RootTab } from "./RootTab";
+import { UserSettings } from "./SettingsTab/UserSettings";
 
 const stylesAvailable = ["purple", "blue"];
 
@@ -88,6 +89,7 @@ export function App() {
                 />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/settings/items" element={<ItemSettings />} />
+                <Route path="/settings/users" element={<UserSettings />} />
                 <Route path="*" element={<ErrorComponent />} />
               </Routes>
             </div>
