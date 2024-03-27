@@ -14,6 +14,7 @@ import { Bounce, ToastContainer } from "react-toastify";
 import { InvoiceTab } from "./InvoiceTab/InvoiceTab";
 import { RootTab } from "./RootTab";
 import { UserSettings } from "./SettingsTab/UserSettings";
+import { PersonalInvoiceView } from "./PersonalView/PersonalInvoiceView";
 
 const stylesAvailable = ["purple", "blue"];
 
@@ -75,6 +76,7 @@ export function App() {
                   path="/"
                   element={<RootTab switchTheme={switchTheme} />}
                 />
+                <Route path="/me/invoice" element={<PersonalInvoiceView />} />
                 <Route path="/invoice" element={<InvoiceTab />} />
                 <Route path="/shop/:userId" element={<ItemSelection />} />
                 <Route

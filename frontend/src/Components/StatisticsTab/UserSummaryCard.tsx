@@ -5,18 +5,18 @@ import { ShopHistoryEntry } from "../../Types/ShopHistory";
 import { useEffect, useState } from "react";
 import { getOwnHistory, getUserHistory } from "../../Queries";
 import { formatMoney } from "../../Format";
+import { getAuthorizedUser } from "../../SessionInfo";
 
 interface Props {
   user: User;
-  isSelf?: boolean;
 }
 
 export function UserSummaryCard(props: Props) {
-  const { user, isSelf = false } = props;
+  const { user } = props;
   const [history, setHistory] = useState<ShopHistoryEntry[]>([]);
 
   useEffect(() => {
-    if (isSelf) {
+    if (user.id === getAuthorizedUser()?.id) {
       getOwnHistory(3).then((historyList) => {
         if (historyList) setHistory(historyList);
       });

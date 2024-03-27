@@ -19,7 +19,7 @@ export function Navbar(props: { switchTheme: () => void }) {
   function tabUpdate(newValue: string) {
     if (newValue === "root") {
       navigate("/");
-    } else if (newValue === "buy") {
+    } else if (newValue === "shop-self") {
       const authUser = getAuthorizedUser();
       if (authUser && authUser.id) {
         navigate(`/shop/${authUser.id}`);
@@ -33,6 +33,8 @@ export function Navbar(props: { switchTheme: () => void }) {
     const newValue = location.pathname.split("/")[1];
     if (newValue.includes("root") || newValue.length === 0) {
       return "root";
+    } else if (location.pathname.startsWith("/me")) {
+      return location.pathname.split("/")[2];
     } else {
       return newValue;
     }
@@ -42,7 +44,7 @@ export function Navbar(props: { switchTheme: () => void }) {
     <>
       <div id="tab-changer">
         <img onClick={switchTheme} src="/icons/happy-manje/happy beer.svg" />
-        <Tabs defaultValue={getSelectedTabValue()} className="TabsRoot">
+        <Tabs value={getSelectedTabValue()} className="TabsRoot">
           <TabsList className="TabsList">
             {isKiosk() ? (
               <>
@@ -94,13 +96,20 @@ export function Navbar(props: { switchTheme: () => void }) {
                   <HomeIcon />
                 </TabsTrigger>
                 <TabsTrigger
-                  value="buy"
+                  value="shop"
                   className="TabsTrigger"
                   onClick={() => {
-                    tabUpdate("buy");
+                    tabUpdate("shop-self");
                   }}
                 >
                   <CookieIcon />
+                </TabsTrigger>
+                <TabsTrigger
+                  value="invoice"
+                  className="TabsTrigger"
+                  onClick={() => tabUpdate("me/invoice")}
+                >
+                  <FileTextIcon />
                 </TabsTrigger>
               </>
             ) : (
