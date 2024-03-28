@@ -54,7 +54,7 @@ export function formatMoney(
   balance: number | undefined,
   decimalCount = 2
 ): string {
-  if (!balance) {
+  if (!balance && balance !== 0) {
     return "";
   }
   const formatted = new Intl.NumberFormat("de-DE", {

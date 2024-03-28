@@ -4,6 +4,7 @@ import { ShopItem } from "./Types/ShopItem";
 import { AuthorizedUser, User } from "./Types/User";
 import { getEncodedCredentials, setAuthorizedUser } from "./SessionInfo";
 import { InvoicePage } from "./Types/Invoice";
+import { toast } from "react-toastify";
 
 export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
 
@@ -99,15 +100,12 @@ export async function getAllUsers(): Promise<User[] | undefined> {
   }
 }
 
-
 export async function enableUser(
   user: User,
   enable: boolean
 ): Promise<boolean> {
   const result = await fetch(
-    `${apiUrl}/api/user/${enable ? "enable" : "disable"}?id=${
-      user.id
-    }`,
+    `${apiUrl}/api/user/${enable ? "enable" : "disable"}?id=${user.id}`,
     {
       method: "POST",
       headers: {
@@ -118,23 +116,32 @@ export async function enableUser(
   return result.ok;
 }
 
+export async function createNewUser(user: User): Promise<boolean> {
+  const result = await fetch(`${apiUrl}/api/user/create`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${getEncodedCredentials()}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  });
+  return result.ok;
+}
+
 export async function deleteUser(user: User): Promise<boolean> {
-  const result = await fetch(
-    `${apiUrl}/api/user/delete?id=${user.id}`,
-    {
-      method: "DELETE",
-      headers: {
-        Authorization: `Basic ${getEncodedCredentials()}`,
-      },
-    }
-  );
+  const result = await fetch(`${apiUrl}/api/user/delete?id=${user.id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Basic ${getEncodedCredentials()}`,
+    },
+  });
   return result.ok;
 }
 
 export async function changeUser(
   user: User,
   value: string,
-  path: string,
+  path: string
 ): Promise<boolean> {
   const result = await fetch(
     `${apiUrl}/api/user/${path}?id=${user.id}&value=${value}`,
@@ -205,6 +212,10 @@ export async function buyItem(
       },
     }
   );
+
+  if (result.status == 418) {
+    toast.warning("I'm a Teapot! 🙃");
+  }
   return result.ok;
 }
 

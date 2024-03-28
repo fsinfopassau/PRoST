@@ -89,18 +89,22 @@ public class ShopController {
 
     Collection<UserAccessRole> roles = authService.getRoles(authentication);
 
-    boolean permited =
+    boolean permitted =
         roles.contains(UserAccessRole.KIOSK) || roles.contains(UserAccessRole.KAFFEEKASSE);
 
-    if (!permited && roles.contains(UserAccessRole.FSINFO)) { // Check if user is buying for himself
-      permited = userId.equals(userDetails.getUsername());
+    if (!permitted && roles.contains(
+        UserAccessRole.FSINFO)) { // Check if user is buying for himself
+      permitted = userId.equals(userDetails.getUsername());
     }
 
-    if (permited && shopService.consume(id, userId,
+    if (permitted && shopService.consume(id, userId,
         (n == null ? 1 : n))) {
       return ResponseEntity.ok().build();
     }
-    return ResponseEntity.status(403).body("No buying for others...");
+
+    // 🙃🫖
+    return ResponseEntity.status(418)
+        .body("I'm a teapot, and you're not an admin or kiosk! \uD83D\uDE43");
   }
 
   @PostMapping("/settings/create")
@@ -168,7 +172,7 @@ public class ShopController {
         return ResponseEntity.ok().build();
       }
     } catch (NumberFormatException e) {
-      return ResponseEntity.badRequest().body("NumberFormatException");
+      return ResponseEntity.badRequest().build();
     }
     return ResponseEntity.badRequest().build();
   }
