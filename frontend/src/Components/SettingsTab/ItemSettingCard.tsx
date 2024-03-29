@@ -1,6 +1,8 @@
 import {
   BookmarkIcon,
+  CheckCircledIcon,
   Cross1Icon,
+  CrossCircledIcon,
   LightningBoltIcon,
   Pencil2Icon,
 } from "@radix-ui/react-icons";
@@ -20,6 +22,7 @@ import { useEffect, useRef, useState } from "react";
 import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
 import { toast } from "react-toastify";
 import { formatMoney } from "../../Format";
+import ScrollDialog from "../Util/ScrollDialog";
 
 export function ItemSettingCard(props: {
   item: ShopItem;
@@ -129,9 +132,55 @@ export function ItemSettingCard(props: {
           </Switch>
         </h3>
 
-        <div className="Button" onClick={deleteItem}>
-          <Cross1Icon />
-        </div>
+        <ScrollDialog
+          title="Gegenstand löschen?"
+          onSubmit={deleteItem}
+          trigger={
+            <div className="Button red">
+              <Cross1Icon />
+            </div>
+          }
+        >
+          <h3 style={{ display: "flex" }}>
+            {item.id}
+            {item.enabled ? (
+              <div className="green">
+                <CheckCircledIcon />
+              </div>
+            ) : (
+              <div className="red">
+                <CrossCircledIcon />
+              </div>
+            )}
+          </h3>
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              maxWidth: "20rem",
+              margin: "auto",
+            }}
+          >
+            <div className="DisplayCard">
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Pencil2Icon /> {item.displayName}
+              </div>
+            </div>
+            <div className="DisplayCard">
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <BookmarkIcon />
+                {item.category}
+              </div>
+            </div>
+            <div className="DisplayCard">
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <LightningBoltIcon />
+                {formatMoney(item.price)}
+              </div>
+            </div>
+          </div>
+        </ScrollDialog>
       </div>
       <Separator className="Separator" />
       <div className="SpreadContainer">
