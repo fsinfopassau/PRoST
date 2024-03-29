@@ -4,7 +4,6 @@ import {
   deleteInvoices,
   getAllInvoices,
   mailInvoices,
-  publishInvoices,
 } from "../../Queries";
 import { InvoiceSelectDisplay } from "./InvoiceSelectDisplay";
 import {
@@ -17,7 +16,6 @@ import { Separator } from "@radix-ui/react-separator";
 import {
   CheckIcon,
   EnvelopeClosedIcon,
-  EyeOpenIcon,
   FileMinusIcon,
   FilePlusIcon,
   PaperPlaneIcon,
@@ -43,7 +41,6 @@ export function InvoiceTab() {
   useEffect(() => {
     if (selectedPage === 0)
       selectPage(0);
-    console.log(minPage, maxPage);
   });
 
   function selectPage(n: number) {
@@ -67,8 +64,6 @@ export function InvoiceTab() {
     // Update the state with the adjusted range
     setMinPages(minPage);
     setMaxPages(maxPage);
-
-    console.log("select", minPage, maxPage);
   }
 
   function handleKeyDown(event: React.KeyboardEvent) {
@@ -116,24 +111,6 @@ export function InvoiceTab() {
     invoices.forEach((i) => {
       if (!i.mailed) handleSelect(i.id);
     });
-  }
-
-  function publishSelected() {
-    if (selectedItems.length === 0) return;
-
-    publishInvoices(selectedItems)
-      .then((result) => {
-        if (result) {
-          toast.success(result.length + " veröffentlicht!");
-          setSelectedItems([]);
-          reloadInvoices();
-        } else {
-          toast.error("Veröffentlichungsfehler!");
-        }
-      })
-      .catch(() => {
-        toast.error("Verbindungsfehler!");
-      });
   }
 
   function mailSelected() {
@@ -236,17 +213,6 @@ export function InvoiceTab() {
                       <FileMinusIcon />
                     </div>
                   </ConfirmInvoices>
-
-                  <ConfirmInvoices
-                    dialogTitle="Rechnungen Veröffentlichen?"
-                    invoices={getSelectedInvoices()}
-                    onSubmit={publishSelected}
-                  >
-                    <div className="Button orange">
-                      <EyeOpenIcon />
-                    </div>
-                  </ConfirmInvoices>
-
                   <ConfirmInvoices
                     dialogTitle="Rechnungen Verschicken?"
                     invoices={getSelectedInvoices()}
