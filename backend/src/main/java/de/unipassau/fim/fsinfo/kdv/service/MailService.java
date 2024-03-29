@@ -3,10 +3,11 @@ package de.unipassau.fim.fsinfo.kdv.service;
 import de.unipassau.fim.fsinfo.kdv.data.dao.InvoiceEntry;
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItem;
+import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceAmountMapping;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 import lombok.NonNull;
 import org.apache.commons.mail.EmailException;
@@ -44,7 +45,7 @@ public class MailService {
     this.items = items;
   }
 
-  public boolean sendInvoice(@NonNull InvoiceEntry invoice, Map<String, Integer> amounts) {
+  public boolean sendInvoice(@NonNull InvoiceEntry invoice, List<InvoiceAmountMapping> amounts) {
     Optional<KdvUser> user = users.findById(invoice.getUserId());
     if (user.isEmpty()) {
       System.err.println(
@@ -118,7 +119,7 @@ public class MailService {
     return true;
   }
 
-  public String formattedAmounts(Map<String, Integer> amounts) {
+  public String formattedAmounts(List<InvoiceAmountMapping> amounts) {
 
     StringBuilder b = new StringBuilder();
 
@@ -128,23 +129,25 @@ public class MailService {
       b.append("\n");
     }
 
-    for (String k : amounts.keySet()) {
+    for (InvoiceAmountMapping mapping : amounts) {
 
-      Optional<ShopItem> item = items.findById(k);
-      String itemName = k;
+      Optional<ShopItem> item = items.findById(mapping.getItemId());
+      String itemName = mapping.getItemId();
 
       if (item.isPresent()) {
         itemName = item.get().getDisplayName();
       }
 
-      int amount = amounts.get(k);
+      int amount = mapping.getAmount();
 
       if (amount < 10) {
         b.append(" ");
       }
+      b.append(itemName);
+      b.append(" >> ");
       b.append(amount);
       b.append(" x ");
-      b.append(itemName);
+      b.append(KdvUser.formatMoney(mapping.getSingeItemPrice()));
       b.append("\n");
     }
 

@@ -3,6 +3,7 @@ package de.unipassau.fim.fsinfo.kdv.service;
 import de.unipassau.fim.fsinfo.kdv.data.dao.InvoiceEntry;
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.dao.ShopItemHistoryEntry;
+import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceAmountMapping;
 import de.unipassau.fim.fsinfo.kdv.data.dto.InvoiceDTO;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.InvoiceRepository;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.ShopItemHistoryRepository;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +112,7 @@ public class InvoiceService {
 
     if (shopEntries.isEmpty()) {
       return new InvoiceDTO(invoice, userName,
-          new HashMap<>());
+          new ArrayList<>());
     }
     return new InvoiceDTO(invoice, userName, getItemAmounts(shopEntries));
   }
@@ -257,22 +259,55 @@ public class InvoiceService {
 
   /**
    * @param entries to search through.
-   * @return a map of itemIds and their amounts.
+   * @return a list of amounts.
    */
-  private Map<String, Integer> getItemAmounts(List<ShopItemHistoryEntry> entries) {
+  private List<InvoiceAmountMapping> getItemAmounts(List<ShopItemHistoryEntry> entries) {
 
-    Map<String, Integer> amounts = new HashMap<>();
+    Map<CompositeKey, InvoiceAmountMapping> amounts = new HashMap<>();
 
     entries.forEach((entry) -> {
-      if (amounts.containsKey(entry.getItemId())) {
-        Integer lastAmount = amounts.get(entry.getItemId());
-        amounts.put(entry.getItemId(), lastAmount + entry.getAmount());
+      CompositeKey key = new CompositeKey(entry.getItemId(), entry.getPrice());
+      if (amounts.containsKey(key)) {
+        InvoiceAmountMapping lastAmount = amounts.get(key);
+        lastAmount.setAmount(lastAmount.getAmount() + entry.getAmount());
       } else {
-        amounts.put(entry.getItemId(), entry.getAmount());
+        amounts.put(key,
+            new InvoiceAmountMapping(entry.getItemId(), entry.getPrice(), entry.getAmount()));
       }
     });
 
-    return amounts;
+    return amounts.values().stream().toList();
   }
+
+  public static class CompositeKey {
+
+    private String itemId;
+    private BigDecimal itemPrice;
+
+    public CompositeKey(String itemId, BigDecimal itemPrice) {
+      this.itemId = itemId;
+      this.itemPrice = itemPrice;
+    }
+
+    // Implement equals and hashCode methods
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+      CompositeKey that = (CompositeKey) o;
+      return Objects.equals(itemId, that.itemId) &&
+          Objects.equals(itemPrice, that.itemPrice);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(itemId, itemPrice);
+    }
+  }
+
 
 }

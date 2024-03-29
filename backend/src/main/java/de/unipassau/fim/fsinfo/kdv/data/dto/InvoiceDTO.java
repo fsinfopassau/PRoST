@@ -2,9 +2,7 @@ package de.unipassau.fim.fsinfo.kdv.data.dto;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.InvoiceEntry;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import lombok.Data;
 
 
@@ -19,9 +17,10 @@ public class InvoiceDTO {
   private Long previousInvoiceTimestamp;
   private boolean isMailed;
   private boolean isPublished;
-  private List<AmountMapping> amounts;
+  private List<InvoiceAmountMapping> amounts;
 
-  public InvoiceDTO(InvoiceEntry entry, String userDisplayName, Map<String, Integer> amounts) {
+  public InvoiceDTO(InvoiceEntry entry, String userDisplayName,
+      List<InvoiceAmountMapping> amounts) {
     id = entry.getId();
     userId = entry.getUserId();
     this.userDisplayName = userDisplayName;
@@ -30,16 +29,7 @@ public class InvoiceDTO {
     previousInvoiceTimestamp = entry.getPreviousInvoiceTimestamp();
     isMailed = entry.isMailed();
     isPublished = entry.isPublished();
-
-    List<AmountMapping> amountsList = new ArrayList<>();
-    for (String k : amounts.keySet()) {
-      amountsList.add(new AmountMapping(k, amounts.get(k)));
-    }
-    this.amounts = amountsList;
-  }
-
-  public record AmountMapping(String itemId, int amount) {
-    // Needed for JSON-List
+    this.amounts = amounts;
   }
 
 }

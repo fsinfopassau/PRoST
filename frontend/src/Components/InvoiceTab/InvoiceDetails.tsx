@@ -22,11 +22,7 @@ export function InvoiceDetails(props: { invoice: Invoice }) {
   }, []);
 
   function getPrice(amount: Amount): string {
-    const singlePrice = getItem(amount)?.price;
-    if (singlePrice) {
-      return formatMoney(-amount.amount * singlePrice);
-    }
-    return "~";
+    return formatMoney(-amount.amount * amount.singeItemPrice);
   }
 
   function getItem(amount: Amount): ShopItem | undefined {
@@ -54,7 +50,7 @@ export function InvoiceDetails(props: { invoice: Invoice }) {
                 </th>
                 <th className="">{amount.amount}</th>
                 <th className="">x</th>
-                <th className="">{formatMoney(getItem(amount)?.price)}</th>
+                <th className="">{formatMoney(amount.singeItemPrice)}</th>
                 <th className="icon">
                   <div>
                     <ThickArrowRightIcon />

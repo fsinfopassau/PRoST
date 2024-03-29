@@ -41,17 +41,17 @@ public class ShopHistoryService {
         Optional<KdvUser> userO = userRepository.findById(entry.getUserId());
         Optional<ShopItem> itemO = itemRepository.findById(entry.getItemId());
 
-        if (userO.isPresent() && itemO.isPresent()) {
-          String userDisplayName = userO.get().getDisplayName();
-          String itemDisplayName = itemO.get().getDisplayName();
+        String userDisplayName =
+            userO.isPresent() ? userO.get().getDisplayName() : entry.getUserId();
+        String itemDisplayName =
+            itemO.isPresent() ? itemO.get().getDisplayName() : entry.getItemId();
 
-          entryDTOs.add(
-              new ShopItemHistoryEntryDTO(entry.getId(), entry.getUserId(), userDisplayName,
-                  entry.getItemId(), itemDisplayName,
-                  entry.getPrice(),
-                  entry.getAmount(),
-                  entry.getTimestamp()));
-        }
+        entryDTOs.add(
+            new ShopItemHistoryEntryDTO(entry.getId(), entry.getUserId(), userDisplayName,
+                entry.getItemId(), itemDisplayName,
+                entry.getPrice(),
+                entry.getAmount(),
+                entry.getTimestamp()));
       }
     }
     return entryDTOs;

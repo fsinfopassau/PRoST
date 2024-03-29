@@ -13,6 +13,7 @@ export interface Invoice {
 export interface Amount {
   itemId: string;
   amount: number;
+  singeItemPrice: number;
 }
 
 export interface InvoicePage {
