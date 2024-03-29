@@ -97,7 +97,7 @@ public class InvoiceService {
         .map(this::getInvoiceDTO)
         .collect(Collectors.toList());
 
-    return new PageImpl<>(invoiceDTOs, pageable, invoiceDTOs.size());
+    return new PageImpl<>(invoiceDTOs, pageable, entriesPage.getTotalElements());
   }
 
   private InvoiceDTO getInvoiceDTO(InvoiceEntry invoice) {

@@ -392,9 +392,12 @@ export async function getPersonalInvoices(): Promise<InvoicePage | undefined> {
   }
 }
 
-export async function getAllInvoices(): Promise<InvoicePage | undefined> {
+export async function getAllInvoices(page: number, userId: string | undefined, mailed: boolean | undefined): Promise<InvoicePage | undefined> {
+  
+  const params = (userId ? ("&userId="+userId) : "")+(mailed=== undefined ? "" : "&mailed="+(mailed ? "true" : "false"));
+   
   try {
-    const response = await fetch(`${apiUrl}/api/invoice/list`, {
+    const response = await fetch(`${apiUrl}/api/invoice/list?s=20&p=`+page+params, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,

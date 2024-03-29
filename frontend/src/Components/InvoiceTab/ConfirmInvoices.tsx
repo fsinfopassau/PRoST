@@ -3,6 +3,8 @@ import { Invoice } from "../../Types/Invoice";
 import { convertTimestampToTime, formatMoney } from "../../Format";
 import { Link } from "react-router-dom";
 import ScrollDialog from "../Util/ScrollDialog";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { InvoiceDetails } from "./InvoiceDetails";
 
 interface CustomComponentProps {
   dialogTitle: string;
@@ -36,6 +38,19 @@ const ConfirmInvoices: React.FC<PropsWithChildren<CustomComponentProps>> = ({
         <tbody>
           {invoices.map((invoice, index) => (
             <tr key={index}>
+              <th className="icon">
+                <ScrollDialog
+                  title="Rechnung"
+                  trigger={
+                    <div className="green">
+                      <InfoCircledIcon />
+                    </div>
+                  }
+                  onSubmit={() => { }}
+                >
+                  <InvoiceDetails invoice={invoice} />
+                </ScrollDialog>
+              </th>
               <th className="name bold">
                 <Link to={`/stats/users/${invoice.userId}`} className="bold">
                   {invoice.userDisplayName}

@@ -27,16 +27,11 @@ public class UserController {
   private final UserRepository userRepository;
 
   private final UserService userService;
-  private final InvoiceService invoiceService;
-  private final ShopHistoryService shopHistoryService;
 
   @Autowired
-  public UserController(UserRepository userRepository, UserService userService,
-      InvoiceService invoiceService, ShopHistoryService shopHistoryService) {
+  public UserController(UserRepository userRepository, UserService userService) {
     this.userRepository = userRepository;
     this.userService = userService;
-    this.invoiceService = invoiceService;
-    this.shopHistoryService = shopHistoryService;
   }
 
   /**
