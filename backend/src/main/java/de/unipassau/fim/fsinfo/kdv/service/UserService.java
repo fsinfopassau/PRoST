@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -30,6 +31,7 @@ public class UserService {
     return matcher.matches();
   }
 
+  @Transactional
   public Optional<KdvUser> createUser(String userName, String displayName, String email) {
 
     if (users.findById(userName).isPresent()) {

@@ -79,11 +79,4 @@ public class InvoiceController {
         .orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
-  @PostMapping("/publish")
-  public ResponseEntity<List<Long>> publish(@RequestBody List<Long> invoiceIds) {
-    Optional<List<Long>> sentInvoices = invoiceService.publish(invoiceIds);
-    return sentInvoices.map(ResponseEntity::ok)
-        .orElseGet(() -> ResponseEntity.badRequest().build());
-  }
-
 }

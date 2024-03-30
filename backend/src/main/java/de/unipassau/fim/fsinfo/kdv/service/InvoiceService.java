@@ -24,6 +24,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class InvoiceService {
@@ -117,29 +118,6 @@ public class InvoiceService {
     return new InvoiceDTO(invoice, userName, getItemAmounts(shopEntries));
   }
 
-  public Optional<List<Long>> publish(List<Long> invoiceIds) {
-    if (invoiceIds == null || invoiceIds.isEmpty()) {
-      return Optional.empty();
-    }
-
-    List<Long> successful = new ArrayList<>();
-    for (Long id : invoiceIds) {
-      Optional<InvoiceEntry> invoiceO = invoiceRepository.findById(id);
-      if (invoiceO.isEmpty()) {
-        continue;
-      }
-
-      InvoiceEntry invoice = invoiceO.get();
-      if (!invoice.isPublished()) {
-        invoice.setPublished(true);
-        invoiceRepository.save(invoice);
-        successful.add(id);
-      }
-    }
-
-    return Optional.of(successful);
-  }
-
   public Optional<List<Long>> mailInvoices(List<Long> invoiceIds) {
     if (invoiceIds == null || invoiceIds.isEmpty()) {
       return Optional.empty();
@@ -176,6 +154,7 @@ public class InvoiceService {
     return Optional.of(successfulSends);
   }
 
+  @Transactional
   public Optional<List<String>> createInvoices(List<String> userIds) {
     if (userIds == null || userIds.isEmpty()) {
       return Optional.empty();
@@ -230,6 +209,7 @@ public class InvoiceService {
     return Optional.of(getInvoiceDTO(invoice));
   }
 
+  @Transactional
   public Optional<List<Long>> delete(List<Long> invoiceIds) {
 
     if (invoiceIds == null || invoiceIds.isEmpty()) {

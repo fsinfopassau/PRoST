@@ -11,6 +11,7 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -38,6 +39,7 @@ public class FileStorageService {
     }
   }
 
+  @Transactional
   public boolean saveItemPicture(@NonNull ShopItem item, @NonNull MultipartFile file)
       throws IOException {
     if (file.getContentType() != null && isValidImageType(file)) {

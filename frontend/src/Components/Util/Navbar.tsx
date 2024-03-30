@@ -1,6 +1,5 @@
 import {
   BarChartIcon,
-  CardStackPlusIcon,
   CookieIcon,
   FileTextIcon,
   GearIcon,
@@ -75,13 +74,6 @@ export function Navbar(props: { switchTheme: () => void }) {
                   onClick={() => tabUpdate("invoices")}
                 >
                   <FileTextIcon />
-                </TabsTrigger>
-                <TabsTrigger
-                  value="payment"
-                  className="TabsTrigger"
-                  onClick={() => tabUpdate("payments")}
-                >
-                  <CardStackPlusIcon />
                 </TabsTrigger>
                 <TabsTrigger
                   value="settings"

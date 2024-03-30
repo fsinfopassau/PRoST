@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ShopService {
@@ -29,6 +30,7 @@ public class ShopService {
     this.userRepository = userRepository;
   }
 
+  @Transactional
   public boolean consume(String itemId, String userId, int amount) {
     Optional<ShopItem> itemO = itemRepository.findById(itemId);
     Optional<KdvUser> userO = userRepository.findById(userId);

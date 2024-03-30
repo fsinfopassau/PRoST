@@ -41,7 +41,6 @@ public class WebConfig implements WebMvcConfigurer {
 
   public static final String[] KIOSK_SPACE = {
       "/api/user/info",
-      "/api/user/list",
       "/api/history/**",
   };
 
@@ -49,6 +48,7 @@ public class WebConfig implements WebMvcConfigurer {
       "/api/user/**",
       "/api/shop/**",
       "/api/invoice/**",
+      "/api/transactions/**",
   };
 
   @Autowired

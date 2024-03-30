@@ -223,13 +223,16 @@ export async function getHistory(
   amount: number
 ): Promise<ShopHistoryEntry[] | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/history/last?n=${amount}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Basic ${getEncodedCredentials()}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${apiUrl}/api/history/shop/last?n=${amount}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${getEncodedCredentials()}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       return undefined;
@@ -244,7 +247,7 @@ export async function getHistory(
 export async function getUserHistory(user: User, amount: number) {
   try {
     const response = await fetch(
-      `${apiUrl}/api/history/last?userId=${user.id}&n=${amount}`,
+      `${apiUrl}/api/history/shop/last?userId=${user.id}&n=${amount}`,
       {
         method: "GET",
         headers: {
@@ -266,7 +269,7 @@ export async function getUserHistory(user: User, amount: number) {
 
 export async function getOwnHistory(amount: number) {
   try {
-    const response = await fetch(`${apiUrl}/api/history/me?n=${amount}`, {
+    const response = await fetch(`${apiUrl}/api/history/shop/me?n=${amount}`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -403,18 +406,26 @@ export async function getPersonalInvoices(): Promise<InvoicePage | undefined> {
   }
 }
 
-export async function getAllInvoices(page: number, userId: string | undefined, mailed: boolean | undefined): Promise<InvoicePage | undefined> {
-  
-  const params = (userId ? ("&userId="+userId) : "")+(mailed=== undefined ? "" : "&mailed="+(mailed ? "true" : "false"));
-   
+export async function getAllInvoices(
+  page: number,
+  userId: string | undefined,
+  mailed: boolean | undefined
+): Promise<InvoicePage | undefined> {
+  const params =
+    (userId ? "&userId=" + userId : "") +
+    (mailed === undefined ? "" : "&mailed=" + (mailed ? "true" : "false"));
+
   try {
-    const response = await fetch(`${apiUrl}/api/invoice/list?s=20&p=`+page+params, {
-      method: "GET",
-      headers: {
-        Authorization: `Basic ${getEncodedCredentials()}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${apiUrl}/api/invoice/list?s=20&p=` + page + params,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${getEncodedCredentials()}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       return undefined;

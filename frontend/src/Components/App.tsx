@@ -15,7 +15,6 @@ import { InvoiceTab } from "./InvoiceTab/InvoiceTab";
 import { RootTab } from "./RootTab";
 import { UserSettings } from "./SettingsTab/UserSettings";
 import { PersonalInvoiceView } from "./PersonalView/PersonalInvoiceView";
-import { Payments } from "./Payments/Payments";
 
 const stylesAvailable = ["purple", "blue"];
 
@@ -79,7 +78,6 @@ export function App() {
                 />
                 <Route path="/me/invoices" element={<PersonalInvoiceView />} />
                 <Route path="/invoices" element={<InvoiceTab />} />
-                <Route path="/payments" element={<Payments />} />
                 <Route path="/shop/:userId" element={<ItemSelection />} />
                 <Route
                   path="/shop/:userId/:itemId"
