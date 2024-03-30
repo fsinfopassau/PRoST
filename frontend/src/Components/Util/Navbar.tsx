@@ -1,5 +1,6 @@
 import {
   BarChartIcon,
+  CardStackPlusIcon,
   CookieIcon,
   FileTextIcon,
   GearIcon,
@@ -69,11 +70,18 @@ export function Navbar(props: { switchTheme: () => void }) {
             {isAdmin() ? (
               <>
                 <TabsTrigger
-                  value="invoice"
+                  value="invoices"
                   className="TabsTrigger"
-                  onClick={() => tabUpdate("invoice")}
+                  onClick={() => tabUpdate("invoices")}
                 >
                   <FileTextIcon />
+                </TabsTrigger>
+                <TabsTrigger
+                  value="payment"
+                  className="TabsTrigger"
+                  onClick={() => tabUpdate("payments")}
+                >
+                  <CardStackPlusIcon />
                 </TabsTrigger>
                 <TabsTrigger
                   value="settings"
@@ -105,9 +113,9 @@ export function Navbar(props: { switchTheme: () => void }) {
                   <CookieIcon />
                 </TabsTrigger>
                 <TabsTrigger
-                  value="invoice"
+                  value="invoices"
                   className="TabsTrigger"
-                  onClick={() => tabUpdate("me/invoice")}
+                  onClick={() => tabUpdate("me/invoices")}
                 >
                   <FileTextIcon />
                 </TabsTrigger>

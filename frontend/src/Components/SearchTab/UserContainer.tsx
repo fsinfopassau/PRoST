@@ -20,14 +20,15 @@ export function UserContainer() {
 
   function filter(users: User[]): User[] {
     if (searchValue.trim().length === 0) {
-      return users;
+      return users.filter(user => user.enabled === true);
     }
 
     const fuse = new Fuse(users, {
       keys: ['id', 'displayName']
     })
+    const results = fuse.search(searchValue).map(result => result.item);
 
-    return fuse.search(searchValue).map(result => result.item);
+    return results.filter(user => user.enabled === true);
   }
 
   return (
