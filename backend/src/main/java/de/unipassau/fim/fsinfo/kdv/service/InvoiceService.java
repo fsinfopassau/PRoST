@@ -236,7 +236,7 @@ public class InvoiceService {
       return Optional.empty();
     }
 
-    List<Long> successfulSends = new ArrayList<>();
+    List<Long> successfulRemovals = new ArrayList<>();
 
     for (Long id : invoiceIds) {
       Optional<InvoiceEntry> invoice = invoiceRepository.findById(id);
@@ -250,11 +250,29 @@ public class InvoiceService {
         continue;
       }
 
+      Optional<InvoiceEntry> newer = getNewerEntry(invoice.get());
+
+      if (newer.isPresent()) {
+        InvoiceEntry newerEntry = newer.get();
+        newerEntry.setPreviousInvoiceTimestamp(invoice.get().getPreviousInvoiceTimestamp());
+        invoiceRepository.save(newerEntry);
+      }
+
       invoiceRepository.delete(invoice.get());
-      successfulSends.add(id);
+      successfulRemovals.add(id);
     }
 
-    return Optional.of(successfulSends);
+    return Optional.of(successfulRemovals);
+  }
+
+  private Optional<InvoiceEntry> getNewerEntry(InvoiceEntry entry) {
+    List<InvoiceEntry> entries = invoiceRepository.findByUserIdAndTimestampGreaterThanOrderByTimestampAsc(
+        entry.getUserId(),
+        entry.getTimestamp());
+    if (entries.isEmpty()) {
+      return Optional.empty();
+    }
+    return Optional.of(entries.get(0));
   }
 
   /**

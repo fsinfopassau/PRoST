@@ -30,4 +30,7 @@ public interface InvoiceRepository extends JpaRepository<InvoiceEntry, Long> {
 
   Page<InvoiceEntry> findByMailedTrue(Pageable pageable);
 
+  List<InvoiceEntry> findByUserIdAndTimestampGreaterThanOrderByTimestampAsc(String userId,
+      Long startDate);
+
 }
