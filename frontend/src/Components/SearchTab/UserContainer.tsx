@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { User } from "../../Types/User";
 import { UserBox } from "./UserSelectionDisplay";
 import { getAllUsers } from "../../Queries";
+import Fuse from 'fuse.js';
 
 export function UserContainer() {
   const [searchValue, setSearchValue] = useState("");
@@ -17,25 +18,16 @@ export function UserContainer() {
       });
   }, []);
 
-  function filter(users: User[], useFuzzy: boolean): User[] {
-    const escapedSearch = searchValue.replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&"); // Escape special regex characters
-
-    const result = users.filter(
-      (user) =>
-        // Case-insensitive regex
-        new RegExp(escapedSearch, "i").test(user.displayName) && user.enabled
-    );
-
-    if (useFuzzy) {
-      // fuzzy
-      const fuzzyRegex = escapedSearch.split("").join(".*");
-      return users.filter(
-        (user) =>
-          new RegExp(fuzzyRegex, "i").test(user.displayName) && user.enabled
-      );
+  function filter(users: User[]): User[] {
+    if (searchValue.trim().length === 0) {
+      return users;
     }
 
-    return result;
+    const fuse = new Fuse(users, {
+      keys: ['id', 'displayName']
+    })
+
+    return fuse.search(searchValue).map(result => result.item);
   }
 
   return (
@@ -51,7 +43,7 @@ export function UserContainer() {
         {users === undefined ? (
           <></>
         ) : (
-          filter(users, true).map((user, index) => (
+          filter(users).map((user, index) => (
             <UserBox key={index} user={user} />
           ))
         )}
