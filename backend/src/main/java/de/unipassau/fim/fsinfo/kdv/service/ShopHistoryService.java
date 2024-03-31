@@ -57,12 +57,19 @@ public class ShopHistoryService {
     return entryDTOs;
   }
 
-  public List<ShopItemHistoryEntryDTO> getLastUserHistory(Integer n, String userId) {
-    if (n == null) {
-      return getDTO(historyRepository.findAll(desc));
+  public Optional<List<ShopItemHistoryEntryDTO>> getLastUserHistory(Integer n, String userId) {
+
+    Optional<KdvUser> user = userRepository.findById(userId);
+    if (user.isEmpty()) {
+      return Optional.empty();
     }
+
+    if (n == null) {
+      return Optional.of(getDTO(historyRepository.findAll(desc)));
+    }
+
     Pageable pageable = PageRequest.of(0, n, desc);
-    return getDTO(historyRepository.findByUserIdEquals(userId, pageable));
+    return Optional.of(getDTO(historyRepository.findByUserIdEquals(userId, pageable)));
   }
 
   public List<ShopItemHistoryEntryDTO> getLastHistory(Integer n) {

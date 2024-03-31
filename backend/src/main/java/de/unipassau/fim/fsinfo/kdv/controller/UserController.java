@@ -1,10 +1,7 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
-import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.security.CustomUserDetailsContextMapper.CustomUserDetails;
-import de.unipassau.fim.fsinfo.kdv.service.InvoiceService;
-import de.unipassau.fim.fsinfo.kdv.service.ShopHistoryService;
 import de.unipassau.fim.fsinfo.kdv.service.UserService;
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,13 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/user")
 public class UserController {
 
-  private final UserRepository userRepository;
-
   private final UserService userService;
 
   @Autowired
-  public UserController(UserRepository userRepository, UserService userService) {
-    this.userRepository = userRepository;
+  public UserController(UserService userService) {
     this.userService = userService;
   }
 
@@ -41,21 +35,17 @@ public class UserController {
    */
   @GetMapping("/info")
   public ResponseEntity<List<KdvUser>> list(@RequestParam(required = false) String id) {
-    if (id == null) {
-      return ResponseEntity.ok(userRepository.findAll());
-    } else {
-      Optional<KdvUser> user = userRepository.findById(id);
-      return user.map(kdvUser -> ResponseEntity.ok(List.of(kdvUser)))
-          .orElseGet(() -> ResponseEntity.badRequest().build());
-    }
+    return userService.info(id).map(ResponseEntity::ok)
+        .orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
   @GetMapping("/me")
   public ResponseEntity<KdvUser> me(Authentication authentication) {
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-    Optional<KdvUser> user = userRepository.findById(userDetails.getUsername());
-    return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
+    Optional<List<KdvUser>> users = userService.info(userDetails.getUsername());
+    return users.map(kdvUsers -> ResponseEntity.ok(kdvUsers.get(0)))
+        .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   @PostMapping("/create")
@@ -69,92 +59,50 @@ public class UserController {
   }
 
   @DeleteMapping("/delete")
-  public ResponseEntity<KdvUser> delete(@RequestParam String id) {
-    Optional<KdvUser> user = userRepository.findById(id);
-
-    if (user.isPresent()) {
-      userRepository.delete(user.get());
-      return ResponseEntity.ok(user.get());
+  public ResponseEntity<String> delete(@RequestParam String id) {
+    if (userService.delete(id)) {
+      return ResponseEntity.ok().build();
     }
-
     return ResponseEntity.badRequest().build();
   }
 
   @PostMapping("/name")
   public ResponseEntity<String> name(@RequestParam String id, @RequestParam String value) {
-    Optional<KdvUser> user = userRepository.findById(id);
-
-    try {
-      if (user.isPresent()) {
-        user.get().setDisplayName(value);
-        userRepository.save(user.get());
-        return ResponseEntity.ok().build();
-      }
-    } catch (NumberFormatException e) {
-      return ResponseEntity.badRequest().build();
+    if (userService.rename(id, value)) {
+      return ResponseEntity.ok().build();
     }
-
     return ResponseEntity.badRequest().build();
   }
 
   @PostMapping("/email")
   public ResponseEntity<String> email(@RequestParam String id, @RequestParam String value) {
-    Optional<KdvUser> user = userRepository.findById(id);
-
-    try {
-      if (user.isPresent() && UserService.isValidEmail(value)) {
-        user.get().setEmail(value);
-        userRepository.save(user.get());
-        return ResponseEntity.ok().build();
-      }
-    } catch (NumberFormatException e) {
-      return ResponseEntity.badRequest().build();
+    if (userService.setEmail(id, value)) {
+      return ResponseEntity.ok().build();
     }
-
     return ResponseEntity.badRequest().build();
   }
 
   @PostMapping("/balance")
   public ResponseEntity<BigDecimal> balance(@RequestParam String id, @RequestParam String value) {
-    Optional<KdvUser> user = userRepository.findById(id);
-
-    try {
-      BigDecimal d = new BigDecimal(value);
-      if (user.isPresent()) {
-        user.get().setBalance(d);
-        userRepository.save(user.get());
-        return ResponseEntity.ok(user.get().getBalance());
-      }
-    } catch (NumberFormatException e) {
-      return ResponseEntity.badRequest().build();
+    if (userService.setBalance(id, value)) {
+      return ResponseEntity.ok().build();
     }
-
     return ResponseEntity.badRequest().build();
   }
 
   @PostMapping("/enable")
   public ResponseEntity<String> enable(@RequestParam String id) {
-    Optional<KdvUser> user = userRepository.findById(id);
-
-    if (user.isPresent()) {
-      user.get().setEnabled(true);
-      userRepository.save(user.get());
+    if (userService.setEnabled(id, true)) {
       return ResponseEntity.ok().build();
     }
-
     return ResponseEntity.badRequest().build();
   }
 
   @PostMapping("/disable")
   public ResponseEntity<String> disable(@RequestParam String id) {
-    Optional<KdvUser> user = userRepository.findById(id);
-
-    if (user.isPresent()) {
-      user.get().setEnabled(false);
-      userRepository.save(user.get());
+    if (userService.setEnabled(id, false)) {
       return ResponseEntity.ok().build();
     }
-
     return ResponseEntity.badRequest().build();
   }
 

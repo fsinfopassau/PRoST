@@ -1,8 +1,6 @@
 package de.unipassau.fim.fsinfo.kdv.controller;
 
-import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.dto.ShopItemHistoryEntryDTO;
-import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.kdv.security.CustomUserDetailsContextMapper.CustomUserDetails;
 import de.unipassau.fim.fsinfo.kdv.service.ShopHistoryService;
 import java.util.List;
@@ -20,13 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class ShopHistoryController {
 
   private final ShopHistoryService shopHistoryService;
-  private final UserRepository userRepository;
 
   @Autowired
-  public ShopHistoryController(ShopHistoryService shopHistoryService,
-      UserRepository userRepository) {
+  public ShopHistoryController(ShopHistoryService shopHistoryService) {
     this.shopHistoryService = shopHistoryService;
-    this.userRepository = userRepository;
   }
 
   @GetMapping("/last")
@@ -36,7 +31,10 @@ public class ShopHistoryController {
     if (userId == null) {
       return ResponseEntity.ok(shopHistoryService.getLastHistory(n));
     } else {
-      return ResponseEntity.ok(shopHistoryService.getLastUserHistory(n, userId));
+      Optional<List<ShopItemHistoryEntryDTO>> list = shopHistoryService.getLastUserHistory(n,
+          userId);
+
+      return list.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
   }
 
@@ -45,11 +43,10 @@ public class ShopHistoryController {
       @RequestParam(required = false) Integer n, Authentication authentication) {
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-    Optional<KdvUser> user = userRepository.findById(userDetails.getUsername());
-    if (user.isPresent()) {
-      return ResponseEntity.ok(shopHistoryService.getLastUserHistory(n, userDetails.getUsername()));
-    }
-    return ResponseEntity.notFound().build();
+    Optional<List<ShopItemHistoryEntryDTO>> list = shopHistoryService.getLastUserHistory(n,
+        userDetails.getUsername());
+
+    return list.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 
   }
 }

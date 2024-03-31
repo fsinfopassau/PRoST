@@ -5,8 +5,10 @@ import { UserSettingCard } from "./UserSettingCard";
 import ScrollDialog from "../Util/ScrollDialog";
 import { toast } from "react-toastify";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
+import Fuse from "fuse.js";
 
 export function UserSettings() {
+  const [searchValue, setSearchValue] = useState("");
   const [users, setUsers] = useState<User[]>([]);
   const [newId, setNewId] = useState<string>("");
   const [newName, setNewName] = useState<string>("");
@@ -49,57 +51,80 @@ export function UserSettings() {
     });
   }
 
+  function filter(users: User[]): User[] {
+    if (searchValue.trim().length === 0) {
+      return users.filter((user) => user.enabled === true);
+    }
+
+    const fuse = new Fuse(users, {
+      keys: ["id", "displayName"],
+    });
+    const results = fuse.search(searchValue).map((result) => result.item);
+
+    return results.filter((user) => user.enabled === true);
+  }
+
   return (
     <>
-      <ScrollDialog
-        title="Neuer Nutzer"
-        trigger={
-          <div className="Button icon green">
-            <div className="green">
-              <PlusCircledIcon />
+      <div className="DisplayCard">
+        <div style={{ display: "flex", gap: "1rem" }}>
+          <input
+            type="text"
+            placeholder="Nutzer"
+            className="Input"
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+          <ScrollDialog
+            title="Neuer Nutzer"
+            trigger={
+              <div className="Button icon green">
+                <div className="green">
+                  <PlusCircledIcon />
+                </div>
+              </div>
+            }
+            onSubmit={createUser}
+          >
+            <div
+              style={{
+                padding: "1rem",
+                display: "flex",
+                flexDirection: "column",
+                gap: ".5rem",
+              }}
+            >
+              <div className="DialogDescription">Identifier:</div>
+              <fieldset className="Fieldset">
+                <input
+                  className="Input"
+                  onChange={handleIdChange}
+                  placeholder={"sugmaW"}
+                />
+              </fieldset>
+              <div className="DialogDescription">Name:</div>
+              <fieldset className="Fieldset">
+                <input
+                  className="Input"
+                  onChange={handleNameChange}
+                  placeholder={"Willy Wonka"}
+                />
+              </fieldset>
+              <div className="DialogDescription">E-Mail:</div>
+              <fieldset className="Fieldset">
+                <input
+                  className="Input"
+                  onChange={handleEmailChange}
+                  placeholder={"mail@wonka.de"}
+                />
+              </fieldset>
             </div>
-          </div>
-        }
-        onSubmit={createUser}
-      >
-        <div
-          style={{
-            padding: "1rem",
-            display: "flex",
-            flexDirection: "column",
-            gap: ".5rem",
-          }}
-        >
-          <div className="DialogDescription">Identifier:</div>
-          <fieldset className="Fieldset">
-            <input
-              className="Input"
-              onChange={handleIdChange}
-              placeholder={"sugmaW"}
-            />
-          </fieldset>
-          <div className="DialogDescription">Name:</div>
-          <fieldset className="Fieldset">
-            <input
-              className="Input"
-              onChange={handleNameChange}
-              placeholder={"Willy Wonka"}
-            />
-          </fieldset>
-          <div className="DialogDescription">E-Mail:</div>
-          <fieldset className="Fieldset">
-            <input
-              className="Input"
-              onChange={handleEmailChange}
-              placeholder={"mail@wonka.de"}
-            />
-          </fieldset>
+          </ScrollDialog>
         </div>
-      </ScrollDialog>
-      <div className="CardContainer">
-        {users.map((user, index) => (
-          <UserSettingCard user={user} key={index} onUpdate={reloadUsers} />
-        ))}
+        <div className="CardContainer">
+          {filter(users).map((user, index) => (
+            <UserSettingCard user={user} key={index} onUpdate={reloadUsers} />
+          ))}
+        </div>
       </div>
     </>
   );

@@ -29,7 +29,7 @@ services:
     container_name: KdV-LDAP
     image: bitnami/openldap:latest
     ports:
-      - "389:1389"
+      - "1389:1389"
     networks:
       - kdv
     volumes:

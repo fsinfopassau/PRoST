@@ -2,6 +2,8 @@ package de.unipassau.fim.fsinfo.kdv.service;
 
 import de.unipassau.fim.fsinfo.kdv.data.dao.KdvUser;
 import de.unipassau.fim.fsinfo.kdv.data.repositories.UserRepository;
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,5 +57,79 @@ public class UserService {
     System.out.println("[US] :: " + userName + " :: user-creation succeeded");
     users.save(user);
     return Optional.of(user);
+  }
+
+  public Optional<List<KdvUser>> info(String id) {
+    if (id == null) {
+      return Optional.of(users.findAll());
+    } else {
+      Optional<KdvUser> user = users.findById(id);
+      if (user.isPresent()) {
+        return Optional.of(List.of(user.get()));
+      }
+    }
+    return Optional.empty();
+  }
+
+  public boolean delete(String id) {
+    Optional<KdvUser> user = users.findById(id);
+
+    if (user.isPresent()) {
+      users.delete(user.get());
+      return true;
+    }
+    return false;
+  }
+
+  public boolean rename(String id, String name) {
+    Optional<KdvUser> user = users.findById(id);
+
+    if (user.isPresent()) {
+      KdvUser u = user.get();
+      u.setDisplayName(name);
+      users.save(u);
+      return true;
+    }
+    return false;
+  }
+
+  public boolean setEmail(String id, String email) {
+    Optional<KdvUser> user = users.findById(id);
+
+    if (user.isPresent() && isValidEmail(email)) {
+      KdvUser u = user.get();
+      u.setEmail(email);
+      users.save(u);
+      return true;
+    }
+    return false;
+  }
+
+  public boolean setBalance(String id, String balance) {
+    Optional<KdvUser> user = users.findById(id);
+
+    try {
+      if (user.isPresent()) {
+        KdvUser u = user.get();
+        u.setBalance(new BigDecimal(balance));
+        users.save(u);
+        return true;
+      }
+    } catch (NumberFormatException e) {
+      return false;
+    }
+    return false;
+  }
+
+  public boolean setEnabled(String id, boolean value) {
+    Optional<KdvUser> user = users.findById(id);
+
+    if (user.isPresent()) {
+      KdvUser u = user.get();
+      u.setEnabled(value);
+      users.save(u);
+      return true;
+    }
+    return false;
   }
 }

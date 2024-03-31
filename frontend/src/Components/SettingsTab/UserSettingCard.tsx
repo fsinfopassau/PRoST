@@ -15,6 +15,7 @@ import { formatMoney } from "../../Format";
 import { changeUser, deleteUser, enableUser } from "../../Queries";
 import ScrollDialog from "../Util/ScrollDialog";
 import { UserSummaryCard } from "../StatisticsTab/UserSummaryCard";
+import { Link } from "react-router-dom";
 
 export function UserSettingCard(props: { user: User; onUpdate: () => void }) {
   const { user, onUpdate } = props;
@@ -79,7 +80,7 @@ export function UserSettingCard(props: { user: User; onUpdate: () => void }) {
     <div className="DisplayCard">
       <div className="SpreadContainer">
         <h3 className="SpreadContainer bold">
-          {user.id}
+          <Link to={`/stats/users/${user.id}`}>{user.id}</Link>
           <Switch
             className="SwitchRoot"
             defaultChecked={user.enabled}
