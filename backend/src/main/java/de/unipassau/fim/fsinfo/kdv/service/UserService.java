@@ -105,6 +105,23 @@ public class UserService {
     return false;
   }
 
+  public boolean transaction(String id, String balance) {
+    Optional<KdvUser> user = users.findById(id);
+
+    try {
+      if (user.isPresent()) {
+        KdvUser u = user.get();
+        u.setBalance(u.getBalance().add(new BigDecimal(balance).abs()));
+        users.save(u);
+        return true;
+      }
+    } catch (NumberFormatException e) {
+      return false;
+    }
+    return false;
+  }
+
+  @Transactional
   public boolean setBalance(String id, String balance) {
     Optional<KdvUser> user = users.findById(id);
 

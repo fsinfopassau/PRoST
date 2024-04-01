@@ -4,8 +4,9 @@ import { createNewUser, getAllUsers } from "../../Queries";
 import { UserSettingCard } from "./UserSettingCard";
 import ScrollDialog from "../Util/ScrollDialog";
 import { toast } from "react-toastify";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
+import { Pencil2Icon, PlusCircledIcon } from "@radix-ui/react-icons";
 import Fuse from "fuse.js";
+import { Separator } from "@radix-ui/react-separator";
 
 export function UserSettings() {
   const [searchValue, setSearchValue] = useState("");
@@ -13,8 +14,17 @@ export function UserSettings() {
   const [newId, setNewId] = useState<string>("");
   const [newName, setNewName] = useState<string>("");
   const [newEmail, setNewEmail] = useState<string>("");
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(reloadUsers, []);
+
+  function toggleEdit() {
+    if (editMode) {
+      setEditMode(false);
+    } else {
+      setEditMode(true);
+    }
+  }
 
   function reloadUsers() {
     getAllUsers().then((users) => {
@@ -119,10 +129,23 @@ export function UserSettings() {
               </fieldset>
             </div>
           </ScrollDialog>
+
+          <div
+            className={editMode ? "Button orange" : "Button"}
+            onClick={toggleEdit}
+          >
+            <Pencil2Icon />
+          </div>
         </div>
+        <Separator className="Separator" />
         <div className="CardContainer">
           {filter(users).map((user, index) => (
-            <UserSettingCard user={user} key={index} onUpdate={reloadUsers} />
+            <UserSettingCard
+              user={user}
+              key={index}
+              editMode={editMode}
+              onUpdate={reloadUsers}
+            />
           ))}
         </div>
       </div>

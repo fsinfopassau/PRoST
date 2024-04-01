@@ -90,6 +90,15 @@ public class UserController {
     return ResponseEntity.badRequest().build();
   }
 
+  @PostMapping("/transaction")
+  public ResponseEntity<BigDecimal> transaction(@RequestParam String id,
+      @RequestParam String value) {
+    if (userService.transaction(id, value)) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
   @PostMapping("/enable")
   public ResponseEntity<String> enable(@RequestParam String id) {
     if (userService.setEnabled(id, true)) {
