@@ -38,12 +38,12 @@ export function UserSettingCard(props: {
             user.id +
             '" gutgeschrieben!'
         );
+        setTransactionAmount("");
+        onUpdate();
       } else {
         toast.error("Transaktion fehlgeschlagen!");
       }
     });
-    setTransactionAmount("");
-    onUpdate();
   }
 
   function handleKeyDown(event: React.KeyboardEvent) {
