@@ -71,6 +71,7 @@ public class UserService {
     return Optional.empty();
   }
 
+  @Transactional
   public boolean delete(String id) {
     Optional<KdvUser> user = users.findById(id);
 
@@ -81,6 +82,7 @@ public class UserService {
     return false;
   }
 
+  @Transactional
   public boolean rename(String id, String name) {
     Optional<KdvUser> user = users.findById(id);
 
@@ -93,6 +95,7 @@ public class UserService {
     return false;
   }
 
+  @Transactional
   public boolean setEmail(String id, String email) {
     Optional<KdvUser> user = users.findById(id);
 
@@ -105,6 +108,7 @@ public class UserService {
     return false;
   }
 
+  @Transactional
   public boolean transaction(String id, String balance) {
     Optional<KdvUser> user = users.findById(id);
 
@@ -138,6 +142,7 @@ public class UserService {
     return false;
   }
 
+  @Transactional
   public boolean setEnabled(String id, boolean value) {
     Optional<KdvUser> user = users.findById(id);
 

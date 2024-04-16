@@ -118,6 +118,7 @@ public class InvoiceService {
     return new InvoiceDTO(invoice, userName, getItemAmounts(shopEntries));
   }
 
+  @Transactional
   public Optional<List<Long>> mailInvoices(List<Long> invoiceIds) {
     if (invoiceIds == null || invoiceIds.isEmpty()) {
       return Optional.empty();

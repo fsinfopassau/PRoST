@@ -22,7 +22,7 @@ public class ShopHistoryService {
   private final UserRepository userRepository;
   private final ShopItemRepository itemRepository;
   private final ShopItemHistoryRepository historyRepository;
-  private final Sort desc;
+  private final Sort desc = Sort.by("timestamp").descending();
 
   @Autowired
   public ShopHistoryService(UserRepository userRepository, ShopItemRepository itemRepository,
@@ -30,7 +30,6 @@ public class ShopHistoryService {
     this.userRepository = userRepository;
     this.itemRepository = itemRepository;
     this.historyRepository = historyRepository;
-    desc = Sort.by("timestamp").descending();
   }
 
   private List<ShopItemHistoryEntryDTO> getDTO(Iterable<ShopItemHistoryEntry> entryList) {
