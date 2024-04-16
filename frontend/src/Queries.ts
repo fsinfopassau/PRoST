@@ -197,6 +197,18 @@ export async function getAllShopItems(): Promise<ShopItem[] | undefined> {
   }
 }
 
+export async function createNewShopItem( item : ShopItem): Promise<boolean> {
+  const result = await fetch(`${apiUrl}/api/shop/settings/create`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${getEncodedCredentials()}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(item),
+  });
+  return result.ok;
+}
+
 export async function buyItem(
   userId: string,
   itemId: string,
