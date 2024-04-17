@@ -1,10 +1,14 @@
 import {
   BarChartIcon,
+  CalendarIcon,
   CookieIcon,
+  DragHandleDots1Icon,
+  DragHandleDots2Icon,
   FileTextIcon,
   GearIcon,
   HomeIcon,
   MagnifyingGlassIcon,
+  PersonIcon,
 } from "@radix-ui/react-icons";
 import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -69,6 +73,13 @@ export function Navbar(props: { switchTheme: () => void }) {
             {isAdmin() ? (
               <>
                 <TabsTrigger
+                  value="history"
+                  className="TabsTrigger"
+                  onClick={() => tabUpdate("history")}
+                >
+                  <CalendarIcon />
+                </TabsTrigger>
+                <TabsTrigger
                   value="invoices"
                   className="TabsTrigger"
                   onClick={() => tabUpdate("invoices")}
@@ -76,11 +87,18 @@ export function Navbar(props: { switchTheme: () => void }) {
                   <FileTextIcon />
                 </TabsTrigger>
                 <TabsTrigger
-                  value="settings"
+                  value="users"
                   className="TabsTrigger"
-                  onClick={() => tabUpdate("settings")}
+                  onClick={() => tabUpdate("users")}
                 >
-                  <GearIcon />
+                  <PersonIcon />
+                </TabsTrigger>
+                <TabsTrigger
+                  value="items"
+                  className="TabsTrigger"
+                  onClick={() => tabUpdate("items")}
+                >
+                  <DragHandleDots2Icon />
                 </TabsTrigger>
               </>
             ) : (

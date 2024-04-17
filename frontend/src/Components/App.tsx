@@ -77,7 +77,6 @@ export function App() {
                   element={<RootTab switchTheme={switchTheme} />}
                 />
                 <Route path="/me/invoices" element={<PersonalInvoiceView />} />
-                <Route path="/invoices" element={<InvoiceTab />} />
                 <Route path="/shop/:userId" element={<ItemSelection />} />
                 <Route
                   path="/shop/:userId/:itemId"
@@ -89,9 +88,10 @@ export function App() {
                   path="/stats/users/:userId"
                   element={<UserStatistics />}
                 />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/settings/items" element={<ItemSettings />} />
-                <Route path="/settings/users" element={<UserSettings />} />
+                <Route path="/history" element={<Settings />} />
+                <Route path="/invoices" element={<InvoiceTab />} />
+                <Route path="/items" element={<ItemSettings />} />
+                <Route path="/users" element={<UserSettings />} />
                 <Route path="*" element={<ErrorComponent />} />
               </Routes>
             </div>
