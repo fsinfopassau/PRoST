@@ -41,5 +41,5 @@ npm run dev
   
 Run backend mit LDAP-Container:
 ```bash
-docker build && docker compose up ldap backend
+docker compose up ldap backend --build
 ```

@@ -1,5 +1,6 @@
 package de.unipassau.fim.fsinfo.prost.service;
 
+import de.unipassau.fim.fsinfo.prost.data.TransactionType;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItemHistoryEntry;
@@ -35,22 +36,26 @@ public class ShopService {
   public boolean consume(String itemId, String userId, int amount, String bearerId) {
     Optional<ShopItem> itemO = itemRepository.findById(itemId);
     Optional<ProstUser> userO = userRepository.findById(userId);
+    Optional<ProstUser> bearerUser = userRepository.findById(bearerId);
 
-    if (userO.isEmpty() || itemO.isEmpty()) {
+    if (userO.isEmpty() || itemO.isEmpty() || bearerUser.isEmpty()) {
+      System.out.println(userO + " " + itemO + " " + bearerUser);
       return false;
     }
 
     ProstUser user = userO.get();
+    ProstUser bearer = bearerUser.get();
     ShopItem item = itemO.get();
 
-    if (!item.getEnabled() || !user.getEnabled()) {
+    if (!item.getEnabled() || !user.getEnabled() || !bearer.getEnabled()) {
       return false;
     }
 
     userRepository.save(user);
 
-    Optional<TransactionEntry> transaction = transactionService.buy(user.getId(),
-        item.getPrice().multiply(BigDecimal.valueOf(amount)), bearerId);
+    Optional<TransactionEntry> transaction = transactionService.moneyTransfer(
+        Optional.empty(), user.getId(), bearer.getId(),
+        item.getPrice().multiply(BigDecimal.valueOf(amount)), TransactionType.BUY);
 
     if (transaction.isPresent()) {
       historyRepository.save(

@@ -35,8 +35,11 @@ public class ShopItemHistoryEntry {
   @Column(nullable = false)
   private Long timestamp;
 
-  @OneToOne
+  @OneToOne(optional = false)
   private TransactionEntry transaction;
+
+  @OneToOne(optional = true)
+  private TransactionEntry refundTransaction;
 
   public ShopItemHistoryEntry(TransactionEntry transaction, String itemId,
       BigDecimal itemPrice, int amount) {
@@ -45,5 +48,6 @@ public class ShopItemHistoryEntry {
     this.itemPrice = itemPrice;
     this.amount = amount;
     this.timestamp = Instant.now().toEpochMilli();
+    this.transaction = transaction;
   }
 }

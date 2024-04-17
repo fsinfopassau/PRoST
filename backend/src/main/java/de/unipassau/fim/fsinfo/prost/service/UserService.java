@@ -2,7 +2,6 @@ package de.unipassau.fim.fsinfo.prost.service;
 
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -104,23 +103,6 @@ public class UserService {
       u.setEmail(email);
       users.save(u);
       return true;
-    }
-    return false;
-  }
-
-  @Transactional
-  public boolean setBalance(String id, String balance) {
-    Optional<ProstUser> user = users.findById(id);
-
-    try {
-      if (user.isPresent()) {
-        ProstUser u = user.get();
-        u.setBalance(new BigDecimal(balance));
-        users.save(u);
-        return true;
-      }
-    } catch (NumberFormatException e) {
-      return false;
     }
     return false;
   }

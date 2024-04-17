@@ -13,7 +13,12 @@ import {
 import { Separator } from "@radix-ui/react-separator";
 import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
 import { formatMoney } from "../../Format";
-import { changeUser, deleteUser, enableUser } from "../../Queries";
+import {
+  changeUser,
+  createTransaction,
+  deleteUser,
+  enableUser,
+} from "../../Queries";
 import ScrollDialog from "../Util/ScrollDialog";
 import { UserSummaryCard } from "../StatisticsTab/UserSummaryCard";
 import { Link } from "react-router-dom";
@@ -30,7 +35,7 @@ export function UserSettingCard(props: {
 
   function applyTransaction() {
     console.log(transactionAmount);
-    changeUser(user, transactionAmount, "transaction").then((result) => {
+    createTransaction(user, transactionAmount, "deposit").then((result) => {
       if (result) {
         toast.success(
           formatMoney(Math.abs(Number(transactionAmount))) +
@@ -98,7 +103,7 @@ export function UserSettingCard(props: {
   }
 
   function setBalance(newBalance: string) {
-    changeUser(user, newBalance, "balance").then((result) => {
+    createTransaction(user, newBalance, "change").then((result) => {
       if (result) {
         toast.success("Kontostand geändert.");
         onUpdate();

@@ -50,7 +50,8 @@ public class ShopHistoryService {
                 entry.getItemId(), itemDisplayName,
                 entry.getItemPrice(),
                 entry.getAmount(),
-                entry.getTimestamp()));
+                entry.getTimestamp(),
+                entry.getTransaction()));
       }
     }
     return entryDTOs;

@@ -25,7 +25,7 @@ services:
     networks:
       - kdv
     volumes:
-      - ./kdv-data:/data
+      - ./.data:/data
     restart: on-failure
   ldap:
     container_name: KdV-LDAP

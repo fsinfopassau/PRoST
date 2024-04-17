@@ -138,6 +138,23 @@ export async function deleteUser(user: User): Promise<boolean> {
   return result.ok;
 }
 
+export async function createTransaction(
+  receiver: User,
+  value: string,
+  actionType: string
+): Promise<boolean> {
+  const result = await fetch(
+    `${apiUrl}/api/transaction/${actionType}?id=${receiver.id}&value=${value}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+      },
+    }
+  );
+  return result.ok;
+}
+
 export async function changeUser(
   user: User,
   value: string,
@@ -197,7 +214,7 @@ export async function getAllShopItems(): Promise<ShopItem[] | undefined> {
   }
 }
 
-export async function createNewShopItem( item : ShopItem): Promise<boolean> {
+export async function createNewShopItem(item: ShopItem): Promise<boolean> {
   const result = await fetch(`${apiUrl}/api/shop/settings/create`, {
     method: "POST",
     headers: {

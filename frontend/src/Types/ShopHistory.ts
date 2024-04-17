@@ -1,3 +1,5 @@
+import { Transaction } from "./TransactionEntry";
+
 export interface ShopHistoryEntry {
   id: number;
   userId: string;
@@ -7,4 +9,6 @@ export interface ShopHistoryEntry {
   price: number;
   amount: number;
   timestamp: number;
+  transaction: Transaction;
+  refundTransaction: Transaction;
 }

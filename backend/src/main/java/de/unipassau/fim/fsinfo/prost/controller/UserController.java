@@ -4,7 +4,6 @@ import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.security.CustomUserDetailsContextMapper.CustomUserDetails;
 import de.unipassau.fim.fsinfo.prost.service.TransactionService;
 import de.unipassau.fim.fsinfo.prost.service.UserService;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,24 +79,6 @@ public class UserController {
   @PostMapping("/email")
   public ResponseEntity<String> email(@RequestParam String id, @RequestParam String value) {
     if (userService.setEmail(id, value)) {
-      return ResponseEntity.ok().build();
-    }
-    return ResponseEntity.badRequest().build();
-  }
-
-  @PostMapping("/balance")
-  public ResponseEntity<BigDecimal> balance(@RequestParam String id, @RequestParam String value) {
-    if (userService.setBalance(id, value)) {
-      return ResponseEntity.ok().build();
-    }
-    return ResponseEntity.badRequest().build();
-  }
-
-  @PostMapping("/deposit")
-  public ResponseEntity<BigDecimal> transaction(@RequestParam String id,
-      @RequestParam String value, Authentication authentication) {
-    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-    if (transactionService.deposit(id, value, userDetails.getUsername()).isPresent()) {
       return ResponseEntity.ok().build();
     }
     return ResponseEntity.badRequest().build();

@@ -1,6 +1,7 @@
 package de.unipassau.fim.fsinfo.prost.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import de.unipassau.fim.fsinfo.prost.data.dao.TransactionEntry;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 
@@ -16,5 +17,6 @@ public class ShopItemHistoryEntryDTO {
   private BigDecimal itemPrice;
   private int amount;
   private Long timestamp;
+  private TransactionEntry transaction;
 
 }

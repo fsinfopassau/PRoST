@@ -33,19 +33,19 @@ public class TransactionEntry {
   private TransactionType transactionType;
 
   @Column(nullable = false)
-  private BigDecimal price;
+  private BigDecimal amount;
 
   @Column(nullable = false)
   private Long timestamp;
 
   public TransactionEntry(String senderId, String receiverId, String bearerId,
       TransactionType type,
-      BigDecimal price) {
+      BigDecimal amount) {
     this.bearerId = bearerId;
     this.receiverId = receiverId;
     this.senderId = senderId;
     this.transactionType = type;
-    this.price = price;
+    this.amount = amount;
     this.timestamp = Instant.now().toEpochMilli();
   }
 }

@@ -94,17 +94,19 @@ public class ShopController {
 
     if (!permitted && roles.contains(
         UserAccessRole.FSINFO)) { // Check if user is buying for himself
-      permitted = userId.equals(userDetails.getUsername());
+      if (!userId.equals(userDetails.getUsername())) {
+        // 🙃🫖
+        return ResponseEntity.status(418)
+            .body("I'm a teapot, and you're not an admin or kiosk! \uD83D\uDE43");
+      }
     }
 
     if (permitted && shopService.consume(id, userId,
         (n == null ? 1 : n), userDetails.getUsername())) {
       return ResponseEntity.ok().build();
     }
+    return ResponseEntity.badRequest().build();
 
-    // 🙃🫖
-    return ResponseEntity.status(418)
-        .body("I'm a teapot, and you're not an admin or kiosk! \uD83D\uDE43");
   }
 
   @PostMapping("/settings/create")
