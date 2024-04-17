@@ -1,16 +1,15 @@
-# KdV
+# PRoST
 
-(*Kasse des Vertrauens*)
+(***P**raktisches **R**echnungssystem für **o**ptimale **S**pesen- und **T**rinkkultur*)
 
 Ein digitales Kaffeekassen-System
 der [Fachschaft für Informatik und Mathematik der Universität Passau](https://fsinfo.fim.uni-passau.de/).
 
-## Deployment
+## Deploy
 
 Docker-Compose-Environment:
 
 - VITE_API_URL: URL für die Backend-API
-- MASTER_PASSWORD: Master Password for every user
 - /data : Ordner für Datenbank und Item-Bilder
 
 **Build & Run Compose**:
@@ -30,11 +29,17 @@ docker compose up
 - ESLint addon
 
 ```bash
-cd frontend && npm install && npm run dev
+cd frontend
+npm install
+npm run dev
 ```
 
 **Backend**:
 
 - [Google-Java-Codestyle](https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml)
-    - Intellij: Settings > Editor > Codestyle > Scheme
-- Run backend mit Maven...
+    - Intellij: Settings > Editor > Codestyle > Scheme 
+  
+Run backend mit LDAP-Container:
+```bash
+docker build && docker compose up ldap backend
+```
