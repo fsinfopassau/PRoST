@@ -15,6 +15,7 @@ import { InvoiceTab } from "./InvoiceTab/InvoiceTab";
 import { RootTab } from "./RootTab";
 import { UserSettings } from "./SettingsTab/UserSettings";
 import { PersonalInvoiceView } from "./PersonalView/PersonalInvoiceView";
+import { PersonalHistoryView } from "./PersonalView/PersonalHistoryView";
 
 const stylesAvailable = ["purple", "blue"];
 
@@ -77,6 +78,7 @@ export function App() {
                   element={<RootTab switchTheme={switchTheme} />}
                 />
                 <Route path="/me/invoices" element={<PersonalInvoiceView />} />
+                <Route path="/me/history" element={<PersonalHistoryView />} />
                 <Route path="/shop/:userId" element={<ItemSelection />} />
                 <Route
                   path="/shop/:userId/:itemId"

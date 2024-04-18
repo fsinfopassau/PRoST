@@ -184,6 +184,31 @@ export async function getAllTransactions(
   }
 }
 
+export async function getPersonalTransactions(
+  page: number
+): Promise<TransactionPage | undefined> {
+  try {
+    const response = await fetch(
+      `${apiUrl}/api/transaction/me?s=20&p=` + page,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${getEncodedCredentials()}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as TransactionPage;
+  } catch (error) {
+    return undefined;
+  }
+}
+
 export async function changeUser(
   user: User,
   value: string,

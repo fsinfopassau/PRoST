@@ -92,9 +92,12 @@ public class ShopController {
     boolean permitted =
         roles.contains(UserAccessRole.KIOSK) || roles.contains(UserAccessRole.KAFFEEKASSE);
 
-    if (!permitted && roles.contains(
-        UserAccessRole.FSINFO)) { // Check if user is buying for himself
-      if (!userId.equals(userDetails.getUsername())) {
+    Optional<UserAccessRole> highestPermission = authService.getHighestRole(roles);
+
+    if (highestPermission.isPresent() && highestPermission.get().equals(UserAccessRole.FSINFO)) {
+      if (userId.equals(userDetails.getUsername())) {
+        permitted = true;
+      } else {
         // 🙃🫖
         return ResponseEntity.status(418)
             .body("I'm a teapot, and you're not an admin or kiosk! \uD83D\uDE43");

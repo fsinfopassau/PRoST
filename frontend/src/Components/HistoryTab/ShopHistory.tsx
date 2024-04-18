@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ShopHistoryEntry } from "../../Types/ShopHistory";
-import { getHistory } from "../../Queries";
+import { getHistory, getOwnHistory } from "../../Queries";
 import { HistoryEntryDisplay } from "../StatisticsTab/HistoryEntryDisplay";
 import {
   ScrollArea,
@@ -9,13 +9,19 @@ import {
   ScrollAreaViewport,
 } from "@radix-ui/react-scroll-area";
 
-export function ShopHistory() {
+export function ShopHistory(props: { personal: boolean }) {
   const [history, setHistory] = useState<ShopHistoryEntry[]>([]);
 
   useEffect(() => {
-    getHistory(20).then((historyList) => {
-      if (historyList) setHistory(historyList);
-    });
+    if (props.personal) {
+      getOwnHistory(20).then((historyList) => {
+        if (historyList) setHistory(historyList);
+      });
+    } else {
+      getHistory(20).then((historyList) => {
+        if (historyList) setHistory(historyList);
+      });
+    }
   }, []);
 
   return (

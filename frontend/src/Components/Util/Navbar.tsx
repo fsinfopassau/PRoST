@@ -2,10 +2,8 @@ import {
   BarChartIcon,
   CalendarIcon,
   CookieIcon,
-  DragHandleDots1Icon,
   DragHandleDots2Icon,
   FileTextIcon,
-  GearIcon,
   HomeIcon,
   MagnifyingGlassIcon,
   PersonIcon,
@@ -121,6 +119,13 @@ export function Navbar(props: { switchTheme: () => void }) {
                   }}
                 >
                   <CookieIcon />
+                </TabsTrigger>
+                <TabsTrigger
+                  value="history"
+                  className="TabsTrigger"
+                  onClick={() => tabUpdate("me/history")}
+                >
+                  <CalendarIcon />
                 </TabsTrigger>
                 <TabsTrigger
                   value="invoices"

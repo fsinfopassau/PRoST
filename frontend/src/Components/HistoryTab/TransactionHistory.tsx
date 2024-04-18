@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Transaction } from "../../Types/Transaction";
-import { getAllTransactions } from "../../Queries";
+import { getAllTransactions, getPersonalTransactions } from "../../Queries";
 import {
   ScrollArea,
   ScrollAreaScrollbar,
@@ -10,7 +10,7 @@ import {
 import { Separator } from "@radix-ui/react-separator";
 import { TransactionDisplay } from "./TransactionDisplay";
 
-export function TransactionHistory() {
+export function TransactionHistory(props: { personal: boolean }) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [selectedPage, setSelectedPage] = useState(0);
   const [searchValue, setSearchValue] = useState("");
@@ -19,7 +19,7 @@ export function TransactionHistory() {
   const [maxPage, setMaxPages] = useState(3);
 
   useEffect(() => {
-    reloadInvoices();
+    reloadTransactions();
   }, [selectedPage, searchValue]);
 
   useEffect(() => {
@@ -51,16 +51,25 @@ export function TransactionHistory() {
 
   function handleKeyDown(event: React.KeyboardEvent) {
     if (event.key === "Enter") {
-      reloadInvoices();
+      reloadTransactions();
     }
   }
-  function reloadInvoices() {
-    getAllTransactions(selectedPage, searchValue).then((result) => {
-      if (result && result.content) {
-        setTransactions(result.content);
-        setTotalPages(result.totalPages + 1);
-      }
-    });
+  function reloadTransactions() {
+    if (props.personal) {
+      getPersonalTransactions(selectedPage).then((result) => {
+        if (result && result.content) {
+          setTransactions(result.content);
+          setTotalPages(result.totalPages + 1);
+        }
+      });
+    } else {
+      getAllTransactions(selectedPage, searchValue).then((result) => {
+        if (result && result.content) {
+          setTransactions(result.content);
+          setTotalPages(result.totalPages + 1);
+        }
+      });
+    }
   }
   return (
     <ScrollArea className="DisplayCard" style={{ maxWidth: "60rem" }}>

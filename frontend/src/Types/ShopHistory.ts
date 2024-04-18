@@ -6,7 +6,7 @@ export interface ShopHistoryEntry {
   userDisplayName: string;
   itemId: string;
   itemDisplayName: string;
-  price: number;
+  itemPrice: number;
   amount: number;
   timestamp: number;
   transaction: Transaction;
