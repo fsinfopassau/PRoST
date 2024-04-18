@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { Invoice } from "../../Types/Invoice";
-import {
-  deleteInvoices,
-  getAllInvoices,
-  mailInvoices,
-} from "../../Queries";
+import { deleteInvoices, getAllInvoices, mailInvoices } from "../../Queries";
 import { InvoiceSelectDisplay } from "./InvoiceSelectDisplay";
 import {
   ScrollArea,
@@ -39,8 +35,7 @@ export function InvoiceTab() {
   }, [selectedPage, searchValue, mailed]);
 
   useEffect(() => {
-    if (selectedPage === 0)
-      selectPage(0);
+    if (selectedPage === 0) selectPage(0);
   });
 
   function selectPage(n: number) {
@@ -180,19 +175,34 @@ export function InvoiceTab() {
         <ScrollAreaViewport>
           <h2>Rechnungen</h2>
 
-          <div id="invoiceSearch">
+          <div id="tableSearch">
             <input
               className="Input"
               type="text"
               onChange={(e) => setSearchValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Nutzer Id" />
-            <div onClick={cycleMailed} className={mailed === undefined ? "Button" : (mailed ? "Button green" : "Button red")}><EnvelopeClosedIcon /></div>
+              placeholder="Nutzer Id"
+            />
+            <div
+              onClick={cycleMailed}
+              className={
+                mailed === undefined
+                  ? "Button"
+                  : mailed
+                  ? "Button green"
+                  : "Button red"
+              }
+            >
+              <EnvelopeClosedIcon />
+            </div>
           </div>
 
           <Separator className="Separator" />
 
-          <div className="SpreadContainer" style={{ padding: "0 .5rem 0.5rem 0.5rem" }}>
+          <div
+            className="SpreadContainer"
+            style={{ padding: "0 .5rem 0.5rem 0.5rem" }}
+          >
             <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
               {isAllSelected() ? (
                 <div className="Toggle green" onClick={toggleAll}>
@@ -237,7 +247,7 @@ export function InvoiceTab() {
             </div>
           </div>
 
-          <table className="InvoiceTable">
+          <table className="Table">
             <tbody>
               {invoices.map((invoice, index) => (
                 <InvoiceSelectDisplay
@@ -255,17 +265,20 @@ export function InvoiceTab() {
           <div className="PageBar">
             {Array.from({ length: totalPages - 1 }, (_, index) => {
               if (index >= minPage && index <= maxPage) {
-                return <div
-                  key={"p" + index}
-                  className={`PageButton ${selectedPage === index ? 'Selected' : ''}`}
-                  onClick={() => selectPage(index)}
-                >
-                  {index + 1}
-                </div>
+                return (
+                  <div
+                    key={"p" + index}
+                    className={`PageButton ${
+                      selectedPage === index ? "Selected" : ""
+                    }`}
+                    onClick={() => selectPage(index)}
+                  >
+                    {index + 1}
+                  </div>
+                );
               }
             }).filter(Boolean)}
           </div>
-
         </ScrollAreaViewport>
         <ScrollAreaScrollbar className="Scrollbar" orientation="vertical">
           <ScrollAreaThumb className="ScrollbarThumb" />

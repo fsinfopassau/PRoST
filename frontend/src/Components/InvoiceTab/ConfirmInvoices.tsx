@@ -34,7 +34,7 @@ const ConfirmInvoices: React.FC<PropsWithChildren<CustomComponentProps>> = ({
       trigger={<div>{children} </div>}
       onSubmit={onSubmit}
     >
-      <table className="InvoiceTable">
+      <table className="Table">
         <tbody>
           {invoices.map((invoice, index) => (
             <tr key={index}>
@@ -46,7 +46,7 @@ const ConfirmInvoices: React.FC<PropsWithChildren<CustomComponentProps>> = ({
                       <InfoCircledIcon />
                     </div>
                   }
-                  onSubmit={() => { }}
+                  onSubmit={() => {}}
                 >
                   <InvoiceDetails invoice={invoice} />
                 </ScrollDialog>

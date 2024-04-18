@@ -8,6 +8,13 @@ export interface Transaction {
   timestamp: number;
 }
 
+export interface TransactionPage {
+  content: Transaction[];
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
 export enum TransactionType {
   DEPOSIT,
   BUY,

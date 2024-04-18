@@ -6,7 +6,7 @@ import { ErrorComponent } from "./Util/ErrorTab";
 import { ItemSelection } from "./SearchTab/ItemSelection";
 import { ItemCheckout } from "./SearchTab/ItemCheckout";
 import { Statistics } from "./StatisticsTab/Statistics";
-import { Settings } from "./SettingsTab/Settings";
+import { History } from "./HistoryTab/History";
 import { UserStatistics } from "./StatisticsTab/UserStatistics";
 import { AllUsersStatistics } from "./StatisticsTab/AllUsersStatistics";
 import { ItemSettings } from "./SettingsTab/ItemSettings";
@@ -88,7 +88,7 @@ export function App() {
                   path="/stats/users/:userId"
                   element={<UserStatistics />}
                 />
-                <Route path="/history" element={<Settings />} />
+                <Route path="/history" element={<History />} />
                 <Route path="/invoices" element={<InvoiceTab />} />
                 <Route path="/items" element={<ItemSettings />} />
                 <Route path="/users" element={<UserSettings />} />

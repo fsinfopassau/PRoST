@@ -69,20 +69,20 @@ public class TransactionController {
 
   /**
    * @param p: Page-Number 0-MAX
-   * @param s: Page-Size
+   * @param s: Page-Size 1-MAX
    * @return Page + infos
    */
   @GetMapping("/list")
   public Page<TransactionEntry> getTransactions(
       @RequestParam(defaultValue = "0") int p,
       @RequestParam(defaultValue = "10") int s,
-      @RequestParam(required = false) String userId) {
-    return transactionService.getTransactions(Math.max(0, p), Math.max(1, s), userId);
+      @RequestParam(required = false) String receiverId) {
+    return transactionService.getTransactions(Math.max(0, p), Math.max(1, s), receiverId);
   }
 
   /**
    * @param p: Page-Number 0-MAX
-   * @param s: Page-Size
+   * @param s: Page-Size 1-MAX
    * @return Page + infos
    */
   @GetMapping("/me")

@@ -5,6 +5,7 @@ import { AuthorizedUser, User } from "./Types/User";
 import { getEncodedCredentials, setAuthorizedUser } from "./SessionInfo";
 import { InvoicePage } from "./Types/Invoice";
 import { toast } from "react-toastify";
+import { TransactionPage } from "./Types/Transaction";
 
 export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
 
@@ -153,6 +154,34 @@ export async function createTransaction(
     }
   );
   return result.ok;
+}
+
+export async function getAllTransactions(
+  page: number,
+  receiverId: string | undefined
+): Promise<TransactionPage | undefined> {
+  const params = receiverId ? "&receiverId=" + receiverId : "";
+
+  try {
+    const response = await fetch(
+      `${apiUrl}/api/transaction/list?s=20&p=` + page + params,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${getEncodedCredentials()}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as TransactionPage;
+  } catch (error) {
+    return undefined;
+  }
 }
 
 export async function changeUser(

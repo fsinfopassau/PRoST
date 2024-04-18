@@ -32,7 +32,7 @@ export function PersonalInvoiceView() {
     <div className="CardContainer">
       <div className="DisplayCard">
         <h3>Rechnungen</h3>
-        <table className="InvoiceTable">
+        <table className="Table">
           <tbody>
             {invoices?.map((invoice, index) => (
               <tr key={index}>

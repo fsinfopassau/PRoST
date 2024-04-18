@@ -105,11 +105,11 @@ public class TransactionService {
     return Optional.of(entry);
   }
 
-  public Page<TransactionEntry> getTransactions(int pageNumber, int pageSize, String userId) {
+  public Page<TransactionEntry> getTransactions(int pageNumber, int pageSize, String receiverId) {
     Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("timestamp").descending());
 
-    if (userId != null) {
-      return history.findByReceiverId(userId, pageable);
+    if (receiverId != null) {
+      return history.findByReceiverId(receiverId, pageable);
     } else {
       return history.findAll(pageable);
     }

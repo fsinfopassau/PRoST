@@ -1,4 +1,4 @@
-import { Transaction } from "./TransactionEntry";
+import { Transaction } from "./Transaction";
 
 export interface ShopHistoryEntry {
   id: number;
