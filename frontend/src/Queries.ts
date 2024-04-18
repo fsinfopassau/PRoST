@@ -328,10 +328,14 @@ export async function getHistory(
   }
 }
 
-export async function getUserHistory(user: User, size: number, page: number) {
+export async function getUserHistory(
+  userId: string,
+  size: number,
+  page: number
+) {
   try {
     const response = await fetch(
-      `${apiUrl}/api/history/shop/list?s=${size}&p=${page}&receiverId=${user.id}`,
+      `${apiUrl}/api/history/shop/list?s=${size}&p=${page}&receiverId=${userId}`,
       {
         method: "GET",
         headers: {

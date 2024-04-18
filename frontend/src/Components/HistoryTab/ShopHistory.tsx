@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ShopHistoryEntry } from "../../Types/ShopHistory";
-import { getHistory, getOwnHistory } from "../../Queries";
+import { getHistory, getOwnHistory, getUserHistory } from "../../Queries";
 import { HistoryEntryDisplay } from "../StatisticsTab/HistoryEntryDisplay";
 import {
   ScrollArea,
@@ -63,12 +63,21 @@ export function ShopHistory(props: { personal: boolean }) {
         }
       });
     } else {
-      getHistory(20, selectedPage).then((historyPage) => {
-        if (historyPage) {
-          setHistory(historyPage.content);
-          setTotalPages(historyPage.totalPages + 1);
-        }
-      });
+      if (searchValue.trim().length != 0) {
+        getUserHistory(searchValue, 20, selectedPage).then((historyPage) => {
+          if (historyPage) {
+            setHistory(historyPage.content);
+            setTotalPages(historyPage.totalPages + 1);
+          }
+        });
+      } else {
+        getHistory(20, selectedPage).then((historyPage) => {
+          if (historyPage) {
+            setHistory(historyPage.content);
+            setTotalPages(historyPage.totalPages + 1);
+          }
+        });
+      }
     }
   }
 
