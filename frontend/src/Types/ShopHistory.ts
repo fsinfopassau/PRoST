@@ -12,3 +12,10 @@ export interface ShopHistoryEntry {
   transaction: Transaction;
   refundTransaction: Transaction;
 }
+
+export interface ShopHistoryEntryPage {
+  content: ShopHistoryEntry[];
+  totalPages: number;
+  size: number;
+  number: number;
+}

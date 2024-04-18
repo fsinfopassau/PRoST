@@ -42,7 +42,7 @@ public class WebConfig implements WebMvcConfigurer {
 
   public static final String[] KIOSK_SPACE = {
       "/api/user/info",
-      "/api/history/**",
+      "/api/history/shop/**",
   };
 
   public static final String[] ADMIN_SPACE = {

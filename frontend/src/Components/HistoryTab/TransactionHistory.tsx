@@ -76,15 +76,19 @@ export function TransactionHistory(props: { personal: boolean }) {
       <ScrollAreaViewport>
         <h2>Transaktionen</h2>
 
-        <div id="tableSearch">
-          <input
-            className="Input"
-            type="text"
-            onChange={(e) => setSearchValue(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Nutzer Id"
-          />
-        </div>
+        {props.personal ? (
+          <></>
+        ) : (
+          <div id="tableSearch">
+            <input
+              className="Input"
+              type="text"
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Empfänger Id"
+            />
+          </div>
+        )}
 
         <Separator className="Separator" />
 

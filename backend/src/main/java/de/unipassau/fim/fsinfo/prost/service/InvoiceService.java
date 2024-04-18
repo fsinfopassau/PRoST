@@ -71,9 +71,7 @@ public class InvoiceService {
     return new PageImpl<>(invoiceDTOs, pageable, invoiceDTOs.size());
   }
 
-  public Page<InvoiceDTO> getInvoices(int pageNumber, int pageSize,
-      Boolean mailed,
-      String userId) {
+  public Page<InvoiceDTO> getInvoices(int pageNumber, int pageSize, Boolean mailed, String userId) {
 
     Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("timestamp").descending());
     Page<InvoiceEntry> entriesPage;

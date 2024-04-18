@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ShopHistoryEntry } from "./Types/ShopHistory";
+import { ShopHistoryEntry, ShopHistoryEntryPage } from "./Types/ShopHistory";
 import { ShopItem } from "./Types/ShopItem";
 import { AuthorizedUser, User } from "./Types/User";
 import { getEncodedCredentials, setAuthorizedUser } from "./SessionInfo";
@@ -303,11 +303,12 @@ export async function buyItem(
 }
 
 export async function getHistory(
-  amount: number
-): Promise<ShopHistoryEntry[] | undefined> {
+  size: number,
+  page: number
+): Promise<ShopHistoryEntryPage | undefined> {
   try {
     const response = await fetch(
-      `${apiUrl}/api/history/shop/last?n=${amount}`,
+      `${apiUrl}/api/history/shop/list?s=${size}&p=${page}`,
       {
         method: "GET",
         headers: {
@@ -321,16 +322,16 @@ export async function getHistory(
       return undefined;
     }
 
-    return (await response.json()) as ShopHistoryEntry[];
+    return (await response.json()) as ShopHistoryEntryPage;
   } catch (error) {
     return undefined;
   }
 }
 
-export async function getUserHistory(user: User, amount: number) {
+export async function getUserHistory(user: User, size: number, page: number) {
   try {
     const response = await fetch(
-      `${apiUrl}/api/history/shop/last?userId=${user.id}&n=${amount}`,
+      `${apiUrl}/api/history/shop/list?s=${size}&p=${page}&receiverId=${user.id}`,
       {
         method: "GET",
         headers: {
@@ -344,27 +345,30 @@ export async function getUserHistory(user: User, amount: number) {
       return undefined;
     }
 
-    return (await response.json()) as ShopHistoryEntry[];
+    return (await response.json()) as ShopHistoryEntryPage;
   } catch (error) {
     return undefined;
   }
 }
 
-export async function getOwnHistory(amount: number) {
+export async function getOwnHistory(size: number, page: number) {
   try {
-    const response = await fetch(`${apiUrl}/api/history/shop/me?n=${amount}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Basic ${getEncodedCredentials()}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${apiUrl}/api/history/shop/me?s=${size}&p=${page}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${getEncodedCredentials()}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       return undefined;
     }
 
-    return (await response.json()) as ShopHistoryEntry[];
+    return (await response.json()) as ShopHistoryEntryPage;
   } catch (error) {
     return undefined;
   }

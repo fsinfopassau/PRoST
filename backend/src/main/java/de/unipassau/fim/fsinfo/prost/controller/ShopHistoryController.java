@@ -3,10 +3,8 @@ package de.unipassau.fim.fsinfo.prost.controller;
 import de.unipassau.fim.fsinfo.prost.data.dto.ShopItemHistoryEntryDTO;
 import de.unipassau.fim.fsinfo.prost.security.CustomUserDetailsContextMapper.CustomUserDetails;
 import de.unipassau.fim.fsinfo.prost.service.ShopHistoryService;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,29 +22,32 @@ public class ShopHistoryController {
     this.shopHistoryService = shopHistoryService;
   }
 
-  @GetMapping("/last")
-  public ResponseEntity<List<ShopItemHistoryEntryDTO>> history(
-      @RequestParam(required = false) String userId,
-      @RequestParam(required = false) Integer n) {
-    if (userId == null) {
-      return ResponseEntity.ok(shopHistoryService.getLastHistory(n));
-    } else {
-      Optional<List<ShopItemHistoryEntryDTO>> list = shopHistoryService.getLastUserHistory(n,
-          userId);
-
-      return list.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+  /**
+   * @param p: Page-Number 0-MAX
+   * @param s: Page-Size 1-MAX
+   * @return Page + infos
+   */
+  @GetMapping("/list")
+  public Page<ShopItemHistoryEntryDTO> getTransactions(
+      @RequestParam(defaultValue = "0") int p,
+      @RequestParam(defaultValue = "10") int s,
+      @RequestParam(required = false) String receiverId) {
+    return shopHistoryService.getHistory(Math.max(0, p), Math.max(1, s), receiverId);
   }
 
+  /**
+   * @param p: Page-Number 0-MAX
+   * @param s: Page-Size 1-MAX
+   * @return Page + infos
+   */
   @GetMapping("/me")
-  public ResponseEntity<List<ShopItemHistoryEntryDTO>> historyMe(
-      @RequestParam(required = false) Integer n, Authentication authentication) {
+  public Page<ShopItemHistoryEntryDTO> getPersonalTransactions(
+      @RequestParam(defaultValue = "0") int p,
+      @RequestParam(defaultValue = "10") int s,
+      Authentication authentication) {
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-    Optional<List<ShopItemHistoryEntryDTO>> list = shopHistoryService.getLastUserHistory(n,
+    return shopHistoryService.getHistory(Math.max(0, p), Math.max(1, s),
         userDetails.getUsername());
-
-    return list.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-
   }
 }

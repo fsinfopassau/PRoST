@@ -17,12 +17,12 @@ export function UserSummaryCard(props: Props) {
 
   useEffect(() => {
     if (user.id === getAuthorizedUser()?.id) {
-      getOwnHistory(3).then((historyList) => {
-        if (historyList) setHistory(historyList);
+      getOwnHistory(3, 0).then((page) => {
+        if (page) setHistory(page.content);
       });
     } else {
-      getUserHistory(user, 3).then((historyList) => {
-        if (historyList) setHistory(historyList);
+      getUserHistory(user, 3, 0).then((historyList) => {
+        if (historyList) setHistory(historyList.content);
       });
     }
   }, []);

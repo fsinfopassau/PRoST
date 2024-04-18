@@ -116,7 +116,7 @@ export function UserSettings() {
                 <input
                   className="Input"
                   onChange={handleNameChange}
-                  placeholder={"Willy Wonka"}
+                  placeholder={"WillyD"}
                 />
               </fieldset>
               <div className="DialogDescription">E-Mail:</div>
@@ -124,7 +124,7 @@ export function UserSettings() {
                 <input
                   className="Input"
                   onChange={handleEmailChange}
-                  placeholder={"mail@wonka.de"}
+                  placeholder={"mail@willy.de"}
                 />
               </fieldset>
             </div>
