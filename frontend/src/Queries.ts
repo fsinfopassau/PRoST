@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ShopHistoryEntry, ShopHistoryEntryPage } from "./Types/ShopHistory";
+import { ShopHistoryEntryPage } from "./Types/ShopHistory";
 import { ShopItem } from "./Types/ShopItem";
 import { AuthorizedUser, User } from "./Types/User";
 import { getEncodedCredentials, setAuthorizedUser } from "./SessionInfo";

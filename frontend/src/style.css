@@ -275,6 +275,7 @@ Tabs
   margin-bottom: 0.6rem;
   padding: 1rem;
   position: sticky;
+  z-index: 10;
   top: 0;
 }
 
