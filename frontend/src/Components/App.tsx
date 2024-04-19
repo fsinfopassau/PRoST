@@ -6,7 +6,7 @@ import { ErrorComponent } from "./Util/ErrorTab";
 import { ItemSelection } from "./SearchTab/ItemSelection";
 import { ItemCheckout } from "./SearchTab/ItemCheckout";
 import { Statistics } from "./StatisticsTab/Statistics";
-import { Settings } from "./SettingsTab/Settings";
+import { History } from "./HistoryTab/History";
 import { UserStatistics } from "./StatisticsTab/UserStatistics";
 import { AllUsersStatistics } from "./StatisticsTab/AllUsersStatistics";
 import { ItemSettings } from "./SettingsTab/ItemSettings";
@@ -15,6 +15,7 @@ import { InvoiceTab } from "./InvoiceTab/InvoiceTab";
 import { RootTab } from "./RootTab";
 import { UserSettings } from "./SettingsTab/UserSettings";
 import { PersonalInvoiceView } from "./PersonalView/PersonalInvoiceView";
+import { PersonalHistoryView } from "./PersonalView/PersonalHistoryView";
 
 const stylesAvailable = ["purple", "blue"];
 
@@ -77,7 +78,7 @@ export function App() {
                   element={<RootTab switchTheme={switchTheme} />}
                 />
                 <Route path="/me/invoices" element={<PersonalInvoiceView />} />
-                <Route path="/invoices" element={<InvoiceTab />} />
+                <Route path="/me/history" element={<PersonalHistoryView />} />
                 <Route path="/shop/:userId" element={<ItemSelection />} />
                 <Route
                   path="/shop/:userId/:itemId"
@@ -89,9 +90,10 @@ export function App() {
                   path="/stats/users/:userId"
                   element={<UserStatistics />}
                 />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/settings/items" element={<ItemSettings />} />
-                <Route path="/settings/users" element={<UserSettings />} />
+                <Route path="/history" element={<History />} />
+                <Route path="/invoices" element={<InvoiceTab />} />
+                <Route path="/items" element={<ItemSettings />} />
+                <Route path="/users" element={<UserSettings />} />
                 <Route path="*" element={<ErrorComponent />} />
               </Routes>
             </div>

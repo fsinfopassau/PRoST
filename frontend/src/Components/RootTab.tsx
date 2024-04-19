@@ -30,7 +30,7 @@ export function RootTab(props: { switchTheme: () => void }) {
             src="/icons/happy-manje/happy beer.svg"
             id="SearchTitle"
           />
-          KdV
+          PRoST
         </h1>
         {!isUser() ? (
           <></>

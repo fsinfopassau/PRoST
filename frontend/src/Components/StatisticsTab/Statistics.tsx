@@ -14,8 +14,8 @@ export function Statistics() {
   const [history, setHistory] = useState<ShopHistoryEntry[]>([]);
 
   useEffect(() => {
-    getHistory(20).then((historyList) => {
-      if (historyList) setHistory(historyList);
+    getHistory(20, 0).then((historyList) => {
+      if (historyList) setHistory(historyList.content);
     });
   }, []);
 

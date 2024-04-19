@@ -39,7 +39,7 @@ export function InvoiceDetails(props: { invoice: Invoice }) {
         </Link>
       </h3>
       <div style={{ margin: "1.5rem 0" }}>
-        <table className="InvoiceTable">
+        <table className="Table">
           <tbody>
             {invoice.amounts?.map((amount, index) => (
               <tr key={amount.itemId + "" + index}>

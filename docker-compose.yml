@@ -18,12 +18,14 @@ services:
     container_name: KdV-Backend
     build:
       context: backend
+      args:
+        - LDAP_URI=ldap://ldap:1389/dc=fsinfo,dc=fim,dc=uni-passau,dc=de
     ports:
       - "8081:8081"
     networks:
       - kdv
     volumes:
-      - ./kdv-data:/data
+      - ./.data:/data
     restart: on-failure
   ldap:
     container_name: KdV-LDAP

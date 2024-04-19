@@ -107,7 +107,7 @@ const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({
           <div>{selectedUsers.length} Nutzer ausgewählt</div>
         </div>
         <Separator className="Separator" />
-        <table className="InvoiceTable">
+        <table className="Table">
           <tbody>
             {users.map((user) => (
               <InvoiceCreationUserDisplay
