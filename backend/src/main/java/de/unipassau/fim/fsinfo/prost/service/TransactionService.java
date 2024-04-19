@@ -84,6 +84,7 @@ public class TransactionService {
   private Optional<TransactionEntry> buy(ProstUser receiver, ProstUser bearer,
       BigDecimal amount) {
     receiver.setBalance(receiver.getBalance().subtract(amount.abs()));
+    receiver.setTotalSpent(receiver.getTotalSpent().abs().add(amount.abs()));
     users.save(receiver);
 
     TransactionEntry entry = new TransactionEntry(null,

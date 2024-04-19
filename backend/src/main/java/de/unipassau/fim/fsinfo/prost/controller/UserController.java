@@ -84,6 +84,14 @@ public class UserController {
     return ResponseEntity.badRequest().build();
   }
 
+  @PostMapping("/moneySpent")
+  public ResponseEntity<String> moneySpent(@RequestParam String id, @RequestParam String value) {
+    if (userService.setMoneySpent(id, value)) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
   @PostMapping("/enable")
   public ResponseEntity<String> enable(@RequestParam String id) {
     if (userService.setEnabled(id, true)) {

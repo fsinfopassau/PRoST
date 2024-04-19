@@ -21,6 +21,8 @@ public class ProstUser {
   @Column(nullable = false)
   private BigDecimal balance;
   @Column(nullable = false)
+  private BigDecimal totalSpent;
+  @Column(nullable = false)
   private String displayName;
   private String email;
   private Boolean enabled;
@@ -31,6 +33,7 @@ public class ProstUser {
     this.email = email;
     this.enabled = enabled;
     this.balance = new BigDecimal(0);
+    this.totalSpent = new BigDecimal(0);
   }
 
   public static String formatMoney(BigDecimal amount) {
