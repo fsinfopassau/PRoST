@@ -5,7 +5,7 @@ COPY ./src ./src/
 RUN mvn package -DskipTests
 
 # Run
-FROM openjdk:17-slim
+FROM docker.io/library/openjdk:17-slim
 WORKDIR /app
 COPY --from=backend /app/backend/target/*.jar ./backend.jar
 EXPOSE 8081
