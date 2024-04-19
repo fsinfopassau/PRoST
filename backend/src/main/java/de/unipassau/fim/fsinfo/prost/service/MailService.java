@@ -84,7 +84,7 @@ public class MailService {
    *
    * @param address The receiver.
    * @param subject The title-text shown in the mailclient.
-   * @param text The mail-Content.
+   * @param text    The mail-Content.
    * @return true if mail could be sent out.
    */
   private boolean sendMail(String address, String subject, String text) {
@@ -113,8 +113,7 @@ public class MailService {
       email.send();
       mailCooldown.put(address, System.currentTimeMillis() + mailCooldownTime);
     } catch (EmailException e) {
-      // TODO PSE set to false - true: testing only
-      return true;
+      return false;
     }
     return true;
   }
