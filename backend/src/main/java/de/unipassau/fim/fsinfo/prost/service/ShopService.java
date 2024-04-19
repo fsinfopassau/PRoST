@@ -10,6 +10,7 @@ import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
 import java.math.BigDecimal;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ public class ShopService {
   final TransactionService transactionService;
 
   final int nameLength = 20;
+  final BigDecimal maxPrice = new BigDecimal(100);
 
   @Autowired
   public ShopService(ShopItemRepository itemRepository, ShopItemHistoryRepository historyRepository,
@@ -72,28 +74,17 @@ public class ShopService {
   @Transactional
   public Optional<ShopItem> createItem(String identifier, String displayName, String category, BigDecimal price ){
 
-    if (identifier == null || identifier.isBlank()) {
-      System.out.println("[SS] :: identifier is empty.");
+    if (checkEmpty(displayName,"display name")
+            || checkEmpty(category,"category")
+            || checkEmpty(identifier,"identifier")
+            || checkSize(displayName, "display name")
+            || checkSize(category, "category")
+            || checkSize(identifier, "identifier")) {
       return Optional.empty();
     }
 
     if (itemRepository.existsById(identifier)) {
       System.out.println("[SS] :: identifier \"" + identifier + "\" already present.");
-      return Optional.empty();
-    }
-
-    if (displayName == null || displayName.isBlank()) {
-      System.out.println("[SS] :: display name is empty.");
-      return Optional.empty();
-    }
-
-    if (category == null || category.isBlank()) {
-      System.out.println("[SS] :: category is empty");
-      return Optional.empty();
-    }
-
-    if (displayName.length() > nameLength || category.length() > nameLength || identifier.length() > nameLength) {
-      System.out.println("[SS] :: string size to large");
       return Optional.empty();
     }
 
@@ -105,6 +96,85 @@ public class ShopService {
     ShopItem item = new ShopItem(identifier,category,displayName,price.abs());
     itemRepository.save(item);
     return Optional.of(item);
+  }
+
+  @Transactional
+  public Optional<ShopItem> delete(String identifier) {
+    Optional<ShopItem> item = itemRepository.findById(identifier);
+    if(item.isPresent()) {
+      itemRepository.delete(item.get());
+      return item;
+    }
+    return Optional.empty();
+  }
+
+  @Transactional
+  public Optional<ShopItem> changeDisplayName(String identifier, String newDisplayName) {
+    Optional<ShopItem> item = itemRepository.findById(identifier);
+
+    if (checkEmpty(newDisplayName, "display name") || checkSize(newDisplayName, "display name")) {
+      return Optional.empty();
+    }
+
+    if(item.isPresent()) {
+      item.get().setDisplayName(newDisplayName);
+      itemRepository.save(item.get());
+      return item;
+    }
+    return Optional.empty();
+  }
+
+  @Transactional
+  public Optional<ShopItem> changeCategory(String identifier, String category) {
+    Optional<ShopItem> item = itemRepository.findById(identifier);
+
+    if (checkEmpty(category, "category") || checkSize(category, "category")) {
+      return Optional.empty();
+    }
+
+    if(item.isPresent()) {
+      item.get().setCategory(category);
+      itemRepository.save(item.get());
+      return item;
+    }
+    return Optional.empty();
+  }
+
+  @Transactional
+  public Optional<ShopItem> changePrice(String identifier, String value) {
+    Optional<ShopItem> item = itemRepository.findById(identifier);
+
+    try {
+      if (item.isPresent()) {
+        BigDecimal price = new BigDecimal(value);
+        if(price.compareTo(maxPrice) > 0) {
+          System.out.println("[SS] :: Price is with " + price + " to high");
+          return Optional.empty();
+        }
+        item.get().setPrice(price.abs());
+        itemRepository.save(item.get());
+        return item;
+      }
+    } catch (NumberFormatException e) {
+      return Optional.empty();
+    }
+    return Optional.empty();
+  }
+
+  private boolean checkEmpty(String value, String name) {
+    if(value == null || value.isBlank() ) {
+      System.out.println("[SS] :: " + name +" is empty");
+      return true;
+    }
+    return false;
+  }
+
+  private boolean checkSize(String value, String name) {
+    if(value.length() > nameLength ) {
+      System.out.println("[SS] :: " + name + " size to large");
+      return true;
+    }
+    return false;
   }
 
 }

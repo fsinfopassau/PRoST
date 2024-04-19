@@ -8,7 +8,6 @@ import de.unipassau.fim.fsinfo.prost.service.AuthenticationService;
 import de.unipassau.fim.fsinfo.prost.service.FileStorageService;
 import de.unipassau.fim.fsinfo.prost.service.ShopService;
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -114,17 +113,18 @@ public class ShopController {
 
   @PostMapping("/settings/create")
   public ResponseEntity<ShopItem> create(@RequestBody ShopItem itemTemplate) {
-    Optional<ShopItem> shopItem = shopService.createItem(itemTemplate.getId(), itemTemplate.getDisplayName(), itemTemplate.getCategory(), itemTemplate.getPrice());
+    Optional<ShopItem> shopItem = shopService.createItem(itemTemplate.getId(), itemTemplate.getDisplayName(),
+            itemTemplate.getCategory(), itemTemplate.getPrice());
 
     return shopItem.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
   @DeleteMapping("/settings/item/delete")
   public ResponseEntity<Optional<ShopItem>> delete(@RequestParam String id) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    if (item.isPresent()) {
-      itemRepository.delete(item.get());
-      return ResponseEntity.ok(item);
+    Optional<ShopItem> shopItem = shopService.delete(id);
+
+    if (shopItem.isPresent()) {
+      return ResponseEntity.ok(shopItem);
     }
     return ResponseEntity.badRequest().build();
   }
@@ -132,10 +132,9 @@ public class ShopController {
   @PostMapping("/settings/item/displayname")
   public ResponseEntity<String> displayName(@RequestParam String id,
       @RequestParam String value) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    if (item.isPresent()) {
-      item.get().setDisplayName(value);
-      itemRepository.save(item.get());
+    Optional<ShopItem> shopItem = shopService.changeDisplayName(id,value);
+
+    if (shopItem.isPresent()) {
       return ResponseEntity.ok().build();
     }
     return ResponseEntity.badRequest().build();
@@ -144,10 +143,9 @@ public class ShopController {
   @PostMapping("/settings/item/category")
   public ResponseEntity<String> displayCategory(@RequestParam String id,
       @RequestParam String value) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    if (item.isPresent()) {
-      item.get().setCategory(value);
-      itemRepository.save(item.get());
+    Optional<ShopItem> shopItem = shopService.changeCategory(id,value);
+
+    if (shopItem.isPresent()) {
       return ResponseEntity.ok().build();
     }
     return ResponseEntity.badRequest().build();
@@ -156,16 +154,10 @@ public class ShopController {
   @PostMapping("/settings/item/price")
   public ResponseEntity<String> price(@RequestParam String id,
       @RequestParam String value) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    try {
-      BigDecimal price = new BigDecimal(value);
-      if (item.isPresent()) {
-        item.get().setPrice(price);
-        itemRepository.save(item.get());
-        return ResponseEntity.ok().build();
-      }
-    } catch (NumberFormatException e) {
-      return ResponseEntity.badRequest().build();
+    Optional<ShopItem> shopItem = shopService.changePrice(id,value);
+
+    if (shopItem.isPresent()) {
+      return ResponseEntity.ok().build();
     }
     return ResponseEntity.badRequest().build();
   }
