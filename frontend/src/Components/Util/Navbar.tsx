@@ -1,10 +1,12 @@
 import {
   BarChartIcon,
+  CalendarIcon,
   CookieIcon,
+  DragHandleDots2Icon,
   FileTextIcon,
-  GearIcon,
   HomeIcon,
   MagnifyingGlassIcon,
+  PersonIcon,
 } from "@radix-ui/react-icons";
 import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -19,7 +21,7 @@ export function Navbar(props: { switchTheme: () => void }) {
   function tabUpdate(newValue: string) {
     if (newValue === "root") {
       navigate("/");
-    } else if (newValue === "buy") {
+    } else if (newValue === "shop-self") {
       const authUser = getAuthorizedUser();
       if (authUser && authUser.id) {
         navigate(`/shop/${authUser.id}`);
@@ -33,6 +35,8 @@ export function Navbar(props: { switchTheme: () => void }) {
     const newValue = location.pathname.split("/")[1];
     if (newValue.includes("root") || newValue.length === 0) {
       return "root";
+    } else if (location.pathname.startsWith("/me")) {
+      return location.pathname.split("/")[2];
     } else {
       return newValue;
     }
@@ -42,7 +46,7 @@ export function Navbar(props: { switchTheme: () => void }) {
     <>
       <div id="tab-changer">
         <img onClick={switchTheme} src="/icons/happy-manje/happy beer.svg" />
-        <Tabs defaultValue={getSelectedTabValue()} className="TabsRoot">
+        <Tabs value={getSelectedTabValue()} className="TabsRoot">
           <TabsList className="TabsList">
             {isKiosk() ? (
               <>
@@ -67,18 +71,32 @@ export function Navbar(props: { switchTheme: () => void }) {
             {isAdmin() ? (
               <>
                 <TabsTrigger
-                  value="invoice"
+                  value="history"
                   className="TabsTrigger"
-                  onClick={() => tabUpdate("invoice")}
+                  onClick={() => tabUpdate("history")}
+                >
+                  <CalendarIcon />
+                </TabsTrigger>
+                <TabsTrigger
+                  value="invoices"
+                  className="TabsTrigger"
+                  onClick={() => tabUpdate("invoices")}
                 >
                   <FileTextIcon />
                 </TabsTrigger>
                 <TabsTrigger
-                  value="settings"
+                  value="users"
                   className="TabsTrigger"
-                  onClick={() => tabUpdate("settings")}
+                  onClick={() => tabUpdate("users")}
                 >
-                  <GearIcon />
+                  <PersonIcon />
+                </TabsTrigger>
+                <TabsTrigger
+                  value="items"
+                  className="TabsTrigger"
+                  onClick={() => tabUpdate("items")}
+                >
+                  <DragHandleDots2Icon />
                 </TabsTrigger>
               </>
             ) : (
@@ -94,13 +112,27 @@ export function Navbar(props: { switchTheme: () => void }) {
                   <HomeIcon />
                 </TabsTrigger>
                 <TabsTrigger
-                  value="buy"
+                  value="shop"
                   className="TabsTrigger"
                   onClick={() => {
-                    tabUpdate("buy");
+                    tabUpdate("shop-self");
                   }}
                 >
                   <CookieIcon />
+                </TabsTrigger>
+                <TabsTrigger
+                  value="history"
+                  className="TabsTrigger"
+                  onClick={() => tabUpdate("me/history")}
+                >
+                  <CalendarIcon />
+                </TabsTrigger>
+                <TabsTrigger
+                  value="invoices"
+                  className="TabsTrigger"
+                  onClick={() => tabUpdate("me/invoices")}
+                >
+                  <FileTextIcon />
                 </TabsTrigger>
               </>
             ) : (

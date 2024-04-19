@@ -1,10 +1,21 @@
+import { Transaction } from "./Transaction";
+
 export interface ShopHistoryEntry {
   id: number;
   userId: string;
   userDisplayName: string;
   itemId: string;
   itemDisplayName: string;
-  price: number;
+  itemPrice: number;
   amount: number;
   timestamp: number;
+  transaction: Transaction;
+  refundTransaction: Transaction;
+}
+
+export interface ShopHistoryEntryPage {
+  content: ShopHistoryEntry[];
+  totalPages: number;
+  size: number;
+  number: number;
 }

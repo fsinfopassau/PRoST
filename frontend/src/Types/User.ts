@@ -2,7 +2,9 @@ import { getAllUsers } from "../Queries";
 export interface User {
   id: string; // id
   displayName: string;
+  email: string;
   balance: number;
+  totalSpent: number;
   enabled: boolean;
 }
 

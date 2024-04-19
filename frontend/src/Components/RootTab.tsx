@@ -4,7 +4,7 @@ import { User } from "../Types/User";
 import { getOwnUser } from "../Queries";
 import { ErrorComponent } from "./Util/ErrorTab";
 import { UserContainer } from "./SearchTab/UserContainer";
-import { PersonalUserOverview } from "./RootUserTab/PersonalUserOverview";
+import { PersonalUserOverview } from "./PersonalView/PersonalUserOverview";
 
 export function RootTab(props: { switchTheme: () => void }) {
   const [user, setUser] = useState<User | undefined>(undefined);
@@ -30,7 +30,7 @@ export function RootTab(props: { switchTheme: () => void }) {
             src="/icons/happy-manje/happy beer.svg"
             id="SearchTitle"
           />
-          KdV
+          PRoST
         </h1>
         {!isUser() ? (
           <></>

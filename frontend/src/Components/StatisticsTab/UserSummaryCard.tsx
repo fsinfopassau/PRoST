@@ -5,24 +5,26 @@ import { ShopHistoryEntry } from "../../Types/ShopHistory";
 import { useEffect, useState } from "react";
 import { getOwnHistory, getUserHistory } from "../../Queries";
 import { formatMoney } from "../../Format";
+import { getAuthorizedUser } from "../../SessionInfo";
+import { LevelProgressDisplay } from "./UserLevelDisplay";
 
 interface Props {
   user: User;
-  isSelf?: boolean;
 }
 
 export function UserSummaryCard(props: Props) {
-  const { user, isSelf = false } = props;
+  const { user } = props;
   const [history, setHistory] = useState<ShopHistoryEntry[]>([]);
+  const level_step = 5;
 
   useEffect(() => {
-    if (isSelf) {
-      getOwnHistory(3).then((historyList) => {
-        if (historyList) setHistory(historyList);
+    if (user.id === getAuthorizedUser()?.id) {
+      getOwnHistory(3, 0).then((page) => {
+        if (page) setHistory(page.content);
       });
     } else {
-      getUserHistory(user, 3).then((historyList) => {
-        if (historyList) setHistory(historyList);
+      getUserHistory(user.id, 3, 0).then((historyList) => {
+        if (historyList) setHistory(historyList.content);
       });
     }
   }, []);
@@ -40,7 +42,10 @@ export function UserSummaryCard(props: Props) {
           </Link>
           <div>👑 🍺</div>
         </div>
-        <Separator className="Separator" />
+        <div style={{ textAlign: "center" }}>{Math.floor(user.totalSpent / level_step) + 1}</div>
+        <LevelProgressDisplay
+          value={(user.totalSpent % level_step) / level_step}
+        />
         <div className="SpreadContainer">
           <div>
             <div className="bold">Letzte:</div>

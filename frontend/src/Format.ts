@@ -50,7 +50,13 @@ export function getTimeSince(unixMillis: number): string {
   return `now`;
 }
 
-export function formatMoney(balance: number, decimalCount = 2): string {
+export function formatMoney(
+  balance: number | undefined,
+  decimalCount = 2
+): string {
+  if (!balance && balance !== 0) {
+    return "";
+  }
   const formatted = new Intl.NumberFormat("de-DE", {
     minimumFractionDigits: decimalCount,
     maximumFractionDigits: decimalCount,

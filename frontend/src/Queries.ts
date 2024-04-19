@@ -1,9 +1,11 @@
 import axios from "axios";
-import { ShopHistoryEntry } from "./Types/ShopHistory";
+import { ShopHistoryEntryPage } from "./Types/ShopHistory";
 import { ShopItem } from "./Types/ShopItem";
 import { AuthorizedUser, User } from "./Types/User";
 import { getEncodedCredentials, setAuthorizedUser } from "./SessionInfo";
 import { InvoicePage } from "./Types/Invoice";
+import { toast } from "react-toastify";
+import { TransactionPage } from "./Types/Transaction";
 
 export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
 
@@ -99,6 +101,131 @@ export async function getAllUsers(): Promise<User[] | undefined> {
   }
 }
 
+export async function enableUser(
+  user: User,
+  enable: boolean
+): Promise<boolean> {
+  const result = await fetch(
+    `${apiUrl}/api/user/${enable ? "enable" : "disable"}?id=${user.id}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+      },
+    }
+  );
+  return result.ok;
+}
+
+export async function createNewUser(user: User): Promise<boolean> {
+  const result = await fetch(`${apiUrl}/api/user/create`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${getEncodedCredentials()}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  });
+  return result.ok;
+}
+
+export async function deleteUser(user: User): Promise<boolean> {
+  const result = await fetch(`${apiUrl}/api/user/delete?id=${user.id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Basic ${getEncodedCredentials()}`,
+    },
+  });
+  return result.ok;
+}
+
+export async function createTransaction(
+  receiver: User,
+  value: string,
+  actionType: string
+): Promise<boolean> {
+  const result = await fetch(
+    `${apiUrl}/api/transaction/${actionType}?id=${receiver.id}&value=${value}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+      },
+    }
+  );
+  return result.ok;
+}
+
+export async function getAllTransactions(
+  page: number,
+  receiverId: string | undefined
+): Promise<TransactionPage | undefined> {
+  const params = receiverId ? "&receiverId=" + receiverId : "";
+
+  try {
+    const response = await fetch(
+      `${apiUrl}/api/transaction/list?s=20&p=` + page + params,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${getEncodedCredentials()}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as TransactionPage;
+  } catch (error) {
+    return undefined;
+  }
+}
+
+export async function getPersonalTransactions(
+  page: number
+): Promise<TransactionPage | undefined> {
+  try {
+    const response = await fetch(
+      `${apiUrl}/api/transaction/me?s=20&p=` + page,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${getEncodedCredentials()}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as TransactionPage;
+  } catch (error) {
+    return undefined;
+  }
+}
+
+export async function changeUser(
+  user: User,
+  value: string,
+  path: string
+): Promise<boolean> {
+  const result = await fetch(
+    `${apiUrl}/api/user/${path}?id=${user.id}&value=${value}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+      },
+    }
+  );
+  return result.ok;
+}
+
 export async function getShopItem(
   itemId: string
 ): Promise<ShopItem | undefined> {
@@ -141,6 +268,18 @@ export async function getAllShopItems(): Promise<ShopItem[] | undefined> {
   }
 }
 
+export async function createNewShopItem(item: ShopItem): Promise<boolean> {
+  const result = await fetch(`${apiUrl}/api/shop/settings/create`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${getEncodedCredentials()}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(item),
+  });
+  return result.ok;
+}
+
 export async function buyItem(
   userId: string,
   itemId: string,
@@ -156,35 +295,20 @@ export async function buyItem(
       },
     }
   );
+
+  if (result.status == 418) {
+    toast.warning("I'm a Teapot! 🙃");
+  }
   return result.ok;
 }
 
 export async function getHistory(
-  amount: number
-): Promise<ShopHistoryEntry[] | undefined> {
-  try {
-    const response = await fetch(`${apiUrl}/api/history/last?n=${amount}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Basic ${getEncodedCredentials()}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      return undefined;
-    }
-
-    return (await response.json()) as ShopHistoryEntry[];
-  } catch (error) {
-    return undefined;
-  }
-}
-
-export async function getUserHistory(user: User, amount: number) {
+  size: number,
+  page: number
+): Promise<ShopHistoryEntryPage | undefined> {
   try {
     const response = await fetch(
-      `${apiUrl}/api/history/last?userId=${user.id}&n=${amount}`,
+      `${apiUrl}/api/history/shop/list?s=${size}&p=${page}`,
       {
         method: "GET",
         headers: {
@@ -198,27 +322,57 @@ export async function getUserHistory(user: User, amount: number) {
       return undefined;
     }
 
-    return (await response.json()) as ShopHistoryEntry[];
+    return (await response.json()) as ShopHistoryEntryPage;
   } catch (error) {
     return undefined;
   }
 }
 
-export async function getOwnHistory(amount: number) {
+export async function getUserHistory(
+  userId: string,
+  size: number,
+  page: number
+) {
   try {
-    const response = await fetch(`${apiUrl}/api/history/me?n=${amount}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Basic ${getEncodedCredentials()}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${apiUrl}/api/history/shop/list?s=${size}&p=${page}&receiverId=${userId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${getEncodedCredentials()}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       return undefined;
     }
 
-    return (await response.json()) as ShopHistoryEntry[];
+    return (await response.json()) as ShopHistoryEntryPage;
+  } catch (error) {
+    return undefined;
+  }
+}
+
+export async function getOwnHistory(size: number, page: number) {
+  try {
+    const response = await fetch(
+      `${apiUrl}/api/history/shop/me?s=${size}&p=${page}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${getEncodedCredentials()}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as ShopHistoryEntryPage;
   } catch (error) {
     return undefined;
   }
@@ -343,15 +497,26 @@ export async function getPersonalInvoices(): Promise<InvoicePage | undefined> {
   }
 }
 
-export async function getAllInvoices(): Promise<InvoicePage | undefined> {
+export async function getAllInvoices(
+  page: number,
+  userId: string | undefined,
+  mailed: boolean | undefined
+): Promise<InvoicePage | undefined> {
+  const params =
+    (userId ? "&userId=" + userId : "") +
+    (mailed === undefined ? "" : "&mailed=" + (mailed ? "true" : "false"));
+
   try {
-    const response = await fetch(`${apiUrl}/api/invoice/list`, {
-      method: "GET",
-      headers: {
-        Authorization: `Basic ${getEncodedCredentials()}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${apiUrl}/api/invoice/list?s=20&p=` + page + params,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${getEncodedCredentials()}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       return undefined;

@@ -11,10 +11,10 @@
   </parent>
 
   <groupId>de.unipassau.fim.fsinfo</groupId>
-  <artifactId>KdV</artifactId>
+  <artifactId>PRoST</artifactId>
   <version>1.0.0</version>
-  <name>KdV</name>
-  <description>KdV</description>
+  <name>PRoST</name>
+  <description>PRoST</description>
 
   <properties>
     <java.version>17</java.version>

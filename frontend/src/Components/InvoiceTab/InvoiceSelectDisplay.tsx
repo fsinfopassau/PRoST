@@ -3,11 +3,14 @@ import {
   EnvelopeClosedIcon,
   EyeNoneIcon,
   EyeOpenIcon,
+  InfoCircledIcon,
   LockClosedIcon,
 } from "@radix-ui/react-icons";
 import { convertTimestampToTime, formatMoney } from "../../Format";
 import { Invoice } from "../../Types/Invoice";
 import { Link } from "react-router-dom";
+import ScrollDialog from "../Util/ScrollDialog";
+import { InvoiceDetails } from "./InvoiceDetails";
 
 export function InvoiceSelectDisplay(props: {
   invoice: Invoice;
@@ -70,6 +73,19 @@ export function InvoiceSelectDisplay(props: {
           </div>
         </th>
       )}
+      <th className="icon">
+        <ScrollDialog
+          title="Rechnung"
+          trigger={
+            <div className="green">
+              <InfoCircledIcon />
+            </div>
+          }
+          onSubmit={() => {}}
+        >
+          <InvoiceDetails invoice={invoice} />
+        </ScrollDialog>
+      </th>
       <th className="name bold">
         <Link to={`/stats/users/${invoice.userId}`} className="bold">
           {invoice.userDisplayName}

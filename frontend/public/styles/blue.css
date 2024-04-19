@@ -139,3 +139,18 @@ Dialog
 .DialogDescription {
   color: var(--mauve-11);
 }
+
+.ProgressRoot {
+  background-repeat: no-repeat;
+  background-image: url(/public/img/mc_xp-empty.png);
+  overflow: hidden;
+  background-size: 100% 100%;
+}
+
+.ProgressIndicator {
+  background-image: url(/public/img/mc_xp.png);
+  background-repeat: no-repeat;
+  overflow: hidden;
+  background-size: cover;
+  transition: width 1s; /* Adjust the duration as needed */
+}
