@@ -6,8 +6,10 @@ import { Separator } from "@radix-ui/react-separator";
 import ScrollDialog from "../Util/ScrollDialog";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { toast } from "react-toastify";
+import Fuse from "fuse.js";
 
 export function ItemSettings() {
+  const [searchValue, setSearchValue] = useState("");
   const [items, setItems] = useState<ShopItem[]>([]);
   const [newId, setNewId] = useState<string>("");
   const [newCategory, setNewCategory] = useState<string>("");
@@ -59,9 +61,27 @@ export function ItemSettings() {
     setNewPrice(parseInt(event.target.value));
   };
 
+  function filter(items: ShopItem[]): ShopItem[] {
+    if (searchValue.trim().length === 0) {
+      return items.filter((item) => item.enabled === true);
+    }
+
+    const fuse = new Fuse(items, {
+      keys: ["id", "displayName"],
+    });
+    const results = fuse.search(searchValue).map((result) => result.item);
+
+    return results.filter((item) => item.enabled === true);
+  }
+
   return (
     <div className="DisplayCard">
       <div style={{ display: "flex", gap: "1rem" }}>
+        <input
+          type="text"
+          placeholder="Item"
+          onChange={(e) => setSearchValue(e.target.value)}
+        ></input>
         <ScrollDialog
           title="Neues Item"
           trigger={
@@ -126,7 +146,7 @@ export function ItemSettings() {
       </div>
       <Separator className="Separator" />
       <div className="CardContainer">
-        {items.map((item, index) => (
+        {filter(items).map((item, index) => (
           <ItemSettingCard item={item} key={index} onUpdate={reloadShopItems} />
         ))}
       </div>
