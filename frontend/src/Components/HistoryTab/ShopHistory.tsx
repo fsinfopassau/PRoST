@@ -90,18 +90,19 @@ export function ShopHistory(props: { personal: boolean }) {
           {props.personal ? (
             <></>
           ) : (
-            <div id="tableSearch">
-              <input
-                className="Input"
-                type="text"
-                onChange={(e) => setSearchValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Empfänger Id"
-              />
-            </div>
+            <>
+              <div id="tableSearch">
+                <input
+                  className="Input"
+                  type="text"
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Empfänger Id"
+                />
+              </div>
+              <Separator className="Separator" />
+            </>
           )}
-
-          <Separator className="Separator" />
 
           <table>
             <tbody>

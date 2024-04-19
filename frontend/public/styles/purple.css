@@ -211,6 +211,19 @@ Dialog
 }
 
 /*
+Progress
+*/
+
+.ProgressRoot {
+  background: var(--violet-5);
+  border-radius: 99999px;
+}
+
+.ProgressIndicator {
+  background-color: var(--violet-11);
+}
+
+/*
 Colors
 */
 

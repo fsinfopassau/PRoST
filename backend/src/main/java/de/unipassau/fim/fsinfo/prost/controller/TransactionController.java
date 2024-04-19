@@ -48,7 +48,7 @@ public class TransactionController {
   }
 
   @PostMapping("/deposit")
-  public ResponseEntity<BigDecimal> transaction(@RequestParam String id,
+  public ResponseEntity<BigDecimal> deposit(@RequestParam String id,
       @RequestParam String value, Authentication authentication) {
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 

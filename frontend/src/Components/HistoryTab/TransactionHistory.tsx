@@ -79,18 +79,19 @@ export function TransactionHistory(props: { personal: boolean }) {
         {props.personal ? (
           <></>
         ) : (
-          <div id="tableSearch">
-            <input
-              className="Input"
-              type="text"
-              onChange={(e) => setSearchValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Empfänger Id"
-            />
-          </div>
+          <>
+            <div id="tableSearch">
+              <input
+                className="Input"
+                type="text"
+                onChange={(e) => setSearchValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Empfänger Id"
+              />
+              <Separator className="Separator" />
+            </div>
+          </>
         )}
-
-        <Separator className="Separator" />
 
         <table className="Table">
           <tbody>

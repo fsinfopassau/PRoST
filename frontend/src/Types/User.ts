@@ -4,6 +4,7 @@ export interface User {
   displayName: string;
   email: string;
   balance: number;
+  totalSpent: number;
   enabled: boolean;
 }
 

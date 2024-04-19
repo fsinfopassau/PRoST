@@ -11,7 +11,7 @@ spring:
       hibernate:
         format_sql: true
     hibernate:
-      ddl-auto: create-drop # "update" | "create-drop" for dev
+      ddl-auto: update # "update" | "create-drop" for dev
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   servlet:
