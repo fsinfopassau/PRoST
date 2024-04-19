@@ -40,9 +40,9 @@ export function UserSummaryCard(props: Props) {
           <Link to={`/stats/users/${user.id}`} className="bold">
             {getDisplayName()}
           </Link>
-          <div>{Math.floor(user.totalSpent / level_step) + 1}</div>
           <div>👑 🍺</div>
         </div>
+        <div style={{ textAlign: "center" }}>{Math.floor(user.totalSpent / level_step) + 1}</div>
         <LevelProgressDisplay
           value={(user.totalSpent % level_step) / level_step}
         />

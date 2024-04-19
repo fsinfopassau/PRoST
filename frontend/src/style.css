@@ -592,9 +592,9 @@ General
   position: relative;
   overflow: hidden;
   transform: translateZ(0);
+  margin: 0 0 0.5rem 0;
+  height: .75rem;
   width: 100%;
-  margin: 0.5rem 0;
-  height: 0.75rem;
 }
 
 .ProgressIndicator {

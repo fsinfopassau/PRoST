@@ -214,12 +214,20 @@ Dialog
 Progress
 */
 
+
 .ProgressRoot {
+  overflow: hidden;
+  width: 100%;
+  background-size: 100% 100%;
   background: var(--violet-5);
   border-radius: 99999px;
 }
 
 .ProgressIndicator {
+  overflow: hidden;
+  height: 100%;
+  background-size: cover;
+  transition: width 1s; /* Adjust the duration as needed */
   background-color: var(--violet-11);
 }
 
