@@ -23,6 +23,8 @@ public class ShopService {
 
   final TransactionService transactionService;
 
+  final int nameLength = 20;
+
   @Autowired
   public ShopService(ShopItemRepository itemRepository, ShopItemHistoryRepository historyRepository,
       UserRepository userRepository, TransactionService transactionService) {
@@ -65,6 +67,44 @@ public class ShopService {
     } else {
       return false;
     }
+  }
+
+  @Transactional
+  public Optional<ShopItem> createItem(String identifier, String displayName, String category, BigDecimal price ){
+
+    if (identifier == null || identifier.isBlank()) {
+      System.out.println("[SS] :: identifier is empty.");
+      return Optional.empty();
+    }
+
+    if (itemRepository.existsById(identifier)) {
+      System.out.println("[SS] :: identifier \"" + identifier + "\" already present.");
+      return Optional.empty();
+    }
+
+    if (displayName == null || displayName.isBlank()) {
+      System.out.println("[SS] :: display name is empty.");
+      return Optional.empty();
+    }
+
+    if (category == null || category.isBlank()) {
+      System.out.println("[SS] :: category is empty");
+      return Optional.empty();
+    }
+
+    if (displayName.length() > nameLength || category.length() > nameLength || identifier.length() > nameLength) {
+      System.out.println("[SS] :: string size to large");
+      return Optional.empty();
+    }
+
+    if (price == null) {
+      System.out.println("[SS] :: The price is invalid or null");
+      return Optional.empty();
+    }
+
+    ShopItem item = new ShopItem(identifier,category,displayName,price.abs());
+    itemRepository.save(item);
+    return Optional.of(item);
   }
 
 }

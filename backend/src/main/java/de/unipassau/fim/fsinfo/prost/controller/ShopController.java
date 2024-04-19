@@ -113,22 +113,10 @@ public class ShopController {
   }
 
   @PostMapping("/settings/create")
-  public ResponseEntity<ShopItem> create(@RequestBody ShopItem item) {
-    if (item.getId() == null || itemRepository.existsById(item.getId())
-        || item.getDisplayName() == null
-        || item.getDisplayName().isBlank()) {
-      return ResponseEntity.badRequest().build();
-    }
+  public ResponseEntity<ShopItem> create(@RequestBody ShopItem itemTemplate) {
+    Optional<ShopItem> shopItem = shopService.createItem(itemTemplate.getId(), itemTemplate.getDisplayName(), itemTemplate.getCategory(), itemTemplate.getPrice());
 
-    if (item.getEnabled() == null) {
-      item.setEnabled(true);
-    }
-    if (item.getPrice() == null) {
-      item.setPrice(new BigDecimal(0));
-    }
-
-    itemRepository.save(item);
-    return ResponseEntity.ok(item);
+    return shopItem.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
   @DeleteMapping("/settings/item/delete")

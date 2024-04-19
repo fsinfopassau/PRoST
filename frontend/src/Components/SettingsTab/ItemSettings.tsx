@@ -80,6 +80,7 @@ export function ItemSettings() {
         <input
           type="text"
           placeholder="Item"
+          className="Input"
           onChange={(e) => setSearchValue(e.target.value)}
         ></input>
         <ScrollDialog
