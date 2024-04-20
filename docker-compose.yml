@@ -1,21 +1,18 @@
 version: '3.8'
-volumes:
-  kdv-ldap:
-networks:
-  kdv:
+
 services:
   frontend:
-    container_name: KdV-Frontend
+    container_name: PRoST-Frontend
     build:
       context: frontend
-    environment:
-      VITE_API_URL: http://localhost:8081
+      args:
+        - VITE_API_URL=http://localhost:8081
     ports:
       - "8080:8080"
     restart: on-failure
   backend:
     depends_on: [ ldap ]
-    container_name: KdV-Backend
+    container_name: PRoST-Backend
     build:
       context: backend
     environment:
@@ -23,19 +20,19 @@ services:
     ports:
       - "8081:8081"
     networks:
-      - kdv
+      - prost
     volumes:
       - ./.data:/data
     restart: on-failure
   ldap:
-    container_name: KdV-LDAP
+    container_name: PRoST-LDAP
     image: bitnami/openldap:latest
     ports:
       - "1389:1389"
     networks:
-      - kdv
+      - prost
     volumes:
-      - kdv-ldap:/bitnami/openldap
+      - prost-ldap:/bitnami/openldap
       - ./ldif:/ldif
     environment:
       LDAP_ADMIN_USERNAME: admin
@@ -43,3 +40,9 @@ services:
       LDAP_ROOT: dc=fsinfo,dc=fim,dc=uni-passau,dc=de
       LDAP_ADMIN_DN: cn=admin,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
       LDAP_CUSTOM_LDIF_DIR: /ldif
+
+volumes:
+  prost-ldap:
+
+networks:
+  prost:

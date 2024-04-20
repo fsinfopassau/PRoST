@@ -1,4 +1,6 @@
 FROM docker.io/library/node:16 AS frontend
+ARG VITE_API_URL
+ENV VITE_API_URL $VITE_API_URL
 WORKDIR /app/frontend
 COPY package*.json ./
 RUN npm install
