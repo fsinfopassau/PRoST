@@ -49,6 +49,7 @@ export function UserSettings() {
       email: newEmail,
       balance: 0,
       enabled: true,
+      totalSpent: 0,
     };
 
     createNewUser(user).then((success) => {
