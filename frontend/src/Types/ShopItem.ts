@@ -8,7 +8,7 @@ export interface ShopItem {
   enabled: boolean;
 }
 
-let cachedItems = new Map<string, ShopItem>();
+const cachedItems = new Map<string, ShopItem>();
 
 /**
  * gets DisplayName from cached Users
@@ -21,13 +21,15 @@ export async function getItemDisplayName(
     return item.displayName;
   } else {
     const newItems = await getAllShopItems();
-    newItems.forEach((newItem: ShopItem) =>
-      cachedItems.set(newItem.id, newItem)
-    );
+    if(newItems){
+      newItems.forEach((newItem: ShopItem) =>
+        cachedItems.set(newItem.id, newItem)
+      );
 
-    item = cachedItems.get(itemId);
-    if (item) {
-      return item.displayName;
+      item = cachedItems.get(itemId);
+      if (item) {
+        return item.displayName;
+      }
     }
   }
   return undefined;

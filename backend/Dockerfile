@@ -10,6 +10,4 @@ WORKDIR /app
 COPY --from=backend /app/backend/target/*.jar ./backend.jar
 EXPOSE 8081
 ENV DATA_LOCATION /data
-ARG LDAP_URI
-ENV LDAP_URI $LDAP_URI
 CMD ["java", "-jar", "backend.jar"]
