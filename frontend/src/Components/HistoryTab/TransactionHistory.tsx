@@ -56,14 +56,14 @@ export function TransactionHistory(props: { personal: boolean }) {
   }
   function reloadTransactions() {
     if (props.personal) {
-      getPersonalTransactions(selectedPage).then((result) => {
+      getPersonalTransactions(10, selectedPage).then((result) => {
         if (result && result.content) {
           setTransactions(result.content);
           setTotalPages(result.totalPages + 1);
         }
       });
     } else {
-      getAllTransactions(selectedPage, searchValue).then((result) => {
+      getAllTransactions(10, selectedPage, searchValue).then((result) => {
         if (result && result.content) {
           setTransactions(result.content);
           setTotalPages(result.totalPages + 1);

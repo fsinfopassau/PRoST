@@ -55,7 +55,7 @@ export function App() {
     <>
       <React.StrictMode>
         <div className="Main">
-          <BrowserRouter>
+          <BrowserRouter basename={import.meta.env.VITE_BASE_PATH || ""}>
             <Navbar switchTheme={switchTheme} />
             <ToastContainer
               position="bottom-left"

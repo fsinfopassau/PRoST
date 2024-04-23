@@ -56,7 +56,7 @@ export function ShopHistory(props: { personal: boolean }) {
   }
   function reloadTransactions() {
     if (props.personal) {
-      getOwnHistory(20, selectedPage).then((historyPage) => {
+      getOwnHistory(10, selectedPage).then((historyPage) => {
         if (historyPage) {
           setHistory(historyPage.content);
           setTotalPages(historyPage.totalPages + 1);
@@ -64,14 +64,14 @@ export function ShopHistory(props: { personal: boolean }) {
       });
     } else {
       if (searchValue.trim().length != 0) {
-        getUserHistory(searchValue, 20, selectedPage).then((historyPage) => {
+        getUserHistory(searchValue, 10, selectedPage).then((historyPage) => {
           if (historyPage) {
             setHistory(historyPage.content);
             setTotalPages(historyPage.totalPages + 1);
           }
         });
       } else {
-        getHistory(20, selectedPage).then((historyPage) => {
+        getHistory(10, selectedPage).then((historyPage) => {
           if (historyPage) {
             setHistory(historyPage.content);
             setTotalPages(historyPage.totalPages + 1);

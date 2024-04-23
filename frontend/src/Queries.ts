@@ -157,6 +157,7 @@ export async function createTransaction(
 }
 
 export async function getAllTransactions(
+  size: number,
   page: number,
   receiverId: string | undefined
 ): Promise<TransactionPage | undefined> {
@@ -164,7 +165,7 @@ export async function getAllTransactions(
 
   try {
     const response = await fetch(
-      `${apiUrl}/api/transaction/list?s=20&p=` + page + params,
+      `${apiUrl}/api/transaction/list?s=${size}&p=${page}` + params,
       {
         method: "GET",
         headers: {
@@ -185,11 +186,12 @@ export async function getAllTransactions(
 }
 
 export async function getPersonalTransactions(
+  size: number,
   page: number
 ): Promise<TransactionPage | undefined> {
   try {
     const response = await fetch(
-      `${apiUrl}/api/transaction/me?s=20&p=` + page,
+      `${apiUrl}/api/transaction/me?s=${size}&p=${page}`,
       {
         method: "GET",
         headers: {
