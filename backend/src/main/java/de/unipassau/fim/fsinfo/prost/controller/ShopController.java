@@ -180,10 +180,8 @@ public class ShopController {
 
   @PostMapping("/settings/item/enable")
   public ResponseEntity<String> enable(@RequestParam String id) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    if (item.isPresent()) {
-      item.get().setEnabled(true);
-      itemRepository.save(item.get());
+    Optional<ShopItem> shopItem = shopService.enable(id);
+    if (shopItem.isPresent()) {
       return ResponseEntity.ok().build();
     }
     return ResponseEntity.badRequest().build();
@@ -191,10 +189,8 @@ public class ShopController {
 
   @PostMapping("/settings/item/disable")
   public ResponseEntity<String> disable(@RequestParam String id) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    if (item.isPresent()) {
-      item.get().setEnabled(false);
-      itemRepository.save(item.get());
+    Optional<ShopItem> shopItem = shopService.enable(id);
+    if (shopItem.isPresent()) {
       return ResponseEntity.ok().build();
     }
     return ResponseEntity.badRequest().build();

@@ -63,7 +63,7 @@ export function ItemSettings() {
 
   function filter(items: ShopItem[]): ShopItem[] {
     if (searchValue.trim().length === 0) {
-      return items.filter((item) => item.enabled === true);
+      return items;
     }
 
     const fuse = new Fuse(items, {
@@ -71,7 +71,7 @@ export function ItemSettings() {
     });
     const results = fuse.search(searchValue).map((result) => result.item);
 
-    return results.filter((item) => item.enabled === true);
+    return results;
   }
 
   return (

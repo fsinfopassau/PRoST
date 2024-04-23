@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -159,6 +160,25 @@ public class ShopService {
       return Optional.empty();
     }
     return Optional.empty();
+  }
+
+  @Transactional
+  public Optional<ShopItem> enable(String identifier) {
+    return setVisibility(identifier, true);
+  }
+
+  @Transactional
+  public Optional<ShopItem> disable(String identifier) {
+    return setVisibility(identifier, false);
+  }
+
+  private Optional<ShopItem> setVisibility(String identifier, boolean value) {
+    Optional<ShopItem> item = itemRepository.findById(identifier);
+    if (item.isPresent()) {
+      item.get().setEnabled(value);
+      itemRepository.save(item.get());
+    }
+    return item;
   }
 
   private boolean checkEmpty(String value, String name) {
