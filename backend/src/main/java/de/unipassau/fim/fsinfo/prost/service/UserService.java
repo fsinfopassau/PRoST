@@ -17,6 +17,7 @@ public class UserService {
   private final UserRepository users;
 
   private static final String EMAIL_PATTERN = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$";
+  private static final int maxLength = 20;
 
   @Autowired
   public UserService(UserRepository users) {
@@ -47,9 +48,15 @@ public class UserService {
       return Optional.empty();
     }
 
-    if (displayName == null || displayName.isBlank()) {
+    if (displayName == null || displayName.isBlank() || displayName.length() > maxLength) {
       System.out.println(
           "[US] :: " + userName + " :: user-creation failed [displayName=" + displayName + "] ");
+      return Optional.empty();
+    }
+
+    if (userName.length() > maxLength) {
+      System.out.println(
+              "[US] :: " + userName + " :: user-creation failed [userName=" + userName + "] ");
       return Optional.empty();
     }
 
@@ -86,7 +93,7 @@ public class UserService {
   public boolean rename(String id, String name) {
     Optional<ProstUser> user = users.findById(id);
 
-    if (user.isPresent()) {
+    if (user.isPresent() && name.length() <= maxLength) {
       ProstUser u = user.get();
       u.setDisplayName(name);
       users.save(u);

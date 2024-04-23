@@ -25,8 +25,8 @@ public class ShopService {
 
   final TransactionService transactionService;
 
-  final int nameLength = 20;
-  final BigDecimal maxPrice = new BigDecimal(100);
+  final static int nameLength = 20;
+  final static BigDecimal maxPrice = new BigDecimal(100);
 
   @Autowired
   public ShopService(ShopItemRepository itemRepository, ShopItemHistoryRepository historyRepository,
