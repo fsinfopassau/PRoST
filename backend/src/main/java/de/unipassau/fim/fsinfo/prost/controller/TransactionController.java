@@ -1,7 +1,7 @@
 package de.unipassau.fim.fsinfo.prost.controller;
 
-import de.unipassau.fim.fsinfo.prost.data.TransactionType;
 import de.unipassau.fim.fsinfo.prost.data.dao.TransactionEntry;
+import de.unipassau.fim.fsinfo.prost.data.type.TransactionType;
 import de.unipassau.fim.fsinfo.prost.security.CustomUserDetailsContextMapper.CustomUserDetails;
 import de.unipassau.fim.fsinfo.prost.service.TransactionService;
 import java.math.BigDecimal;

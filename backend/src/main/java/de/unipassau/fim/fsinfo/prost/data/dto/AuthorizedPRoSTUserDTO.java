@@ -1,8 +1,8 @@
 package de.unipassau.fim.fsinfo.prost.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import de.unipassau.fim.fsinfo.prost.data.UserAccessRole;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
+import de.unipassau.fim.fsinfo.prost.data.type.UserAccessRole;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class AuthorizedPRoSTUserDTO {

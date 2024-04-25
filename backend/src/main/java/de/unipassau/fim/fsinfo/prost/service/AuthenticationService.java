@@ -1,9 +1,9 @@
 package de.unipassau.fim.fsinfo.prost.service;
 
-import de.unipassau.fim.fsinfo.prost.data.UserAccessRole;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dto.AuthorizedPRoSTUserDTO;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
+import de.unipassau.fim.fsinfo.prost.data.type.UserAccessRole;
 import de.unipassau.fim.fsinfo.prost.security.CustomUserDetailsContextMapper.CustomUserDetails;
 import java.util.ArrayList;
 import java.util.Collection;

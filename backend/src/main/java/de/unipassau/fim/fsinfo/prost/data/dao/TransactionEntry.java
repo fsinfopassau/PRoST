@@ -1,6 +1,6 @@
 package de.unipassau.fim.fsinfo.prost.data.dao;
 
-import de.unipassau.fim.fsinfo.prost.data.TransactionType;
+import de.unipassau.fim.fsinfo.prost.data.type.TransactionType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

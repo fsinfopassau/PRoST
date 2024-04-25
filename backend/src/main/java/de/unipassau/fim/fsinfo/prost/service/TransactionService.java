@@ -1,10 +1,10 @@
 package de.unipassau.fim.fsinfo.prost.service;
 
-import de.unipassau.fim.fsinfo.prost.data.TransactionType;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.TransactionEntry;
 import de.unipassau.fim.fsinfo.prost.data.repositories.TransactionRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
+import de.unipassau.fim.fsinfo.prost.data.type.TransactionType;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;

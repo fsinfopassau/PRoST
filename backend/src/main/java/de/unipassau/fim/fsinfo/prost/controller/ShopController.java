@@ -1,8 +1,8 @@
 package de.unipassau.fim.fsinfo.prost.controller;
 
-import de.unipassau.fim.fsinfo.prost.data.UserAccessRole;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
+import de.unipassau.fim.fsinfo.prost.data.type.UserAccessRole;
 import de.unipassau.fim.fsinfo.prost.security.CustomUserDetailsContextMapper.CustomUserDetails;
 import de.unipassau.fim.fsinfo.prost.service.AuthenticationService;
 import de.unipassau.fim.fsinfo.prost.service.FileStorageService;
@@ -113,8 +113,9 @@ public class ShopController {
 
   @PostMapping("/settings/create")
   public ResponseEntity<ShopItem> create(@RequestBody ShopItem itemTemplate) {
-    Optional<ShopItem> shopItem = shopService.createItem(itemTemplate.getId(), itemTemplate.getDisplayName(),
-            itemTemplate.getCategory(), itemTemplate.getPrice());
+    Optional<ShopItem> shopItem = shopService.createItem(itemTemplate.getId(),
+        itemTemplate.getDisplayName(),
+        itemTemplate.getCategory(), itemTemplate.getPrice());
 
     return shopItem.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
   }
@@ -132,7 +133,7 @@ public class ShopController {
   @PostMapping("/settings/item/displayname")
   public ResponseEntity<String> displayName(@RequestParam String id,
       @RequestParam String value) {
-    Optional<ShopItem> shopItem = shopService.changeDisplayName(id,value);
+    Optional<ShopItem> shopItem = shopService.changeDisplayName(id, value);
 
     if (shopItem.isPresent()) {
       return ResponseEntity.ok().build();
@@ -143,7 +144,7 @@ public class ShopController {
   @PostMapping("/settings/item/category")
   public ResponseEntity<String> displayCategory(@RequestParam String id,
       @RequestParam String value) {
-    Optional<ShopItem> shopItem = shopService.changeCategory(id,value);
+    Optional<ShopItem> shopItem = shopService.changeCategory(id, value);
 
     if (shopItem.isPresent()) {
       return ResponseEntity.ok().build();
@@ -154,7 +155,7 @@ public class ShopController {
   @PostMapping("/settings/item/price")
   public ResponseEntity<String> price(@RequestParam String id,
       @RequestParam String value) {
-    Optional<ShopItem> shopItem = shopService.changePrice(id,value);
+    Optional<ShopItem> shopItem = shopService.changePrice(id, value);
 
     if (shopItem.isPresent()) {
       return ResponseEntity.ok().build();

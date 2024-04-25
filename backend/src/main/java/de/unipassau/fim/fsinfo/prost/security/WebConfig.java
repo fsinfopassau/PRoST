@@ -1,6 +1,6 @@
 package de.unipassau.fim.fsinfo.prost.security;
 
-import de.unipassau.fim.fsinfo.prost.data.UserAccessRole;
+import de.unipassau.fim.fsinfo.prost.data.type.UserAccessRole;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +50,7 @@ public class WebConfig implements WebMvcConfigurer {
       "/api/shop/**",
       "/api/invoice/**",
       "/api/transaction/**",
+      "/api/history/admin/**",
   };
 
   @Autowired

@@ -1,6 +1,5 @@
 package de.unipassau.fim.fsinfo.prost.service;
 
-import de.unipassau.fim.fsinfo.prost.data.TransactionType;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItemHistoryEntry;
@@ -8,11 +7,10 @@ import de.unipassau.fim.fsinfo.prost.data.dao.TransactionEntry;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
+import de.unipassau.fim.fsinfo.prost.data.type.TransactionType;
 import java.math.BigDecimal;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,14 +71,15 @@ public class ShopService {
   }
 
   @Transactional
-  public Optional<ShopItem> createItem(String identifier, String displayName, String category, BigDecimal price ){
+  public Optional<ShopItem> createItem(String identifier, String displayName, String category,
+      BigDecimal price) {
 
-    if (checkEmpty(displayName,"display name")
-            || checkEmpty(category,"category")
-            || checkEmpty(identifier,"identifier")
-            || checkSize(displayName, "display name")
-            || checkSize(category, "category")
-            || checkSize(identifier, "identifier")) {
+    if (checkEmpty(displayName, "display name")
+        || checkEmpty(category, "category")
+        || checkEmpty(identifier, "identifier")
+        || checkSize(displayName, "display name")
+        || checkSize(category, "category")
+        || checkSize(identifier, "identifier")) {
       return Optional.empty();
     }
 
@@ -94,7 +93,7 @@ public class ShopService {
       return Optional.empty();
     }
 
-    ShopItem item = new ShopItem(identifier,category,displayName,price.abs());
+    ShopItem item = new ShopItem(identifier, category, displayName, price.abs());
     itemRepository.save(item);
     return Optional.of(item);
   }
@@ -102,7 +101,7 @@ public class ShopService {
   @Transactional
   public Optional<ShopItem> delete(String identifier) {
     Optional<ShopItem> item = itemRepository.findById(identifier);
-    if(item.isPresent()) {
+    if (item.isPresent()) {
       itemRepository.delete(item.get());
       return item;
     }
@@ -117,7 +116,7 @@ public class ShopService {
       return Optional.empty();
     }
 
-    if(item.isPresent()) {
+    if (item.isPresent()) {
       item.get().setDisplayName(newDisplayName);
       itemRepository.save(item.get());
       return item;
@@ -133,7 +132,7 @@ public class ShopService {
       return Optional.empty();
     }
 
-    if(item.isPresent()) {
+    if (item.isPresent()) {
       item.get().setCategory(category);
       itemRepository.save(item.get());
       return item;
@@ -148,7 +147,7 @@ public class ShopService {
     try {
       if (item.isPresent()) {
         BigDecimal price = new BigDecimal(value);
-        if(price.compareTo(maxPrice) > 0) {
+        if (price.compareTo(maxPrice) > 0) {
           System.out.println("[SS] :: Price is with " + price + " to high");
           return Optional.empty();
         }
@@ -182,15 +181,15 @@ public class ShopService {
   }
 
   private boolean checkEmpty(String value, String name) {
-    if(value == null || value.isBlank() ) {
-      System.out.println("[SS] :: " + name +" is empty");
+    if (value == null || value.isBlank()) {
+      System.out.println("[SS] :: " + name + " is empty");
       return true;
     }
     return false;
   }
 
   private boolean checkSize(String value, String name) {
-    if(value.length() > nameLength ) {
+    if (value.length() > nameLength) {
       System.out.println("[SS] :: " + name + " size to large");
       return true;
     }
