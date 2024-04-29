@@ -9,7 +9,7 @@ services:
         - VITE_API_URL=http://localhost:8081
         - VITE_BASE_PATH=/kaffeekasse
     ports:
-      - "8080:8080"
+      - "8080:80"
     restart: on-failure
   backend:
     depends_on: [ ldap ]

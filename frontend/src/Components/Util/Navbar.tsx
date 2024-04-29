@@ -12,6 +12,7 @@ import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LoginDialog } from "./LoginDialog";
 import { getAuthorizedUser, isAdmin, isKiosk, isUser } from "../../SessionInfo";
+import { BASE_PATH } from "../App";
 
 export function Navbar(props: { switchTheme: () => void }) {
   const { switchTheme } = props;
@@ -45,7 +46,7 @@ export function Navbar(props: { switchTheme: () => void }) {
   return (
     <>
       <div id="tab-changer">
-        <img onClick={switchTheme} src="/icons/happy-manje/happy beer.svg" />
+        <img onClick={switchTheme} src={`${BASE_PATH}/icons/happy-manje/happy beer.svg`} />
         <Tabs value={getSelectedTabValue()} className="TabsRoot">
           <TabsList className="TabsList">
             {isKiosk() ? (
