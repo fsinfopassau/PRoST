@@ -189,7 +189,7 @@ public class ShopController {
 
   @PostMapping("/settings/item/disable")
   public ResponseEntity<String> disable(@RequestParam String id) {
-    Optional<ShopItem> shopItem = shopService.enable(id);
+    Optional<ShopItem> shopItem = shopService.disable(id);
     if (shopItem.isPresent()) {
       return ResponseEntity.ok().build();
     }
