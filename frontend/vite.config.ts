@@ -9,7 +9,4 @@ export default defineConfig({
     host: true,
     strictPort: true,
   },
-  build: {
-    outDir: "dist/kaffekasse",
-  },
 });
