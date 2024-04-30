@@ -18,7 +18,7 @@ services:
       context: backend
     environment:
       LDAP_URI: ldap://ldap:1389/dc=fsinfo,dc=fim,dc=uni-passau,dc=de
-      #ALLOWED_ORIGINS: localhost/kaffeekasse
+      PORT: 8081
     ports:
       - "8081:8081"
     networks:

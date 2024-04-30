@@ -23,13 +23,14 @@ import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
 import { toast } from "react-toastify";
 import { formatMoney } from "../../Format";
 import ScrollDialog from "../Util/ScrollDialog";
+import { BASE_PATH } from "../App";
 
 export function ItemSettingCard(props: {
   item: ShopItem;
   onUpdate: () => void;
 }) {
   const { item, onUpdate } = props;
-  const [imageUrl, setImageUrl] = useState<string>("/Beer.jpg");
+  const [imageUrl, setImageUrl] = useState<string>(`${BASE_PATH}/img/Beer.jpg`);
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

@@ -46,7 +46,10 @@ export function Navbar(props: { switchTheme: () => void }) {
   return (
     <>
       <div id="tab-changer">
-        <img onClick={switchTheme} src={`${BASE_PATH}/icons/happy-manje/happy beer.svg`} />
+        <img
+          onClick={switchTheme}
+          src={`${BASE_PATH}/icons/happy-manje/happy beer.svg`}
+        />
         <Tabs value={getSelectedTabValue()} className="TabsRoot">
           <TabsList className="TabsList">
             {isKiosk() ? (
