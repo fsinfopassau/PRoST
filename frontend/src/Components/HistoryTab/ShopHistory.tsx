@@ -104,7 +104,7 @@ export function ShopHistory(props: { personal: boolean }) {
             </>
           )}
 
-          <table>
+          <table className="Table">
             <tbody>
               {history.map((item) => (
                 <HistoryEntryDisplay entry={item} key={item.id} />

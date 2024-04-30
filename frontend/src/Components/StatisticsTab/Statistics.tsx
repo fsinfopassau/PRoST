@@ -36,7 +36,7 @@ export function Statistics() {
         <ScrollArea className="DisplayCard">
           <ScrollAreaViewport style={{ maxHeight: "20rem" }}>
             <h3 className="bold">Kürzlich</h3>
-            <table>
+            <table className="Table">
               <tbody>
                 {history.map((item) => (
                   <HistoryEntryDisplay entry={item} key={item.id} />

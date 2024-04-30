@@ -113,17 +113,6 @@ div {
 }
 
 /*
-History
-*/
-
-.table-entry {
-  background-color: var(--violet-4);
-  color: var(--violet-11);
-  border: 2px solid var(--violet-8);
-  border-radius: 12px;
-}
-
-/*
 Invoice
 */
 
@@ -213,7 +202,6 @@ Dialog
 /*
 Progress
 */
-
 
 .ProgressRoot {
   overflow: hidden;
