@@ -48,7 +48,7 @@ public class AuthenticationService {
   }
 
   public Optional<UserAccessRole> getHighestRole(Collection<UserAccessRole> roles) {
-    if (roles.isEmpty()) {
+    if (roles == null || roles.isEmpty()) {
       return Optional.empty();
     }
 
@@ -64,6 +64,12 @@ public class AuthenticationService {
   }
 
   public Collection<UserAccessRole> getRoles(Authentication authentication) {
+    if (authentication == null) {
+      System.err.println(
+          "[AC] :: No null-Authentication!");
+      return new ArrayList<>();
+    }
+
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
     List<UserAccessRole> userRoles = new ArrayList<>();
