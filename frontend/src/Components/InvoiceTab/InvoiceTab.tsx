@@ -205,11 +205,11 @@ export function InvoiceTab() {
           >
             <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
               {isAllSelected() ? (
-                <div className="Toggle green" onClick={toggleAll}>
+                <div className="CheckBox green" onClick={toggleAll}>
                   <CheckIcon />
                 </div>
               ) : (
-                <div className="Toggle" onClick={toggleAll}></div>
+                <div className="CheckBox" onClick={toggleAll}></div>
               )}
 
               {selectedItems.length !== 0 ? (

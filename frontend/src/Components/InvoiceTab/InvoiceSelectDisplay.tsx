@@ -30,7 +30,7 @@ export function InvoiceSelectDisplay(props: {
   }
 
   return (
-    <tr>
+    <tr className={totalAmounts() === 0 ? "orange" : ""}>
       <th className="icon">
         {invoice.mailed ? (
           <div>
@@ -38,7 +38,7 @@ export function InvoiceSelectDisplay(props: {
           </div>
         ) : selected ? (
           <div
-            className="Toggle green"
+            className="CheckBox green"
             onClick={() => {
               onSelect(invoice.id);
             }}
@@ -47,7 +47,7 @@ export function InvoiceSelectDisplay(props: {
           </div>
         ) : (
           <div
-            className="Toggle"
+            className="CheckBox"
             onClick={() => {
               onSelect(invoice.id);
             }}
@@ -92,7 +92,7 @@ export function InvoiceSelectDisplay(props: {
         </Link>
       </th>
       <th className="amount">{totalAmounts()}</th>
-      <th className="balance bold">{formatMoney(invoice.balance)}</th>
+      <th className="balance bold ">{formatMoney(invoice.balance)}</th>
       <th className="date">{convertTimestampToTime(invoice.timestamp)}</th>
     </tr>
   );

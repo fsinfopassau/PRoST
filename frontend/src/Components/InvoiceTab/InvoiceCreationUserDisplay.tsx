@@ -24,7 +24,7 @@ export function InvoiceCreationUserDisplay(props: {
             </div>
           ) : selected ? (
             <div
-              className="Toggle green"
+              className="CheckBox green"
               onClick={() => {
                 onSelect(user.id);
               }}
@@ -33,7 +33,7 @@ export function InvoiceCreationUserDisplay(props: {
             </div>
           ) : (
             <div
-              className="Toggle"
+              className="CheckBox"
               onClick={() => {
                 onSelect(user.id);
               }}

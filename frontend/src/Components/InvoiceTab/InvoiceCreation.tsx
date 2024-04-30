@@ -98,11 +98,11 @@ const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({
       >
         <div className="SpreadContainer" style={{ padding: "0 .5rem" }}>
           {isAllSelected() ? (
-            <div className="Toggle green" onClick={toggleAll}>
+            <div className="CheckBox green" onClick={toggleAll}>
               <CheckIcon />
             </div>
           ) : (
-            <div className="Toggle" onClick={toggleAll}></div>
+            <div className="CheckBox" onClick={toggleAll}></div>
           )}
           <div>{selectedUsers.length} Nutzer ausgewählt</div>
         </div>

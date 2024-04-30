@@ -97,7 +97,7 @@ export function ShopHistory(props: { personal: boolean }) {
                   type="text"
                   onChange={(e) => setSearchValue(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Empfänger Id"
+                  placeholder="Käufer Id"
                 />
               </div>
               <Separator className="Separator" />
