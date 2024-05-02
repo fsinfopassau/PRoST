@@ -12,37 +12,33 @@ export function TransactionDisplay(props: { transaction: Transaction }) {
         <th className="left date">
           {convertTimestampToTime(transaction.timestamp)}
         </th>
-        <th className="name bold">{transaction.transactionType}</th>
-        <th className="name-long table-entry">
-          (
-          <Link to={`/stats/users/${transaction.bearerId}`} className="bold">
-            {transaction.bearerId}
-          </Link>
-          )
-          <Link to={`/stats/users/${transaction.senderId}`} className="bold">
-            {transaction.senderId}
-          </Link>
-          <div className="bold">
+        <th className="bold">{transaction.transactionType}</th>
+        <th className="">
+          <div className="horizontalContainer">
+            (
+            <Link to={`/stats/users/${transaction.bearerId}`} className="bold">
+              {transaction.bearerId}
+            </Link>
+            )
+            <Link to={`/stats/users/${transaction.senderId}`} className="bold">
+              {transaction.senderId}
+            </Link>
             <DoubleArrowRightIcon />
+            <Link to={`/stats/users/${transaction.receiverId}`} className="bold">
+              {transaction.receiverId}
+            </Link>
           </div>
-          <Link to={`/stats/users/${transaction.receiverId}`} className="bold">
-            {transaction.receiverId}
-          </Link>
         </th>
-        {transaction.transactionType.toString() === "CHANGE" ? (
-          <>
-            <th className="balance bold right">
+        <th className="balance bold right">
+          {transaction.transactionType.toString() === "CHANGE" ? (
+            <div className="horizontalContainer bold right">
               {formatMoney(transaction.previous)}
               <DoubleArrowRightIcon />
-            </th>
-          </>
-        ) : (
-          <>
-            <th className="balance bold right"></th>
-          </>
-        )}
-        <th className="balance bold">{formatMoney(transaction.amount)}</th>
-      </tr>
+              {formatMoney(transaction.amount)}
+            </div>
+          ) : <>{formatMoney(transaction.amount)}</>}
+        </th>
+      </tr >
     </>
   );
 }

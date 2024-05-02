@@ -12,8 +12,8 @@ export function InvoiceCreationUserDisplay(props: {
 
   return (
     <>
-      <tr>
-        <th className="icon">
+      <tr className="table-entry">
+        <th className="icon left">
           {!user.enabled ? (
             <div>
               <LockClosedIcon />
@@ -40,12 +40,12 @@ export function InvoiceCreationUserDisplay(props: {
             ></div>
           )}
         </th>
-        <th className="name bold">
+        <th className="bold name">
           <Link to={`/stats/users/${user.id}`} className="bold">
             {user.displayName}
           </Link>
         </th>
-        <th className="balance bold">{formatMoney(user.balance)}</th>
+        <th className="balance bold right">{formatMoney(user.balance)}</th>
       </tr>
     </>
   );

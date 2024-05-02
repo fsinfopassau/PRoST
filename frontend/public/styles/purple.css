@@ -13,20 +13,6 @@ div {
   border-bottom-right-radius: 12px;
 }
 
-#login-button {
-  background-color: white;
-  border: 4px solid var(--mauve-4);
-  box-shadow: 0 2px 4px var(--black-a3);
-  border-radius: 12px;
-}
-#login-button:hover {
-  border: 4px solid var(--violet-7);
-}
-#login-button:active {
-  background-color: var(--violet-5);
-  box-shadow: 0 0 0 2px var(--black-a5);
-}
-
 #main-search {
   color: white;
   background-color: var(--black-a5);
@@ -124,9 +110,6 @@ Invoice
 
   tr {
     border-bottom: 1px solid black;
-  }
-  th {
-    padding: 0 0.5rem;
   }
   tr:last-child {
     border-bottom: none;

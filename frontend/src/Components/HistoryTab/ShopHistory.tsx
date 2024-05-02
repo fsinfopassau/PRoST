@@ -91,7 +91,7 @@ export function ShopHistory(props: { personal: boolean }) {
             <></>
           ) : (
             <>
-              <div id="tableSearch">
+              <div className="tableSearch">
                 <input
                   className="Input"
                   type="text"
@@ -100,7 +100,6 @@ export function ShopHistory(props: { personal: boolean }) {
                   placeholder="Käufer Id"
                 />
               </div>
-              <Separator className="Separator" />
             </>
           )}
 
@@ -120,9 +119,8 @@ export function ShopHistory(props: { personal: boolean }) {
                 return (
                   <div
                     key={"p" + index}
-                    className={`PageButton ${
-                      selectedPage === index ? "Selected" : ""
-                    }`}
+                    className={`PageButton ${selectedPage === index ? "Selected" : ""
+                      }`}
                     onClick={() => selectPage(index)}
                   >
                     {index + 1}
