@@ -16,7 +16,7 @@ public class UserService {
 
   private final UserRepository users;
 
-  private static final String EMAIL_PATTERN = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$";
+  private static final String EMAIL_PATTERN = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\\.+[a-zA-Z0-9.-]+$";
   private static final int maxLength = 20;
 
   @Autowired
