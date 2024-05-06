@@ -7,7 +7,7 @@ export function PersonalUserOverview(props: { user: User }) {
   return (
     <>
       <UserSummaryCard user={user} />
-      <div className="CardContainer">
+      <div className="GridContainer">
         <div className="DisplayCard">
           <h3>Statistiken</h3>
           <p>...</p>

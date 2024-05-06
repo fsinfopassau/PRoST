@@ -175,7 +175,7 @@ export function InvoiceTab() {
         <ScrollAreaViewport>
           <h2>Rechnungen</h2>
 
-          <div id="tableSearch">
+          <div className="tableSearch">
             <input
               className="Input"
               type="text"
@@ -189,8 +189,8 @@ export function InvoiceTab() {
                 mailed === undefined
                   ? "Button"
                   : mailed
-                  ? "Button green"
-                  : "Button red"
+                    ? "Button green"
+                    : "Button red"
               }
             >
               <EnvelopeClosedIcon />
@@ -201,15 +201,15 @@ export function InvoiceTab() {
 
           <div
             className="SpreadContainer"
-            style={{ padding: "0 .5rem 0.5rem 0.5rem" }}
+            style={{ padding: "0 0.7rem 0.5rem 0.7rem" }}
           >
             <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
               {isAllSelected() ? (
-                <div className="Toggle green" onClick={toggleAll}>
+                <div className="CheckBox green" onClick={toggleAll}>
                   <CheckIcon />
                 </div>
               ) : (
-                <div className="Toggle" onClick={toggleAll}></div>
+                <div className="CheckBox" onClick={toggleAll}></div>
               )}
 
               {selectedItems.length !== 0 ? (
@@ -268,9 +268,8 @@ export function InvoiceTab() {
                 return (
                   <div
                     key={"p" + index}
-                    className={`PageButton ${
-                      selectedPage === index ? "Selected" : ""
-                    }`}
+                    className={`PageButton ${selectedPage === index ? "Selected" : ""
+                      }`}
                     onClick={() => selectPage(index)}
                   >
                     {index + 1}

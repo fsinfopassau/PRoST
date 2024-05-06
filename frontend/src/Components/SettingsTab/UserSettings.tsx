@@ -139,7 +139,7 @@ export function UserSettings() {
           </div>
         </div>
         <Separator className="Separator" />
-        <div className="CardContainer">
+        <div className="GridContainer">
           {filter(users).map((user, index) => (
             <UserSettingCard
               user={user}

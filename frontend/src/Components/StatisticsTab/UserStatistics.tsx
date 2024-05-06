@@ -18,7 +18,7 @@ export function UserStatistics() {
 
   if (user) {
     return (
-      <div className="CardContainer">
+      <div className="GridContainer">
         <UserSummaryCard user={user} />
       </div>
     );

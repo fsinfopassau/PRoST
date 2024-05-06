@@ -113,37 +113,59 @@ export function UserSettingCard(props: {
     });
   }
 
-  return (
-    <div className="DisplayCard">
-      <div className="SpreadContainer">
-        <h3>
-          {!editMode ? (
+  function NormalCard() {
+    return (
+      <div className="DisplayCard">
+        <div className="SpreadContainer">
+          <h3>
             <Link
               className="bold SpreadContainer"
               to={`/stats/users/${user.id}`}
             >
               {user.displayName}
             </Link>
-          ) : (
-            <h3 className="SpreadContainer">
-              <Link className="bold" to={`/stats/users/${user.id}`}>
-                {user.id}
-              </Link>
-              <Switch
-                className="SwitchRoot"
-                defaultChecked={user.enabled}
-                onCheckedChange={toggleEnable}
-              >
-                <SwitchThumb className="SwitchThumb" />
-              </Switch>
-            </h3>
-          )}
-        </h3>
+          </h3>
 
+          <div className="SpreadContainer"></div>
+        </div>
+        <Separator className="Separator" />
+
+        <h3>{formatMoney(user.balance)}</h3>
         <div className="SpreadContainer">
-          {!editMode ? (
-            <></>
-          ) : (
+          <input
+            type="text"
+            placeholder="Betrag"
+            className="Input"
+            value={transactionAmount}
+            onKeyDown={handleKeyDown}
+            onChange={(e) => setTransactionAmount(e.target.value)}
+          />
+          <div className="Button green" onClick={applyTransaction}>
+            <PlusIcon />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function EditCard() {
+    return (
+      <div className="DisplayCard">
+        <div className="SpreadContainer">
+          <h3 className="SpreadContainer">
+            <Link className="bold" to={`/stats/users/${user.id}`}>
+              {user.id}
+            </Link>
+            <Switch
+              className="SwitchRoot"
+              defaultChecked={user.enabled}
+              onCheckedChange={toggleEnable}
+            >
+              <SwitchThumb className="SwitchThumb" />
+            </Switch>
+          </h3>
+
+          <div className="SpreadContainer">
             <ScrollDialog
               title="Nutzer löschen?"
               onSubmit={deleteItem}
@@ -173,29 +195,10 @@ export function UserSettingCard(props: {
                 </div>
               </div>
             </ScrollDialog>
-          )}
-        </div>
-      </div>
-      <Separator className="Separator" />
-      {!editMode ? (
-        <>
-          <h3>{formatMoney(user.balance)}</h3>
-          <div className="SpreadContainer">
-            <input
-              type="text"
-              placeholder="Betrag"
-              className="Input"
-              value={transactionAmount}
-              onKeyDown={handleKeyDown}
-              onChange={(e) => setTransactionAmount(e.target.value)}
-            />
-            <div className="Button green" onClick={applyTransaction}>
-              <PlusIcon />
-            </div>
           </div>
-        </>
-      ) : (
-        <div className="SelectionContainer">
+        </div>
+        <Separator className="Separator" />
+        <div className="SmallGridContainer">
           <div className="Button">
             <ChatBubbleIcon />
             <ButtonDialogChanger
@@ -227,7 +230,9 @@ export function UserSettingCard(props: {
             />
           </div>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
+
+  return editMode ? EditCard() : NormalCard();
 }

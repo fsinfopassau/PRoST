@@ -80,7 +80,7 @@ export function TransactionHistory(props: { personal: boolean }) {
           <></>
         ) : (
           <>
-            <div id="tableSearch">
+            <div className="tableSearch">
               <input
                 className="Input"
                 type="text"
@@ -109,9 +109,8 @@ export function TransactionHistory(props: { personal: boolean }) {
               return (
                 <div
                   key={"p" + index}
-                  className={`PageButton ${
-                    selectedPage === index ? "Selected" : ""
-                  }`}
+                  className={`PageButton ${selectedPage === index ? "Selected" : ""
+                    }`}
                   onClick={() => selectPage(index)}
                 >
                   {index + 1}

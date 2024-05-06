@@ -185,7 +185,7 @@ export function ItemSettingCard(props: {
       </div>
       <Separator className="Separator" />
       <div className="SpreadContainer">
-        <div className="SelectionContainer" style={{ width: "60%" }}>
+        <div className="SmallGridContainer" style={{ width: "60%" }}>
           <div className="Button">
             <Pencil2Icon />
             <ButtonDialogChanger
