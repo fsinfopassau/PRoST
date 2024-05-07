@@ -42,21 +42,21 @@ export function InvoiceDetails(props: { invoice: Invoice }) {
         <table className="Table">
           <tbody>
             {invoice.amounts?.map((amount, index) => (
-              <tr key={amount.itemId + "" + index}>
-                <th className="name bold">
+              <tr key={amount.itemId + "" + index} className="table-entry">
+                <th className="left name bold">
                   {getItem(amount)
                     ? getItem(amount)?.displayName
                     : amount.itemId}
                 </th>
-                <th className="">{amount.amount}</th>
-                <th className="">x</th>
-                <th className="">{formatMoney(amount.singeItemPrice)}</th>
+                <th className="amount">{amount.amount}</th>
+                <th className="icon">x</th>
+                <th className="balance ">{formatMoney(amount.singeItemPrice)}</th>
                 <th className="icon">
                   <div>
                     <ThickArrowRightIcon />
                   </div>
                 </th>
-                <th className="balance bold">{getPrice(amount)}</th>
+                <th className="balance bold right">{getPrice(amount)}</th>
               </tr>
             ))}
           </tbody>
@@ -66,7 +66,7 @@ export function InvoiceDetails(props: { invoice: Invoice }) {
         style={{
           display: "flex",
           alignContent: "space-around",
-          padding: "0 0.5rem ",
+          padding: "0 0.7rem ",
         }}
       >
         <div style={{ display: "flex", flexGrow: "2" }}>

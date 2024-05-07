@@ -27,8 +27,8 @@ export function RootTab(props: { switchTheme: () => void }) {
         <h1>
           <img
             onClick={props.switchTheme}
-            src="/icons/happy-manje/happy beer.svg"
-            id="SearchTitle"
+            src="icons/happy-manje/happy beer.svg"
+            id="MainIcon"
           />
           PRoST
         </h1>

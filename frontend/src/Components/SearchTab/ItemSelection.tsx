@@ -39,7 +39,7 @@ export function ItemSelection() {
         <div style={{ flexGrow: "0" }}>
           <UserSummaryCard user={user} />
         </div>
-        <div className="SelectionContainer">
+        <div className="SmallGridContainer">
           {filter(items).map((item, index) => (
             <ItemDisplay key={index} item={item} />
           ))}

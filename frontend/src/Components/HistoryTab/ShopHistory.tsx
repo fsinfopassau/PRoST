@@ -91,20 +91,19 @@ export function ShopHistory(props: { personal: boolean }) {
             <></>
           ) : (
             <>
-              <div id="tableSearch">
+              <div className="tableSearch">
                 <input
                   className="Input"
                   type="text"
                   onChange={(e) => setSearchValue(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Empfänger Id"
+                  placeholder="Käufer Id"
                 />
               </div>
-              <Separator className="Separator" />
             </>
           )}
 
-          <table>
+          <table className="Table">
             <tbody>
               {history.map((item) => (
                 <HistoryEntryDisplay entry={item} key={item.id} />
@@ -120,9 +119,8 @@ export function ShopHistory(props: { personal: boolean }) {
                 return (
                   <div
                     key={"p" + index}
-                    className={`PageButton ${
-                      selectedPage === index ? "Selected" : ""
-                    }`}
+                    className={`PageButton ${selectedPage === index ? "Selected" : ""
+                      }`}
                     onClick={() => selectPage(index)}
                   >
                     {index + 1}

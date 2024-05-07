@@ -11,16 +11,16 @@ export function HistoryEntryDisplay(props: { entry: ShopHistoryEntry }) {
   }
 
   return (
-    <tr className="table-entry" style={{ display: "flex" }}>
-      <th>
+    <tr className="table-entry">
+      <th className="name left">
         <Link to={`/stats/users/${entry.userId}`} className="bold">
           {entry.userDisplayName}
         </Link>
       </th>
-      <th className="last">{formatMoney(-entry.itemPrice * entry.amount)}</th>
-      <th className="last">{getAmount()}</th>
-      <th className="">{entry.itemDisplayName}</th>
-      <th className="last">{getTimeSince(entry.timestamp)}</th>
+      <th className="balance right">{formatMoney(-entry.itemPrice * entry.amount)}</th>
+      <th className="amount right">{getAmount()}</th>
+      <th className="left">{entry.itemDisplayName}</th>
+      <th className="right">{getTimeSince(entry.timestamp)}</th>
     </tr>
   );
 }

@@ -18,6 +18,7 @@ import { PersonalInvoiceView } from "./PersonalView/PersonalInvoiceView";
 import { PersonalHistoryView } from "./PersonalView/PersonalHistoryView";
 
 const stylesAvailable = ["purple", "blue"];
+export const BASE_PATH = import.meta.env.VITE_BASE_PATH || "";
 
 function loadTheme(themeName: string) {
   // Remove existing theme stylesheet
@@ -29,7 +30,7 @@ function loadTheme(themeName: string) {
   const newThemeLink = document.createElement("link");
   newThemeLink.id = "theme-stylesheet";
   newThemeLink.rel = "stylesheet";
-  newThemeLink.href = `/styles/${themeName}.css`;
+  newThemeLink.href = BASE_PATH + `/styles/${themeName}.css`;
   document.head.appendChild(newThemeLink);
 }
 
@@ -55,7 +56,7 @@ export function App() {
     <>
       <React.StrictMode>
         <div className="Main">
-          <BrowserRouter basename={import.meta.env.VITE_BASE_PATH || ""}>
+          <BrowserRouter basename={BASE_PATH}>
             <Navbar switchTheme={switchTheme} />
             <ToastContainer
               position="bottom-left"

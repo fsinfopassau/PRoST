@@ -30,7 +30,7 @@ export function InvoiceSelectDisplay(props: {
   }
 
   return (
-    <tr>
+    <tr className={totalAmounts() === 0 ? "table-entry orange" : "table-entry"}>
       <th className="icon">
         {invoice.mailed ? (
           <div>
@@ -38,7 +38,7 @@ export function InvoiceSelectDisplay(props: {
           </div>
         ) : selected ? (
           <div
-            className="Toggle green"
+            className="CheckBox green"
             onClick={() => {
               onSelect(invoice.id);
             }}
@@ -47,7 +47,7 @@ export function InvoiceSelectDisplay(props: {
           </div>
         ) : (
           <div
-            className="Toggle"
+            className="CheckBox"
             onClick={() => {
               onSelect(invoice.id);
             }}
@@ -81,19 +81,19 @@ export function InvoiceSelectDisplay(props: {
               <InfoCircledIcon />
             </div>
           }
-          onSubmit={() => {}}
+          onSubmit={() => { }}
         >
           <InvoiceDetails invoice={invoice} />
         </ScrollDialog>
       </th>
-      <th className="name bold">
+      <th className="name bold left">
         <Link to={`/stats/users/${invoice.userId}`} className="bold">
           {invoice.userDisplayName}
         </Link>
       </th>
       <th className="amount">{totalAmounts()}</th>
-      <th className="balance bold">{formatMoney(invoice.balance)}</th>
-      <th className="date">{convertTimestampToTime(invoice.timestamp)}</th>
+      <th className="balance bold right">{formatMoney(invoice.balance)}</th>
+      <th className="date right">{convertTimestampToTime(invoice.timestamp)}</th>
     </tr>
   );
 }

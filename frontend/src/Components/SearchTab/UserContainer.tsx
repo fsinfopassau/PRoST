@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { User } from "../../Types/User";
 import { UserBox } from "./UserSelectionDisplay";
 import { getAllUsers } from "../../Queries";
-import Fuse from 'fuse.js';
+import Fuse from "fuse.js";
 
 export function UserContainer() {
   const [searchValue, setSearchValue] = useState("");
@@ -20,15 +20,15 @@ export function UserContainer() {
 
   function filter(users: User[]): User[] {
     if (searchValue.trim().length === 0) {
-      return users.filter(user => user.enabled === true);
+      return users.filter((user) => user.enabled === true);
     }
 
     const fuse = new Fuse(users, {
-      keys: ['id', 'displayName']
-    })
-    const results = fuse.search(searchValue).map(result => result.item);
+      keys: ["id", "displayName"],
+    });
+    const results = fuse.search(searchValue).map((result) => result.item);
 
-    return results.filter(user => user.enabled === true);
+    return results.filter((user) => user.enabled === true);
   }
 
   return (
@@ -36,11 +36,10 @@ export function UserContainer() {
       <input
         type="text"
         onChange={(e) => setSearchValue(e.target.value)}
-        className="SearchInput"
-        id="search"
+        id="main-search"
         placeholder="Search"
       />
-      <div className="SelectionContainer">
+      <div className="SmallGridContainer">
         {users === undefined ? (
           <></>
         ) : (

@@ -21,10 +21,10 @@ export function Statistics() {
 
   return (
     <>
-      <div className="CardContainer">
+      <div className="GridContainer">
         <div className="DisplayCard">
           <h3 className="bold">Sprungbrett</h3>
-          <div className="SelectionContainer">
+          <div className="SmallGridContainer">
             <Link to={`/stats/users`} className="bold Button">
               Nutzer
             </Link>
@@ -36,7 +36,7 @@ export function Statistics() {
         <ScrollArea className="DisplayCard">
           <ScrollAreaViewport style={{ maxHeight: "20rem" }}>
             <h3 className="bold">Kürzlich</h3>
-            <table>
+            <table className="Table">
               <tbody>
                 {history.map((item) => (
                   <HistoryEntryDisplay entry={item} key={item.id} />

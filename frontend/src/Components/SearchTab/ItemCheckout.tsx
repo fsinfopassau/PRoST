@@ -11,11 +11,12 @@ import {
   PaperPlaneIcon,
 } from "@radix-ui/react-icons";
 import { formatMoney } from "../../Format";
+import { BASE_PATH } from "../App";
 
 export function ItemCheckout() {
   const { userId, itemId } = useParams();
   const [item, setItem] = useState<ShopItem>();
-  const [imageUrl, setImageUrl] = useState<string>("/Beer.jpg");
+  const [imageUrl, setImageUrl] = useState<string>(`${BASE_PATH}/img/Beer.jpg`);
   const [amount, setAmount] = useState<number>(1);
   const navigate = useNavigate();
 

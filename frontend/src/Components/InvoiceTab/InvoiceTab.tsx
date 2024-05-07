@@ -19,6 +19,7 @@ import {
 import ConfirmInvoices from "./ConfirmInvoices";
 import InvoiceCreation from "./InvoiceCreation";
 import { toast } from "react-toastify";
+import { fail } from "assert";
 
 export function InvoiceTab() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -114,7 +115,21 @@ export function InvoiceTab() {
     mailInvoices(selectedItems)
       .then((result) => {
         if (result) {
-          toast.success(result.length + " versendet!");
+          const failed = selectedItems.length - result.length;
+          if (result.length > 0) {
+            toast.success(
+              `${result.length} Rechnung${
+                result.length > 1 ? "en" : ""
+              } versendet!`
+            );
+          }
+
+          if (failed) {
+            toast.warn(
+              `${failed} Rechnung${result.length > 1 ? "en" : ""} versendet!`
+            );
+          }
+
           setSelectedItems([]);
           reloadInvoices();
         } else {
@@ -132,7 +147,10 @@ export function InvoiceTab() {
     deleteInvoices(selectedItems)
       .then((result) => {
         if (result) {
-          toast.warn(result.length + " gelöscht!");
+          toast.warn(
+            result.length +
+              ` Rechnung${result.length > 1 ? "en" : ""} gelöscht!`
+          );
           setSelectedItems([]);
           reloadInvoices();
         } else {
@@ -175,7 +193,7 @@ export function InvoiceTab() {
         <ScrollAreaViewport>
           <h2>Rechnungen</h2>
 
-          <div id="tableSearch">
+          <div className="tableSearch">
             <input
               className="Input"
               type="text"
@@ -201,15 +219,15 @@ export function InvoiceTab() {
 
           <div
             className="SpreadContainer"
-            style={{ padding: "0 .5rem 0.5rem 0.5rem" }}
+            style={{ padding: "0 0.7rem 0.5rem 0.7rem" }}
           >
             <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
               {isAllSelected() ? (
-                <div className="Toggle green" onClick={toggleAll}>
+                <div className="CheckBox green" onClick={toggleAll}>
                   <CheckIcon />
                 </div>
               ) : (
-                <div className="Toggle" onClick={toggleAll}></div>
+                <div className="CheckBox" onClick={toggleAll}></div>
               )}
 
               {selectedItems.length !== 0 ? (

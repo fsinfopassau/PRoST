@@ -23,13 +23,14 @@ import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
 import { toast } from "react-toastify";
 import { formatMoney } from "../../Format";
 import ScrollDialog from "../Util/ScrollDialog";
+import { BASE_PATH } from "../App";
 
 export function ItemSettingCard(props: {
   item: ShopItem;
   onUpdate: () => void;
 }) {
   const { item, onUpdate } = props;
-  const [imageUrl, setImageUrl] = useState<string>("/Beer.jpg");
+  const [imageUrl, setImageUrl] = useState<string>(`${BASE_PATH}/img/Beer.jpg`);
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -184,37 +185,43 @@ export function ItemSettingCard(props: {
       </div>
       <Separator className="Separator" />
       <div className="SpreadContainer">
-        <div className="SelectionContainer" style={{ width: "60%" }}>
-          <div className="Button">
-            <Pencil2Icon />
-            <ButtonDialogChanger
-              name={item.displayName}
-              dialogName="Namen ändern"
-              dialogDesc="Ändere hier den Namen des Items"
-              onSubmit={setName}
-              key={"NameChanger"}
-            />
-          </div>
-          <div className="Button">
-            <BookmarkIcon />
-            <ButtonDialogChanger
-              name={item.category}
-              dialogName="Kategorie ändern"
-              dialogDesc="Ändere hier die Kategorie des Items"
-              onSubmit={setCategory}
-              key={"CategoryChanger"}
-            />
-          </div>
-          <div className="Button">
-            <LightningBoltIcon />
-            <ButtonDialogChanger
-              name={formatMoney(item.price)}
-              dialogName="Preis ändern"
-              dialogDesc="Ändere hier den Preis des Items"
-              onSubmit={setPrice}
-              key={"PriceChanger"}
-            />
-          </div>
+        <div className="SmallGridContainer" style={{ width: "60%" }}>
+          <ButtonDialogChanger
+            dialogName="Namen ändern"
+            dialogDesc="Ändere hier den Namen des Items"
+            onSubmit={setName}
+            key={"NameChanger"}
+            trigger={
+              <div className="Button">
+                <Pencil2Icon />
+                {item.displayName}
+              </div>
+            }
+          />
+          <ButtonDialogChanger
+            dialogName="Kategorie ändern"
+            dialogDesc="Ändere hier die Kategorie des Items"
+            onSubmit={setCategory}
+            key={"CategoryChanger"}
+            trigger={
+              <div className="Button">
+                <BookmarkIcon />
+                {item.category}
+              </div>
+            }
+          />
+          <ButtonDialogChanger
+            dialogName="Preis ändern"
+            dialogDesc="Ändere hier den Preis des Items"
+            onSubmit={setPrice}
+            key={"PriceChanger"}
+            trigger={
+              <div className="Button">
+                <LightningBoltIcon />
+                {formatMoney(item.price)}
+              </div>
+            }
+          />
         </div>
         <div style={{ width: "40%" }}>
           <AspectRatio ratio={1 / 1} onClick={setImage}>

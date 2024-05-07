@@ -64,15 +64,13 @@ export function UserSettings() {
 
   function filter(users: User[]): User[] {
     if (searchValue.trim().length === 0) {
-      return users.filter((user) => user.enabled === true);
+      return users;
     }
 
     const fuse = new Fuse(users, {
       keys: ["id", "displayName"],
     });
-    const results = fuse.search(searchValue).map((result) => result.item);
-
-    return results.filter((user) => user.enabled === true);
+    return fuse.search(searchValue).map((result) => result.item);
   }
 
   return (
@@ -139,7 +137,7 @@ export function UserSettings() {
           </div>
         </div>
         <Separator className="Separator" />
-        <div className="CardContainer">
+        <div className="GridContainer">
           {filter(users).map((user, index) => (
             <UserSettingCard
               user={user}

@@ -71,37 +71,42 @@ public class TransactionService {
       return Optional.empty();
     }
 
+    BigDecimal previous = receiver.getBalance();
+
     receiver.setBalance(receiver.getBalance().add(amount.abs()));
     users.save(receiver);
 
     TransactionEntry entry = new TransactionEntry(null,
         receiver.getId(),
-        bearer.getId(), TransactionType.DEPOSIT, amount);
+        bearer.getId(), TransactionType.DEPOSIT, previous, amount);
     history.save(entry);
     return Optional.of(entry);
   }
 
   private Optional<TransactionEntry> buy(ProstUser receiver, ProstUser bearer,
       BigDecimal amount) {
+    BigDecimal previous = receiver.getBalance();
+
     receiver.setBalance(receiver.getBalance().subtract(amount.abs()));
     receiver.setTotalSpent(receiver.getTotalSpent().abs().add(amount.abs()));
     users.save(receiver);
 
     TransactionEntry entry = new TransactionEntry(null,
         receiver.getId(),
-        bearer.getId(), TransactionType.BUY, amount);
+        bearer.getId(), TransactionType.BUY, previous, amount);
     history.save(entry);
     return Optional.of(entry);
   }
 
   private Optional<TransactionEntry> change(ProstUser receiver, ProstUser bearer,
       BigDecimal amount) {
+    BigDecimal previous = receiver.getBalance();
     receiver.setBalance(amount.abs());
     users.save(receiver);
 
     TransactionEntry entry = new TransactionEntry(null,
         receiver.getId(),
-        bearer.getId(), TransactionType.CHANGE, amount);
+        bearer.getId(), TransactionType.CHANGE, previous, amount);
     history.save(entry);
     return Optional.of(entry);
   }

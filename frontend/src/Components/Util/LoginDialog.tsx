@@ -79,14 +79,14 @@ export function LoginDialog() {
     <>
       <div id="login">
         {isLogged ? (
-          <button onClick={logout} id="login-button">
-            <div>{userName}</div>
+          <button onClick={logout} id="login-button" className="Button">
+            {userName}
             <ExitIcon width={35} height={25} />
           </button>
         ) : (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <button id="login-button">
+              <button id="login-button" className="Button">
                 <AvatarIcon width={35} height={25} />
               </button>
             </DialogTrigger>
