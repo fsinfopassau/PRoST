@@ -19,6 +19,7 @@ import {
 import ConfirmInvoices from "./ConfirmInvoices";
 import InvoiceCreation from "./InvoiceCreation";
 import { toast } from "react-toastify";
+import { fail } from "assert";
 
 export function InvoiceTab() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -114,7 +115,21 @@ export function InvoiceTab() {
     mailInvoices(selectedItems)
       .then((result) => {
         if (result) {
-          toast.success(result.length + " versendet!");
+          const failed = selectedItems.length - result.length;
+          if (result.length > 0) {
+            toast.success(
+              `${result.length} Rechnung${
+                result.length > 1 ? "en" : ""
+              } versendet!`
+            );
+          }
+
+          if (failed) {
+            toast.warn(
+              `${failed} Rechnung${result.length > 1 ? "en" : ""} versendet!`
+            );
+          }
+
           setSelectedItems([]);
           reloadInvoices();
         } else {
@@ -132,7 +147,10 @@ export function InvoiceTab() {
     deleteInvoices(selectedItems)
       .then((result) => {
         if (result) {
-          toast.warn(result.length + " gelöscht!");
+          toast.warn(
+            result.length +
+              ` Rechnung${result.length > 1 ? "en" : ""} gelöscht!`
+          );
           setSelectedItems([]);
           reloadInvoices();
         } else {
@@ -189,8 +207,8 @@ export function InvoiceTab() {
                 mailed === undefined
                   ? "Button"
                   : mailed
-                    ? "Button green"
-                    : "Button red"
+                  ? "Button green"
+                  : "Button red"
               }
             >
               <EnvelopeClosedIcon />
@@ -268,8 +286,9 @@ export function InvoiceTab() {
                 return (
                   <div
                     key={"p" + index}
-                    className={`PageButton ${selectedPage === index ? "Selected" : ""
-                      }`}
+                    className={`PageButton ${
+                      selectedPage === index ? "Selected" : ""
+                    }`}
                     onClick={() => selectPage(index)}
                   >
                     {index + 1}

@@ -377,7 +377,7 @@ a {
   }
 
   .balance {
-    min-width: 7rem;
+    min-width: 6rem;
   }
 
   .amount {
@@ -385,12 +385,12 @@ a {
   }
 
   .name {
-    min-width: 10rem;
+    min-width: 9rem;
   }
 
   .icon {
-    width: .3rem;
-    min-width: .2rem;
+    width: 0.3rem;
+    min-width: 0.2rem;
   }
 
   .horizontalContainer {
@@ -410,17 +410,17 @@ a {
   width: 100%;
 }
 .table-entry th {
-  padding: 0 .7rem;
+  padding: 0 0.7rem;
 }
 
 .tableSearch {
   display: flex;
   padding: 0 0.7rem;
-  margin: .7rem 0;
+  margin: 0.7rem 0;
   align-items: center;
 
   .Button {
-    margin-left: .7rem;
+    margin-left: 0.7rem;
   }
 }
 

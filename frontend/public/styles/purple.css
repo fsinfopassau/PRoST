@@ -74,10 +74,10 @@ div {
 
 .Input {
   color: var(--violet-11);
-  box-shadow: 0 0 0 1px var(--violet-7);
+  box-shadow: 0 0 0 2px var(--violet-7);
 }
 .Input:focus {
-  box-shadow: 0 0 0 2px var(--violet-8);
+  box-shadow: 0 0 0 3px var(--violet-8);
 }
 
 .DisplayCard {

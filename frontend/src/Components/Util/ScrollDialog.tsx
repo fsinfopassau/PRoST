@@ -81,17 +81,21 @@ const ScrollDialog: React.FC<PropsWithChildren<CustomComponentProps>> = ({
             <div
               style={{
                 display: "flex",
-                marginTop: 25,
+                marginTop: "1rem",
                 justifyContent: "space-evenly",
               }}
             >
               <DialogClose asChild>
-                <div className="Button red" aria-label="Close">
+                <div
+                  className="Button red"
+                  style={{ width: "40%" }}
+                  aria-label="Close"
+                >
                   <Cross2Icon />
                 </div>
               </DialogClose>
               <DialogClose asChild onClick={onSubmit}>
-                <div className="Button green">
+                <div className="Button green" style={{ width: "40%" }}>
                   <CheckIcon />
                 </div>
               </DialogClose>

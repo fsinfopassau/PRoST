@@ -69,9 +69,7 @@ export function ItemSettings() {
     const fuse = new Fuse(items, {
       keys: ["id", "displayName"],
     });
-    const results = fuse.search(searchValue).map((result) => result.item);
-
-    return results;
+    return fuse.search(searchValue).map((result) => result.item);
   }
 
   return (
@@ -146,7 +144,7 @@ export function ItemSettings() {
         </ScrollDialog>
       </div>
       <Separator className="Separator" />
-      <div className="CardContainer">
+      <div className="GridContainer">
         {filter(items).map((item, index) => (
           <ItemSettingCard item={item} key={index} onUpdate={reloadShopItems} />
         ))}

@@ -84,10 +84,23 @@ public class MailService {
    *
    * @param address The receiver.
    * @param subject The title-text shown in the mailclient.
-   * @param text    The mail-Content.
+   * @param text The mail-Content.
    * @return true if mail could be sent out.
    */
   private boolean sendMail(String address, String subject, String text) {
+    if (address == null) {
+      System.err.println("[MS] :: no address!");
+      return false;
+    }
+    if (subject == null) {
+      System.err.println("[MS] :: no subject!");
+      return false;
+    }
+    if (text == null) {
+      System.err.println("[MS] :: no text!");
+      return false;
+    }
+
     if (mailCooldown.containsKey(address)) {
       if (mailCooldown.get(address) < System.currentTimeMillis()) {
         mailCooldown.remove(address);
@@ -96,7 +109,7 @@ public class MailService {
       }
     }
 
-    // System.out.println("[MS] :: send mail :: " + address + " |\n" + subject + " |\n" + text);
+    System.out.println("[MS] :: send mail :: " + address + " |\n" + subject + " |\n" + text);
 
     MultiPartEmail email = new MultiPartEmail();
     try {

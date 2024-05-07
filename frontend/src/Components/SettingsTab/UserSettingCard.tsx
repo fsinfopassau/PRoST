@@ -199,36 +199,42 @@ export function UserSettingCard(props: {
         </div>
         <Separator className="Separator" />
         <div className="SmallGridContainer">
-          <div className="Button">
-            <ChatBubbleIcon />
-            <ButtonDialogChanger
-              name={user.displayName}
-              dialogName="Namen ändern"
-              dialogDesc="Ändere hier den Namen des Nutzers"
-              onSubmit={setName}
-              key={"NameChanger"}
-            />
-          </div>
-          <div className="Button">
-            <EnvelopeClosedIcon />
-            <ButtonDialogChanger
-              name={user.email}
-              dialogName="E-Mail ändern"
-              dialogDesc="Ändere hier die E-Mail adresse des Nutzers"
-              onSubmit={setMail}
-              key={"MailChanger"}
-            />
-          </div>
-          <div className="Button">
-            <LightningBoltIcon />
-            <ButtonDialogChanger
-              name={formatMoney(user.balance)}
-              dialogName="Kontostand ändern"
-              dialogDesc="Ändere hier den Kontostand des Nutzers"
-              onSubmit={setBalance}
-              key={"BalanceChanger"}
-            />
-          </div>
+          <ButtonDialogChanger
+            dialogName="Namen ändern"
+            dialogDesc="Ändere hier den Namen des Nutzers"
+            onSubmit={setName}
+            key={"NameChanger"}
+            trigger={
+              <div className="Button">
+                <ChatBubbleIcon />
+                {user.displayName}
+              </div>
+            }
+          />
+          <ButtonDialogChanger
+            dialogName="E-Mail ändern"
+            dialogDesc="Ändere hier die E-Mail adresse des Nutzers"
+            onSubmit={setMail}
+            key={"MailChanger"}
+            trigger={
+              <div className="Button">
+                <EnvelopeClosedIcon />
+                {user.email}
+              </div>
+            }
+          />
+          <ButtonDialogChanger
+            dialogName="Kontostand ändern"
+            dialogDesc="Ändere hier den Kontostand des Nutzers"
+            onSubmit={setBalance}
+            key={"BalanceChanger"}
+            trigger={
+              <div className="Button">
+                <LightningBoltIcon />
+                {formatMoney(user.balance)}
+              </div>
+            }
+          />
         </div>
       </div>
     );
