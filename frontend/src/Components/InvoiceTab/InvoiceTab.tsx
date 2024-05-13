@@ -19,7 +19,6 @@ import {
 import ConfirmInvoices from "./ConfirmInvoices";
 import InvoiceCreation from "./InvoiceCreation";
 import { toast } from "react-toastify";
-import { fail } from "assert";
 
 export function InvoiceTab() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
