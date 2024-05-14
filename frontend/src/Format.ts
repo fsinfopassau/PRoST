@@ -64,3 +64,8 @@ export function formatMoney(
 
   return formatted + " €";
 }
+
+// more elaborate solution with more edgecases required
+export function formatMoneyInput(money: string): string {
+  return money.replace(",", ".");
+}

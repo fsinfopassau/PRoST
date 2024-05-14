@@ -50,9 +50,17 @@ public class TransactionService {
 
     switch (type) {
       case DEPOSIT -> {
+        if (amount.compareTo(BigDecimal.ZERO) < 0) { // Only Positive Values
+          System.out.println("[TS] :: Deposit is with " + amount + " to low");
+          return Optional.empty();
+        }
         return deposit(receiver.get(), bearer.get(), amount);
       }
       case BUY -> {
+        if (amount.compareTo(BigDecimal.ZERO) < 0) { // Only Positive Values
+          System.out.println("[TS] :: Buy is with " + amount + " to low");
+          return Optional.empty();
+        }
         return buy(receiver.get(), bearer.get(), amount);
       }
       case CHANGE -> {
@@ -101,7 +109,7 @@ public class TransactionService {
   private Optional<TransactionEntry> change(ProstUser receiver, ProstUser bearer,
       BigDecimal amount) {
     BigDecimal previous = receiver.getBalance();
-    receiver.setBalance(amount.abs());
+    receiver.setBalance(amount);
     users.save(receiver);
 
     TransactionEntry entry = new TransactionEntry(null,

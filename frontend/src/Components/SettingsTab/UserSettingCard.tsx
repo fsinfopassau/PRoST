@@ -12,7 +12,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Separator } from "@radix-ui/react-separator";
 import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
-import { formatMoney } from "../../Format";
+import { formatMoney, formatMoneyInput } from "../../Format";
 import {
   changeUser,
   createTransaction,
@@ -34,11 +34,14 @@ export function UserSettingCard(props: {
   const [transactionAmount, setTransactionAmount] = useState<string>("");
 
   function applyTransaction() {
-    console.log(transactionAmount);
-    createTransaction(user, transactionAmount, "deposit").then((result) => {
+    createTransaction(
+      user,
+      formatMoneyInput(transactionAmount),
+      "deposit"
+    ).then((result) => {
       if (result) {
         toast.success(
-          formatMoney(Math.abs(Number(transactionAmount))) +
+          formatMoney(Math.abs(Number(formatMoneyInput(transactionAmount)))) +
             ' wurde "' +
             user.id +
             '" gutgeschrieben!'
@@ -103,14 +106,16 @@ export function UserSettingCard(props: {
   }
 
   function setBalance(newBalance: string) {
-    createTransaction(user, newBalance, "change").then((result) => {
-      if (result) {
-        toast.success("Kontostand geändert.");
-        onUpdate();
-      } else {
-        toast.error("Änderung fehlgeschlagen!");
+    createTransaction(user, formatMoneyInput(newBalance), "change").then(
+      (result) => {
+        if (result) {
+          toast.success("Kontostand geändert.");
+          onUpdate();
+        } else {
+          toast.error("Änderung fehlgeschlagen!");
+        }
       }
-    });
+    );
   }
 
   function NormalCard() {

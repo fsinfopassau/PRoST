@@ -7,6 +7,7 @@ import ScrollDialog from "../Util/ScrollDialog";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { toast } from "react-toastify";
 import Fuse from "fuse.js";
+import { formatMoneyInput } from "../../Format";
 
 export function ItemSettings() {
   const [searchValue, setSearchValue] = useState("");
@@ -35,7 +36,7 @@ export function ItemSettings() {
 
     createNewShopItem(item).then((success) => {
       if (success) {
-        toast.success("Item" + newId + "created");
+        toast.success("Item" + newId + " created");
         reloadShopItems();
       } else {
         toast.error("Master, you failed me!");
@@ -58,7 +59,7 @@ export function ItemSettings() {
   };
 
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewPrice(parseInt(event.target.value));
+    setNewPrice(parseFloat(formatMoneyInput(event.target.value)));
   };
 
   function filter(items: ShopItem[]): ShopItem[] {
