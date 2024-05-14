@@ -59,7 +59,7 @@ export function ItemSettings() {
   };
 
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewPrice(parseFloat(formatMoneyInput(event.target.value)));
+    setNewPrice(formatMoneyInput(event.target.value));
   };
 
   function filter(items: ShopItem[]): ShopItem[] {

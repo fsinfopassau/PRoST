@@ -66,6 +66,6 @@ export function formatMoney(
 }
 
 // more elaborate solution with more edgecases required
-export function formatMoneyInput(money: string): string {
-  return money.replace(",", ".");
+export function formatMoneyInput(money: string): number {
+  return parseFloat(money.replace(",", "."));
 }

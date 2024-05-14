@@ -1,4 +1,4 @@
-import { CheckIcon, LockClosedIcon, MinusIcon } from "@radix-ui/react-icons";
+import { CheckIcon, LockClosedIcon } from "@radix-ui/react-icons";
 import { User } from "../../Types/User";
 import { Link } from "react-router-dom";
 import { formatMoney } from "../../Format";
@@ -17,10 +17,6 @@ export function InvoiceCreationUserDisplay(props: {
           {!user.enabled ? (
             <div>
               <LockClosedIcon />
-            </div>
-          ) : user.balance === 0 ? (
-            <div>
-              <MinusIcon />
             </div>
           ) : selected ? (
             <div

@@ -40,7 +40,7 @@ const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({
 
     setSelectedUsers([]);
     users.forEach((i) => {
-      if (i.balance !== 0 && i.enabled) handleSelect(i.id);
+      if (i.enabled) handleSelect(i.id);
     });
   }
 
@@ -73,9 +73,9 @@ const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({
           if (result.length !== 0) {
             toast.success(
               result.length +
-              " neue Rechnung" +
-              (result.length > 1 ? "en" : "") +
-              "!"
+                " neue Rechnung" +
+                (result.length > 1 ? "en" : "") +
+                "!"
             );
             onSubmit();
           }

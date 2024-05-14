@@ -57,6 +57,10 @@ public class UserController {
         userTemplate.getDisplayName(),
         userTemplate.getEmail());
 
+    if (user.isPresent() && userTemplate.getTotalSpent() != null) {
+      userService.setMoneySpent(user.get().getId(), userTemplate.getTotalSpent().toString());
+    }
+
     return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
   }
 

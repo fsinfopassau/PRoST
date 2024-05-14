@@ -6,6 +6,7 @@ import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.data.dto.InvoiceAmountMapping;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -61,14 +62,20 @@ public class MailService {
     String text = "Servus " + user.get().getDisplayName() + ",\n\n" +
         "dein aktueller Kontostand bei der Kaffeekasse beträgt " + ProstUser.formatMoney(
         invoice.getBalance()) + ".\n"
-        + formattedAmounts(amounts)
-        + "\nBitte überweise den Betrag mittels PayPal [1] oder gib ihn mir bei der nächsten Gelegenheit persönlich in bar.\n"
-        + "\n"
-        + "Viele Grüße\n"
-        + "Bierjam\n"
-        + "\n"
-        + "[1] https://paypal.me/fsinfokaffee/" + Math.abs(invoice.getBalance().doubleValue())
-        + "\n";
+        + formattedAmounts(amounts);
+
+    if (invoice.getBalance().compareTo(BigDecimal.ZERO) < 0) {
+      text +=
+          "\nBitte überweise den Betrag mittels PayPal [1] oder gib ihn mir bei der nächsten Gelegenheit persönlich in bar.\n"
+              + "\n"
+              + "Viele Grüße\n"
+              + "Bierjam\n"
+              + "\n"
+              + "[1] https://paypal.me/fsinfokaffee/" + Math.abs(invoice.getBalance().doubleValue())
+              + "\n";
+    } else {
+      text += "\nViele Grüße\nBierjam\n\n";
+    }
 
     if (sendMail(user.get().getEmail(), "Kaffeekasse - Neue Abrechnung", text)) {
       System.out.println("[MS] :: invoice=" + invoice.getId() + " :: sent new invoice!");

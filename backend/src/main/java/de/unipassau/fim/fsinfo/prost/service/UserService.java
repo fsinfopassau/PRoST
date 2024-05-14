@@ -56,7 +56,7 @@ public class UserService {
 
     if (userName.length() > maxLength) {
       System.out.println(
-              "[US] :: " + userName + " :: user-creation failed [userName=" + userName + "] ");
+          "[US] :: " + userName + " :: user-creation failed [userName=" + userName + "] ");
       return Optional.empty();
     }
 
@@ -134,14 +134,22 @@ public class UserService {
     try {
       BigDecimal amount = new BigDecimal(amountString);
 
+      if (amount.compareTo(BigDecimal.ZERO) < 0) { // Only Positive Values
+        System.out.println("[US] :: Money Spent is with " + amount + " to low");
+        return false;
+      }
+
       if (user.isPresent()) {
         ProstUser u = user.get();
-        u.setTotalSpent(amount);
+        u.setTotalSpent(amount.abs());
         users.save(u);
         return true;
+      } else {
+        System.out.println("[US] :: No user with id " + id + " found");
+        return false;
       }
-      return false;
     } catch (NumberFormatException e) {
+      System.out.println("[US] :: " + amountString + " is no valid amount");
       return false;
     }
   }

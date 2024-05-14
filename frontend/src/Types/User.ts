@@ -46,3 +46,7 @@ export async function getUserDisplayName(userId: string): Promise<string> {
   }
   return userId;
 }
+
+export function getLevel(user: User): number {
+  return Math.floor(user.totalSpent / 5) + 1;
+}

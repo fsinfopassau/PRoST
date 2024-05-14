@@ -1,14 +1,18 @@
 import { toast } from "react-toastify";
-import { User } from "../../Types/User";
+import { getLevel, User } from "../../Types/User";
 import { Switch, SwitchThumb } from "@radix-ui/react-switch";
 import {
   ChatBubbleIcon,
   CheckCircledIcon,
+  CheckIcon,
   Cross1Icon,
+  Cross2Icon,
   CrossCircledIcon,
+  DoubleArrowRightIcon,
   EnvelopeClosedIcon,
   LightningBoltIcon,
   PlusIcon,
+  RocketIcon,
 } from "@radix-ui/react-icons";
 import { Separator } from "@radix-ui/react-separator";
 import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
@@ -36,12 +40,12 @@ export function UserSettingCard(props: {
   function applyTransaction() {
     createTransaction(
       user,
-      formatMoneyInput(transactionAmount),
+      formatMoneyInput(transactionAmount).toString(),
       "deposit"
     ).then((result) => {
       if (result) {
         toast.success(
-          formatMoney(Math.abs(Number(formatMoneyInput(transactionAmount)))) +
+          formatMoney(Math.abs(formatMoneyInput(transactionAmount))) +
             ' wurde "' +
             user.id +
             '" gutgeschrieben!'
@@ -105,33 +109,62 @@ export function UserSettingCard(props: {
     });
   }
 
-  function setBalance(newBalance: string) {
-    createTransaction(user, formatMoneyInput(newBalance), "change").then(
-      (result) => {
-        if (result) {
-          toast.success("Kontostand geändert.");
-          onUpdate();
-        } else {
-          toast.error("Änderung fehlgeschlagen!");
-        }
+  function setTotalSpent(spentTotal: string) {
+    changeUser(
+      user,
+      formatMoneyInput(spentTotal).toString(),
+      "moneySpent"
+    ).then((result) => {
+      if (result) {
+        toast.success("Gesamtausgaben geändert.");
+        onUpdate();
+      } else {
+        toast.error("Änderung der Gesamtausgaben fehlgeschlagen!");
       }
-    );
+    });
+  }
+
+  function setBalance(newBalance: string) {
+    createTransaction(
+      user,
+      formatMoneyInput(newBalance).toString(),
+      "change"
+    ).then((result) => {
+      if (result) {
+        toast.success("Kontostand geändert.");
+        onUpdate();
+      } else {
+        toast.error("Änderung fehlgeschlagen!");
+      }
+    });
   }
 
   function NormalCard() {
     return (
       <div className="DisplayCard">
         <div className="SpreadContainer">
-          <h3>
+          <h3 className="SpreadContainer">
             <Link
               className="bold SpreadContainer"
               to={`/stats/users/${user.id}`}
             >
               {user.displayName}
             </Link>
+            {user.enabled ? (
+              <div className="green">
+                <CheckIcon />
+              </div>
+            ) : (
+              <div className="red">
+                <Cross2Icon />
+              </div>
+            )}
           </h3>
 
-          <div className="SpreadContainer"></div>
+          <h3>
+            <RocketIcon />
+            {getLevel(user)}
+          </h3>
         </div>
         <Separator className="Separator" />
 
@@ -204,6 +237,20 @@ export function UserSettingCard(props: {
         </div>
         <Separator className="Separator" />
         <div className="SmallGridContainer">
+          <ButtonDialogChanger
+            dialogName="Gesamtausgaben"
+            dialogDesc="Ändere hier die Gesamtausgaben des Nutzers"
+            onSubmit={setTotalSpent}
+            key={"Totalspent"}
+            trigger={
+              <div className="Button">
+                <RocketIcon />
+                {getLevel(user)}
+                <DoubleArrowRightIcon />
+                {formatMoney(user.totalSpent)}
+              </div>
+            }
+          />
           <ButtonDialogChanger
             dialogName="Namen ändern"
             dialogDesc="Ändere hier den Namen des Nutzers"

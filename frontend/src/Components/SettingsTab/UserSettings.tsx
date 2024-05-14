@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { Pencil2Icon, PlusCircledIcon } from "@radix-ui/react-icons";
 import Fuse from "fuse.js";
 import { Separator } from "@radix-ui/react-separator";
+import { formatMoneyInput } from "../../Format";
 
 export function UserSettings() {
   const [searchValue, setSearchValue] = useState("");
@@ -14,6 +15,7 @@ export function UserSettings() {
   const [newId, setNewId] = useState<string>("");
   const [newName, setNewName] = useState<string>("");
   const [newEmail, setNewEmail] = useState<string>("");
+  const [moneySpent, setMoneySpent] = useState<string>("");
   const [editMode, setEditMode] = useState(false);
 
   useEffect(reloadUsers, []);
@@ -41,6 +43,11 @@ export function UserSettings() {
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewEmail(event.target.value);
   };
+  const handleMoneySpentChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setMoneySpent(event.target.value);
+  };
 
   function createUser() {
     const user: User = {
@@ -51,6 +58,10 @@ export function UserSettings() {
       enabled: true,
       totalSpent: 0,
     };
+
+    if (moneySpent.trim().length != 0) {
+      user.totalSpent = formatMoneyInput(moneySpent);
+    }
 
     createNewUser(user).then((success) => {
       if (success) {
@@ -102,7 +113,7 @@ export function UserSettings() {
                 gap: ".5rem",
               }}
             >
-              <div className="DialogDescription">Identifier:</div>
+              <div className="DialogDescription">Identifier: *</div>
               <fieldset className="Fieldset">
                 <input
                   className="Input"
@@ -110,7 +121,7 @@ export function UserSettings() {
                   placeholder={"sugmaW"}
                 />
               </fieldset>
-              <div className="DialogDescription">Name:</div>
+              <div className="DialogDescription">Name: *</div>
               <fieldset className="Fieldset">
                 <input
                   className="Input"
@@ -118,12 +129,20 @@ export function UserSettings() {
                   placeholder={"WillyD"}
                 />
               </fieldset>
-              <div className="DialogDescription">E-Mail:</div>
+              <div className="DialogDescription">E-Mail: *</div>
               <fieldset className="Fieldset">
                 <input
                   className="Input"
                   onChange={handleEmailChange}
                   placeholder={"mail@willy.de"}
+                />
+              </fieldset>
+              <div className="DialogDescription">Bisher ausgegeben:</div>
+              <fieldset className="Fieldset">
+                <input
+                  className="Input"
+                  onChange={handleMoneySpentChange}
+                  placeholder={"0"}
                 />
               </fieldset>
             </div>

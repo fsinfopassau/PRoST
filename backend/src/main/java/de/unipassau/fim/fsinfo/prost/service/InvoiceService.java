@@ -163,6 +163,7 @@ public class InvoiceService {
     for (String id : userIds) {
       Optional<ProstUser> user0 = userRepository.findById(id);
       if (user0.isEmpty()) {
+        System.err.println("[IS] :: No user found with id " + id);
         continue;
       }
 
@@ -184,11 +185,6 @@ public class InvoiceService {
    * @return optional
    */
   private Optional<InvoiceDTO> createInvoice(ProstUser user) {
-
-    // Nur fortfahren, wenn Nutzer Schulden hat.
-    if (user.getBalance().compareTo(new BigDecimal(0)) != -1) {
-      return Optional.empty();
-    }
 
     List<InvoiceEntry> previousInvoices = invoiceRepository.findByUserIdEqualsOrderByTimestampDesc(
         user.getId());
