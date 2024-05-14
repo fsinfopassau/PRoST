@@ -78,12 +78,12 @@ export function ItemSettings() {
       <div style={{ display: "flex", gap: "1rem" }}>
         <input
           type="text"
-          placeholder="Item"
+          placeholder="Gegenstand"
           className="Input"
           onChange={(e) => setSearchValue(e.target.value)}
         ></input>
         <ScrollDialog
-          title="Neues Item"
+          title="Neuer Gegenstand"
           trigger={
             <div className="Button icon green">
               <div className="green">
