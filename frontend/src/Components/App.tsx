@@ -16,6 +16,7 @@ import { RootTab } from "./RootTab";
 import { UserSettings } from "./SettingsTab/UserSettings";
 import { PersonalInvoiceView } from "./PersonalView/PersonalInvoiceView";
 import { PersonalHistoryView } from "./PersonalView/PersonalHistoryView";
+import ScrollDialog from "./Util/ScrollDialog";
 
 const stylesAvailable = ["purple", "blue"];
 export const BASE_PATH = import.meta.env.VITE_BASE_PATH || "";
@@ -45,6 +46,21 @@ export function App() {
     const nextIndex = (currentIndex + 1) % stylesAvailable.length;
     const nextTheme = stylesAvailable[nextIndex];
     setTheme(nextTheme);
+  };
+
+  const HTMLDataInfos = () => {
+    const [htmlContent, setHtmlContent] = useState("");
+
+    useEffect(() => {
+      fetch(BASE_PATH + `/data-info.html`)
+        .then((response) => response.text())
+        .then((data) => {
+          setHtmlContent(data);
+        })
+        .catch((error) => console.error("Error loading HTML:", error));
+    }, []);
+
+    return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
   };
 
   useEffect(() => {
@@ -99,6 +115,14 @@ export function App() {
               </Routes>
             </div>
           </BrowserRouter>
+
+          <ScrollDialog
+            onSubmit={() => {}}
+            title="Datenschutzhinweise der PRoST-Sotware"
+            trigger={<div className="site-data-info">Datenschutz</div>}
+          >
+            {HTMLDataInfos()}
+          </ScrollDialog>
         </div>
       </React.StrictMode>
     </>
