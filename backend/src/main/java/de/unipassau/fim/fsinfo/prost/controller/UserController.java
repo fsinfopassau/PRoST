@@ -55,7 +55,7 @@ public class UserController {
 
     Optional<ProstUser> user = userService.createUser(userTemplate.getId(),
         userTemplate.getDisplayName(),
-        userTemplate.getEmail());
+        userTemplate.getEmail(), true);
 
     if (user.isPresent() && userTemplate.getTotalSpent() != null) {
       userService.setMoneySpent(user.get().getId(), userTemplate.getTotalSpent().toString());

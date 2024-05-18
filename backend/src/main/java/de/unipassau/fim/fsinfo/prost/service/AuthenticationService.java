@@ -46,7 +46,7 @@ public class AuthenticationService {
 
     user = userService.createUser(userDetails.getUsername(),
         userDetails.getDisplayName(),
-        userDetails.getEmail());
+        userDetails.getEmail(), false);
 
     return user.map(prostUser -> new AuthorizedPRoSTUserDTO(prostUser, role.get()));
   }

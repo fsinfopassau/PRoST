@@ -21,6 +21,8 @@ public class TransactionService {
   private final TransactionRepository history;
   private final UserRepository users;
 
+  public static final BigDecimal MAX_DEPOSIT_VALUE = new BigDecimal("50.0");
+
   @Autowired
   public TransactionService(UserRepository users, TransactionRepository history) {
     this.history = history;
@@ -43,10 +45,14 @@ public class TransactionService {
       Optional<ProstUser> receiver,
       Optional<ProstUser> bearer, BigDecimal amount, TransactionType type) {
 
+    if (amount.scale() > 2) {
+      System.err.println("[TS] :: " + amount + " has not the right money-precision!");
+      return Optional.empty();
+    }
+
     // scale -> Maximum 2 Decimal -> smallest is Cents, no fraction of cents
-    if (receiver.isEmpty() || bearer.isEmpty() || amount.scale()
-        > 2) {
-      System.err.println("[TS] :: " + receiver + " " + bearer + " " + amount);
+    if (receiver.isEmpty() || bearer.isEmpty()) {
+      System.err.println("[TS] :: something is missing :: " + receiver + " " + bearer);
       return Optional.empty();
     }
 
@@ -78,7 +84,12 @@ public class TransactionService {
 
   private Optional<TransactionEntry> deposit(ProstUser receiver, ProstUser bearer,
       BigDecimal amount) {
-    if (amount.doubleValue() == 0.0d) {
+    if (amount.compareTo(BigDecimal.ZERO) < 0) {
+      System.out.println("[TS] :: Only deposit positive values!");
+      return Optional.empty();
+    }
+    if (amount.compareTo(MAX_DEPOSIT_VALUE) > 0) {
+      System.out.println("[TS] :: Max-Deposit amount of " + MAX_DEPOSIT_VALUE.doubleValue() + "!");
       return Optional.empty();
     }
 

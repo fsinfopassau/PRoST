@@ -95,7 +95,8 @@ public class ShopService {
       return Optional.empty();
     }
 
-    ShopItem item = new ShopItem(identifier, category, displayName, price.abs());
+    ShopItem item = new ShopItem(DataFilter.filterNameId(identifier), category, displayName,
+        price.abs());
     itemRepository.save(item);
     return Optional.of(item);
   }

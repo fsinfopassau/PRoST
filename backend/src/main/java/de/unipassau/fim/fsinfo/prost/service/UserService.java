@@ -22,11 +22,22 @@ public class UserService {
 
 
   @Transactional
-  public Optional<ProstUser> createUser(String userName, String displayName, String email) {
+  public Optional<ProstUser> createUser(String userName, String displayName, String email,
+      boolean manualCreation) {
 
     if (users.findById(userName).isPresent()) {
       System.out.println("[US] :: " + userName + " :: user-creation failed :: exists ");
       return Optional.empty();
+    }
+
+    if (!DataFilter.isValidString(userName, "userName")) {
+      System.out.println(
+          "[US] :: " + userName + " :: user-creation failed [userName=" + userName + "] ");
+      return Optional.empty();
+    }
+
+    if (manualCreation) {
+      userName = DataFilter.filterNameId(userName);
     }
 
     // Allow only valid or no mail at all.
@@ -38,18 +49,18 @@ public class UserService {
     if (!DataFilter.isValidString(displayName, "displayName")) {
       System.out.println(
           "[US] :: " + userName + " :: user-creation failed [displayName=" + displayName + "] ");
-      return Optional.empty();
-    }
 
-    if (!DataFilter.isValidString(userName, "userName")) {
-      System.out.println(
-          "[US] :: " + userName + " :: user-creation failed [userName=" + userName + "] ");
-      return Optional.empty();
+      // refuse creation if user was created by admin
+      if (manualCreation) {
+        return Optional.empty();
+      }
+      // default to id
+      displayName = userName;
     }
 
     ProstUser user = new ProstUser(userName, displayName, email, true);
-    System.out.println("[US] :: " + userName + " :: user-creation succeeded");
     users.save(user);
+    System.out.println("[US] :: " + userName + " :: user-creation succeeded");
     return Optional.of(user);
   }
 
