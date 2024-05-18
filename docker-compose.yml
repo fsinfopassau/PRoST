@@ -10,7 +10,6 @@ services:
         - VITE_BASE_PATH=/prost
     ports:
       - "8080:80"
-    restart: on-failure
   backend:
     depends_on: [ ldap, mariadb ]
     container_name: PRoST-Backend
@@ -32,7 +31,6 @@ services:
       - prost
     volumes:
       - ./.data:/data
-    restart: on-failure
   mariadb:
     image: lscr.io/linuxserver/mariadb:latest
     container_name: mariadb
@@ -45,7 +43,6 @@ services:
       - ./.data/maria-config:/config
     networks:
       - prost
-    restart: on-failure
   ldap:
     container_name: PRoST-LDAP
     image: bitnami/openldap:latest
@@ -60,7 +57,6 @@ services:
       LDAP_ROOT: dc=fsinfo,dc=fim,dc=uni-passau,dc=de
       LDAP_ADMIN_DN: cn=admin,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
       LDAP_CUSTOM_LDIF_DIR: /ldif
-    restart: on-failure
 
 volumes:
   prost-ldap:

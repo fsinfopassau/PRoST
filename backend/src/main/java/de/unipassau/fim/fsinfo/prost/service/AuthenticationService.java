@@ -27,6 +27,10 @@ public class AuthenticationService {
   }
 
   public Optional<AuthorizedPRoSTUserDTO> auth(Authentication auth) {
+    if (auth == null) {
+      return Optional.empty();
+    }
+
     Optional<UserAccessRole> role = getHighestRole(getRoles(auth));
 
     if (role.isEmpty()) {
@@ -55,7 +59,7 @@ public class AuthenticationService {
     AtomicReference<UserAccessRole> highest = new AtomicReference<>(roles.iterator().next());
 
     roles.forEach(role -> {
-      if (highest.get().compareTo(role) < 0) {
+      if (role != null && highest.get().compareTo(role) < 0) {
         highest.set(role);
       }
     });
@@ -65,8 +69,6 @@ public class AuthenticationService {
 
   public Collection<UserAccessRole> getRoles(Authentication authentication) {
     if (authentication == null) {
-      System.err.println(
-          "[AC] :: No null-Authentication!");
       return new ArrayList<>();
     }
 
@@ -75,13 +77,15 @@ public class AuthenticationService {
     List<UserAccessRole> userRoles = new ArrayList<>();
 
     authentication.getAuthorities().forEach(authority -> {
-      try {
-        UserAccessRole role = UserAccessRole.valueOf(authority.getAuthority());
-        userRoles.add(role);
-      } catch (IllegalArgumentException e) {
-        System.err.println(
-            "[AC] :: Could not map authority " + authority.getAuthority()
-                + " to UserAccessRole of User " + userDetails.getUsername() + "!");
+      if (authority != null) {
+        try {
+          UserAccessRole role = UserAccessRole.valueOf(authority.getAuthority());
+          userRoles.add(role);
+        } catch (IllegalArgumentException e) {
+          System.err.println(
+              "[AC] :: Could not map authority " + authority.getAuthority()
+                  + " to UserAccessRole of User " + userDetails.getUsername() + "!");
+        }
       }
     });
 

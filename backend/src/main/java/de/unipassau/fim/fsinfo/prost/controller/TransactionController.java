@@ -30,6 +30,10 @@ public class TransactionController {
   @PostMapping("/change")
   public ResponseEntity<BigDecimal> balance(@RequestParam String id,
       @RequestParam String value, Authentication authentication) {
+    if (authentication == null || value == null || id == null) {
+      return ResponseEntity.badRequest().build();
+    }
+
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
     try {
@@ -50,6 +54,10 @@ public class TransactionController {
   @PostMapping("/deposit")
   public ResponseEntity<BigDecimal> deposit(@RequestParam String id,
       @RequestParam String value, Authentication authentication) {
+    if (authentication == null || value == null || id == null) {
+      return ResponseEntity.badRequest().build();
+    }
+
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
     try {
@@ -77,7 +85,8 @@ public class TransactionController {
       @RequestParam(defaultValue = "0") int p,
       @RequestParam(defaultValue = "10") int s,
       @RequestParam(required = false) String receiverId) {
-    return transactionService.getTransactions(Math.max(0, p), Math.max(1, s), receiverId);
+    return transactionService.getTransactions(Math.max(0, p), Math.min(Math.max(1, s), 100),
+        receiverId);
   }
 
   /**
@@ -90,9 +99,13 @@ public class TransactionController {
       @RequestParam(defaultValue = "0") int p,
       @RequestParam(defaultValue = "10") int s,
       Authentication authentication) {
+    if (authentication == null) {
+      return Page.empty();
+    }
+
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-    return transactionService.getPersonalTransactions(Math.max(0, p), Math.max(1, s),
+    return transactionService.getPersonalTransactions(Math.max(0, p), Math.min(Math.max(1, s), 100),
         userDetails.getUsername());
   }
 

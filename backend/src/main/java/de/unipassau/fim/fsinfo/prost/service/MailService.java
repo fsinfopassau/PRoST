@@ -142,32 +142,32 @@ public class MailService {
 
     StringBuilder b = new StringBuilder();
 
-    if (!amounts.isEmpty()) {
+    if (amounts != null && !amounts.isEmpty()) {
       b.append("\n");
       b.append("Deine Einkäufe seit letzter Abrechnung:");
       b.append("\n");
-    }
 
-    for (InvoiceAmountMapping mapping : amounts) {
+      for (InvoiceAmountMapping mapping : amounts) {
 
-      Optional<ShopItem> item = items.findById(mapping.getItemId());
-      String itemName = mapping.getItemId();
+        Optional<ShopItem> item = items.findById(mapping.getItemId());
+        String itemName = mapping.getItemId();
 
-      if (item.isPresent()) {
-        itemName = item.get().getDisplayName();
+        if (item.isPresent()) {
+          itemName = item.get().getDisplayName();
+        }
+
+        int amount = mapping.getAmount();
+
+        if (amount < 10) {
+          b.append(" ");
+        }
+        b.append(itemName);
+        b.append(" >> ");
+        b.append(amount);
+        b.append(" x ");
+        b.append(ProstUser.formatMoney(mapping.getSingeItemPrice()));
+        b.append("\n");
       }
-
-      int amount = mapping.getAmount();
-
-      if (amount < 10) {
-        b.append(" ");
-      }
-      b.append(itemName);
-      b.append(" >> ");
-      b.append(amount);
-      b.append(" x ");
-      b.append(ProstUser.formatMoney(mapping.getSingeItemPrice()));
-      b.append("\n");
     }
 
     return b.toString();

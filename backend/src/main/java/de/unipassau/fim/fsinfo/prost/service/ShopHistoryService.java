@@ -7,7 +7,6 @@ import de.unipassau.fim.fsinfo.prost.data.dto.ShopItemHistoryEntryDTO;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,36 +70,4 @@ public class ShopHistoryService {
         entry.getTransaction());
   }
 
-  private List<ShopItemHistoryEntryDTO> getDTO(Iterable<ShopItemHistoryEntry> entryList) {
-    List<ShopItemHistoryEntryDTO> entryDTOs = new ArrayList<>();
-    if (entryList != null) {
-      for (ShopItemHistoryEntry entry : entryList) {
-        entryDTOs.add(getDTO(entry));
-      }
-    }
-    return entryDTOs;
-  }
-
-  public Optional<List<ShopItemHistoryEntryDTO>> getLastUserHistory(Integer n, String userId) {
-
-    Optional<ProstUser> user = userRepository.findById(userId);
-    if (user.isEmpty()) {
-      return Optional.empty();
-    }
-
-    if (n == null) {
-      return Optional.of(getDTO(historyRepository.findAll(desc)));
-    }
-
-    Pageable pageable = PageRequest.of(0, n, desc);
-    return Optional.of(getDTO(historyRepository.findByUserIdEquals(userId, pageable)));
-  }
-
-  public List<ShopItemHistoryEntryDTO> getLastHistory(Integer n) {
-    if (n == null) {
-      return getDTO(historyRepository.findAll(desc));
-    }
-    Pageable pageable = PageRequest.of(0, n, desc);
-    return getDTO(historyRepository.findAll(pageable));
-  }
 }

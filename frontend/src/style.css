@@ -399,6 +399,10 @@ a {
     min-width: 10rem;
   }
 
+  .time {
+    min-width: 6.5rem;
+  }
+
   .balance {
     min-width: 6rem;
   }
@@ -408,7 +412,7 @@ a {
   }
 
   .name {
-    min-width: 9rem;
+    min-width: 8.5rem;
   }
 
   .icon {

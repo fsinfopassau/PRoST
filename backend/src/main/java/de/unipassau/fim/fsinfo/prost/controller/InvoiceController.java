@@ -39,7 +39,8 @@ public class InvoiceController {
       @RequestParam(defaultValue = "10") int s,
       @RequestParam(required = false) String userId,
       @RequestParam(required = false) Boolean mailed) {
-    return invoiceService.getInvoices(Math.max(0, p), Math.max(1, s), mailed, userId);
+    return invoiceService.getInvoices(Math.max(0, p), Math.min(Math.max(1, s), 100), mailed,
+        userId);
   }
 
   /**
@@ -52,9 +53,13 @@ public class InvoiceController {
       @RequestParam(defaultValue = "0") int p,
       @RequestParam(defaultValue = "10") int s,
       @RequestParam(required = false) Boolean mailed, Authentication authentication) {
+    if (authentication == null) {
+      return Page.empty();
+    }
+
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-    return invoiceService.getPersonalInvoices(Math.max(0, p), Math.max(1, s), mailed,
+    return invoiceService.getPersonalInvoices(Math.max(0, p), Math.min(Math.max(1, s), 100), mailed,
         userDetails.getUsername());
   }
 

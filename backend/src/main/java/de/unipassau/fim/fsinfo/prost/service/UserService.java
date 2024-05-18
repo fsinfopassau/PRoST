@@ -1,12 +1,11 @@
 package de.unipassau.fim.fsinfo.prost.service;
 
+import de.unipassau.fim.fsinfo.prost.data.DataFilter;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,23 +15,11 @@ public class UserService {
 
   private final UserRepository users;
 
-  private static final String EMAIL_PATTERN = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\\.+[a-zA-Z0-9.-]+$";
-  private static final int maxLength = 20;
-
   @Autowired
   public UserService(UserRepository users) {
     this.users = users;
   }
 
-  public static boolean isValidEmail(String email) {
-    if (email == null) {
-      return false;
-    }
-
-    Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-    Matcher matcher = pattern.matcher(email);
-    return matcher.matches();
-  }
 
   @Transactional
   public Optional<ProstUser> createUser(String userName, String displayName, String email) {
@@ -42,19 +29,19 @@ public class UserService {
       return Optional.empty();
     }
 
-    // Allow only valid or no mail.
-    if (!isValidEmail(email) && email != null) {
+    // Allow only valid or no mail at all.
+    if (!DataFilter.isValidEmail(email) && email != null) {
       System.out.println("[US] :: " + userName + " :: user-creation failed [mail=" + email + "] ");
       return Optional.empty();
     }
 
-    if (displayName == null || displayName.isBlank() || displayName.length() > maxLength) {
+    if (!DataFilter.isValidString(displayName, "displayName")) {
       System.out.println(
           "[US] :: " + userName + " :: user-creation failed [displayName=" + displayName + "] ");
       return Optional.empty();
     }
 
-    if (userName.length() > maxLength) {
+    if (!DataFilter.isValidString(userName, "userName")) {
       System.out.println(
           "[US] :: " + userName + " :: user-creation failed [userName=" + userName + "] ");
       return Optional.empty();
@@ -93,7 +80,7 @@ public class UserService {
   public boolean rename(String id, String name) {
     Optional<ProstUser> user = users.findById(id);
 
-    if (user.isPresent() && name.length() <= maxLength) {
+    if (user.isPresent() && DataFilter.isValidString(name, "user name")) {
       ProstUser u = user.get();
       u.setDisplayName(name);
       users.save(u);
@@ -106,7 +93,7 @@ public class UserService {
   public boolean setEmail(String id, String email) {
     Optional<ProstUser> user = users.findById(id);
 
-    if (user.isPresent() && isValidEmail(email)) {
+    if (user.isPresent() && DataFilter.isValidEmail(email)) {
       ProstUser u = user.get();
       u.setEmail(email);
       users.save(u);

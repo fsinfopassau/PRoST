@@ -43,7 +43,9 @@ public class TransactionService {
       Optional<ProstUser> receiver,
       Optional<ProstUser> bearer, BigDecimal amount, TransactionType type) {
 
-    if (receiver.isEmpty() || bearer.isEmpty() || amount.scale() > 2) {
+    // scale -> Maximum 2 Decimal -> smallest is Cents, no fraction of cents
+    if (receiver.isEmpty() || bearer.isEmpty() || amount.scale()
+        > 2) {
       System.err.println("[TS] :: " + receiver + " " + bearer + " " + amount);
       return Optional.empty();
     }
@@ -67,6 +69,7 @@ public class TransactionService {
         return change(receiver.get(), bearer.get(), amount);
       }
       default -> {
+        System.out.println("[TS] :: Transaction-type \"" + type + "\" is not defined");
         return Optional.empty();
       }
     }
@@ -81,12 +84,12 @@ public class TransactionService {
 
     BigDecimal previous = receiver.getBalance();
 
-    receiver.setBalance(receiver.getBalance().add(amount.abs()));
+    receiver.setBalance(previous.add(amount.abs()));
     users.save(receiver);
 
     TransactionEntry entry = new TransactionEntry(null,
         receiver.getId(),
-        bearer.getId(), TransactionType.DEPOSIT, previous, amount);
+        bearer.getId(), TransactionType.DEPOSIT, previous, amount.abs());
     history.save(entry);
     return Optional.of(entry);
   }
@@ -95,13 +98,13 @@ public class TransactionService {
       BigDecimal amount) {
     BigDecimal previous = receiver.getBalance();
 
-    receiver.setBalance(receiver.getBalance().subtract(amount.abs()));
+    receiver.setBalance(previous.subtract(amount.abs()));
     receiver.setTotalSpent(receiver.getTotalSpent().abs().add(amount.abs()));
     users.save(receiver);
 
     TransactionEntry entry = new TransactionEntry(null,
         receiver.getId(),
-        bearer.getId(), TransactionType.BUY, previous, amount);
+        bearer.getId(), TransactionType.BUY, previous, amount.abs());
     history.save(entry);
     return Optional.of(entry);
   }

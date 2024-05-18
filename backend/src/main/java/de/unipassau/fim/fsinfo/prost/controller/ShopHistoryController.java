@@ -32,7 +32,7 @@ public class ShopHistoryController {
       @RequestParam(defaultValue = "0") int p,
       @RequestParam(defaultValue = "10") int s,
       @RequestParam(required = false) String receiverId) {
-    return shopHistoryService.getHistory(Math.max(0, p), Math.max(1, s), receiverId);
+    return shopHistoryService.getHistory(Math.max(0, p), Math.min(Math.max(1, s), 100), receiverId);
   }
 
   /**
@@ -45,9 +45,12 @@ public class ShopHistoryController {
       @RequestParam(defaultValue = "0") int p,
       @RequestParam(defaultValue = "10") int s,
       Authentication authentication) {
+    if (authentication == null) {
+      return Page.empty();
+    }
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-    return shopHistoryService.getHistory(Math.max(0, p), Math.max(1, s),
+    return shopHistoryService.getHistory(Math.max(0, p), Math.min(Math.max(1, s), 100),
         userDetails.getUsername());
   }
 }

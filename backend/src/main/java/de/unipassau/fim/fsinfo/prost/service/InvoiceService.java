@@ -50,7 +50,7 @@ public class InvoiceService {
     Page<InvoiceEntry> entriesPage;
 
     if (userRepository.findById(userId).isEmpty()) {
-      return new PageImpl<>(new ArrayList<>(), pageable, 0);
+      return Page.empty();
     }
 
     if (mailed != null) {
@@ -125,6 +125,10 @@ public class InvoiceService {
     List<Long> successfulSends = new ArrayList<>();
 
     for (Long id : invoiceIds) {
+
+      if (id == null) {
+        continue;
+      }
 
       Optional<InvoiceEntry> invoiceO = invoiceRepository.findById(id);
 
@@ -214,6 +218,10 @@ public class InvoiceService {
     List<Long> successfulRemovals = new ArrayList<>();
 
     for (Long id : invoiceIds) {
+      if (id == null) {
+        continue;
+      }
+
       Optional<InvoiceEntry> invoice = invoiceRepository.findById(id);
 
       if (invoice.isEmpty()) {
@@ -241,6 +249,9 @@ public class InvoiceService {
   }
 
   private Optional<InvoiceEntry> getNewerEntry(InvoiceEntry entry) {
+    if (entry == null) {
+      return Optional.empty();
+    }
     List<InvoiceEntry> entries = invoiceRepository.findByUserIdAndTimestampGreaterThanOrderByTimestampAsc(
         entry.getUserId(),
         entry.getTimestamp());
@@ -256,9 +267,17 @@ public class InvoiceService {
    */
   private List<InvoiceAmountMapping> getItemAmounts(List<ShopItemHistoryEntry> entries) {
 
+    if (entries == null || entries.isEmpty()) {
+      return List.of();
+    }
+
     Map<CompositeKey, InvoiceAmountMapping> amounts = new HashMap<>();
 
     entries.forEach((entry) -> {
+      if (entry == null) {
+        return;
+      }
+
       CompositeKey key = new CompositeKey(entry.getItemId(), entry.getItemPrice());
       if (amounts.containsKey(key)) {
         InvoiceAmountMapping lastAmount = amounts.get(key);
