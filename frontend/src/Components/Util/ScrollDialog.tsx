@@ -87,7 +87,7 @@ const ScrollDialog: React.FC<PropsWithChildren<CustomComponentProps>> = ({
             >
               <DialogClose asChild>
                 <div
-                  className="Button danger-color"
+                  className="Button danger-color icon"
                   style={{ width: "40%" }}
                   aria-label="Close"
                 >
@@ -95,7 +95,7 @@ const ScrollDialog: React.FC<PropsWithChildren<CustomComponentProps>> = ({
                 </div>
               </DialogClose>
               <DialogClose asChild onClick={onSubmit}>
-                <div className="Button good-color" style={{ width: "40%" }}>
+                <div className="Button good-color icon" style={{ width: "40%" }}>
                   <CheckIcon />
                 </div>
               </DialogClose>

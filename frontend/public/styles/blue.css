@@ -78,10 +78,10 @@ a:visited {
 
 .Input {
   color: #000080;
-  box-shadow: 0 0 0 2px #bfbfe6;
+  border: 3px solid #bfbfe6;
 }
 .Input:focus {
-  box-shadow: 0 0 0 3px #9696e4;
+  border: 3px solid #9696e4;
 }
 
 .DisplayCard {
@@ -212,16 +212,28 @@ Colors
 }
 
 .danger-color {
+  color: #ff7777;
+  border-color: #ff7777;
+}
+.danger-color:focus {
   color: red;
   border-color: red;
 }
 
 .good-color {
-  color: green;
-  border-color: green;
+  color: #119911;
+  border-color: #119911;
+}
+.good-color:focus {
+  color: #116611;
+  border-color: #116611;
 }
 
 .important-color {
+  color: #ffaf1b;
+  border-color: #ffaf1b;
+}
+.important-color:focus {
   color: orange;
   border-color: orange;
 }

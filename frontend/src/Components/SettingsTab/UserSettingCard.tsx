@@ -16,7 +16,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Separator } from "@radix-ui/react-separator";
 import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
-import { formatMoney, formatMoneyInput } from "../../Format";
+import { formatMoney, getValidMoney } from "../../Format";
 import {
   changeUser,
   createTransaction,
@@ -38,24 +38,29 @@ export function UserSettingCard(props: {
   const [transactionAmount, setTransactionAmount] = useState<string>("");
 
   function applyTransaction() {
-    createTransaction(
-      user,
-      formatMoneyInput(transactionAmount).toString(),
-      "deposit"
-    ).then((result) => {
-      if (result) {
-        toast.success(
-          formatMoney(Math.abs(formatMoneyInput(transactionAmount))) +
-          ' wurde "' +
-          user.id +
-          '" gutgeschrieben!'
-        );
-        setTransactionAmount("");
-        onUpdate();
-      } else {
-        toast.error("Transaktion fehlgeschlagen!");
-      }
-    });
+    const money = getValidMoney(transactionAmount);
+    if (money) {
+      createTransaction(
+        user,
+        money.toString(),
+        "deposit"
+      ).then((result) => {
+        if (result) {
+          toast.success(
+            formatMoney(Math.abs(money)) +
+            ' wurde "' +
+            user.id +
+            '" gutgeschrieben!'
+          );
+          setTransactionAmount("");
+          onUpdate();
+        } else {
+          toast.error("Transaktion fehlgeschlagen!");
+        }
+      });
+    } else {
+      toast.error("Kein gültiger Betrag!");
+    }
   }
 
   function handleKeyDown(event: React.KeyboardEvent) {
@@ -110,33 +115,54 @@ export function UserSettingCard(props: {
   }
 
   function setTotalSpent(spentTotal: string) {
-    changeUser(
-      user,
-      formatMoneyInput(spentTotal).toString(),
-      "moneySpent"
-    ).then((result) => {
-      if (result) {
-        toast.success("Gesamtausgaben geändert.");
-        onUpdate();
-      } else {
-        toast.error("Änderung der Gesamtausgaben fehlgeschlagen!");
-      }
-    });
+    const money = getValidMoney(spentTotal);
+    if (money) {
+      changeUser(
+        user,
+        money.toString(),
+        "moneySpent"
+      ).then((result) => {
+        if (result) {
+          toast.success("Gesamtausgaben geändert.");
+          onUpdate();
+        } else {
+          toast.error("Änderung der Gesamtausgaben fehlgeschlagen!");
+        }
+      });
+    } else {
+      toast.error("Kein gültiger Betrag!");
+    }
   }
 
   function setBalance(newBalance: string) {
-    createTransaction(
-      user,
-      formatMoneyInput(newBalance).toString(),
-      "change"
-    ).then((result) => {
-      if (result) {
-        toast.success("Kontostand geändert.");
-        onUpdate();
-      } else {
-        toast.error("Änderung fehlgeschlagen!");
-      }
-    });
+    const money = getValidMoney(newBalance);
+    if (money) {
+      createTransaction(
+        user,
+        money.toString(),
+        "change"
+      ).then((result) => {
+        if (result) {
+          toast.success("Kontostand geändert.");
+          onUpdate();
+        } else {
+          toast.error("Änderung fehlgeschlagen!");
+        }
+      });
+    } else {
+      toast.error("Kein gültiger Betrag!");
+    }
+  }
+
+  function isTransactionAmountValid() {
+    const money = getValidMoney(transactionAmount);
+
+    if (transactionAmount.length === 0)
+      return false;
+
+    if (money && money > 0 && money <= 50) {
+      return true;
+    }
   }
 
   function NormalCard() {
@@ -173,7 +199,7 @@ export function UserSettingCard(props: {
           <input
             type="text"
             placeholder="Betrag"
-            className="Input"
+            className={transactionAmount.length === 0 ? "Input" : isTransactionAmountValid() ? "Input good-color" : "Input danger-color"}
             value={transactionAmount}
             onKeyDown={handleKeyDown}
             onChange={(e) => setTransactionAmount(e.target.value)}

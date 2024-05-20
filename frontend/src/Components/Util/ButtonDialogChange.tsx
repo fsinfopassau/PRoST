@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ScrollDialog from "./ScrollDialog";
+import { isValidString } from "../../Format";
 
 export function ButtonDialogChanger(props: {
   trigger: React.ReactNode;
@@ -30,7 +31,7 @@ export function ButtonDialogChanger(props: {
       >
         <div className="DialogDescription">{dialogDesc}</div>
         <fieldset className="Fieldset">
-          <input className="Input" onChange={handleInputChange} />
+          <input className={isValidString(inputValue) ? "Input good-color" : "Input danger-color"} onChange={handleInputChange} />
         </fieldset>
       </div>
     </ScrollDialog>

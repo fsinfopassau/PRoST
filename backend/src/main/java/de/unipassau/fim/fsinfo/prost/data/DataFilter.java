@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class DataFilter {
 
   private static final String EMAIL_PATTERN = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\\.+[a-zA-Z0-9.-]+$";
-  final static int MAX_NAME_LENGTH = 20;
+  final static int MAX_NAME_LENGTH = 30;
 
   public static boolean isValidString(String value, String name) {
     if (value == null || value.isBlank()) {

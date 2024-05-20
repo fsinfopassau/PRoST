@@ -7,7 +7,7 @@ import ScrollDialog from "../Util/ScrollDialog";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { toast } from "react-toastify";
 import Fuse from "fuse.js";
-import { formatMoneyInput } from "../../Format";
+import { filterNameId, getValidMoney, isValidString } from "../../Format";
 
 export function ItemSettings() {
   const [searchValue, setSearchValue] = useState("");
@@ -15,7 +15,7 @@ export function ItemSettings() {
   const [newId, setNewId] = useState<string>("");
   const [newCategory, setNewCategory] = useState<string>("");
   const [newDisplayName, setNewDisplayName] = useState<string>("");
-  const [newPrice, setNewPrice] = useState<number>(0);
+  const [newPrice, setNewPrice] = useState<number | undefined>(0);
 
   useEffect(reloadShopItems, []);
 
@@ -26,22 +26,25 @@ export function ItemSettings() {
   }
 
   function createShopItem() {
-    const item: ShopItem = {
-      id: newId,
-      category: newCategory,
-      displayName: newDisplayName,
-      price: newPrice,
-      enabled: true,
-    };
+    if (newPrice) {
 
-    createNewShopItem(item).then((success) => {
-      if (success) {
-        toast.success("Item" + newId + " created");
-        reloadShopItems();
-      } else {
-        toast.error("Master, you failed me!");
-      }
-    });
+      const item: ShopItem = {
+        id: newId,
+        category: newCategory,
+        displayName: newDisplayName,
+        price: newPrice,
+        enabled: true,
+      };
+
+      createNewShopItem(item).then((success) => {
+        if (success) {
+          toast.success("Item" + newId + " created");
+          reloadShopItems();
+        } else {
+          toast.error("Master, you failed me!");
+        }
+      });
+    }
   }
 
   const handleIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +62,12 @@ export function ItemSettings() {
   };
 
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewPrice(formatMoneyInput(event.target.value));
+    const money = getValidMoney(event.target.value);
+    if (money)
+      setNewPrice(money);
+    else {
+      setNewPrice(undefined);
+    }
   };
 
   function filter(items: ShopItem[]): ShopItem[] {
@@ -68,24 +76,25 @@ export function ItemSettings() {
     }
 
     const fuse = new Fuse(items, {
-      keys: ["id", "displayName"],
+      keys: ["id", "displayName", "category"],
     });
     return fuse.search(searchValue).map((result) => result.item);
   }
 
   return (
     <div className="DisplayCard">
-      <div style={{ display: "flex", gap: "1rem" }}>
+      <h2>Gegenstände</h2>
+      <div className="tableSearch">
         <input
           type="text"
-          placeholder="Gegenstand"
+          placeholder="Id, Name, Kategorie"
           className="Input"
           onChange={(e) => setSearchValue(e.target.value)}
         ></input>
         <ScrollDialog
           title="Neuer Gegenstand"
           trigger={
-            <div className="Button icon good-color">
+            <div className="Button good-color icon">
               <div className="good-color">
                 <PlusCircledIcon />
               </div>
@@ -105,7 +114,7 @@ export function ItemSettings() {
               Identifier:
               <fieldset className="Fieldset">
                 <input
-                  className="Input"
+                  className={isValidString(filterNameId(newId)) ? "Input good-color" : "Input danger-color"}
                   onChange={handleIdChange}
                   placeholder="vergammelte Milch"
                 ></input>
@@ -115,7 +124,7 @@ export function ItemSettings() {
               Kategorie:
               <fieldset className="Fieldset">
                 <input
-                  className="Input"
+                  className={isValidString(newCategory) ? "Input good-color" : "Input danger-color"}
                   onChange={handleCategoryChange}
                   placeholder="abgestandene Getränke"
                 ></input>
@@ -125,7 +134,7 @@ export function ItemSettings() {
               Name:
               <fieldset className="Fieldset">
                 <input
-                  className="Input"
+                  className={isValidString(newDisplayName) ? "Input good-color" : "Input danger-color"}
                   onChange={handleDisplayNameChange}
                   placeholder="Restbier von gestern"
                 ></input>
@@ -135,7 +144,7 @@ export function ItemSettings() {
               Preis:
               <fieldset className="Fieldset">
                 <input
-                  className="Input"
+                  className={newPrice !== undefined ? "Input good-color" : "Input danger-color"}
                   onChange={handlePriceChange}
                   placeholder="12,34"
                 ></input>

@@ -34,7 +34,6 @@ body {
   height: 100%;
 
   @media (max-width: 768px) {
-    font-size: .7rem;
     padding: 0;
   }
 }
@@ -42,18 +41,10 @@ body {
 .MainBody {
   flex-grow: 1;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  
-  @media (max-width: 768px) {
-    font-size: .7rem;
-  }
-}
-
-.MainBody > * {
   width: 100%;
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /*standard*/
@@ -68,6 +59,7 @@ h1 {
 
   @media (max-width: 768px) {
     font-size: 3rem;
+    margin: 2rem 0;
   }
 }
 
@@ -94,6 +86,12 @@ h3 {
   
   @media (max-width: 768px) {
     font-size: 1rem;
+  }
+}
+
+a,p,li,strong,div {
+  @media (max-width: 768px) {
+    font-size: .8rem;
   }
 }
 
@@ -320,7 +318,7 @@ a {
   ); /* Adjust the minmax values as needed */
   grid-auto-rows: min-content;
   gap: 1rem;
-  padding: 20px 0;
+  padding: 20px;
 }
 
 .GridContainer {
@@ -350,7 +348,7 @@ a {
 /* General */
 
 .Button {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 15px;
@@ -383,7 +381,7 @@ a {
   flex: 1;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 12px;
   padding: 5px 10px;
   font-size: 1.25rem;
   line-height: 1;
@@ -595,7 +593,7 @@ a {
 }
 
 .DialogContent {
-  border-radius: 6px;
+  border-radius: 12px;
   position: fixed;
   top: 50%;
   left: 50%;

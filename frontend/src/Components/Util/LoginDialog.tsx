@@ -22,12 +22,14 @@ import {
   existCredentials,
 } from "../../SessionInfo";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export function LoginDialog() {
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLogged, setLogged] = useState(existCredentials());
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const name = getSessionUserName();
@@ -65,6 +67,7 @@ export function LoginDialog() {
     setPassword("");
     resetSession();
     setLogged(false);
+    navigate("/");
     window.location.reload();
   }
 
@@ -131,7 +134,7 @@ export function LoginDialog() {
                     justifyContent: "flex-end",
                   }}
                 >
-                  <button className="Button" onClick={submit}>
+                  <button className="Button icon" onClick={submit}>
                     <PaperPlaneIcon />
                   </button>
                 </div>

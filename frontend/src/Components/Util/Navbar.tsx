@@ -11,13 +11,30 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LoginDialog } from "./LoginDialog";
-import { getAuthorizedUser, isAdmin, isOnlyKiosk, isOnlyUser, isUser } from "../../SessionInfo";
+import { getAuthorizedUser, isAdmin, isOnlyKiosk, isOnlyUser, isUser, resetSession } from "../../SessionInfo";
 import { BASE_PATH } from "../App";
+import { useEffect } from "react";
 
 export function Navbar(props: { switchTheme: () => void }) {
   const { switchTheme } = props;
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === "F8" || event.key === "f8") {
+        resetSession();
+        navigate("/");
+        window.location.reload();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
 
   function tabUpdate(newValue: string) {
     if (newValue === "root") {
@@ -120,8 +137,9 @@ export function Navbar(props: { switchTheme: () => void }) {
           ) : <></>}
         </TabsList>
       </Tabs>
-
-      <LoginDialog />
+      {!isOnlyKiosk() ?
+        <LoginDialog />
+        : <></>}
     </div>
   );
 }

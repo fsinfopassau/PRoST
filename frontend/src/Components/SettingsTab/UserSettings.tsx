@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { Pencil2Icon, PlusCircledIcon } from "@radix-ui/react-icons";
 import Fuse from "fuse.js";
 import { Separator } from "@radix-ui/react-separator";
-import { formatMoneyInput } from "../../Format";
+import { filterNameId, getValidMoney, isValidEmail, isValidString } from "../../Format";
 
 export function UserSettings() {
   const [searchValue, setSearchValue] = useState("");
@@ -59,8 +59,10 @@ export function UserSettings() {
       totalSpent: 0,
     };
 
-    if (moneySpent.trim().length != 0) {
-      user.totalSpent = formatMoneyInput(moneySpent);
+    const money = getValidMoney(moneySpent);
+
+    if (money) {
+      user.totalSpent = money;
     }
 
     createNewUser(user).then((success) => {
@@ -68,7 +70,7 @@ export function UserSettings() {
         toast.success("User " + newId + " created");
         reloadUsers();
       } else {
-        toast.error("Master, you failed me!");
+        toast.error("Meister, warum entäuschst du mich? 😢");
       }
     });
   }
@@ -79,7 +81,7 @@ export function UserSettings() {
     }
 
     const fuse = new Fuse(users, {
-      keys: ["id", "displayName"],
+      keys: ["id", "displayName", "email"],
     });
     return fuse.search(searchValue).map((result) => result.item);
   }
@@ -87,10 +89,11 @@ export function UserSettings() {
   return (
     <>
       <div className="DisplayCard">
-        <div style={{ display: "flex", gap: "1rem" }}>
+        <h2>Nutzer</h2>
+        <div className="tableSearch">
           <input
             type="text"
-            placeholder="Nutzer"
+            placeholder="Id, Name, Email"
             className="Input"
             onChange={(e) => setSearchValue(e.target.value)}
           />
@@ -114,9 +117,9 @@ export function UserSettings() {
               }}
             >
               <div className="DialogDescription">Identifier: *</div>
-              <fieldset className="Fieldset">
+              <fieldset className="Fieldset" >
                 <input
-                  className="Input"
+                  className={isValidString(filterNameId(newId)) ? "Input good-color" : "Input danger-color"}
                   onChange={handleIdChange}
                   placeholder={"sugmaW"}
                 />
@@ -124,7 +127,7 @@ export function UserSettings() {
               <div className="DialogDescription">Name: *</div>
               <fieldset className="Fieldset">
                 <input
-                  className="Input"
+                  className={isValidString(newName) ? "Input good-color" : "Input danger-color"}
                   onChange={handleNameChange}
                   placeholder={"WillyD"}
                 />
@@ -132,7 +135,7 @@ export function UserSettings() {
               <div className="DialogDescription">E-Mail: *</div>
               <fieldset className="Fieldset">
                 <input
-                  className="Input"
+                  className={isValidEmail(newEmail) ? "Input good-color" : "Input danger-color"}
                   onChange={handleEmailChange}
                   placeholder={"mail@willy.de"}
                 />
@@ -140,7 +143,7 @@ export function UserSettings() {
               <div className="DialogDescription">Bisher ausgegeben:</div>
               <fieldset className="Fieldset">
                 <input
-                  className="Input"
+                  className={getValidMoney(moneySpent.trim().length === 0 ? "0" : moneySpent) !== undefined ? "Input good-color" : "Input danger-color"}
                   onChange={handleMoneySpentChange}
                   placeholder={"0"}
                 />
@@ -149,12 +152,14 @@ export function UserSettings() {
           </ScrollDialog>
 
           <div
-            className={editMode ? "Button important-color" : "Button"}
+            className={editMode ? "Button icon important-color" : "Button icon"}
             onClick={toggleEdit}
           >
-            <Pencil2Icon />
+            <div>
+              <Pencil2Icon />
+            </div>
           </div>
-        </div>
+        </div >
         <Separator className="Separator" />
         <div className="GridContainer">
           {filter(users).map((user, index) => (
@@ -166,7 +171,7 @@ export function UserSettings() {
             />
           ))}
         </div>
-      </div>
+      </div >
     </>
   );
 }

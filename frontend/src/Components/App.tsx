@@ -117,7 +117,7 @@ export function App() {
           </BrowserRouter>
 
           <ScrollDialog
-            onSubmit={() => {}}
+            onSubmit={() => { }}
             title="Datenschutzhinweise der PRoST-Sotware"
             trigger={<div className="site-data-info">Datenschutz</div>}
           >

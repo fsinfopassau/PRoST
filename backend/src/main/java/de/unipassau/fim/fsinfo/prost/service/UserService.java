@@ -104,7 +104,8 @@ public class UserService {
   public boolean setEmail(String id, String email) {
     Optional<ProstUser> user = users.findById(id);
 
-    if (user.isPresent() && DataFilter.isValidEmail(email)) {
+    if (user.isPresent() && DataFilter.isValidString(email, "user email")
+        && DataFilter.isValidEmail(email)) {
       ProstUser u = user.get();
       u.setEmail(email);
       users.save(u);
