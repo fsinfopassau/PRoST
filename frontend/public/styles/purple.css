@@ -141,6 +141,9 @@ Tabs
   color: var(--violet-11);
   border-bottom: 4px solid currentColor;
 }
+.TabsTrigger[data-state="inactive"] {
+  margin-bottom: 4px;
+}
 .TabsTrigger:active {
   box-shadow: 0 0 0 2px black;
 }

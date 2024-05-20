@@ -299,7 +299,7 @@ export async function buyItem(
   );
 
   if (result.status == 418) {
-    toast.warning("I'm a Teapot! 🙃");
+    toast.warning("Ich bin ne 🫖, du Keck! 🙃");
   }
   return result.ok;
 }

@@ -15,7 +15,7 @@ import { InvoiceDetails } from "./InvoiceDetails";
 export function InvoiceSelectDisplay(props: {
   invoice: Invoice;
   onSelect: (id: number) => void;
-  selected: boolean;
+  selected: boolean | undefined;
 }) {
   const { invoice, onSelect, selected } = props;
 
@@ -31,29 +31,31 @@ export function InvoiceSelectDisplay(props: {
 
   return (
     <tr className={totalAmounts() === 0 ? "table-entry orange" : "table-entry"}>
-      <th className="icon">
-        {invoice.mailed ? (
-          <div>
-            <LockClosedIcon />
-          </div>
-        ) : selected ? (
-          <div
-            className="CheckBox green"
-            onClick={() => {
-              onSelect(invoice.id);
-            }}
-          >
-            <CheckIcon />
-          </div>
-        ) : (
-          <div
-            className="CheckBox"
-            onClick={() => {
-              onSelect(invoice.id);
-            }}
-          ></div>
-        )}
-      </th>
+      {selected === undefined ? <></> :
+        <th className="icon">
+          {invoice.mailed ? (
+            <div>
+              <LockClosedIcon />
+            </div>
+          ) : selected ? (
+            <div
+              className="CheckBox green"
+              onClick={() => {
+                onSelect(invoice.id);
+              }}
+            >
+              <CheckIcon />
+            </div>
+          ) : (
+            <div
+              className="CheckBox"
+              onClick={() => {
+                onSelect(invoice.id);
+              }}
+            ></div>
+          )}
+        </th>
+      }
       {invoice.mailed ? (
         <th className="icon">
           <div className="green">

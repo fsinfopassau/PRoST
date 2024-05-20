@@ -57,7 +57,7 @@ public class ShopService {
     ShopItem item = itemO.get();
 
     // Every Component needs to be allowed to be part of the Transaction
-    if (!item.getEnabled() || !user.getEnabled() || !bearer.getEnabled()) {
+    if (!item.getEnabled() || !user.getEnabled()) {
       return false;
     }
 

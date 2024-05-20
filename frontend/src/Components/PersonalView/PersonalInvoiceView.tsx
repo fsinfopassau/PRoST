@@ -65,8 +65,8 @@ export function PersonalInvoiceView() {
               <InvoiceSelectDisplay
                 key={index}
                 invoice={invoice}
-                onSelect={() => {}}
-                selected={true}
+                onSelect={() => { }}
+                selected={undefined}
               />
             ))}
           </tbody>
@@ -80,9 +80,8 @@ export function PersonalInvoiceView() {
               return (
                 <div
                   key={"p" + index}
-                  className={`PageButton ${
-                    selectedPage === index ? "Selected" : ""
-                  }`}
+                  className={`PageButton ${selectedPage === index ? "Selected" : ""
+                    }`}
                   onClick={() => selectPage(index)}
                 >
                   {index + 1}

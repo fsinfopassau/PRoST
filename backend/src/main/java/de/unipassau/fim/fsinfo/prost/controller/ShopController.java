@@ -111,7 +111,7 @@ public class ShopController {
         (n == null ? 1 : n), userDetails.getUsername())) {
       return ResponseEntity.ok().build();
     }
-    return ResponseEntity.badRequest().build();
+    return ResponseEntity.badRequest().body(permitted + " " + highestPermission);
 
   }
 
