@@ -91,22 +91,20 @@ export function ItemCheckout() {
             </div>
           </div>
         </div>
-        <div id="CheckoutBar">
-          <div className="CheckoutCounter">
-            <button className="Button" onClick={decrement}>
-              <ChevronLeftIcon height={60} width={60} />
-            </button>
-            <div>
-              <div>{amount}</div>
-            </div>
-            <button className="Button" onClick={increment}>
-              <ChevronRightIcon height={60} width={60} />
-            </button>
+        <div className="CheckoutCounter">
+          <button className="Button" onClick={decrement}>
+            <ChevronLeftIcon height={60} width={60} />
+          </button>
+          <div>
+            <div>{amount}</div>
           </div>
-          <button id="Checkout-Complete" className="Button" onClick={checkout}>
-            <PaperPlaneIcon width={50} height={35} />
+          <button className="Button" onClick={increment}>
+            <ChevronRightIcon height={60} width={60} />
           </button>
         </div>
+        <button id="Checkout-Complete" className="Button" onClick={checkout}>
+          <PaperPlaneIcon width={50} height={35} />
+        </button>
       </div>
     </>
   );

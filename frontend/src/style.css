@@ -32,6 +32,11 @@ body {
   padding: 0 1rem 1rem 1rem;
   margin: 0 auto;
   height: 100%;
+
+  @media (max-width: 768px) {
+    font-size: .7rem;
+    padding: 0;
+  }
 }
 
 .MainBody {
@@ -40,6 +45,10 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  
+  @media (max-width: 768px) {
+    font-size: .7rem;
+  }
 }
 
 .MainBody > * {
@@ -56,6 +65,10 @@ h1 {
   justify-content: center;
   margin: 4rem 0;
   font-weight: 500;
+
+  @media (max-width: 768px) {
+    font-size: 3rem;
+  }
 }
 
 h2 {
@@ -65,6 +78,10 @@ h2 {
   justify-content: center;
   margin: 0.3rem 0;
   font-weight: 500;
+  
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
 }
 
 h3 {
@@ -74,6 +91,10 @@ h3 {
   justify-content: center;
   margin: 0.2rem 0;
   font-weight: 400;
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 }
 
 svg {
@@ -89,13 +110,20 @@ a {
   position: fixed;
   bottom: 4px;
   right: 4px;
-  z-index: 1000;
+  z-index: 1;
   padding: 6px;
   font-size: 12px;
   color: black;
   cursor: pointer;
   transition: background-color 0.3s ease;
   border-radius: 10000px;
+
+  @media (max-width: 768px) {
+    bottom: 2px;
+    right: 2px;
+    padding: 3px;
+    font-size: 8px;
+  }
 }
 
 /* Change background color on hover */
@@ -127,7 +155,7 @@ a {
 
 #login {
   justify-content: right;
-  width: 100%;
+  flex-grow: 1;
   display: flex;
   align-items: center;
 }
@@ -172,47 +200,36 @@ a {
   @media screen and (max-height: 650px) {
     max-width: 40vh;
   }
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
   @media screen and (max-height: 550px) {
     max-width: 30vh;
   }
 }
 
-#CheckoutBar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 50px;
-  padding: 2rem;
-  font-size: 4rem;
-  flex-grow: 1;
-  /*
-  position: sticky;
-  bottom: 0;
-  */
-  width: 100%;
-}
-#CheckoutBar Button {
-  padding: 0.7rem;
-}
-
 #Checkout-Complete {
   margin: 1rem;
-  position: absolute;
-  right: 0;
+  width: 50vw;
+  border-radius: 10000px;
 }
 
 .CheckoutCounter {
   display: flex;
-  align-content: center;
+  justify-content: center;
   align-items: center;
   gap: 20px;
-  height: 100%;
+  width: 50vw;
 }
 .CheckoutCounter > div {
   width: 3.5rem;
+  font-size: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
 }
 .CheckoutCounter > Button {
   border-radius: 10000px;
@@ -247,49 +264,52 @@ a {
   margin-bottom: 0.6rem;
   padding: 1rem;
   position: sticky;
-  z-index: 10;
+  z-index: 1;
   top: 0;
+  align-items: center;
+  justify-content: left;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 0.5rem;
+  }
 }
 
 #tab-changer > img {
-  margin-right: 0.6rem;
   padding: .25rem;
   height: 100%;
 }
 
-.TabsRoot {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  margin-right: .5rem;
-}
-
 .TabsList {
+  justify-content: center;
   flex-shrink: 0;
   display: flex;
-  height: 100%;
+  flex-wrap: wrap;
+  list-style-type: none;
+  height: auto;
+  padding: 0;
+  margin: 0;
 }
 
 .TabsTrigger {
-  font-family: inherit;
-  padding: 0 20px;
-  height: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
   display: flex;
-  
   align-items: center;
   justify-content: center;
-  font-size: 15px;
-  line-height: 1;
-  user-select: none;
-  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
 }
 .TabsTrigger * {
   cursor: pointer;
 }
-
 .TabsTrigger:active {
   position: relative;
 }
+
 
 /* Alignments */
 .SmallGridContainer {
@@ -307,6 +327,10 @@ a {
   display: grid;
   grid-auto-rows: min-content;
   grid-template-columns: repeat(auto-fill, minmax(25.5rem, 1fr));
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  }
 }
 
 .SpreadContainer {
@@ -334,6 +358,10 @@ a {
   font-weight: 500;
   height: 3rem;
   cursor: pointer;
+  @media (max-width: 768px) {
+    font-size: .75rem;
+    height: 2rem;
+  }
 }
 .Button * {
   cursor: pointer;
@@ -357,10 +385,15 @@ a {
   justify-content: center;
   border-radius: 4px;
   padding: 5px 10px;
-  font-size: 20px;
+  font-size: 1.25rem;
   line-height: 1;
-  height: 35px;
+  height: 2rem;
   min-width: 10rem;
+  @media (max-width: 768px) {
+    font-size: .9rem;
+    height: 1.5rem;
+    min-width: 5rem;
+  }
 }
 
 .DisplayCard {
@@ -388,6 +421,13 @@ a {
 .Table {
   width: 100%;
 
+  .horizontalContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+  }
+
   .left {
     text-align: left;
     justify-content: left;
@@ -398,8 +438,13 @@ a {
     justify-content: right;
   }
 
+  .icon {
+    width: 0.3rem;
+    min-width: 0.2rem;
+  }
+
   .date {
-    min-width: 10rem;
+    min-width: 11rem;
   }
 
   .time {
@@ -418,16 +463,26 @@ a {
     min-width: 8.5rem;
   }
 
-  .icon {
-    width: 0.3rem;
-    min-width: 0.2rem;
-  }
-
-  .horizontalContainer {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
+  @media (max-width: 768px) {
+    .date {
+      min-width: 5.5rem;
+    }
+  
+    .time {
+      min-width: 3.25rem;
+    }
+  
+    .balance {
+      min-width: 5rem;
+    }
+  
+    .amount {
+      min-width: 3rem;
+    }
+  
+    .name {
+      min-width: 5rem;
+    }
   }
 }
 
@@ -438,6 +493,9 @@ a {
   height: 2.7rem;
   min-width: 21rem;
   width: 100%;
+  @media (max-width: 768px) {
+    font-size: .75rem;
+  }
 }
 .table-entry th {
   padding: 0 0.7rem;
@@ -532,6 +590,7 @@ a {
   place-items: center;
   overflow-y: auto;
   inset: 0;
+  z-index: 2;
   animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -545,6 +604,7 @@ a {
   max-width: 50rem;
   max-height: 85vh;
   padding: 25px;
+  z-index: 2;
   animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .DialogContent:focus {
@@ -555,6 +615,9 @@ a {
   margin: 0;
   font-weight: 500;
   font-size: 3rem;
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
 }
 
 .DialogDescription {

@@ -125,6 +125,8 @@ Tabs
   color: var(--violet-11);
   border: 2px solid white;
   background-clip: border-box;
+  margin: 4px 0;
+  border-bottom: 4px solid white;
 }
 .TabsTrigger:first-child {
   border-top-left-radius: 12px;
@@ -136,13 +138,11 @@ Tabs
 }
 .TabsTrigger:hover {
   border: 2px solid var(--violet-8);
+  border-bottom: 4px solid var(--violet-8);
 }
 .TabsTrigger[data-state="active"] {
   color: var(--violet-11);
   border-bottom: 4px solid currentColor;
-}
-.TabsTrigger[data-state="inactive"] {
-  margin-bottom: 4px;
 }
 .TabsTrigger:active {
   box-shadow: 0 0 0 2px black;

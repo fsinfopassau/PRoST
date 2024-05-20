@@ -154,31 +154,21 @@ export function ItemSettingCard(props: {
               </div>
             )}
           </h3>
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              maxWidth: "20rem",
-              margin: "auto",
-            }}
-          >
-            <div className="DisplayCard">
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Pencil2Icon /> {item.displayName}
-              </div>
+          <div className="DisplayCard">
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Pencil2Icon /> {item.displayName}
             </div>
-            <div className="DisplayCard">
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <BookmarkIcon />
-                {item.category}
-              </div>
+          </div>
+          <div className="DisplayCard">
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <BookmarkIcon />
+              {item.category}
             </div>
-            <div className="DisplayCard">
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <LightningBoltIcon />
-                {formatMoney(item.price)}
-              </div>
+          </div>
+          <div className="DisplayCard">
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <LightningBoltIcon />
+              {formatMoney(item.price)}
             </div>
           </div>
         </ScrollDialog>
