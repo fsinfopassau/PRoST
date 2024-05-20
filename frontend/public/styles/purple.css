@@ -6,6 +6,10 @@ div {
   color: var(--violet-11);
 }
 
+a:visited {
+  color: var(--violet-9);
+}
+
 #tab-changer {
   background-color: var(--black-a4);
   box-shadow: 0 2px 18px var(--black-a4);
@@ -109,7 +113,7 @@ Invoice
   border-collapse: collapse;
 
   tr {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid gray;
   }
   tr:last-child {
     border-bottom: none;
@@ -188,20 +192,15 @@ Dialog
 /*
 Progress
 */
-
-.ProgressRoot {
-  overflow: hidden;
-  width: 100%;
-  background-size: 100% 100%;
-  background: var(--violet-5);
+.progress-bar {
   border-radius: 99999px;
 }
 
-.ProgressIndicator {
-  overflow: hidden;
-  height: 100%;
-  background-size: cover;
-  transition: width 1s; /* Adjust the duration as needed */
+.progress-bar-background {
+  background: var(--violet-5);
+}
+
+.progress-bar-foreground {
   background-color: var(--violet-11);
 }
 
@@ -214,17 +213,17 @@ Colors
   border-color: var(--violet-11);
 }
 
-.red {
+.danger-color {
   color: red;
   border-color: red;
 }
 
-.green {
+.good-color {
   color: green;
   border-color: green;
 }
 
-.orange {
+.important-color {
   color: orange;
   border-color: orange;
 }

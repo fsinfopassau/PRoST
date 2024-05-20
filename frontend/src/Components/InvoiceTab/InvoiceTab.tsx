@@ -117,8 +117,7 @@ export function InvoiceTab() {
           const failed = selectedItems.length - result.length;
           if (result.length > 0) {
             toast.success(
-              `${result.length} Rechnung${
-                result.length > 1 ? "en" : ""
+              `${result.length} Rechnung${result.length > 1 ? "en" : ""
               } versendet!`
             );
           }
@@ -148,7 +147,7 @@ export function InvoiceTab() {
         if (result) {
           toast.warn(
             result.length +
-              ` Rechnung${result.length > 1 ? "en" : ""} gelöscht!`
+            ` Rechnung${result.length > 1 ? "en" : ""} gelöscht!`
           );
           setSelectedItems([]);
           reloadInvoices();
@@ -206,8 +205,8 @@ export function InvoiceTab() {
                 mailed === undefined
                   ? "Button"
                   : mailed
-                  ? "Button green"
-                  : "Button red"
+                    ? "Button good-color"
+                    : "Button danger-color"
               }
             >
               <EnvelopeClosedIcon />
@@ -222,7 +221,7 @@ export function InvoiceTab() {
           >
             <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
               {isAllSelected() ? (
-                <div className="CheckBox green" onClick={toggleAll}>
+                <div className="CheckBox good-color" onClick={toggleAll}>
                   <CheckIcon />
                 </div>
               ) : (
@@ -236,7 +235,7 @@ export function InvoiceTab() {
                     invoices={getSelectedInvoices()}
                     onSubmit={deleteSelected}
                   >
-                    <div className="Button red">
+                    <div className="Button danger-color">
                       <FileMinusIcon />
                     </div>
                   </ConfirmInvoices>
@@ -245,7 +244,7 @@ export function InvoiceTab() {
                     invoices={getSelectedInvoices()}
                     onSubmit={mailSelected}
                   >
-                    <div className="Button orange">
+                    <div className="Button important-color">
                       <PaperPlaneIcon />
                     </div>
                   </ConfirmInvoices>
@@ -257,7 +256,7 @@ export function InvoiceTab() {
 
             <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
               <InvoiceCreation onSubmit={reloadInvoices}>
-                <div className="Button green">
+                <div className="Button good-color">
                   <FilePlusIcon />
                 </div>
               </InvoiceCreation>
@@ -285,9 +284,8 @@ export function InvoiceTab() {
                 return (
                   <div
                     key={"p" + index}
-                    className={`PageButton ${
-                      selectedPage === index ? "Selected" : ""
-                    }`}
+                    className={`PageButton ${selectedPage === index ? "Selected" : ""
+                      }`}
                     onClick={() => selectPage(index)}
                   >
                     {index + 1}

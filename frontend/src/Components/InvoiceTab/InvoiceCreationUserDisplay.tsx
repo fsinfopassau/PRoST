@@ -20,7 +20,7 @@ export function InvoiceCreationUserDisplay(props: {
             </div>
           ) : selected ? (
             <div
-              className="CheckBox green"
+              className="CheckBox good-color"
               onClick={() => {
                 onSelect(user.id);
               }}

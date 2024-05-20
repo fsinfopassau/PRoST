@@ -73,9 +73,9 @@ const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({
           if (result.length !== 0) {
             toast.success(
               result.length +
-                " neue Rechnung" +
-                (result.length > 1 ? "en" : "") +
-                "!"
+              " neue Rechnung" +
+              (result.length > 1 ? "en" : "") +
+              "!"
             );
             onSubmit();
           }
@@ -98,7 +98,7 @@ const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({
       >
         <div className="SpreadContainer" style={{ padding: "0 .7rem" }}>
           {isAllSelected() ? (
-            <div className="CheckBox green" onClick={toggleAll}>
+            <div className="CheckBox good-color" onClick={toggleAll}>
               <CheckIcon />
             </div>
           ) : (

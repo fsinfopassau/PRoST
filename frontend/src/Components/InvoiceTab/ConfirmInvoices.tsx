@@ -39,13 +39,13 @@ const ConfirmInvoices: React.FC<PropsWithChildren<CustomComponentProps>> = ({
           {invoices.map((invoice, index) => (
             <tr
               key={index}
-              className={totalAmounts(invoice) === 0 ? "table-entry orange" : "table-entry"}
+              className={totalAmounts(invoice) === 0 ? "table-entry important-color" : "table-entry"}
             >
               <th className="icon left">
                 <ScrollDialog
                   title="Rechnung"
                   trigger={
-                    <div className="green">
+                    <div className="good-color">
                       <InfoCircledIcon />
                     </div>
                   }

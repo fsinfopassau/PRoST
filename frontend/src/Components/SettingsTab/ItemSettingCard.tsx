@@ -137,7 +137,7 @@ export function ItemSettingCard(props: {
           title="Gegenstand löschen?"
           onSubmit={deleteItem}
           trigger={
-            <div className="Button red">
+            <div className="Button danger-color">
               <Cross1Icon />
             </div>
           }
@@ -145,11 +145,11 @@ export function ItemSettingCard(props: {
           <h3 style={{ display: "flex" }}>
             {item.id}
             {item.enabled ? (
-              <div className="green">
+              <div className="good-color">
                 <CheckCircledIcon />
               </div>
             ) : (
-              <div className="red">
+              <div className="danger-color">
                 <CrossCircledIcon />
               </div>
             )}

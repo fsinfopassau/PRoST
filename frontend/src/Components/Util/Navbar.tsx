@@ -86,22 +86,22 @@ export function Navbar(props: { switchTheme: () => void }) {
     return (
       <>
         <TabsTrigger value="history" className="TabsTrigger" onClick={() => tabUpdate("history")}>
-          <div className="orange">
+          <div className="important-color">
             <CalendarIcon />
           </div>
         </TabsTrigger>
         <TabsTrigger value="invoices" className="TabsTrigger" onClick={() => tabUpdate("invoices")}>
-          <div className="orange">
+          <div className="important-color">
             <FileTextIcon />
           </div>
         </TabsTrigger>
         <TabsTrigger value="users" className="TabsTrigger" onClick={() => tabUpdate("users")}>
-          <div className="orange">
+          <div className="important-color">
             <PersonIcon />
           </div>
         </TabsTrigger>
         <TabsTrigger value="items" className="TabsTrigger" onClick={() => tabUpdate("items")}>
-          <div className="orange">
+          <div className="important-color">
             <TokensIcon />
           </div>
         </TabsTrigger>

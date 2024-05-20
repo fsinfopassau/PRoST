@@ -30,7 +30,7 @@ export function InvoiceSelectDisplay(props: {
   }
 
   return (
-    <tr className={totalAmounts() === 0 ? "table-entry orange" : "table-entry"}>
+    <tr className={totalAmounts() === 0 ? "table-entry important-color" : "table-entry"}>
       {selected === undefined ? <></> :
         <th className="icon">
           {invoice.mailed ? (
@@ -39,7 +39,7 @@ export function InvoiceSelectDisplay(props: {
             </div>
           ) : selected ? (
             <div
-              className="CheckBox green"
+              className="CheckBox good-color"
               onClick={() => {
                 onSelect(invoice.id);
               }}
@@ -58,19 +58,19 @@ export function InvoiceSelectDisplay(props: {
       }
       {invoice.mailed ? (
         <th className="icon">
-          <div className="green">
+          <div className="good-color">
             <EnvelopeClosedIcon />
           </div>
         </th>
       ) : invoice.published ? (
         <th className="icon">
-          <div className="orange">
+          <div className="important-color">
             <EyeOpenIcon />
           </div>
         </th>
       ) : (
         <th className="icon">
-          <div className="red">
+          <div className="danger-color">
             <EyeNoneIcon />
           </div>
         </th>
@@ -79,7 +79,7 @@ export function InvoiceSelectDisplay(props: {
         <ScrollDialog
           title="Rechnung"
           trigger={
-            <div className="green">
+            <div className="good-color">
               <InfoCircledIcon />
             </div>
           }

@@ -97,8 +97,8 @@ export function UserSettings() {
           <ScrollDialog
             title="Neuer Nutzer"
             trigger={
-              <div className="Button icon green">
-                <div className="green">
+              <div className="Button icon good-color">
+                <div className="good-color">
                   <PlusCircledIcon />
                 </div>
               </div>
@@ -149,7 +149,7 @@ export function UserSettings() {
           </ScrollDialog>
 
           <div
-            className={editMode ? "Button orange" : "Button"}
+            className={editMode ? "Button important-color" : "Button"}
             onClick={toggleEdit}
           >
             <Pencil2Icon />

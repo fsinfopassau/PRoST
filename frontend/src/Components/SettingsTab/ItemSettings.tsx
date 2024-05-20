@@ -85,8 +85,8 @@ export function ItemSettings() {
         <ScrollDialog
           title="Neuer Gegenstand"
           trigger={
-            <div className="Button icon green">
-              <div className="green">
+            <div className="Button icon good-color">
+              <div className="good-color">
                 <PlusCircledIcon />
               </div>
             </div>

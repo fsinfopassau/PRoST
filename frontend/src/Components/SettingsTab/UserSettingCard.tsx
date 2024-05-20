@@ -46,9 +46,9 @@ export function UserSettingCard(props: {
       if (result) {
         toast.success(
           formatMoney(Math.abs(formatMoneyInput(transactionAmount))) +
-            ' wurde "' +
-            user.id +
-            '" gutgeschrieben!'
+          ' wurde "' +
+          user.id +
+          '" gutgeschrieben!'
         );
         setTransactionAmount("");
         onUpdate();
@@ -151,11 +151,11 @@ export function UserSettingCard(props: {
               {user.displayName}
             </Link>
             {user.enabled ? (
-              <div className="green">
+              <div className="good-color">
                 <CheckIcon />
               </div>
             ) : (
-              <div className="red">
+              <div className="danger-color">
                 <Cross2Icon />
               </div>
             )}
@@ -178,7 +178,7 @@ export function UserSettingCard(props: {
             onKeyDown={handleKeyDown}
             onChange={(e) => setTransactionAmount(e.target.value)}
           />
-          <div className="Button green" onClick={applyTransaction}>
+          <div className="Button good-color" onClick={applyTransaction}>
             <PlusIcon />
           </div>
         </div>
@@ -208,7 +208,7 @@ export function UserSettingCard(props: {
               title="Nutzer löschen?"
               onSubmit={deleteItem}
               trigger={
-                <div className="Button red">
+                <div className="Button danger-color">
                   <Cross1Icon />
                 </div>
               }
@@ -216,11 +216,11 @@ export function UserSettingCard(props: {
               <h3 style={{ display: "flex" }}>
                 {user.id}
                 {user.enabled ? (
-                  <div className="green">
+                  <div className="good-color">
                     <CheckCircledIcon />
                   </div>
                 ) : (
-                  <div className="red">
+                  <div className="danger-color">
                     <CrossCircledIcon />
                   </div>
                 )}
