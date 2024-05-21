@@ -1,9 +1,8 @@
-package de.unipassau.fim.fsinfo.prost;
+package de.unipassau.fim.fsinfo.prost.service;
 
 import static org.mockito.Mockito.when;
 
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
-import de.unipassau.fim.fsinfo.prost.service.FileStorageService;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
