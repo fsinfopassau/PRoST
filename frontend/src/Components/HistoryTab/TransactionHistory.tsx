@@ -72,7 +72,7 @@ export function TransactionHistory(props: { personal: boolean }) {
     }
   }
   return (
-    <ScrollArea className="DisplayCard" style={{ maxWidth: "60rem" }}>
+    <ScrollArea className="DisplayCard" style={{ maxWidth: "100rem" }}>
       <ScrollAreaViewport>
         <h2>Transaktionen</h2>
 

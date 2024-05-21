@@ -102,6 +102,11 @@ export function Navbar(props: { switchTheme: () => void }) {
   function adminView() {
     return (
       <>
+        <TabsTrigger value="stats" className="TabsTrigger" onClick={() => tabUpdate("stats")}>
+          <div className="important-color">
+            <BarChartIcon />
+          </div>
+        </TabsTrigger>
         <TabsTrigger value="history" className="TabsTrigger" onClick={() => tabUpdate("history")}>
           <div className="important-color">
             <CalendarIcon />

@@ -4,8 +4,12 @@ import { TransactionHistory } from "../HistoryTab/TransactionHistory";
 export function PersonalHistoryView() {
   return (
     <>
-      <ShopHistory personal={true} />
-      <TransactionHistory personal={true} />
+      <div className="SingleCardContainer">
+        <div style={{ width: "100rem" }}>
+          <ShopHistory personal={true} />
+          <TransactionHistory personal={true} />
+        </div>
+      </div>
     </>
   );
 }

@@ -184,124 +184,123 @@ export function InvoiceTab() {
 
   return (
     <>
-      <ScrollArea
-        className="DisplayCard"
-        style={{ height: "100%", maxWidth: "60rem" }}
-      >
-        <ScrollAreaViewport>
-          <h2>Rechnungen</h2>
+      <div className="SingleCardContainer">
+        <ScrollArea className="DisplayCard" style={{ maxWidth: "100rem" }}>
+          <ScrollAreaViewport>
+            <h2>Rechnungen</h2>
 
-          <div className="tableSearch">
-            <input
-              className="Input"
-              type="text"
-              onChange={(e) => setSearchValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Nutzer Id"
-            />
+            <div className="tableSearch">
+              <input
+                className="Input"
+                type="text"
+                onChange={(e) => setSearchValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Nutzer Id"
+              />
+              <div
+                onClick={cycleMailed}
+                className={
+                  mailed === undefined
+                    ? "Button"
+                    : mailed
+                      ? "Button good-color"
+                      : "Button danger-color"
+                }
+              >
+                <EnvelopeClosedIcon />
+              </div>
+            </div>
+
+            <Separator className="Separator" />
+
             <div
-              onClick={cycleMailed}
-              className={
-                mailed === undefined
-                  ? "Button"
-                  : mailed
-                    ? "Button good-color"
-                    : "Button danger-color"
-              }
+              className="SpreadContainer"
+              style={{ padding: "0 0.7rem 0.5rem 0.7rem" }}
             >
-              <EnvelopeClosedIcon />
-            </div>
-          </div>
-
-          <Separator className="Separator" />
-
-          <div
-            className="SpreadContainer"
-            style={{ padding: "0 0.7rem 0.5rem 0.7rem" }}
-          >
-            <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-              {isAllSelected() ? (
-                <div className="CheckBox good-color" onClick={toggleAll}>
-                  <CheckIcon />
-                </div>
-              ) : (
-                <div className="CheckBox" onClick={toggleAll}></div>
-              )}
-
-              {selectedItems.length !== 0 ? (
-                <div className="SpreadContainer">
-                  <ConfirmInvoices
-                    dialogTitle="Rechnungen Löschen?"
-                    invoices={getSelectedInvoices()}
-                    onSubmit={deleteSelected}
-                  >
-                    <div className="Button danger-color">
-                      <FileMinusIcon />
-                    </div>
-                  </ConfirmInvoices>
-                  <ConfirmInvoices
-                    dialogTitle="Rechnungen Verschicken?"
-                    invoices={getSelectedInvoices()}
-                    onSubmit={mailSelected}
-                  >
-                    <div className="Button important-color">
-                      <PaperPlaneIcon />
-                    </div>
-                  </ConfirmInvoices>
-                </div>
-              ) : (
-                <></>
-              )}
-            </div>
-
-            <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-              <InvoiceCreation onSubmit={reloadInvoices}>
-                <div className="Button good-color">
-                  <FilePlusIcon />
-                </div>
-              </InvoiceCreation>
-            </div>
-          </div>
-
-          <table className="Table">
-            <tbody>
-              {invoices.map((invoice, index) => (
-                <InvoiceSelectDisplay
-                  key={index}
-                  invoice={invoice}
-                  onSelect={handleSelect}
-                  selected={selectedItems.includes(invoice.id)}
-                />
-              ))}
-            </tbody>
-          </table>
-
-          <Separator className="Separator" />
-
-          <div className="PageBar">
-            {Array.from({ length: totalPages - 1 }, (_, index) => {
-              if (index >= minPage && index <= maxPage) {
-                return (
-                  <div
-                    key={"p" + index}
-                    className={`PageButton ${selectedPage === index ? "Selected" : ""
-                      }`}
-                    onClick={() => selectPage(index)}
-                  >
-                    {index + 1}
+              <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+                {isAllSelected() ? (
+                  <div className="CheckBox good-color" onClick={toggleAll}>
+                    <CheckIcon />
                   </div>
-                );
-              }
-            }).filter(Boolean)}
-          </div>
-        </ScrollAreaViewport>
-        <ScrollAreaScrollbar className="Scrollbar" orientation="vertical">
-          <ScrollAreaThumb className="ScrollbarThumb" />
-        </ScrollAreaScrollbar>
-        <ScrollAreaScrollbar className="Scrollbar" orientation="horizontal">
-          <ScrollAreaThumb className="ScrollbarThumb" />
-        </ScrollAreaScrollbar>
-      </ScrollArea>
+                ) : (
+                  <div className="CheckBox" onClick={toggleAll}></div>
+                )}
+
+                {selectedItems.length !== 0 ? (
+                  <div className="SpreadContainer">
+                    <ConfirmInvoices
+                      dialogTitle="Rechnungen Löschen?"
+                      invoices={getSelectedInvoices()}
+                      onSubmit={deleteSelected}
+                    >
+                      <div className="Button danger-color">
+                        <FileMinusIcon />
+                      </div>
+                    </ConfirmInvoices>
+                    <ConfirmInvoices
+                      dialogTitle="Rechnungen Verschicken?"
+                      invoices={getSelectedInvoices()}
+                      onSubmit={mailSelected}
+                    >
+                      <div className="Button important-color">
+                        <PaperPlaneIcon />
+                      </div>
+                    </ConfirmInvoices>
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </div>
+
+              <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+                <InvoiceCreation onSubmit={reloadInvoices}>
+                  <div className="Button good-color">
+                    <FilePlusIcon />
+                  </div>
+                </InvoiceCreation>
+              </div>
+            </div>
+
+            <table className="Table">
+              <tbody>
+                {invoices.map((invoice, index) => (
+                  <InvoiceSelectDisplay
+                    key={index}
+                    invoice={invoice}
+                    onSelect={handleSelect}
+                    selected={selectedItems.includes(invoice.id)}
+                  />
+                ))}
+              </tbody>
+            </table>
+
+            <Separator className="Separator" />
+
+            <div className="PageBar">
+              {Array.from({ length: totalPages - 1 }, (_, index) => {
+                if (index >= minPage && index <= maxPage) {
+                  return (
+                    <div
+                      key={"p" + index}
+                      className={`PageButton ${selectedPage === index ? "Selected" : ""
+                        }`}
+                      onClick={() => selectPage(index)}
+                    >
+                      {index + 1}
+                    </div>
+                  );
+                }
+              }).filter(Boolean)}
+            </div>
+          </ScrollAreaViewport>
+          <ScrollAreaScrollbar className="Scrollbar" orientation="vertical">
+            <ScrollAreaThumb className="ScrollbarThumb" />
+          </ScrollAreaScrollbar>
+          <ScrollAreaScrollbar className="Scrollbar" orientation="horizontal">
+            <ScrollAreaThumb className="ScrollbarThumb" />
+          </ScrollAreaScrollbar>
+        </ScrollArea>
+      </div>
     </>
   );
 }

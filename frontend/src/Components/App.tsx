@@ -27,6 +27,7 @@ function loadTheme(themeName: string) {
   if (oldThemeLink) {
     oldThemeLink.remove();
   }
+
   // Add new theme stylesheet
   const newThemeLink = document.createElement("link");
   newThemeLink.id = "theme-stylesheet";

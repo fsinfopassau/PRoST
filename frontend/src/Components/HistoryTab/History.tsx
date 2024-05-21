@@ -4,8 +4,12 @@ import { TransactionHistory } from "./TransactionHistory";
 export function History() {
   return (
     <>
-      <ShopHistory personal={false} />
-      <TransactionHistory personal={false} />
+      <div className="SingleCardContainer">
+        <div style={{ width: "100rem" }}>
+          <ShopHistory personal={false} />
+          <TransactionHistory personal={false} />
+        </div>
+      </div>
     </>
   );
 }

@@ -52,51 +52,53 @@ export function PersonalInvoiceView() {
   }
 
   return (
-    <ScrollArea
-      className="DisplayCard"
-      style={{ height: "100%", maxWidth: "60rem" }}
-    >
-      <ScrollAreaViewport>
-        <h2>Rechnungen</h2>
+    <div className="SingleCardContainer">
+      <ScrollArea
+        className="DisplayCard"
+        style={{ height: "100%", maxWidth: "60rem" }}
+      >
+        <ScrollAreaViewport>
+          <h2>Rechnungen</h2>
 
-        <table className="Table">
-          <tbody>
-            {invoices.map((invoice, index) => (
-              <InvoiceSelectDisplay
-                key={index}
-                invoice={invoice}
-                onSelect={() => { }}
-                selected={undefined}
-              />
-            ))}
-          </tbody>
-        </table>
+          <table className="Table">
+            <tbody>
+              {invoices.map((invoice, index) => (
+                <InvoiceSelectDisplay
+                  key={index}
+                  invoice={invoice}
+                  onSelect={() => { }}
+                  selected={undefined}
+                />
+              ))}
+            </tbody>
+          </table>
 
-        <Separator className="Separator" />
+          <Separator className="Separator" />
 
-        <div className="PageBar">
-          {Array.from({ length: totalPages - 1 }, (_, index) => {
-            if (index >= minPage && index <= maxPage) {
-              return (
-                <div
-                  key={"p" + index}
-                  className={`PageButton ${selectedPage === index ? "Selected" : ""
-                    }`}
-                  onClick={() => selectPage(index)}
-                >
-                  {index + 1}
-                </div>
-              );
-            }
-          }).filter(Boolean)}
-        </div>
-      </ScrollAreaViewport>
-      <ScrollAreaScrollbar className="Scrollbar" orientation="vertical">
-        <ScrollAreaThumb className="ScrollbarThumb" />
-      </ScrollAreaScrollbar>
-      <ScrollAreaScrollbar className="Scrollbar" orientation="horizontal">
-        <ScrollAreaThumb className="ScrollbarThumb" />
-      </ScrollAreaScrollbar>
-    </ScrollArea>
+          <div className="PageBar">
+            {Array.from({ length: totalPages - 1 }, (_, index) => {
+              if (index >= minPage && index <= maxPage) {
+                return (
+                  <div
+                    key={"p" + index}
+                    className={`PageButton ${selectedPage === index ? "Selected" : ""
+                      }`}
+                    onClick={() => selectPage(index)}
+                  >
+                    {index + 1}
+                  </div>
+                );
+              }
+            }).filter(Boolean)}
+          </div>
+        </ScrollAreaViewport>
+        <ScrollAreaScrollbar className="Scrollbar" orientation="vertical">
+          <ScrollAreaThumb className="ScrollbarThumb" />
+        </ScrollAreaScrollbar>
+        <ScrollAreaScrollbar className="Scrollbar" orientation="horizontal">
+          <ScrollAreaThumb className="ScrollbarThumb" />
+        </ScrollAreaScrollbar>
+      </ScrollArea>
+    </div>
   );
 }
