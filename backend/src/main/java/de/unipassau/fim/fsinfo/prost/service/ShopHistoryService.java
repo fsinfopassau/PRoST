@@ -34,14 +34,23 @@ public class ShopHistoryService {
     this.historyRepository = historyRepository;
   }
 
+  /**
+   * Returns the last history (as a Page) of the last bought items, beginning with the most recent.
+   * Can either return a Page of the complete History or the History of a given user.
+   *
+   * @param pageNumber The page-index (0-n) of the searched dataset.
+   * @param pageSize The size of a page (1-n).
+   * @param userId The userId of the searched user-buy-history.
+   * @return A page with the search-result according to the given parameters.
+   */
   public Page<ShopItemHistoryEntryDTO> getHistory(
-      int pageNumber, int pageSize, String userId) {
+      int pageNumber, int pageSize, Optional<String> userId) {
 
     Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("timestamp").descending());
     Page<ShopItemHistoryEntry> entriesPage;
 
-    if (userId != null) {
-      entriesPage = historyRepository.findByUserIdEquals(userId, pageable);
+    if (userId.isPresent()) {
+      entriesPage = historyRepository.findByUserIdEquals(userId.get(), pageable);
     } else {
       entriesPage = historyRepository.findAll(pageable);
     }

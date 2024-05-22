@@ -1,6 +1,8 @@
-package de.unipassau.fim.fsinfo.prost.controller;
+package de.unipassau.fim.fsinfo.prost.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import de.unipassau.fim.fsinfo.prost.data.TransactionType;
@@ -12,7 +14,6 @@ import de.unipassau.fim.fsinfo.prost.data.dto.ShopItemHistoryEntryDTO;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
-import de.unipassau.fim.fsinfo.prost.service.ShopHistoryService;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class ShopHistoryServiceTest {
   }
 
   @Test
-  public void testGetHistory() {
+  public void testGetHistory() throws InterruptedException {
     // Mock data
     List<ShopItemHistoryEntry> historyEntries = new ArrayList<>();
 
@@ -56,9 +57,10 @@ public class ShopHistoryServiceTest {
         TransactionType.BUY, null, BigDecimal.valueOf(20.0));
 
     historyEntries.add(
-        new ShopItemHistoryEntry(transactionEntry, "item1", BigDecimal.valueOf(10.0), 2));
+        new ShopItemHistoryEntry(transactionEntry, "item1", new BigDecimal("10.23"), 2));
+    Thread.sleep(1);
     historyEntries.add(
-        new ShopItemHistoryEntry(transactionEntry2, "item2", BigDecimal.valueOf(20.0), 4));
+        new ShopItemHistoryEntry(transactionEntry2, "item2", new BigDecimal("20.99"), 4));
     Page<ShopItemHistoryEntry> page = new PageImpl<>(historyEntries);
 
     // Mock behavior of repositories
@@ -73,19 +75,35 @@ public class ShopHistoryServiceTest {
 
     // Mock behavior of itemRepository
     when(itemRepository.findById("item1")).thenReturn(
-        Optional.of(new ShopItem("item1", "Testitem", "Item One", new BigDecimal("10.0"))));
+        Optional.of(new ShopItem("item1", "Testitem", "Item One", new BigDecimal("10.23"))));
     when(itemRepository.findById("item2")).thenReturn(
-        Optional.of(new ShopItem("item2", "Testitem", "Item Two", new BigDecimal("20.0"))));
+        Optional.of(new ShopItem("item2", "Testitem", "Item Two", new BigDecimal("20.99"))));
 
     // Call the method to test
-    Page<ShopItemHistoryEntryDTO> result = shopHistoryService.getHistory(0, 10, null);
+    Page<ShopItemHistoryEntryDTO> result = shopHistoryService.getHistory(0, 10, Optional.empty());
 
     // Assertions
     assertEquals(2, result.getContent().size());
-    assertEquals("User One", result.getContent().get(0).getUserDisplayName());
-    assertEquals("Item One", result.getContent().get(0).getItemDisplayName());
-    assertEquals("User Two", result.getContent().get(1).getUserDisplayName());
-    assertEquals("Item Two", result.getContent().get(1).getItemDisplayName());
+
+    ShopItemHistoryEntryDTO first = result.getContent().get(0);
+    assertEquals("User One", first.getUserDisplayName());
+    assertEquals("user1", first.getUserId());
+    assertEquals("Item One", first.getItemDisplayName());
+    assertEquals("item1", first.getItemId());
+    assertEquals(2, first.getAmount());
+    assertEquals(new BigDecimal("10.23"), first.getItemPrice());
+    assertNotNull(first.getTimestamp());
+
+    ShopItemHistoryEntryDTO second = result.getContent().get(1);
+    assertEquals("User Two", second.getUserDisplayName());
+    assertEquals("user2", second.getUserId());
+    assertEquals("Item Two", second.getItemDisplayName());
+    assertEquals("item2", second.getItemId());
+    assertEquals(4, second.getAmount());
+    assertEquals(new BigDecimal("20.99"), second.getItemPrice());
+    assertNotNull(second.getTimestamp());
+
+    assertTrue(first.getTimestamp() < second.getTimestamp());
   }
 }
 
