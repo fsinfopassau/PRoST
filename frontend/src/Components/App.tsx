@@ -16,8 +16,10 @@ import { RootTab } from "./RootTab";
 import { UserSettings } from "./SettingsTab/UserSettings";
 import { PersonalInvoiceView } from "./PersonalView/PersonalInvoiceView";
 import { PersonalHistoryView } from "./PersonalView/PersonalHistoryView";
+import ScrollDialog from "./Util/ScrollDialog";
 
 const stylesAvailable = ["purple", "blue"];
+export const BASE_PATH = import.meta.env.VITE_BASE_PATH || "";
 
 function loadTheme(themeName: string) {
   // Remove existing theme stylesheet
@@ -25,11 +27,12 @@ function loadTheme(themeName: string) {
   if (oldThemeLink) {
     oldThemeLink.remove();
   }
+
   // Add new theme stylesheet
   const newThemeLink = document.createElement("link");
   newThemeLink.id = "theme-stylesheet";
   newThemeLink.rel = "stylesheet";
-  newThemeLink.href = `/styles/${themeName}.css`;
+  newThemeLink.href = BASE_PATH + `/styles/${themeName}.css`;
   document.head.appendChild(newThemeLink);
 }
 
@@ -46,6 +49,21 @@ export function App() {
     setTheme(nextTheme);
   };
 
+  const HTMLDataInfos = () => {
+    const [htmlContent, setHtmlContent] = useState("");
+
+    useEffect(() => {
+      fetch(BASE_PATH + `/data-info.html`)
+        .then((response) => response.text())
+        .then((data) => {
+          setHtmlContent(data);
+        })
+        .catch((error) => console.error("Error loading HTML:", error));
+    }, []);
+
+    return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
+  };
+
   useEffect(() => {
     loadTheme(theme);
     localStorage.setItem("theme", theme);
@@ -55,7 +73,7 @@ export function App() {
     <>
       <React.StrictMode>
         <div className="Main">
-          <BrowserRouter>
+          <BrowserRouter basename={BASE_PATH}>
             <Navbar switchTheme={switchTheme} />
             <ToastContainer
               position="bottom-left"
@@ -98,6 +116,14 @@ export function App() {
               </Routes>
             </div>
           </BrowserRouter>
+
+          <ScrollDialog
+            onSubmit={() => { }}
+            title="Datenschutzhinweise der PRoST-Sotware"
+            trigger={<div className="site-data-info">Datenschutz</div>}
+          >
+            {HTMLDataInfos()}
+          </ScrollDialog>
         </div>
       </React.StrictMode>
     </>

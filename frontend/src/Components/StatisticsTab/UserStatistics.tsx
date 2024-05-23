@@ -18,9 +18,15 @@ export function UserStatistics() {
 
   if (user) {
     return (
-      <div className="CardContainer">
-        <UserSummaryCard user={user} />
-      </div>
+      <>
+        <div className="SingleCardContainer">
+          <div>
+            <div className="GridContainer" style={{ flexGrow: "0" }}>
+              <UserSummaryCard user={user} />
+            </div>
+          </div>
+        </div>
+      </>
     );
   } else {
     return <ErrorComponent />;

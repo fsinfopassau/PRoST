@@ -1,4 +1,4 @@
-import { CheckIcon, LockClosedIcon, MinusIcon } from "@radix-ui/react-icons";
+import { CheckIcon, LockClosedIcon } from "@radix-ui/react-icons";
 import { User } from "../../Types/User";
 import { Link } from "react-router-dom";
 import { formatMoney } from "../../Format";
@@ -12,19 +12,15 @@ export function InvoiceCreationUserDisplay(props: {
 
   return (
     <>
-      <tr>
-        <th className="icon">
+      <tr className="table-entry">
+        <th className="icon left">
           {!user.enabled ? (
             <div>
               <LockClosedIcon />
             </div>
-          ) : user.balance === 0 ? (
-            <div>
-              <MinusIcon />
-            </div>
           ) : selected ? (
             <div
-              className="Toggle green"
+              className="CheckBox good-color"
               onClick={() => {
                 onSelect(user.id);
               }}
@@ -33,19 +29,19 @@ export function InvoiceCreationUserDisplay(props: {
             </div>
           ) : (
             <div
-              className="Toggle"
+              className="CheckBox"
               onClick={() => {
                 onSelect(user.id);
               }}
             ></div>
           )}
         </th>
-        <th className="name bold">
+        <th className="bold name">
           <Link to={`/stats/users/${user.id}`} className="bold">
             {user.displayName}
           </Link>
         </th>
-        <th className="balance bold">{formatMoney(user.balance)}</th>
+        <th className="balance bold right">{formatMoney(user.balance)}</th>
       </tr>
     </>
   );

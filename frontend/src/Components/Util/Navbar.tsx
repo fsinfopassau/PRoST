@@ -2,21 +2,39 @@ import {
   BarChartIcon,
   CalendarIcon,
   CookieIcon,
-  DragHandleDots2Icon,
   FileTextIcon,
   HomeIcon,
   MagnifyingGlassIcon,
   PersonIcon,
+  TokensIcon,
 } from "@radix-ui/react-icons";
 import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LoginDialog } from "./LoginDialog";
-import { getAuthorizedUser, isAdmin, isKiosk, isUser } from "../../SessionInfo";
+import { getAuthorizedUser, isAdmin, isOnlyKiosk, isOnlyUser, isUser, resetSession } from "../../SessionInfo";
+import { BASE_PATH } from "../App";
+import { useEffect } from "react";
 
 export function Navbar(props: { switchTheme: () => void }) {
   const { switchTheme } = props;
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === "F8" || event.key === "f8") {
+        resetSession();
+        navigate("/");
+        window.location.reload();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
 
   function tabUpdate(newValue: string) {
     if (newValue === "root") {
@@ -33,115 +51,100 @@ export function Navbar(props: { switchTheme: () => void }) {
 
   function getSelectedTabValue() {
     const newValue = location.pathname.split("/")[1];
+
+    if (isOnlyKiosk() && newValue === "shop") {
+      return "root";
+    }
+
     if (newValue.includes("root") || newValue.length === 0) {
       return "root";
     } else if (location.pathname.startsWith("/me")) {
-      return location.pathname.split("/")[2];
+      return "me/" + location.pathname.split("/")[2];
     } else {
       return newValue;
     }
   }
 
+  function kioskView() {
+    return (
+      <>
+        <TabsTrigger value="root" className="TabsTrigger" onClick={() => tabUpdate("root")}>
+          <MagnifyingGlassIcon />
+        </TabsTrigger>
+        <TabsTrigger value="stats" className="TabsTrigger" onClick={() => tabUpdate("stats")}>
+          <BarChartIcon />
+        </TabsTrigger>
+      </>
+    );
+  }
+
+  function userView() {
+    return (
+      <>
+        <TabsTrigger value="root" className="TabsTrigger" onClick={() => tabUpdate("root")}>
+          <HomeIcon />
+        </TabsTrigger>
+        <TabsTrigger value="shop" className="TabsTrigger" onClick={() => tabUpdate("shop-self")}>
+          <CookieIcon />
+        </TabsTrigger>
+        {isOnlyUser() ? (<>
+          <TabsTrigger value="me/history" className="TabsTrigger" onClick={() => tabUpdate("me/history")}>
+            <CalendarIcon />
+          </TabsTrigger>
+          <TabsTrigger value="me/invoices" className="TabsTrigger" onClick={() => tabUpdate("me/invoices")}>
+            <FileTextIcon />
+          </TabsTrigger>
+        </>) : <></>}
+      </>
+    );
+  }
+
+  function adminView() {
+    return (
+      <>
+        <TabsTrigger value="stats" className="TabsTrigger" onClick={() => tabUpdate("stats")}>
+          <div className="important-color">
+            <BarChartIcon />
+          </div>
+        </TabsTrigger>
+        <TabsTrigger value="history" className="TabsTrigger" onClick={() => tabUpdate("history")}>
+          <div className="important-color">
+            <CalendarIcon />
+          </div>
+        </TabsTrigger>
+        <TabsTrigger value="invoices" className="TabsTrigger" onClick={() => tabUpdate("invoices")}>
+          <div className="important-color">
+            <FileTextIcon />
+          </div>
+        </TabsTrigger>
+        <TabsTrigger value="users" className="TabsTrigger" onClick={() => tabUpdate("users")}>
+          <div className="important-color">
+            <PersonIcon />
+          </div>
+        </TabsTrigger>
+        <TabsTrigger value="items" className="TabsTrigger" onClick={() => tabUpdate("items")}>
+          <div className="important-color">
+            <TokensIcon />
+          </div>
+        </TabsTrigger>
+      </>
+    );
+  }
+
   return (
-    <>
-      <div id="tab-changer">
-        <img onClick={switchTheme} src="/icons/happy-manje/happy beer.svg" />
-        <Tabs value={getSelectedTabValue()} className="TabsRoot">
-          <TabsList className="TabsList">
-            {isKiosk() ? (
-              <>
-                <TabsTrigger
-                  value="root"
-                  className="TabsTrigger"
-                  onClick={() => tabUpdate("root")}
-                >
-                  <MagnifyingGlassIcon />
-                </TabsTrigger>
-                <TabsTrigger
-                  value="stats"
-                  className="TabsTrigger"
-                  onClick={() => tabUpdate("stats")}
-                >
-                  <BarChartIcon />
-                </TabsTrigger>
-              </>
-            ) : (
-              <></>
-            )}
-            {isAdmin() ? (
-              <>
-                <TabsTrigger
-                  value="history"
-                  className="TabsTrigger"
-                  onClick={() => tabUpdate("history")}
-                >
-                  <CalendarIcon />
-                </TabsTrigger>
-                <TabsTrigger
-                  value="invoices"
-                  className="TabsTrigger"
-                  onClick={() => tabUpdate("invoices")}
-                >
-                  <FileTextIcon />
-                </TabsTrigger>
-                <TabsTrigger
-                  value="users"
-                  className="TabsTrigger"
-                  onClick={() => tabUpdate("users")}
-                >
-                  <PersonIcon />
-                </TabsTrigger>
-                <TabsTrigger
-                  value="items"
-                  className="TabsTrigger"
-                  onClick={() => tabUpdate("items")}
-                >
-                  <DragHandleDots2Icon />
-                </TabsTrigger>
-              </>
-            ) : (
-              <></>
-            )}
-            {isUser() && !isKiosk() ? (
-              <>
-                <TabsTrigger
-                  value="root"
-                  className="TabsTrigger"
-                  onClick={() => tabUpdate("root")}
-                >
-                  <HomeIcon />
-                </TabsTrigger>
-                <TabsTrigger
-                  value="shop"
-                  className="TabsTrigger"
-                  onClick={() => {
-                    tabUpdate("shop-self");
-                  }}
-                >
-                  <CookieIcon />
-                </TabsTrigger>
-                <TabsTrigger
-                  value="history"
-                  className="TabsTrigger"
-                  onClick={() => tabUpdate("me/history")}
-                >
-                  <CalendarIcon />
-                </TabsTrigger>
-                <TabsTrigger
-                  value="invoices"
-                  className="TabsTrigger"
-                  onClick={() => tabUpdate("me/invoices")}
-                >
-                  <FileTextIcon />
-                </TabsTrigger>
-              </>
-            ) : (
-              <></>
-            )}
-          </TabsList>
-        </Tabs>
+    <div id="tab-changer">
+      <img onClick={switchTheme} src={`${BASE_PATH}/icons/happy-manje/happy beer.svg`} />
+      <Tabs value={getSelectedTabValue()}>
+        <TabsList className="TabsList">
+          {isOnlyKiosk() ? kioskView() : isUser() ? userView() : null}
+          {isAdmin() ? (
+            adminView()
+          ) : <></>}
+        </TabsList>
+      </Tabs>
+      {!isOnlyKiosk() ?
         <LoginDialog />
-      </div>
-    </>
+        : <></>}
+    </div>
   );
 }

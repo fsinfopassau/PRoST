@@ -1,23 +1,33 @@
-Body {
-  background: #000080;
-  color: hsl(240, 100%, 92%);
+body {
+  background: hsl(240, 100%, 92%);
 }
 
-* {
+div {
   color: #000080;
 }
 
-.SearchInput {
+a:visited {
+  color: #565691;
+}
+
+#tab-changer {
+  background-color: var(--black-a4);
+  box-shadow: 0 2px 18px var(--black-a4);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+#main-search {
   color: white;
   background-color: var(--black-a5);
   box-shadow: 0 2px 18px var(--mauve-10);
   border: 4px solid var(--black-a2);
   border-radius: 12px;
 }
-.SearchInput:focus {
+#main-search:focus {
   border: 4px dashed var(--black-a3);
 }
-.SearchInput::selection {
+#main-search::selection {
   background-color: var(--black-a5);
   color: white;
 }
@@ -26,39 +36,58 @@ Body {
   background-color: white;
   color: #000080;
   border: 4px solid var(--mauve-4);
-  box-shadow: 0 2px 8px var(--mauve-10);
+  box-shadow: 0 2px 4px var(--black-a3);
   border-radius: 12px;
 }
 .Button:hover {
-  background-color: var(--blue-3);
+  border: 4px solid #bfbfe6;
 }
 .Button:active {
-  box-shadow: 0 0 0 2px black;
+  background-color: #a8a8e0;
+  box-shadow: 0 0 0 2px var(--black-a5);
+}
+
+.PageButton {
+  background-color: white;
+  color: #000080;
+  border: 4px solid var(--mauve-4);
+  box-shadow: 0 2px 4px var(--black-a3);
+  border-radius: 10000px;
+}
+.PageButton:hover {
+  border: 4px solid #bfbfe6;
+}
+.PageButton:active {
+  background-color: #a8a8e0;
+  box-shadow: 0 0 0 2px var(--black-a5);
+}
+
+.CheckBox {
+  background-color: white;
+  border-radius: 100%;
+  box-shadow: 0 2px 10px var(--black-a3);
+  border: 2px solid var(--black-a5);
+}
+.CheckBox:hover {
+  background-color: #bfbfe6;
+}
+.CheckBox:active {
+  background-color: #a8a8e0;
+  box-shadow: 0 0 0 2px var(--black-a5);
 }
 
 .Input {
-  color: var(--blue-11);
-  box-shadow: 0 0 0 1px var(--blue-7);
+  color: #000080;
+  border: 3px solid #bfbfe6;
 }
 .Input:focus {
-  box-shadow: 0 0 0 2px var(--blue-8);
+  border: 3px solid #9696e4;
 }
-
-/*
-History
-*/
 
 .DisplayCard {
   border: 2px solid #000080;
-  background-color: var(--blue-2);
+  background-color: #fcfcff;
   box-shadow: 0 2px 10px var(--mauve-8);
-  border-radius: 12px;
-}
-
-.table-entry {
-  background-color: white;
-  color: #000080;
-  border: 2px solid var(--blue-11);
   border-radius: 12px;
 }
 
@@ -74,12 +103,34 @@ History
 }
 
 /*
+Invoice
+*/
+
+.Table {
+  background-color: #e2e2ff;
+  color: #000080;
+  border-radius: 12px;
+  border-collapse: collapse;
+
+  tr {
+    border-bottom: 1px solid gray;
+  }
+  tr:last-child {
+    border-bottom: none;
+  }
+}
+
+/*
 Tabs
 */
 
 .TabsTrigger {
   background-color: white;
-  color: var(--blue-11);
+  color: #000080;
+  border: 2px solid white;
+  background-clip: border-box;
+  margin: 4px 0;
+  border-bottom: 4px solid white;
 }
 .TabsTrigger:first-child {
   border-top-left-radius: 12px;
@@ -90,11 +141,12 @@ Tabs
   border-bottom-right-radius: 12px;
 }
 .TabsTrigger:hover {
-  color: var(--blue-11);
+  border: 2px solid #9696e4;
+  border-bottom: 4px solid #9696e4;
 }
 .TabsTrigger[data-state="active"] {
-  color: var(--blue-11);
-  box-shadow: inset 0 -1px 0 0 currentColor, 0 1px 0 0 currentColor;
+  color: #000080;
+  border-bottom: 4px solid currentColor;
 }
 .TabsTrigger:active {
   box-shadow: 0 0 0 2px black;
@@ -105,9 +157,10 @@ Switch
 */
 
 .SwitchRoot {
-  background-color: var(--blue-5);
-  box-shadow: 0 2px 10px var(--black-a7);
+  background-color: #a8a8e0;
+  box-shadow: 0 2px 10px var(--mauve-8);
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  border: 4 solid #000080;
 }
 .SwitchRoot:focus {
   box-shadow: 0 0 0 2px black;
@@ -133,24 +186,53 @@ Dialog
 }
 
 .DialogTitle {
-  color: var(--mauve-12);
+  color: #000080;
 }
 
-.DialogDescription {
-  color: var(--mauve-11);
+/*
+Progress
+*/
+
+.progress-bar-background {
+  background-image: url(../img/mc_xp-empty.png); /* Background image of the empty bar */
 }
 
-.ProgressRoot {
-  background-repeat: no-repeat;
-  background-image: url(/public/img/mc_xp-empty.png);
-  overflow: hidden;
-  background-size: 100% 100%;
+.progress-bar-foreground {
+  background-image: url(../img/mc_xp.png); /* Background image of the full bar */
 }
 
-.ProgressIndicator {
-  background-image: url(/public/img/mc_xp.png);
-  background-repeat: no-repeat;
-  overflow: hidden;
-  background-size: cover;
-  transition: width 1s; /* Adjust the duration as needed */
+/*
+Colors
+*/
+
+.Selected {
+  color: #000080;
+  border-color: #000080;
+}
+
+.danger-color {
+  color: #ff7777;
+  border-color: #ff7777;
+}
+.danger-color:focus {
+  color: red;
+  border-color: red;
+}
+
+.good-color {
+  color: #119911;
+  border-color: #119911;
+}
+.good-color:focus {
+  color: #116611;
+  border-color: #116611;
+}
+
+.important-color {
+  color: #ffaf1b;
+  border-color: #ffaf1b;
+}
+.important-color:focus {
+  color: orange;
+  border-color: orange;
 }

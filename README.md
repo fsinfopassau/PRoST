@@ -39,7 +39,7 @@ npm run dev
 - [Google-Java-Codestyle](https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml)
     - Intellij: Settings > Editor > Codestyle > Scheme 
   
-Run backend mit LDAP-Container:
+Run backend-stack:
 ```bash
-docker compose up ldap backend --build
+docker compose up ldap backend mariadb --build
 ```

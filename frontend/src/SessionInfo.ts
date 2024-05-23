@@ -47,7 +47,17 @@ export function isKiosk(): boolean {
   return isAdmin() || authorizedUser.accessRole.toString() === "KIOSK";
 }
 
+export function isOnlyKiosk(): boolean {
+  if (authorizedUser === undefined) return false;
+  return !isAdmin() && authorizedUser.accessRole.toString() === "KIOSK";
+}
+
 export function isUser(): boolean {
   if (authorizedUser === undefined) return false;
   return isKiosk() || authorizedUser.accessRole.toString() === "FSINFO";
+}
+
+export function isOnlyUser(): boolean {
+  if (authorizedUser === undefined) return false;
+  return !isAdmin() && !isKiosk() && authorizedUser.accessRole.toString() === "FSINFO";
 }

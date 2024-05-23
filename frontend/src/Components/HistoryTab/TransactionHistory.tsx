@@ -56,14 +56,14 @@ export function TransactionHistory(props: { personal: boolean }) {
   }
   function reloadTransactions() {
     if (props.personal) {
-      getPersonalTransactions(selectedPage).then((result) => {
+      getPersonalTransactions(10, selectedPage).then((result) => {
         if (result && result.content) {
           setTransactions(result.content);
           setTotalPages(result.totalPages + 1);
         }
       });
     } else {
-      getAllTransactions(selectedPage, searchValue).then((result) => {
+      getAllTransactions(10, selectedPage, searchValue).then((result) => {
         if (result && result.content) {
           setTransactions(result.content);
           setTotalPages(result.totalPages + 1);
@@ -72,7 +72,7 @@ export function TransactionHistory(props: { personal: boolean }) {
     }
   }
   return (
-    <ScrollArea className="DisplayCard" style={{ maxWidth: "60rem" }}>
+    <ScrollArea className="DisplayCard" style={{ maxWidth: "100rem" }}>
       <ScrollAreaViewport>
         <h2>Transaktionen</h2>
 
@@ -80,7 +80,7 @@ export function TransactionHistory(props: { personal: boolean }) {
           <></>
         ) : (
           <>
-            <div id="tableSearch">
+            <div className="tableSearch">
               <input
                 className="Input"
                 type="text"
@@ -109,9 +109,8 @@ export function TransactionHistory(props: { personal: boolean }) {
               return (
                 <div
                   key={"p" + index}
-                  className={`PageButton ${
-                    selectedPage === index ? "Selected" : ""
-                  }`}
+                  className={`PageButton ${selectedPage === index ? "Selected" : ""
+                    }`}
                   onClick={() => selectPage(index)}
                 >
                   {index + 1}

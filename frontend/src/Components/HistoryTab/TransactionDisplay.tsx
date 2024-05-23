@@ -8,13 +8,13 @@ export function TransactionDisplay(props: { transaction: Transaction }) {
 
   return (
     <>
-      <tr>
-        <th className="left">
+      <tr className="table-entry">
+        <th className="left date">
           {convertTimestampToTime(transaction.timestamp)}
         </th>
-        <th className="name bold">{transaction.transactionType}</th>
-        <th className="name bold">
-          <div style={{ display: "flex" }}>
+        <th className="bold">{transaction.transactionType}</th>
+        <th className="">
+          <div className="horizontalContainer">
             (
             <Link to={`/stats/users/${transaction.bearerId}`} className="bold">
               {transaction.bearerId}
@@ -23,19 +23,22 @@ export function TransactionDisplay(props: { transaction: Transaction }) {
             <Link to={`/stats/users/${transaction.senderId}`} className="bold">
               {transaction.senderId}
             </Link>
-            <div>
-              <DoubleArrowRightIcon />
-            </div>
-            <Link
-              to={`/stats/users/${transaction.receiverId}`}
-              className="bold"
-            >
+            <DoubleArrowRightIcon />
+            <Link to={`/stats/users/${transaction.receiverId}`} className="bold">
               {transaction.receiverId}
             </Link>
           </div>
         </th>
-        <th className="balance bold">{formatMoney(transaction.amount)}</th>
-      </tr>
+        <th className="balance bold right">
+          {transaction.transactionType.toString() === "CHANGE" ? (
+            <div className="horizontalContainer bold right">
+              {formatMoney(transaction.previous)}
+              <DoubleArrowRightIcon />
+              {formatMoney(transaction.amount)}
+            </div>
+          ) : <>{formatMoney(transaction.amount)}</>}
+        </th>
+      </tr >
     </>
   );
 }

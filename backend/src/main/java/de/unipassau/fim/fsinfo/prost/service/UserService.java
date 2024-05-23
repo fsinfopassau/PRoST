@@ -1,12 +1,11 @@
 package de.unipassau.fim.fsinfo.prost.service;
 
+import de.unipassau.fim.fsinfo.prost.data.DataFilter;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,46 +15,51 @@ public class UserService {
 
   private final UserRepository users;
 
-  private static final String EMAIL_PATTERN = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$";
-
   @Autowired
   public UserService(UserRepository users) {
     this.users = users;
   }
 
-  public static boolean isValidEmail(String email) {
-    if (email == null) {
-      return false;
-    }
-
-    Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-    Matcher matcher = pattern.matcher(email);
-    return matcher.matches();
-  }
-
   @Transactional
-  public Optional<ProstUser> createUser(String userName, String displayName, String email) {
+  public Optional<ProstUser> createUser(String userName, String displayName, String email,
+      boolean manualCreation) {
 
     if (users.findById(userName).isPresent()) {
       System.out.println("[US] :: " + userName + " :: user-creation failed :: exists ");
       return Optional.empty();
     }
 
-    // Allow only valid or no mail.
-    if (!isValidEmail(email) && email != null) {
+    if (!DataFilter.isValidString(userName, "userName")) {
+      System.out.println(
+          "[US] :: " + userName + " :: user-creation failed [userName=" + userName + "] ");
+      return Optional.empty();
+    }
+
+    if (manualCreation) {
+      userName = DataFilter.filterNameId(userName);
+    }
+
+    // Allow only valid or no mail at all.
+    if (!DataFilter.isValidEmail(email) && email != null) {
       System.out.println("[US] :: " + userName + " :: user-creation failed [mail=" + email + "] ");
       return Optional.empty();
     }
 
-    if (displayName == null || displayName.isBlank()) {
+    if (!DataFilter.isValidString(displayName, "displayName")) {
       System.out.println(
           "[US] :: " + userName + " :: user-creation failed [displayName=" + displayName + "] ");
-      return Optional.empty();
+
+      // refuse creation if user was created by admin
+      if (manualCreation) {
+        return Optional.empty();
+      }
+      // default to id
+      displayName = userName;
     }
 
     ProstUser user = new ProstUser(userName, displayName, email, true);
-    System.out.println("[US] :: " + userName + " :: user-creation succeeded");
     users.save(user);
+    System.out.println("[US] :: " + userName + " :: user-creation succeeded");
     return Optional.of(user);
   }
 
@@ -86,7 +90,7 @@ public class UserService {
   public boolean rename(String id, String name) {
     Optional<ProstUser> user = users.findById(id);
 
-    if (user.isPresent()) {
+    if (user.isPresent() && DataFilter.isValidString(name, "user name")) {
       ProstUser u = user.get();
       u.setDisplayName(name);
       users.save(u);
@@ -99,7 +103,8 @@ public class UserService {
   public boolean setEmail(String id, String email) {
     Optional<ProstUser> user = users.findById(id);
 
-    if (user.isPresent() && isValidEmail(email)) {
+    if (user.isPresent() && DataFilter.isValidString(email, "user email")
+        && DataFilter.isValidEmail(email)) {
       ProstUser u = user.get();
       u.setEmail(email);
       users.save(u);
@@ -127,14 +132,22 @@ public class UserService {
     try {
       BigDecimal amount = new BigDecimal(amountString);
 
+      if (amount.compareTo(BigDecimal.ZERO) < 0) { // Only Positive Values
+        System.out.println("[US] :: Money Spent is with " + amount + " to low");
+        return false;
+      }
+
       if (user.isPresent()) {
         ProstUser u = user.get();
-        u.setTotalSpent(amount);
+        u.setTotalSpent(amount.abs());
         users.save(u);
         return true;
+      } else {
+        System.out.println("[US] :: No user with id " + id + " found");
+        return false;
       }
-      return false;
     } catch (NumberFormatException e) {
+      System.out.println("[US] :: " + amountString + " is no valid amount");
       return false;
     }
   }

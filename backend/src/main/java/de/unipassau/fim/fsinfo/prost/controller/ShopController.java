@@ -84,6 +84,10 @@ public class ShopController {
   @PostMapping("/item/consume")
   public ResponseEntity<String> consume(@RequestParam String id, @RequestParam String userId,
       @RequestParam(required = false) Integer n, Authentication authentication) {
+    if (authentication == null) {
+      return ResponseEntity.badRequest().build();
+    }
+
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
     Collection<UserAccessRole> roles = authService.getRoles(authentication);
@@ -107,14 +111,15 @@ public class ShopController {
         (n == null ? 1 : n), userDetails.getUsername())) {
       return ResponseEntity.ok().build();
     }
-    return ResponseEntity.badRequest().build();
+    return ResponseEntity.badRequest().body(permitted + " " + highestPermission);
 
   }
 
   @PostMapping("/settings/create")
   public ResponseEntity<ShopItem> create(@RequestBody ShopItem itemTemplate) {
-    Optional<ShopItem> shopItem = shopService.createItem(itemTemplate.getId(), itemTemplate.getDisplayName(),
-            itemTemplate.getCategory(), itemTemplate.getPrice());
+    Optional<ShopItem> shopItem = shopService.createItem(itemTemplate.getId(),
+        itemTemplate.getDisplayName(),
+        itemTemplate.getCategory(), itemTemplate.getPrice());
 
     return shopItem.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
   }
@@ -132,7 +137,7 @@ public class ShopController {
   @PostMapping("/settings/item/displayname")
   public ResponseEntity<String> displayName(@RequestParam String id,
       @RequestParam String value) {
-    Optional<ShopItem> shopItem = shopService.changeDisplayName(id,value);
+    Optional<ShopItem> shopItem = shopService.changeDisplayName(id, value);
 
     if (shopItem.isPresent()) {
       return ResponseEntity.ok().build();
@@ -143,7 +148,7 @@ public class ShopController {
   @PostMapping("/settings/item/category")
   public ResponseEntity<String> displayCategory(@RequestParam String id,
       @RequestParam String value) {
-    Optional<ShopItem> shopItem = shopService.changeCategory(id,value);
+    Optional<ShopItem> shopItem = shopService.changeCategory(id, value);
 
     if (shopItem.isPresent()) {
       return ResponseEntity.ok().build();
@@ -154,7 +159,7 @@ public class ShopController {
   @PostMapping("/settings/item/price")
   public ResponseEntity<String> price(@RequestParam String id,
       @RequestParam String value) {
-    Optional<ShopItem> shopItem = shopService.changePrice(id,value);
+    Optional<ShopItem> shopItem = shopService.changePrice(id, value);
 
     if (shopItem.isPresent()) {
       return ResponseEntity.ok().build();
@@ -180,10 +185,8 @@ public class ShopController {
 
   @PostMapping("/settings/item/enable")
   public ResponseEntity<String> enable(@RequestParam String id) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    if (item.isPresent()) {
-      item.get().setEnabled(true);
-      itemRepository.save(item.get());
+    Optional<ShopItem> shopItem = shopService.enable(id);
+    if (shopItem.isPresent()) {
       return ResponseEntity.ok().build();
     }
     return ResponseEntity.badRequest().build();
@@ -191,10 +194,8 @@ public class ShopController {
 
   @PostMapping("/settings/item/disable")
   public ResponseEntity<String> disable(@RequestParam String id) {
-    Optional<ShopItem> item = itemRepository.findById(id);
-    if (item.isPresent()) {
-      item.get().setEnabled(false);
-      itemRepository.save(item.get());
+    Optional<ShopItem> shopItem = shopService.disable(id);
+    if (shopItem.isPresent()) {
       return ResponseEntity.ok().build();
     }
     return ResponseEntity.badRequest().build();

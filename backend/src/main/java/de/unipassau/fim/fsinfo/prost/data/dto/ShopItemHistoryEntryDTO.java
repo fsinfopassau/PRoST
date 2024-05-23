@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import de.unipassau.fim.fsinfo.prost.data.dao.TransactionEntry;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class ShopItemHistoryEntryDTO {
 

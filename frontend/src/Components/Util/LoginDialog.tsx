@@ -22,12 +22,14 @@ import {
   existCredentials,
 } from "../../SessionInfo";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export function LoginDialog() {
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLogged, setLogged] = useState(existCredentials());
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const name = getSessionUserName();
@@ -65,6 +67,7 @@ export function LoginDialog() {
     setPassword("");
     resetSession();
     setLogged(false);
+    navigate("/");
     window.location.reload();
   }
 
@@ -79,14 +82,14 @@ export function LoginDialog() {
     <>
       <div id="login">
         {isLogged ? (
-          <button onClick={logout} id="login-button">
-            <div>{userName}</div>
+          <button onClick={logout} id="login-button" className="Button">
+            {userName}
             <ExitIcon width={35} height={25} />
           </button>
         ) : (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <button id="login-button">
+              <button id="login-button" className="Button">
                 <AvatarIcon width={35} height={25} />
               </button>
             </DialogTrigger>
@@ -131,7 +134,7 @@ export function LoginDialog() {
                     justifyContent: "flex-end",
                   }}
                 >
-                  <button className="Button" onClick={submit}>
+                  <button className="Button icon" onClick={submit}>
                     <PaperPlaneIcon />
                   </button>
                 </div>

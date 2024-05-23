@@ -11,11 +11,12 @@ import {
   PaperPlaneIcon,
 } from "@radix-ui/react-icons";
 import { formatMoney } from "../../Format";
+import { BASE_PATH } from "../App";
 
 export function ItemCheckout() {
   const { userId, itemId } = useParams();
   const [item, setItem] = useState<ShopItem>();
-  const [imageUrl, setImageUrl] = useState<string>("/Beer.jpg");
+  const [imageUrl, setImageUrl] = useState<string>(`${BASE_PATH}/img/Beer.jpg`);
   const [amount, setAmount] = useState<number>(1);
   const navigate = useNavigate();
 
@@ -90,22 +91,20 @@ export function ItemCheckout() {
             </div>
           </div>
         </div>
-        <div id="CheckoutBar">
-          <div className="CheckoutCounter">
-            <button className="Button" onClick={decrement}>
-              <ChevronLeftIcon height={60} width={60} />
-            </button>
-            <div>
-              <div>{amount}</div>
-            </div>
-            <button className="Button" onClick={increment}>
-              <ChevronRightIcon height={60} width={60} />
-            </button>
+        <div className="CheckoutCounter">
+          <button className="Button" onClick={decrement}>
+            <ChevronLeftIcon height={60} width={60} />
+          </button>
+          <div>
+            <div>{amount}</div>
           </div>
-          <button id="Checkout-Complete" className="Button" onClick={checkout}>
-            <PaperPlaneIcon width={50} height={35} />
+          <button className="Button" onClick={increment}>
+            <ChevronRightIcon height={60} width={60} />
           </button>
         </div>
+        <button id="Checkout-Complete" className="Button" onClick={checkout}>
+          <PaperPlaneIcon width={50} height={35} />
+        </button>
       </div>
     </>
   );

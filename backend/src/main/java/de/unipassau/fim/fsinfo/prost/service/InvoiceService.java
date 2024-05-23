@@ -44,33 +44,6 @@ public class InvoiceService {
     this.userRepository = userRepository;
   }
 
-  public Page<InvoiceDTO> getPersonalInvoices(int pageNumber, int pageSize, Boolean mailed,
-      String userId) {
-    Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("timestamp").descending());
-    Page<InvoiceEntry> entriesPage;
-
-    if (userRepository.findById(userId).isEmpty()) {
-      return new PageImpl<>(new ArrayList<>(), pageable, 0);
-    }
-
-    if (mailed != null) {
-      if (mailed) {
-        entriesPage = invoiceRepository.findByUserIdAndMailedTrueAndPublishedTrue(userId, pageable);
-      } else {
-        entriesPage = invoiceRepository.findByUserIdAndMailedFalseAndPublishedTrue(userId,
-            pageable);
-      }
-    } else {
-      entriesPage = invoiceRepository.findByUserIdAndPublishedTrue(userId, pageable);
-    }
-
-    List<InvoiceDTO> invoiceDTOs = entriesPage.getContent().stream()
-        .map(this::getInvoiceDTO)
-        .collect(Collectors.toList());
-
-    return new PageImpl<>(invoiceDTOs, pageable, invoiceDTOs.size());
-  }
-
   public Page<InvoiceDTO> getInvoices(int pageNumber, int pageSize, Boolean mailed, String userId) {
 
     Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("timestamp").descending());
@@ -126,6 +99,10 @@ public class InvoiceService {
 
     for (Long id : invoiceIds) {
 
+      if (id == null) {
+        continue;
+      }
+
       Optional<InvoiceEntry> invoiceO = invoiceRepository.findById(id);
 
       if (invoiceO.isEmpty()) {
@@ -163,6 +140,7 @@ public class InvoiceService {
     for (String id : userIds) {
       Optional<ProstUser> user0 = userRepository.findById(id);
       if (user0.isEmpty()) {
+        System.err.println("[IS] :: No user found with id " + id);
         continue;
       }
 
@@ -184,11 +162,6 @@ public class InvoiceService {
    * @return optional
    */
   private Optional<InvoiceDTO> createInvoice(ProstUser user) {
-
-    // Nur fortfahren, wenn Nutzer Schulden hat.
-    if (user.getBalance().compareTo(new BigDecimal(0)) != -1) {
-      return Optional.empty();
-    }
 
     List<InvoiceEntry> previousInvoices = invoiceRepository.findByUserIdEqualsOrderByTimestampDesc(
         user.getId());
@@ -218,6 +191,10 @@ public class InvoiceService {
     List<Long> successfulRemovals = new ArrayList<>();
 
     for (Long id : invoiceIds) {
+      if (id == null) {
+        continue;
+      }
+
       Optional<InvoiceEntry> invoice = invoiceRepository.findById(id);
 
       if (invoice.isEmpty()) {
@@ -245,6 +222,9 @@ public class InvoiceService {
   }
 
   private Optional<InvoiceEntry> getNewerEntry(InvoiceEntry entry) {
+    if (entry == null) {
+      return Optional.empty();
+    }
     List<InvoiceEntry> entries = invoiceRepository.findByUserIdAndTimestampGreaterThanOrderByTimestampAsc(
         entry.getUserId(),
         entry.getTimestamp());
@@ -260,9 +240,17 @@ public class InvoiceService {
    */
   private List<InvoiceAmountMapping> getItemAmounts(List<ShopItemHistoryEntry> entries) {
 
+    if (entries == null || entries.isEmpty()) {
+      return List.of();
+    }
+
     Map<CompositeKey, InvoiceAmountMapping> amounts = new HashMap<>();
 
     entries.forEach((entry) -> {
+      if (entry == null) {
+        return;
+      }
+
       CompositeKey key = new CompositeKey(entry.getItemId(), entry.getItemPrice());
       if (amounts.containsKey(key)) {
         InvoiceAmountMapping lastAmount = amounts.get(key);

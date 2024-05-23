@@ -7,7 +7,6 @@ import de.unipassau.fim.fsinfo.prost.data.dto.ShopItemHistoryEntryDTO;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,14 +34,23 @@ public class ShopHistoryService {
     this.historyRepository = historyRepository;
   }
 
+  /**
+   * Returns the last history (as a Page) of the last bought items, beginning with the most recent.
+   * Can either return a Page of the complete History or the History of a given user.
+   *
+   * @param pageNumber The page-index (0-n) of the searched dataset.
+   * @param pageSize The size of a page (1-n).
+   * @param userId The userId of the searched user-buy-history.
+   * @return A page with the search-result according to the given parameters.
+   */
   public Page<ShopItemHistoryEntryDTO> getHistory(
-      int pageNumber, int pageSize, String userId) {
+      int pageNumber, int pageSize, Optional<String> userId) {
 
     Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("timestamp").descending());
     Page<ShopItemHistoryEntry> entriesPage;
 
-    if (userId != null) {
-      entriesPage = historyRepository.findByUserIdEquals(userId, pageable);
+    if (userId.isPresent()) {
+      entriesPage = historyRepository.findByUserIdEquals(userId.get(), pageable);
     } else {
       entriesPage = historyRepository.findAll(pageable);
     }
@@ -71,36 +79,4 @@ public class ShopHistoryService {
         entry.getTransaction());
   }
 
-  private List<ShopItemHistoryEntryDTO> getDTO(Iterable<ShopItemHistoryEntry> entryList) {
-    List<ShopItemHistoryEntryDTO> entryDTOs = new ArrayList<>();
-    if (entryList != null) {
-      for (ShopItemHistoryEntry entry : entryList) {
-        entryDTOs.add(getDTO(entry));
-      }
-    }
-    return entryDTOs;
-  }
-
-  public Optional<List<ShopItemHistoryEntryDTO>> getLastUserHistory(Integer n, String userId) {
-
-    Optional<ProstUser> user = userRepository.findById(userId);
-    if (user.isEmpty()) {
-      return Optional.empty();
-    }
-
-    if (n == null) {
-      return Optional.of(getDTO(historyRepository.findAll(desc)));
-    }
-
-    Pageable pageable = PageRequest.of(0, n, desc);
-    return Optional.of(getDTO(historyRepository.findByUserIdEquals(userId, pageable)));
-  }
-
-  public List<ShopItemHistoryEntryDTO> getLastHistory(Integer n) {
-    if (n == null) {
-      return getDTO(historyRepository.findAll(desc));
-    }
-    Pageable pageable = PageRequest.of(0, n, desc);
-    return getDTO(historyRepository.findAll(pageable));
-  }
 }

@@ -21,7 +21,7 @@ export function AllUsersStatistics() {
   }, []);
 
   return (
-    <div className="CardContainer">
+    <div className="GridContainer">
       {Object.values(users).map((user, index) => (
         <UserSummaryCard key={index} user={user} />
       ))}

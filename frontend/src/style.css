@@ -32,20 +32,20 @@ body {
   padding: 0 1rem 1rem 1rem;
   margin: 0 auto;
   height: 100%;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
 }
 
 .MainBody {
   flex-grow: 1;
   display: flex;
+  width: 100%;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
-.MainBody > * {
-  width: 100%;
-  flex-grow: 1;
-}
+/*standard*/
 
 h1 {
   font-size: 6rem;
@@ -53,6 +53,12 @@ h1 {
   text-align: center;
   justify-content: center;
   margin: 4rem 0;
+  font-weight: 500;
+
+  @media (max-width: 768px) {
+    font-size: 3rem;
+    margin: 2rem 0;
+  }
 }
 
 h2 {
@@ -61,6 +67,11 @@ h2 {
   text-align: center;
   justify-content: center;
   margin: 0.3rem 0;
+  font-weight: 500;
+  
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
 }
 
 h3 {
@@ -69,6 +80,17 @@ h3 {
   text-align: center;
   justify-content: center;
   margin: 0.2rem 0;
+  font-weight: 400;
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+}
+
+a,p,li,strong,div {
+  @media (max-width: 768px) {
+    font-size: .8rem;
+  }
 }
 
 svg {
@@ -78,6 +100,71 @@ svg {
 a {
   cursor: pointer;
 }
+
+/* DataInfo */
+.site-data-info {
+  position: fixed;
+  bottom: 4px;
+  right: 4px;
+  z-index: 1;
+  padding: 6px;
+  font-size: 12px;
+  color: black;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 10000px;
+
+  @media (max-width: 768px) {
+    bottom: 2px;
+    right: 2px;
+    padding: 3px;
+    font-size: 8px;
+  }
+}
+
+/* Change background color on hover */
+.site-data-info:hover {
+  background-color: black;
+  color: white;
+}
+
+/* Search */
+
+#MainIcon {
+  height: 5rem;
+  padding: 0 1rem;
+}
+
+#main-search {
+  margin: 1rem auto;
+  padding: 0 1rem;
+  justify-content: center;
+  display: flex;
+  width: 80vw;
+  min-width: 10%;
+  max-width: 100%;
+  font-size: 2rem;
+  height: 4rem;
+}
+
+/* Login */
+
+#login {
+  justify-content: right;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+#login-button {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  justify-content: center;
+  user-select: none;
+  cursor: pointer;
+}
+
+/* Checkout */
 
 #Checkout {
   flex-grow: 1;
@@ -109,142 +196,42 @@ a {
   @media screen and (max-height: 650px) {
     max-width: 40vh;
   }
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
   @media screen and (max-height: 550px) {
     max-width: 30vh;
   }
 }
 
-#CheckoutBar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 50px;
-  padding: 2rem;
-  font-size: 4rem;
-  flex-grow: 1;
-  /*
-  position: sticky;
-  bottom: 0;
-  */
-  width: 100%;
-}
-#CheckoutBar Button {
-  padding: 0.7rem;
-}
-
 #Checkout-Complete {
   margin: 1rem;
-  position: absolute;
-  right: 0;
+  width: 50vw;
+  border-radius: 10000px;
 }
 
 .CheckoutCounter {
   display: flex;
-  align-content: center;
+  justify-content: center;
   align-items: center;
   gap: 20px;
-  height: 100%;
+  width: 50vw;
 }
 .CheckoutCounter > div {
   width: 3.5rem;
+  font-size: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
 }
 .CheckoutCounter > Button {
   border-radius: 10000px;
 }
 
-.PageBar {
-  display: flex;
-  padding-bottom: 1rem;
-  width: 100%;
-  justify-content: center;
-}
-.PageButton {
-  text-align: center;
-  cursor: pointer;
-  margin: 0 0.5rem;
-  padding: 0.3rem;
-  min-width: 2.5rem;
-}
-
-#SearchTitle {
-  height: 5rem;
-  padding: 0 1rem;
-}
-
-#tableSearch {
-  display: flex;
-  padding: 0 0.5rem;
-  margin: 0.75rem 0;
-  align-items: center;
-
-  .Button {
-    margin: 0 0.5rem 0 1rem;
-  }
-}
-
-#search {
-  margin: 1rem auto;
-  padding: 0 1rem;
-  justify-content: center;
-  display: flex;
-  width: 80vw;
-  min-width: 10%;
-  max-width: 100%;
-  font-size: 2rem;
-  height: 4rem;
-}
-
-.SearchInput {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  padding: 0 10px;
-  height: 35px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-/*
-History
-*/
-
-.history-container {
-  overflow: hidden;
-  max-width: 30rem;
-}
-
-.table-entry {
-  display: flex;
-  table-layout: fixed; /* Fixed table layout */
-  justify-content: space-evenly; /* or space-around, space-evenly, etc. */
-  margin: 0.4rem 0;
-  font-size: 1rem;
-  height: 2.7rem;
-  min-width: 21em;
-  width: 100%;
-}
-.table-entry th {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin: 0 0.8rem;
-  width: 20%;
-  max-width: 5rem;
-}
-.table-entry th.last {
-  justify-content: flex-end;
-}
-table {
-  width: 100%;
-}
-
-/*
-UserSummary
-*/
+/* UserSummary */
 .UserSummary {
   max-height: 30rem;
   display: flex;
@@ -266,182 +253,61 @@ UserSummary
   }
 }
 
-/*
-Tabs
-*/
+/* Tabs */
 
 #tab-changer {
   display: flex;
   margin-bottom: 0.6rem;
   padding: 1rem;
   position: sticky;
-  z-index: 10;
+  z-index: 1;
   top: 0;
+  align-items: center;
+  justify-content: left;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 0.5rem;
+  }
 }
 
 #tab-changer > img {
-  margin-right: 0.6rem;
-  height: 2.8rem;
-}
-
-.TabsRoot {
-  display: flex;
-  flex-direction: column;
+  padding: .25rem;
+  height: 100%;
 }
 
 .TabsList {
+  justify-content: center;
   flex-shrink: 0;
   display: flex;
+  flex-wrap: wrap;
+  list-style-type: none;
+  height: auto;
+  margin: 0 .75rem;
 }
 
 .TabsTrigger {
-  font-family: inherit;
-  padding: 0 20px;
-  height: 2.8rem;
-  flex: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
-  line-height: 1;
-  user-select: none;
-  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
 }
 .TabsTrigger * {
   cursor: pointer;
 }
-
 .TabsTrigger:active {
   position: relative;
 }
 
-#login {
-  justify-content: right;
-  width: 100%;
-  display: flex;
-  align-items: center;
-}
-#login-button {
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-  height: 100%;
-  justify-content: center;
-  user-select: none;
-  cursor: pointer;
-}
-#login-button * {
-  cursor: pointer;
-}
-#login svg {
-  margin: 0;
-}
 
-/*
-Invoice
-*/
-
-.icon {
-  min-width: 1rem;
-  width: 10%;
-  text-align: left;
-
-  div {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-  }
-}
-
-.Table {
-  tr {
-    margin: 0.4rem 0;
-    font-size: 1rem;
-    height: 2.7rem;
-  }
-
-  .left {
-    text-align: left;
-  }
-
-  .right {
-    text-align: right;
-  }
-
-  .name {
-    text-align: left;
-    min-width: 6rem;
-  }
-
-  .date {
-    width: 25%;
-    min-width: 10rem;
-    text-align: right;
-  }
-
-  .amount {
-    width: 5%;
-    min-width: 2.5rem;
-    text-align: right;
-  }
-
-  .balance {
-    width: 10%;
-    min-width: 6rem;
-    text-align: right;
-  }
-}
-
-/*
-General
-*/
-
-.Button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 15px;
-  font-size: 1.5rem;
-  font-weight: 500;
-  height: 3rem;
-  cursor: pointer;
-}
-.Button * {
-  cursor: pointer;
-}
-
-.Toggle {
-  width: 25px;
-  height: 25px;
-  display: flex;
-
-  * {
-    padding: auto;
-    margin: auto;
-  }
-}
-
-.Input {
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  padding: 5px 10px;
-  font-size: 20px;
-  line-height: 1;
-  height: 35px;
-  min-width: 10rem;
-}
-
-.DisplayCard {
-  overflow: hidden;
-  padding: 0.7rem 1rem;
-  margin: 0.5rem 0.8rem;
-  --scrollbar-size: 12px;
-  flex-grow: 1; /* Grow to fill available space */
-}
-
-.SelectionContainer {
+/* Alignments */
+.SmallGridContainer {
   display: grid;
   grid-template-columns: repeat(
     auto-fill,
@@ -449,14 +315,24 @@ General
   ); /* Adjust the minmax values as needed */
   grid-auto-rows: min-content;
   gap: 1rem;
-  padding: 20px 0;
-  max-width: 1000%;
+  padding: 20px;
 }
 
-.CardContainer {
+.GridContainer {
   display: grid;
   grid-auto-rows: min-content;
-  grid-template-columns: repeat(auto-fill, minmax(25.5rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  }
+}
+
+.SingleCardContainer {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
 }
 
 .SpreadContainer {
@@ -473,11 +349,175 @@ General
   height: 100%;
 }
 
+/* General */
+
+.Button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 15px;
+  font-size: 1.5rem;
+  font-weight: 500;
+  height: 3rem;
+  cursor: pointer;
+  @media (max-width: 768px) {
+    font-size: .75rem;
+    height: 2rem;
+  }
+}
+.Button * {
+  cursor: pointer;
+}
+
+.CheckBox {
+  width: 25px;
+  height: 25px;
+  display: flex;
+  cursor: pointer;
+
+  * {
+    padding: auto;
+    margin: auto;
+  }
+}
+
+.Input {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  padding: 5px 10px;
+  font-size: 1.25rem;
+  line-height: 1;
+  height: 2rem;
+  min-width: 10rem;
+  @media (max-width: 768px) {
+    font-size: .9rem;
+    height: 1.5rem;
+    min-width: 5rem;
+  }
+}
+
+.DisplayCard {
+  overflow: hidden;
+  padding: 0.7rem 1rem;
+  margin: 0.5rem 0.8rem;
+  --scrollbar-size: 12px;
+  flex-grow: 1; /* Grow to fill available space */
+}
+
+.icon {
+  min-width: 1rem;
+  width: 10%;
+  text-align: left;
+
+  div {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+}
+
+/* Table */
+
+.Table {
+  width: 100%;
+
+  .horizontalContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+  }
+
+  .left {
+    text-align: left;
+    justify-content: left;
+  }
+
+  .right {
+    text-align: right;
+    justify-content: right;
+  }
+
+  .icon {
+    width: 0.3rem;
+    min-width: 0.2rem;
+  }
+
+  .date {
+    min-width: 11rem;
+  }
+
+  .time {
+    min-width: 6.5rem;
+  }
+
+  .balance {
+    min-width: 6rem;
+  }
+
+  .amount {
+    min-width: 4rem;
+  }
+
+  .name {
+    min-width: 8.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .date {
+      min-width: 5.5rem;
+    }
+  
+    .time {
+      min-width: 3.25rem;
+    }
+  
+    .balance {
+      min-width: 5rem;
+    }
+  
+    .amount {
+      min-width: 3rem;
+    }
+  
+    .name {
+      min-width: 5rem;
+    }
+  }
+}
+
+.table-entry {
+  justify-content: space-evenly; /* or space-around, space-evenly, etc. */
+  margin: 0.4rem 0;
+  font-size: 1rem;
+  height: 2.7rem;
+  min-width: 21rem;
+  width: 100%;
+  @media (max-width: 768px) {
+    font-size: .75rem;
+  }
+}
+.table-entry th {
+  padding: 0 0.7rem;
+}
+
+.tableSearch {
+  display: flex;
+  padding: 0 0.7rem;
+  margin: 0.7rem 0;
+  align-items: center;
+
+  .Button {
+    margin-left: 0.7rem;
+  }
+}
+
+/* Scrollbar */
 .Scrollbar {
   display: flex;
-  /* ensures no selection */
   user-select: none;
-  /* disable browser handling of all panning and zooming gestures on touch devices */
   touch-action: none;
   padding: 2px;
   cursor: pointer;
@@ -507,6 +547,7 @@ General
   min-height: 44px;
 }
 
+/* Separato */
 .Separator {
   background-color: var(--violet-11);
 }
@@ -519,6 +560,7 @@ General
   margin: 0 1rem;
 }
 
+/* Switch */
 .SwitchRoot {
   position: relative;
   width: 2.3rem;
@@ -538,6 +580,8 @@ General
   transform: translateX(19px);
 }
 
+/* Dialog */
+
 .DialogOverlay {
   position: fixed;
   top: 0;
@@ -548,11 +592,12 @@ General
   place-items: center;
   overflow-y: auto;
   inset: 0;
+  z-index: 2;
   animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .DialogContent {
-  border-radius: 6px;
+  border-radius: 12px;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -561,6 +606,7 @@ General
   max-width: 50rem;
   max-height: 85vh;
   padding: 25px;
+  z-index: 2;
   animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .DialogContent:focus {
@@ -571,6 +617,9 @@ General
   margin: 0;
   font-weight: 500;
   font-size: 3rem;
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
 }
 
 .DialogDescription {
@@ -588,29 +637,53 @@ General
   justify-content: flex-start;
 }
 
-.ProgressRoot {
-  position: relative;
-  overflow: hidden;
-  transform: translateZ(0);
-  margin: 0 0 0.5rem 0;
-  height: .75rem;
+/* Pagination */
+.PageBar {
+  display: flex;
+  padding-bottom: 1rem;
   width: 100%;
+  justify-content: center;
+}
+.PageButton {
+  text-align: center;
+  cursor: pointer;
+  margin: 0 0.5rem;
+  padding: 0.3rem;
+  min-width: 2.5rem;
 }
 
-.ProgressIndicator {
+
+/*
+Progress
+*/
+
+.progress-bar {
+  width: 100%;
+  height: 100%; /* Adjust the height as needed */
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-background {
   width: 100%;
   height: 100%;
-  transition: transform 660ms cubic-bezier(0.65, 0, 0.35, 1);
+  background-size: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-/* 
-Font stuff
-*/
+.progress-bar-foreground {
+  height: 100%;
+  background-size: cover;
+  transition: width 660ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Font stuff */
 
 * {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
-  font-weight: 400;
   font-style: normal;
 }
 
@@ -618,12 +691,5 @@ Font stuff
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: 600;
-  font-style: bold;
-}
-
-.thin {
-  font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 300;
   font-style: bold;
 }

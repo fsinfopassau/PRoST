@@ -4,6 +4,7 @@ export interface Transaction {
   senderId: string;
   receiverId: string;
   transactionType: TransactionType;
+  previous: number;
   amount: number;
   timestamp: number;
 }

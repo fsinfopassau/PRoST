@@ -1,5 +1,6 @@
 package de.unipassau.fim.fsinfo.prost.service;
 
+import de.unipassau.fim.fsinfo.prost.data.DataFilter;
 import de.unipassau.fim.fsinfo.prost.data.TransactionType;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
@@ -10,7 +11,6 @@ import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
 import java.math.BigDecimal;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +24,9 @@ public class ShopService {
 
   final TransactionService transactionService;
 
-  final int nameLength = 20;
-  final BigDecimal maxPrice = new BigDecimal(100);
+  final static int MAX_NAME_LENGTH = 20;
+  final static BigDecimal MAX_PRICE = new BigDecimal(100);
+  final static BigDecimal MIN_PRICE = BigDecimal.ZERO;
 
   @Autowired
   public ShopService(ShopItemRepository itemRepository, ShopItemHistoryRepository historyRepository,
@@ -42,6 +43,10 @@ public class ShopService {
     Optional<ProstUser> userO = userRepository.findById(userId);
     Optional<ProstUser> bearerUser = userRepository.findById(bearerId);
 
+    if (amount < 1 || amount > 10) {
+      return false;
+    }
+
     if (userO.isEmpty() || itemO.isEmpty() || bearerUser.isEmpty()) {
       System.out.println(userO + " " + itemO + " " + bearerUser);
       return false;
@@ -51,15 +56,14 @@ public class ShopService {
     ProstUser bearer = bearerUser.get();
     ShopItem item = itemO.get();
 
-    if (!item.getEnabled() || !user.getEnabled() || !bearer.getEnabled()) {
+    // Every Component needs to be allowed to be part of the Transaction
+    if (!item.getEnabled() || !user.getEnabled()) {
       return false;
     }
 
-    userRepository.save(user);
-
     Optional<TransactionEntry> transaction = transactionService.moneyTransfer(
         Optional.empty(), user.getId(), bearer.getId(),
-        item.getPrice().multiply(BigDecimal.valueOf(amount)), TransactionType.BUY);
+        item.getPrice().abs().multiply(BigDecimal.valueOf(amount).abs()), TransactionType.BUY);
 
     if (transaction.isPresent()) {
       historyRepository.save(
@@ -72,14 +76,12 @@ public class ShopService {
   }
 
   @Transactional
-  public Optional<ShopItem> createItem(String identifier, String displayName, String category, BigDecimal price ){
+  public Optional<ShopItem> createItem(String identifier, String displayName, String category,
+      BigDecimal price) {
 
-    if (checkEmpty(displayName,"display name")
-            || checkEmpty(category,"category")
-            || checkEmpty(identifier,"identifier")
-            || checkSize(displayName, "display name")
-            || checkSize(category, "category")
-            || checkSize(identifier, "identifier")) {
+    if (!DataFilter.isValidString(displayName, "display name")
+        || !DataFilter.isValidString(category, "category")
+        || !DataFilter.isValidString(identifier, "identifier")) {
       return Optional.empty();
     }
 
@@ -93,7 +95,8 @@ public class ShopService {
       return Optional.empty();
     }
 
-    ShopItem item = new ShopItem(identifier,category,displayName,price.abs());
+    ShopItem item = new ShopItem(DataFilter.filterNameId(identifier), category, displayName,
+        price.abs());
     itemRepository.save(item);
     return Optional.of(item);
   }
@@ -101,7 +104,7 @@ public class ShopService {
   @Transactional
   public Optional<ShopItem> delete(String identifier) {
     Optional<ShopItem> item = itemRepository.findById(identifier);
-    if(item.isPresent()) {
+    if (item.isPresent()) {
       itemRepository.delete(item.get());
       return item;
     }
@@ -112,11 +115,11 @@ public class ShopService {
   public Optional<ShopItem> changeDisplayName(String identifier, String newDisplayName) {
     Optional<ShopItem> item = itemRepository.findById(identifier);
 
-    if (checkEmpty(newDisplayName, "display name") || checkSize(newDisplayName, "display name")) {
+    if (!DataFilter.isValidString(newDisplayName, "display name")) {
       return Optional.empty();
     }
 
-    if(item.isPresent()) {
+    if (item.isPresent()) {
       item.get().setDisplayName(newDisplayName);
       itemRepository.save(item.get());
       return item;
@@ -128,11 +131,11 @@ public class ShopService {
   public Optional<ShopItem> changeCategory(String identifier, String category) {
     Optional<ShopItem> item = itemRepository.findById(identifier);
 
-    if (checkEmpty(category, "category") || checkSize(category, "category")) {
+    if (!DataFilter.isValidString(category, "category")) {
       return Optional.empty();
     }
 
-    if(item.isPresent()) {
+    if (item.isPresent()) {
       item.get().setCategory(category);
       itemRepository.save(item.get());
       return item;
@@ -147,11 +150,14 @@ public class ShopService {
     try {
       if (item.isPresent()) {
         BigDecimal price = new BigDecimal(value);
-        if(price.compareTo(maxPrice) > 0) {
+        if (price.compareTo(MAX_PRICE) > 0) {
           System.out.println("[SS] :: Price is with " + price + " to high");
           return Optional.empty();
+        } else if (price.compareTo(MIN_PRICE) < 0) {
+          System.out.println("[SS] :: Price is with " + price + " to low");
+          return Optional.empty();
         }
-        item.get().setPrice(price.abs());
+        item.get().setPrice(price);
         itemRepository.save(item.get());
         return item;
       }
@@ -161,20 +167,23 @@ public class ShopService {
     return Optional.empty();
   }
 
-  private boolean checkEmpty(String value, String name) {
-    if(value == null || value.isBlank() ) {
-      System.out.println("[SS] :: " + name +" is empty");
-      return true;
-    }
-    return false;
+  @Transactional
+  public Optional<ShopItem> enable(String identifier) {
+    return setVisibility(identifier, true);
   }
 
-  private boolean checkSize(String value, String name) {
-    if(value.length() > nameLength ) {
-      System.out.println("[SS] :: " + name + " size to large");
-      return true;
+  @Transactional
+  public Optional<ShopItem> disable(String identifier) {
+    return setVisibility(identifier, false);
+  }
+
+  private Optional<ShopItem> setVisibility(String identifier, boolean value) {
+    Optional<ShopItem> item = itemRepository.findById(identifier);
+    if (item.isPresent()) {
+      item.get().setEnabled(value);
+      itemRepository.save(item.get());
     }
-    return false;
+    return item;
   }
 
 }

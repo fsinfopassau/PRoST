@@ -1,3 +1,4 @@
+import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { useEffect, useState } from "react";
 
 export function LevelProgressDisplay(props: { value: number }) {
@@ -9,15 +10,19 @@ export function LevelProgressDisplay(props: { value: number }) {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [props.value]);
 
   return (
-    <div className="ProgressRoot">
-      <div
-        className="ProgressIndicator"
-        role="progressbar"
-        style={{ width: `${width}%` }}
-      ></div>
-    </div>
+    <>
+      <AspectRatio ratio={546 / 15}>
+        <div className="progress-bar">
+          <div className="progress-bar-background">
+            <div className="progress-bar-foreground"
+              style={{ width: `${width}%` }}
+            ></div>
+          </div>
+        </div>
+      </AspectRatio>
+    </>
   );
 }

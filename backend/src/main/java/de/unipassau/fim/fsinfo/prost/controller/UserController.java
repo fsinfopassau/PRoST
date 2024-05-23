@@ -2,7 +2,6 @@ package de.unipassau.fim.fsinfo.prost.controller;
 
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.security.CustomUserDetailsContextMapper.CustomUserDetails;
-import de.unipassau.fim.fsinfo.prost.service.TransactionService;
 import de.unipassau.fim.fsinfo.prost.service.UserService;
 import java.util.List;
 import java.util.Optional;
@@ -22,12 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
   private final UserService userService;
-  private final TransactionService transactionService;
 
   @Autowired
-  public UserController(UserService userService, TransactionService transactionService) {
+  public UserController(UserService userService) {
     this.userService = userService;
-    this.transactionService = transactionService;
   }
 
   /**
@@ -43,6 +40,9 @@ public class UserController {
 
   @GetMapping("/me")
   public ResponseEntity<ProstUser> me(Authentication authentication) {
+    if (authentication == null) {
+      return ResponseEntity.badRequest().build();
+    }
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
     Optional<List<ProstUser>> users = userService.info(userDetails.getUsername());
@@ -55,7 +55,11 @@ public class UserController {
 
     Optional<ProstUser> user = userService.createUser(userTemplate.getId(),
         userTemplate.getDisplayName(),
-        userTemplate.getEmail());
+        userTemplate.getEmail(), true);
+
+    if (user.isPresent() && userTemplate.getTotalSpent() != null) {
+      userService.setMoneySpent(user.get().getId(), userTemplate.getTotalSpent().toString());
+    }
 
     return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
   }

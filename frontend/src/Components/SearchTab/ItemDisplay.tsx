@@ -4,12 +4,13 @@ import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { useEffect, useState } from "react";
 import { getItemDisplayPicture } from "../../Queries";
 import { formatMoney } from "../../Format";
+import { BASE_PATH } from "../App";
 
 export function ItemDisplay(props: { item: ShopItem }) {
   const { item } = props;
   const navigate = useNavigate();
   const { userId } = useParams();
-  const [imageUrl, setImageUrl] = useState<string>("/Beer.jpg");
+  const [imageUrl, setImageUrl] = useState<string>(`${BASE_PATH}/img/Beer.jpg`);
 
   function selectItem() {
     navigate(`/shop/${userId}/${item.id}`);

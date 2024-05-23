@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { User } from "../../Types/User";
+import { getLevel, User } from "../../Types/User";
 import { Separator } from "@radix-ui/react-separator";
 import { ShopHistoryEntry } from "../../Types/ShopHistory";
 import { useEffect, useState } from "react";
@@ -15,7 +15,6 @@ interface Props {
 export function UserSummaryCard(props: Props) {
   const { user } = props;
   const [history, setHistory] = useState<ShopHistoryEntry[]>([]);
-  const level_step = 5;
 
   useEffect(() => {
     if (user.id === getAuthorizedUser()?.id) {
@@ -40,12 +39,10 @@ export function UserSummaryCard(props: Props) {
           <Link to={`/stats/users/${user.id}`} className="bold">
             {getDisplayName()}
           </Link>
-          <div>👑 🍺</div>
+          <div>💙🦆💙</div>
         </div>
-        <div style={{ textAlign: "center" }}>{Math.floor(user.totalSpent / level_step) + 1}</div>
-        <LevelProgressDisplay
-          value={(user.totalSpent % level_step) / level_step}
-        />
+        <div style={{ textAlign: "center" }}>{getLevel(user)}</div>
+        <LevelProgressDisplay value={(user.totalSpent % 5) / 5} />
         <div className="SpreadContainer">
           <div>
             <div className="bold">Letzte:</div>

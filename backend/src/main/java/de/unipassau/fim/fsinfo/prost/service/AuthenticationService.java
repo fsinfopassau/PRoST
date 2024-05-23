@@ -27,6 +27,10 @@ public class AuthenticationService {
   }
 
   public Optional<AuthorizedPRoSTUserDTO> auth(Authentication auth) {
+    if (auth == null) {
+      return Optional.empty();
+    }
+
     Optional<UserAccessRole> role = getHighestRole(getRoles(auth));
 
     if (role.isEmpty()) {
@@ -42,20 +46,20 @@ public class AuthenticationService {
 
     user = userService.createUser(userDetails.getUsername(),
         userDetails.getDisplayName(),
-        userDetails.getEmail());
+        userDetails.getEmail(), false);
 
     return user.map(prostUser -> new AuthorizedPRoSTUserDTO(prostUser, role.get()));
   }
 
   public Optional<UserAccessRole> getHighestRole(Collection<UserAccessRole> roles) {
-    if (roles.isEmpty()) {
+    if (roles == null || roles.isEmpty()) {
       return Optional.empty();
     }
 
     AtomicReference<UserAccessRole> highest = new AtomicReference<>(roles.iterator().next());
 
     roles.forEach(role -> {
-      if (highest.get().compareTo(role) < 0) {
+      if (role != null && highest.get().compareTo(role) < 0) {
         highest.set(role);
       }
     });
@@ -64,18 +68,24 @@ public class AuthenticationService {
   }
 
   public Collection<UserAccessRole> getRoles(Authentication authentication) {
+    if (authentication == null) {
+      return new ArrayList<>();
+    }
+
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
     List<UserAccessRole> userRoles = new ArrayList<>();
 
     authentication.getAuthorities().forEach(authority -> {
-      try {
-        UserAccessRole role = UserAccessRole.valueOf(authority.getAuthority());
-        userRoles.add(role);
-      } catch (IllegalArgumentException e) {
-        System.err.println(
-            "[AC] :: Could not map authority " + authority.getAuthority()
-                + " to UserAccessRole of User " + userDetails.getUsername() + "!");
+      if (authority != null) {
+        try {
+          UserAccessRole role = UserAccessRole.valueOf(authority.getAuthority());
+          userRoles.add(role);
+        } catch (IllegalArgumentException e) {
+          System.err.println(
+              "[AC] :: Could not map authority " + authority.getAuthority()
+                  + " to UserAccessRole of User " + userDetails.getUsername() + "!");
+        }
       }
     });
 

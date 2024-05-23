@@ -157,6 +157,7 @@ export async function createTransaction(
 }
 
 export async function getAllTransactions(
+  size: number,
   page: number,
   receiverId: string | undefined
 ): Promise<TransactionPage | undefined> {
@@ -164,7 +165,7 @@ export async function getAllTransactions(
 
   try {
     const response = await fetch(
-      `${apiUrl}/api/transaction/list?s=20&p=` + page + params,
+      `${apiUrl}/api/transaction/list?s=${size}&p=${page}` + params,
       {
         method: "GET",
         headers: {
@@ -185,11 +186,12 @@ export async function getAllTransactions(
 }
 
 export async function getPersonalTransactions(
+  size: number,
   page: number
 ): Promise<TransactionPage | undefined> {
   try {
     const response = await fetch(
-      `${apiUrl}/api/transaction/me?s=20&p=` + page,
+      `${apiUrl}/api/transaction/me?s=${size}&p=${page}`,
       {
         method: "GET",
         headers: {
@@ -297,7 +299,7 @@ export async function buyItem(
   );
 
   if (result.status == 418) {
-    toast.warning("I'm a Teapot! 🙃");
+    toast.warning("Ich bin ne 🫖, du Keck! 🙃");
   }
   return result.ok;
 }
@@ -579,29 +581,6 @@ export async function mailInvoices(
 ): Promise<number[] | undefined> {
   try {
     const response = await fetch(`${apiUrl}/api/invoice/mail`, {
-      method: "POST",
-      headers: {
-        Authorization: `Basic ${getEncodedCredentials()}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(ids),
-    });
-
-    if (!response.ok) {
-      return undefined;
-    }
-
-    return (await response.json()) as number[];
-  } catch (error) {
-    return undefined;
-  }
-}
-
-export async function publishInvoices(
-  ids: number[]
-): Promise<number[] | undefined> {
-  try {
-    const response = await fetch(`${apiUrl}/api/invoice/publish`, {
       method: "POST",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,

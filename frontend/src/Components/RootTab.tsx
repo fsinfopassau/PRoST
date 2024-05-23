@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { isKiosk, isUser } from "../SessionInfo";
+import { isOnlyKiosk, isUser } from "../SessionInfo";
 import { User } from "../Types/User";
 import { getOwnUser } from "../Queries";
 import { ErrorComponent } from "./Util/ErrorTab";
@@ -10,15 +10,13 @@ export function RootTab(props: { switchTheme: () => void }) {
   const [user, setUser] = useState<User | undefined>(undefined);
 
   useEffect(() => {
-    if (!isKiosk() && isUser()) {
-      getOwnUser()
-        .then((user) => {
-          setUser(user);
-        })
-        .catch(() => {
-          setUser(undefined);
-        });
-    }
+    getOwnUser()
+      .then((user) => {
+        setUser(user);
+      })
+      .catch(() => {
+        setUser(undefined);
+      });
   }, []);
 
   return (
@@ -27,19 +25,19 @@ export function RootTab(props: { switchTheme: () => void }) {
         <h1>
           <img
             onClick={props.switchTheme}
-            src="/icons/happy-manje/happy beer.svg"
-            id="SearchTitle"
+            src="icons/happy-manje/happy beer.svg"
+            id="MainIcon"
           />
           PRoST
         </h1>
-        {!isUser() ? (
+        {user === undefined ? (
           <></>
-        ) : isKiosk() ? (
+        ) : isOnlyKiosk() ? (
           <UserContainer />
-        ) : user === undefined ? (
-          <ErrorComponent />
-        ) : (
+        ) : isUser() ? (
           <PersonalUserOverview user={user} />
+        ) : (
+          <ErrorComponent />
         )}
       </div>
     </>

@@ -1,11 +1,13 @@
 package de.unipassau.fim.fsinfo.prost.service;
 
+import de.unipassau.fim.fsinfo.prost.data.DataFilter;
 import de.unipassau.fim.fsinfo.prost.data.dao.InvoiceEntry;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.data.dto.InvoiceAmountMapping;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -59,16 +61,22 @@ public class MailService {
     }
 
     String text = "Servus " + user.get().getDisplayName() + ",\n\n" +
-        "dein aktueller Kontostand bei der Kaffeekasse beträgt " + ProstUser.formatMoney(
+        "dein aktueller Kontostand bei der Kaffeekasse beträgt " + DataFilter.formatMoney(
         invoice.getBalance()) + ".\n"
-        + formattedAmounts(amounts)
-        + "\nBitte überweise den Betrag mittels PayPal [1] oder gib ihn mir bei der nächsten Gelegenheit persönlich in bar.\n"
-        + "\n"
-        + "Viele Grüße\n"
-        + "Bierjam\n"
-        + "\n"
-        + "[1] https://paypal.me/fsinfokaffee/" + Math.abs(invoice.getBalance().doubleValue())
-        + "\n";
+        + formattedAmounts(amounts);
+
+    if (invoice.getBalance().compareTo(BigDecimal.ZERO) < 0) {
+      text +=
+          "\nBitte überweise den Betrag mittels PayPal [1] oder gib ihn mir bei der nächsten Gelegenheit persönlich in bar.\n"
+              + "\n"
+              + "Viele Grüße\n"
+              + "Bierjam\n"
+              + "\n"
+              + "[1] https://paypal.me/fsinfokaffee/" + Math.abs(invoice.getBalance().doubleValue())
+              + "\n";
+    } else {
+      text += "\nViele Grüße\nBierjam\n\n";
+    }
 
     if (sendMail(user.get().getEmail(), "Kaffeekasse - Neue Abrechnung", text)) {
       System.out.println("[MS] :: invoice=" + invoice.getId() + " :: sent new invoice!");
@@ -88,6 +96,19 @@ public class MailService {
    * @return true if mail could be sent out.
    */
   private boolean sendMail(String address, String subject, String text) {
+    if (address == null) {
+      System.err.println("[MS] :: no address!");
+      return false;
+    }
+    if (subject == null) {
+      System.err.println("[MS] :: no subject!");
+      return false;
+    }
+    if (text == null) {
+      System.err.println("[MS] :: no text!");
+      return false;
+    }
+
     if (mailCooldown.containsKey(address)) {
       if (mailCooldown.get(address) < System.currentTimeMillis()) {
         mailCooldown.remove(address);
@@ -96,7 +117,7 @@ public class MailService {
       }
     }
 
-    // System.out.println("[MS] :: send mail :: " + address + " |\n" + subject + " |\n" + text);
+    System.out.println("[MS] :: send mail :: " + address + " |\n" + subject + " |\n" + text);
 
     MultiPartEmail email = new MultiPartEmail();
     try {
@@ -113,8 +134,7 @@ public class MailService {
       email.send();
       mailCooldown.put(address, System.currentTimeMillis() + mailCooldownTime);
     } catch (EmailException e) {
-      // TODO PSE set to false - true: testing only
-      return true;
+      return false;
     }
     return true;
   }
@@ -123,32 +143,32 @@ public class MailService {
 
     StringBuilder b = new StringBuilder();
 
-    if (!amounts.isEmpty()) {
+    if (amounts != null && !amounts.isEmpty()) {
       b.append("\n");
       b.append("Deine Einkäufe seit letzter Abrechnung:");
       b.append("\n");
-    }
 
-    for (InvoiceAmountMapping mapping : amounts) {
+      for (InvoiceAmountMapping mapping : amounts) {
 
-      Optional<ShopItem> item = items.findById(mapping.getItemId());
-      String itemName = mapping.getItemId();
+        Optional<ShopItem> item = items.findById(mapping.getItemId());
+        String itemName = mapping.getItemId();
 
-      if (item.isPresent()) {
-        itemName = item.get().getDisplayName();
+        if (item.isPresent()) {
+          itemName = item.get().getDisplayName();
+        }
+
+        int amount = mapping.getAmount();
+
+        if (amount < 10) {
+          b.append(" ");
+        }
+        b.append(itemName);
+        b.append(" >> ");
+        b.append(amount);
+        b.append(" x ");
+        b.append(DataFilter.formatMoney(mapping.getSingeItemPrice()));
+        b.append("\n");
       }
-
-      int amount = mapping.getAmount();
-
-      if (amount < 10) {
-        b.append(" ");
-      }
-      b.append(itemName);
-      b.append(" >> ");
-      b.append(amount);
-      b.append(" x ");
-      b.append(ProstUser.formatMoney(mapping.getSingeItemPrice()));
-      b.append("\n");
     }
 
     return b.toString();

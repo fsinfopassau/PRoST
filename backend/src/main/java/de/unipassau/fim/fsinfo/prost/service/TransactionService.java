@@ -21,6 +21,8 @@ public class TransactionService {
   private final TransactionRepository history;
   private final UserRepository users;
 
+  public static final BigDecimal MAX_DEPOSIT_VALUE = new BigDecimal("50.0");
+
   @Autowired
   public TransactionService(UserRepository users, TransactionRepository history) {
     this.history = history;
@@ -37,14 +39,19 @@ public class TransactionService {
     return moneyTransfer(sender, receiver, bearer, amount, type);
   }
 
-
   @Transactional
   public Optional<TransactionEntry> moneyTransfer(Optional<ProstUser> sender,
       Optional<ProstUser> receiver,
       Optional<ProstUser> bearer, BigDecimal amount, TransactionType type) {
 
-    if (receiver.isEmpty() || bearer.isEmpty() || amount.scale() > 2) {
-      System.err.println("[TS] :: " + receiver + " " + bearer + " " + amount);
+    if (amount.scale() > 2) {
+      System.err.println("[TS] :: " + amount + " has not the right money-precision!");
+      return Optional.empty();
+    }
+
+    // scale -> Maximum 2 Decimal -> smallest is Cents, no fraction of cents
+    if (receiver.isEmpty() || bearer.isEmpty()) {
+      System.err.println("[TS] :: something is missing :: " + receiver + " " + bearer);
       return Optional.empty();
     }
 
@@ -59,6 +66,7 @@ public class TransactionService {
         return change(receiver.get(), bearer.get(), amount);
       }
       default -> {
+        System.out.println("[TS] :: Transaction-type \"" + type + "\" is not defined");
         return Optional.empty();
       }
     }
@@ -67,41 +75,57 @@ public class TransactionService {
 
   private Optional<TransactionEntry> deposit(ProstUser receiver, ProstUser bearer,
       BigDecimal amount) {
-    if (amount.doubleValue() == 0.0d) {
+    if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+      System.out.println("[TS] :: Only deposit positive values!");
+      return Optional.empty();
+    }
+    if (amount.compareTo(MAX_DEPOSIT_VALUE) > 0) {
+      System.out.println("[TS] :: Max-Deposit amount of " + MAX_DEPOSIT_VALUE.doubleValue() + "!");
       return Optional.empty();
     }
 
-    receiver.setBalance(receiver.getBalance().add(amount.abs()));
+    BigDecimal previous = receiver.getBalance();
+
+    receiver.setBalance(previous.add(amount.abs()));
     users.save(receiver);
 
     TransactionEntry entry = new TransactionEntry(null,
         receiver.getId(),
-        bearer.getId(), TransactionType.DEPOSIT, amount);
+        bearer.getId(), TransactionType.DEPOSIT, previous, amount.abs());
     history.save(entry);
     return Optional.of(entry);
   }
 
   private Optional<TransactionEntry> buy(ProstUser receiver, ProstUser bearer,
       BigDecimal amount) {
-    receiver.setBalance(receiver.getBalance().subtract(amount.abs()));
+
+    if (amount.compareTo(BigDecimal.ZERO) < 0) { // Only Positive Values
+      System.out.println("[TS] :: Buy is with " + amount + " to low");
+      return Optional.empty();
+    }
+
+    BigDecimal previous = receiver.getBalance();
+
+    receiver.setBalance(previous.subtract(amount.abs()));
     receiver.setTotalSpent(receiver.getTotalSpent().abs().add(amount.abs()));
     users.save(receiver);
 
     TransactionEntry entry = new TransactionEntry(null,
         receiver.getId(),
-        bearer.getId(), TransactionType.BUY, amount);
+        bearer.getId(), TransactionType.BUY, previous, amount.abs());
     history.save(entry);
     return Optional.of(entry);
   }
 
   private Optional<TransactionEntry> change(ProstUser receiver, ProstUser bearer,
       BigDecimal amount) {
-    receiver.setBalance(amount.abs());
+    BigDecimal previous = receiver.getBalance();
+    receiver.setBalance(amount);
     users.save(receiver);
 
     TransactionEntry entry = new TransactionEntry(null,
         receiver.getId(),
-        bearer.getId(), TransactionType.CHANGE, amount);
+        bearer.getId(), TransactionType.CHANGE, previous, amount);
     history.save(entry);
     return Optional.of(entry);
   }
