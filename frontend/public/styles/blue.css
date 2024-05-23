@@ -194,13 +194,12 @@ Progress
 */
 
 .progress-bar-background {
-  background-image: url(/public/img/mc_xp-empty.png); /* Background image of the empty bar */
+  background-image: url(../img/mc_xp-empty.png); /* Background image of the empty bar */
 }
 
 .progress-bar-foreground {
-  background-image: url(/public/img/mc_xp.png); /* Background image of the full bar */
+  background-image: url(../img/mc_xp.png); /* Background image of the full bar */
 }
-
 
 /*
 Colors
