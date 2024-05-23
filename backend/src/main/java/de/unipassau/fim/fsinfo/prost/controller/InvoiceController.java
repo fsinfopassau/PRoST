@@ -51,15 +51,14 @@ public class InvoiceController {
   @GetMapping("/me")
   public Page<InvoiceDTO> getPersonalInvoices(
       @RequestParam(defaultValue = "0") int p,
-      @RequestParam(defaultValue = "10") int s,
-      @RequestParam(required = false) Boolean mailed, Authentication authentication) {
+      @RequestParam(defaultValue = "10") int s, Authentication authentication) {
     if (authentication == null) {
       return Page.empty();
     }
 
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-    return invoiceService.getPersonalInvoices(Math.max(0, p), Math.min(Math.max(1, s), 100), mailed,
+    return invoiceService.getInvoices(Math.max(0, p), Math.min(Math.max(1, s), 100), true,
         userDetails.getUsername());
   }
 

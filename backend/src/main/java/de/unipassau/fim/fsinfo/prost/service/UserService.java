@@ -20,7 +20,6 @@ public class UserService {
     this.users = users;
   }
 
-
   @Transactional
   public Optional<ProstUser> createUser(String userName, String displayName, String email,
       boolean manualCreation) {
