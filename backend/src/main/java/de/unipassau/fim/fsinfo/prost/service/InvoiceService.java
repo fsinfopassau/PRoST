@@ -44,33 +44,6 @@ public class InvoiceService {
     this.userRepository = userRepository;
   }
 
-  public Page<InvoiceDTO> getPersonalInvoices(int pageNumber, int pageSize, Boolean mailed,
-      String userId) {
-    Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("timestamp").descending());
-    Page<InvoiceEntry> entriesPage;
-
-    if (userRepository.findById(userId).isEmpty()) {
-      return Page.empty();
-    }
-
-    if (mailed != null) {
-      if (mailed) {
-        entriesPage = invoiceRepository.findByUserIdAndMailedTrueAndPublishedTrue(userId, pageable);
-      } else {
-        entriesPage = invoiceRepository.findByUserIdAndMailedFalseAndPublishedTrue(userId,
-            pageable);
-      }
-    } else {
-      entriesPage = invoiceRepository.findByUserIdAndPublishedTrue(userId, pageable);
-    }
-
-    List<InvoiceDTO> invoiceDTOs = entriesPage.getContent().stream()
-        .map(this::getInvoiceDTO)
-        .collect(Collectors.toList());
-
-    return new PageImpl<>(invoiceDTOs, pageable, invoiceDTOs.size());
-  }
-
   public Page<InvoiceDTO> getInvoices(int pageNumber, int pageSize, Boolean mailed, String userId) {
 
     Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("timestamp").descending());

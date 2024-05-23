@@ -4,9 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Locale;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -34,16 +31,6 @@ public class ProstUser {
     this.enabled = enabled;
     this.balance = new BigDecimal(0);
     this.totalSpent = new BigDecimal(0);
-  }
-
-  public static String formatMoney(BigDecimal amount) {
-    if (amount == null) {
-      amount = new BigDecimal(0);
-    }
-    DecimalFormat df = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.GERMANY);
-    df.setMinimumFractionDigits(2); // Ensure two decimal places
-    df.setMaximumFractionDigits(2); // Ensure two decimal places
-    return df.format(amount);
   }
 }
 

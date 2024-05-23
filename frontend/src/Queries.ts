@@ -598,26 +598,3 @@ export async function mailInvoices(
     return undefined;
   }
 }
-
-export async function publishInvoices(
-  ids: number[]
-): Promise<number[] | undefined> {
-  try {
-    const response = await fetch(`${apiUrl}/api/invoice/publish`, {
-      method: "POST",
-      headers: {
-        Authorization: `Basic ${getEncodedCredentials()}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(ids),
-    });
-
-    if (!response.ok) {
-      return undefined;
-    }
-
-    return (await response.json()) as number[];
-  } catch (error) {
-    return undefined;
-  }
-}

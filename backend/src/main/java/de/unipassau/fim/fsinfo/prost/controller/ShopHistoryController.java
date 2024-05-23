@@ -3,6 +3,7 @@ package de.unipassau.fim.fsinfo.prost.controller;
 import de.unipassau.fim.fsinfo.prost.data.dto.ShopItemHistoryEntryDTO;
 import de.unipassau.fim.fsinfo.prost.security.CustomUserDetailsContextMapper.CustomUserDetails;
 import de.unipassau.fim.fsinfo.prost.service.ShopHistoryService;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
@@ -32,7 +33,13 @@ public class ShopHistoryController {
       @RequestParam(defaultValue = "0") int p,
       @RequestParam(defaultValue = "10") int s,
       @RequestParam(required = false) String receiverId) {
-    return shopHistoryService.getHistory(Math.max(0, p), Math.min(Math.max(1, s), 100), receiverId);
+    if (receiverId == null) {
+      return shopHistoryService.getHistory(Math.max(0, p), Math.min(Math.max(1, s), 100),
+          Optional.empty());
+    } else {
+      return shopHistoryService.getHistory(Math.max(0, p), Math.min(Math.max(1, s), 100),
+          Optional.of(receiverId));
+    }
   }
 
   /**
@@ -51,6 +58,6 @@ public class ShopHistoryController {
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
     return shopHistoryService.getHistory(Math.max(0, p), Math.min(Math.max(1, s), 100),
-        userDetails.getUsername());
+        Optional.of(userDetails.getUsername()));
   }
 }

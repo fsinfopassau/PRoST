@@ -1,5 +1,9 @@
 package de.unipassau.fim.fsinfo.prost.data;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,6 +49,16 @@ public class DataFilter {
     Pattern pattern = Pattern.compile(EMAIL_PATTERN);
     Matcher matcher = pattern.matcher(email);
     return matcher.matches();
+  }
+
+  public static String formatMoney(BigDecimal amount) {
+    if (amount == null) {
+      amount = new BigDecimal(0);
+    }
+    DecimalFormat df = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.GERMANY);
+    df.setMinimumFractionDigits(2); // Ensure two decimal places
+    df.setMaximumFractionDigits(2); // Ensure two decimal places
+    return df.format(amount);
   }
 
 }

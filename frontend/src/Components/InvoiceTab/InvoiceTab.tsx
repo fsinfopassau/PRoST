@@ -117,14 +117,17 @@ export function InvoiceTab() {
           const failed = selectedItems.length - result.length;
           if (result.length > 0) {
             toast.success(
-              `${result.length} Rechnung${result.length > 1 ? "en" : ""
+              `${result.length} Rechnung${
+                result.length > 1 ? "en" : ""
               } versendet!`
             );
           }
 
           if (failed) {
             toast.warn(
-              `${failed} Rechnung${result.length > 1 ? "en" : ""} versendet!`
+              `${failed} Rechnung${
+                result.length > 1 ? "en" : ""
+              } nicht versendet!`
             );
           }
 
@@ -147,7 +150,7 @@ export function InvoiceTab() {
         if (result) {
           toast.warn(
             result.length +
-            ` Rechnung${result.length > 1 ? "en" : ""} gelöscht!`
+              ` Rechnung${result.length > 1 ? "en" : ""} gelöscht!`
           );
           setSelectedItems([]);
           reloadInvoices();
@@ -203,8 +206,8 @@ export function InvoiceTab() {
                   mailed === undefined
                     ? "Button"
                     : mailed
-                      ? "Button good-color"
-                      : "Button danger-color"
+                    ? "Button good-color"
+                    : "Button danger-color"
                 }
               >
                 <EnvelopeClosedIcon />
@@ -217,7 +220,9 @@ export function InvoiceTab() {
               className="SpreadContainer"
               style={{ padding: "0 0.7rem 0.5rem 0.7rem" }}
             >
-              <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+              <div
+                style={{ display: "flex", gap: "1rem", alignItems: "center" }}
+              >
                 {isAllSelected() ? (
                   <div className="CheckBox good-color" onClick={toggleAll}>
                     <CheckIcon />
@@ -252,7 +257,9 @@ export function InvoiceTab() {
                 )}
               </div>
 
-              <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+              <div
+                style={{ display: "flex", gap: "1rem", alignItems: "center" }}
+              >
                 <InvoiceCreation onSubmit={reloadInvoices}>
                   <div className="Button good-color">
                     <FilePlusIcon />
@@ -282,8 +289,9 @@ export function InvoiceTab() {
                   return (
                     <div
                       key={"p" + index}
-                      className={`PageButton ${selectedPage === index ? "Selected" : ""
-                        }`}
+                      className={`PageButton ${
+                        selectedPage === index ? "Selected" : ""
+                      }`}
                       onClick={() => selectPage(index)}
                     >
                       {index + 1}

@@ -1,5 +1,6 @@
 package de.unipassau.fim.fsinfo.prost.service;
 
+import de.unipassau.fim.fsinfo.prost.data.DataFilter;
 import de.unipassau.fim.fsinfo.prost.data.dao.InvoiceEntry;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
@@ -60,7 +61,7 @@ public class MailService {
     }
 
     String text = "Servus " + user.get().getDisplayName() + ",\n\n" +
-        "dein aktueller Kontostand bei der Kaffeekasse beträgt " + ProstUser.formatMoney(
+        "dein aktueller Kontostand bei der Kaffeekasse beträgt " + DataFilter.formatMoney(
         invoice.getBalance()) + ".\n"
         + formattedAmounts(amounts);
 
@@ -165,7 +166,7 @@ public class MailService {
         b.append(" >> ");
         b.append(amount);
         b.append(" x ");
-        b.append(ProstUser.formatMoney(mapping.getSingeItemPrice()));
+        b.append(DataFilter.formatMoney(mapping.getSingeItemPrice()));
         b.append("\n");
       }
     }
