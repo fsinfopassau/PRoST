@@ -68,7 +68,7 @@ h2 {
   justify-content: center;
   margin: 0.3rem 0;
   font-weight: 500;
-  
+
   @media (max-width: 768px) {
     font-size: 2rem;
   }
@@ -81,15 +81,19 @@ h3 {
   justify-content: center;
   margin: 0.2rem 0;
   font-weight: 400;
-  
+
   @media (max-width: 768px) {
     font-size: 1rem;
   }
 }
 
-a,p,li,strong,div {
+a,
+p,
+li,
+strong,
+div {
   @media (max-width: 768px) {
-    font-size: .8rem;
+    font-size: 0.8rem;
   }
 }
 
@@ -273,7 +277,7 @@ a {
 }
 
 #tab-changer > img {
-  padding: .25rem;
+  padding: 0.25rem;
   height: 100%;
 }
 
@@ -284,7 +288,7 @@ a {
   flex-wrap: wrap;
   list-style-type: none;
   height: auto;
-  margin: 0 .75rem;
+  margin: 0 0.75rem;
 }
 
 .TabsTrigger {
@@ -304,7 +308,6 @@ a {
 .TabsTrigger:active {
   position: relative;
 }
-
 
 /* Alignments */
 .SmallGridContainer {
@@ -344,9 +347,17 @@ a {
 }
 
 .AspectRatio {
-  display: flex;
-  place-items: center;
+  position: relative; /* Establishes a new positioning context */
+  width: 100%; /* Adjust based on your layout needs */
+}
+
+.image-fitted {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
+  object-fit: contain; /* Scales the image down to fit the container while preserving aspect ratio */
 }
 
 /* General */
@@ -361,7 +372,7 @@ a {
   height: 3rem;
   cursor: pointer;
   @media (max-width: 768px) {
-    font-size: .75rem;
+    font-size: 0.75rem;
     height: 2rem;
   }
 }
@@ -392,7 +403,7 @@ a {
   height: 2rem;
   min-width: 10rem;
   @media (max-width: 768px) {
-    font-size: .9rem;
+    font-size: 0.9rem;
     height: 1.5rem;
     min-width: 5rem;
   }
@@ -469,19 +480,19 @@ a {
     .date {
       min-width: 5.5rem;
     }
-  
+
     .time {
       min-width: 3.25rem;
     }
-  
+
     .balance {
       min-width: 5rem;
     }
-  
+
     .amount {
       min-width: 3rem;
     }
-  
+
     .name {
       min-width: 5rem;
     }
@@ -496,7 +507,7 @@ a {
   min-width: 21rem;
   width: 100%;
   @media (max-width: 768px) {
-    font-size: .75rem;
+    font-size: 0.75rem;
   }
 }
 .table-entry th {
@@ -651,7 +662,6 @@ a {
   padding: 0.3rem;
   min-width: 2.5rem;
 }
-
 
 /*
 Progress

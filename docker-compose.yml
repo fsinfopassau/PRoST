@@ -9,7 +9,7 @@ services:
         - VITE_API_URL=http://localhost:8081
         - VITE_BASE_PATH=/prost
     ports:
-      - "8080:80"
+      - "80:80"
   backend:
     depends_on: [ ldap, mariadb ]
     container_name: PRoST-Backend
