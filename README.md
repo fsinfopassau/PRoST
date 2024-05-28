@@ -5,12 +5,15 @@
 Ein digitales Kaffeekassen-System
 der [Fachschaft für Informatik und Mathematik der Universität Passau](https://fsinfo.fim.uni-passau.de/).
 
+![Shop-Ansicht](img/buymenu.png)
+
+## Features
+
+Eine [Feature-Liste](https://github.com/fsinfopassau/PRoST/wiki/Features) mit Nutzungsanleitung ist im [Wiki](https://github.com/fsinfopassau/PRoST/wiki) zu finden 
+
 ## Deploy
 
-Docker-Compose-Environment:
-
-- VITE_API_URL: URL für die Backend-API
-- /data : Ordner für Datenbank und Item-Bilder
+Details stehen unter [Setup im Wiki](https://github.com/fsinfopassau/PRoST/wiki/Setup)
 
 **Build & Run Compose**:
 
@@ -21,6 +24,8 @@ docker compose build
 ```bash
 docker compose up
 ```
+
+Die Seite ist unter [localhost/prost](http://localhost/prost) zu finden
 
 ## Development
 
@@ -33,6 +38,8 @@ cd frontend
 npm install
 npm run dev
 ```
+
+Frontend ist unter [localhost:8080](http://localhost:8080) zu finden
 
 **Backend**:
 
