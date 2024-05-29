@@ -92,13 +92,13 @@ export function ItemCheckout() {
           </div>
         </div>
         <div className="CheckoutCounter">
-          <button className="Button" onClick={decrement}>
+          <button className="Button icon" onClick={decrement}>
             <ChevronLeftIcon height={60} width={60} />
           </button>
           <div>
             <div>{amount}</div>
           </div>
-          <button className="Button" onClick={increment}>
+          <button className="Button icon" onClick={increment}>
             <ChevronRightIcon height={60} width={60} />
           </button>
         </div>

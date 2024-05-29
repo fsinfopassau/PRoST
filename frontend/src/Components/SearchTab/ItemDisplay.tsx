@@ -30,7 +30,7 @@ export function ItemDisplay(props: { item: ShopItem }) {
         <AspectRatio ratio={1 / 1} className="AspectRatio">
           <img src={imageUrl} alt="Item Image" className="image-fitted" />
         </AspectRatio>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div className="item-desc">
           <div>{item.displayName}</div>
           <div className="bold">{formatMoney(item.price)}</div>
         </div>

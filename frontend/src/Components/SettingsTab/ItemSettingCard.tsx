@@ -137,7 +137,7 @@ export function ItemSettingCard(props: {
           title="Gegenstand löschen?"
           onSubmit={deleteItem}
           trigger={
-            <div className="Button danger-color">
+            <div className="Button icon danger-color">
               <Cross1Icon />
             </div>
           }

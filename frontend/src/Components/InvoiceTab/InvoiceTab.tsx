@@ -204,10 +204,10 @@ export function InvoiceTab() {
                 onClick={cycleMailed}
                 className={
                   mailed === undefined
-                    ? "Button"
+                    ? "Button icon"
                     : mailed
-                    ? "Button good-color"
-                    : "Button danger-color"
+                    ? "Button icon good-color"
+                    : "Button icon danger-color"
                 }
               >
                 <EnvelopeClosedIcon />
@@ -238,7 +238,7 @@ export function InvoiceTab() {
                       invoices={getSelectedInvoices()}
                       onSubmit={deleteSelected}
                     >
-                      <div className="Button danger-color">
+                      <div className="Button icon danger-color">
                         <FileMinusIcon />
                       </div>
                     </ConfirmInvoices>
@@ -247,7 +247,7 @@ export function InvoiceTab() {
                       invoices={getSelectedInvoices()}
                       onSubmit={mailSelected}
                     >
-                      <div className="Button important-color">
+                      <div className="Button icon important-color">
                         <PaperPlaneIcon />
                       </div>
                     </ConfirmInvoices>
@@ -257,11 +257,9 @@ export function InvoiceTab() {
                 )}
               </div>
 
-              <div
-                style={{ display: "flex", gap: "1rem", alignItems: "center" }}
-              >
+              <div style={{ gap: "1rem", alignItems: "center" }}>
                 <InvoiceCreation onSubmit={reloadInvoices}>
-                  <div className="Button good-color">
+                  <div className="Button icon good-color">
                     <FilePlusIcon />
                   </div>
                 </InvoiceCreation>

@@ -40,17 +40,13 @@ export function UserSettingCard(props: {
   function applyTransaction() {
     const money = getValidMoney(transactionAmount);
     if (money) {
-      createTransaction(
-        user,
-        money.toString(),
-        "deposit"
-      ).then((result) => {
+      createTransaction(user, money.toString(), "deposit").then((result) => {
         if (result) {
           toast.success(
             formatMoney(Math.abs(money)) +
-            ' wurde "' +
-            user.id +
-            '" gutgeschrieben!'
+              ' wurde "' +
+              user.id +
+              '" gutgeschrieben!'
           );
           setTransactionAmount("");
           onUpdate();
@@ -116,12 +112,8 @@ export function UserSettingCard(props: {
 
   function setTotalSpent(spentTotal: string) {
     const money = getValidMoney(spentTotal);
-    if (money) {
-      changeUser(
-        user,
-        money.toString(),
-        "moneySpent"
-      ).then((result) => {
+    if (money != undefined) {
+      changeUser(user, money.toString(), "moneySpent").then((result) => {
         if (result) {
           toast.success("Gesamtausgaben geändert.");
           onUpdate();
@@ -137,11 +129,7 @@ export function UserSettingCard(props: {
   function setBalance(newBalance: string) {
     const money = getValidMoney(newBalance);
     if (money) {
-      createTransaction(
-        user,
-        money.toString(),
-        "change"
-      ).then((result) => {
+      createTransaction(user, money.toString(), "change").then((result) => {
         if (result) {
           toast.success("Kontostand geändert.");
           onUpdate();
@@ -157,8 +145,7 @@ export function UserSettingCard(props: {
   function isTransactionAmountValid() {
     const money = getValidMoney(transactionAmount);
 
-    if (transactionAmount.length === 0)
-      return false;
+    if (transactionAmount.length === 0) return false;
 
     if (money && money > 0 && money <= 50) {
       return true;
@@ -199,12 +186,18 @@ export function UserSettingCard(props: {
           <input
             type="text"
             placeholder="Betrag"
-            className={transactionAmount.length === 0 ? "Input" : isTransactionAmountValid() ? "Input good-color" : "Input danger-color"}
+            className={
+              transactionAmount.length === 0
+                ? "Input"
+                : isTransactionAmountValid()
+                ? "Input good-color"
+                : "Input danger-color"
+            }
             value={transactionAmount}
             onKeyDown={handleKeyDown}
             onChange={(e) => setTransactionAmount(e.target.value)}
           />
-          <div className="Button good-color" onClick={applyTransaction}>
+          <div className="Button good-color icon" onClick={applyTransaction}>
             <PlusIcon />
           </div>
         </div>
@@ -234,7 +227,7 @@ export function UserSettingCard(props: {
               title="Nutzer löschen?"
               onSubmit={deleteItem}
               trigger={
-                <div className="Button danger-color">
+                <div className="Button icon danger-color">
                   <Cross1Icon />
                 </div>
               }
