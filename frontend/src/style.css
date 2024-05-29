@@ -703,3 +703,32 @@ Progress
   font-weight: 600;
   font-style: bold;
 }
+
+/* Standard Colors */
+
+.danger-color {
+  color: #ff7777;
+  border-color: #ff7777;
+}
+.danger-color:focus {
+  color: red;
+  border-color: red;
+}
+
+.good-color {
+  color: #119911;
+  border-color: #119911;
+}
+.good-color:focus {
+  color: #116611;
+  border-color: #116611;
+}
+
+.important-color {
+  color: #ffaf1b;
+  border-color: #ffaf1b;
+}
+.important-color:focus {
+  color: orange;
+  border-color: orange;
+}
