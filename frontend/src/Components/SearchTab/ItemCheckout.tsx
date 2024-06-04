@@ -48,14 +48,18 @@ export function ItemCheckout() {
   function checkout() {
     if (userId && itemId) {
       console.log("checkout", userId, itemId);
-      buyItem(userId, itemId, amount).then((result) => {
-        if (result) {
-          toast(amount + "x " + item?.displayName + " gekauft!");
-        } else {
+      buyItem(userId, itemId, amount)
+        .then((result) => {
+          if (result) {
+            toast(amount + "x " + item?.displayName + " gekauft!");
+            navigate("/");
+          } else {
+            toast.error(item?.displayName + " konnte nicht gekauft werden!");
+          }
+        })
+        .catch(() => {
           toast.error(item?.displayName + " konnte nicht gekauft werden!");
-        }
-        navigate("/");
-      });
+        });
     }
   }
 
