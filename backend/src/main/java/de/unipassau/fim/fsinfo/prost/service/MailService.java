@@ -24,10 +24,10 @@ public class MailService {
   @Value("${MAIL_SENDER_ADDR:addr@test.com}")
   private String mailSenderAddr;
 
-  @Value("${MAIL_USER_NAME}")
+  @Value("${MAIL_USER_NAME:}")
   private String mailUserName;
 
-  @Value("${MAIL_USER_PASSWORD}")
+  @Value("${MAIL_USER_PASSWORD:}")
   private String mailUserPassword;
 
   @Value("${MAIL_HOST_NAME:smtp.test.com}")
