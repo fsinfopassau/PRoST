@@ -21,13 +21,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class MailService {
 
-  @Value("${MAIL_USER_NAME:Username}")
-  private String mailUserName;
-
-  @Value("${MAIL_SENDER_ADDR:Username}")
+  @Value("${MAIL_SENDER_ADDR:addr@test.com}")
   private String mailSenderAddr;
 
-  @Value("${MAIL_USER_PASSWORD:password}")
+  @Value("${MAIL_USER_NAME}")
+  private String mailUserName;
+
+  @Value("${MAIL_USER_PASSWORD}")
   private String mailUserPassword;
 
   @Value("${MAIL_HOST_NAME:smtp.test.com}")
@@ -130,7 +130,7 @@ public class MailService {
       email.setHostName(mailHostName);
       email.setSmtpPort(mailHostPort);
       if (mailUserName != null && !mailUserName.isEmpty()) {
-        email.setAuthentication(mailUserName, mailUserPassword);
+        email.setAuthentication(mailUserName, mailUserPassword == null ? "" : mailUserPassword);
       }
       email.setFrom(mailSenderAddr);
       email.addTo(address);
