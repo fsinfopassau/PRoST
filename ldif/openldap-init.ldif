@@ -6,7 +6,13 @@ o: FSinfo
 
 dn: ou=users,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
 changetype: add
-ou: groups
+ou: users
+objectClass: organizationalUnit
+objectClass: top
+
+dn: ou=serviceAccounts,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
+changetype: add
+ou: serviceAccounts
 objectClass: organizationalUnit
 objectClass: top
 
@@ -30,14 +36,12 @@ objectClass: top
 objectClass: uidObject
 userPassword:: cXVpZXRzY2hpZXBhc3N3b3Jk
 
-dn: uid=prostkiosk,ou=users,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
+dn: uid=prostkiosk,ou=serviceAccounts,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
 changetype: add
 uid: prostkiosk
-cn: Kiosk
-sn: Prost
-objectClass: person
+objectClass: account
 objectClass: top
-objectClass: uidObject
+objectClass: simpleSecurityObject
 userPassword:: cXVpZXRzY2hpZXBhc3N3b3Jk
 
 dn: ou=groups,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
@@ -59,12 +63,5 @@ dn: cn=kaffeekasse,ou=groups,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
 changetype: add
 member: uid=prostadmin,ou=users,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
 cn: kaffeekasse
-objectClass: groupOfNames
-objectClass: top
-
-dn: cn=kiosk,ou=groups,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
-changetype: add
-member: uid=prostkiosk,ou=users,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
-cn: kiosk
 objectClass: groupOfNames
 objectClass: top

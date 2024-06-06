@@ -22,6 +22,13 @@ server:
   port: ${PORT:8081}
   error:
     include-stacktrace: never
+logging:
+  level:
+    org:
+      springframework:
+        security: ${LOGGING_LEVEL:INFO}
+        web: ${LOGGING_LEVEL:INFO}
+        data: ${LOGGING_LEVEL:INFO}
 prost:
   save-location: ${DATA_LOCATION:prost-data}
   ldap-uri: ${LDAP_URI:ldap://ldap:1389/dc=fsinfo,dc=fim,dc=uni-passau,dc=de}
