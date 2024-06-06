@@ -321,10 +321,12 @@ a {
 .GridContainer {
   display: grid;
   grid-auto-rows: min-content;
-  grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(35rem, 1fr));
 
   @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
   }
 }
 
@@ -701,35 +703,6 @@ Progress
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: 600;
-}
-
-/* Standard Colors */
-
-.danger-color {
-  color: #ff7777;
-  border-color: #ff7777;
-}
-.danger-color:focus {
-  color: red;
-  border-color: red;
-}
-
-.good-color {
-  color: #119911;
-  border-color: #119911;
-}
-.good-color:focus {
-  color: #116611;
-  border-color: #116611;
-}
-
-.important-color {
-  color: #ffaf1b;
-  border-color: #ffaf1b;
-}
-.important-color:focus {
-  color: orange;
-  border-color: orange;
 }
 
 /* Theme-Template */

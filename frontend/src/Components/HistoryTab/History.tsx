@@ -5,7 +5,7 @@ export function History() {
   return (
     <>
       <div className="SingleCardContainer">
-        <div style={{ width: "100rem" }}>
+        <div>
           <ShopHistory personal={false} />
           <TransactionHistory personal={false} />
         </div>

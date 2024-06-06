@@ -83,7 +83,7 @@ export function ShopHistory(props: { personal: boolean }) {
 
   return (
     <>
-      <ScrollArea className="DisplayCard" style={{ maxWidth: "100rem" }}>
+      <ScrollArea className="DisplayCard">
         <ScrollAreaViewport>
           <h2>Historie</h2>
 
@@ -119,8 +119,9 @@ export function ShopHistory(props: { personal: boolean }) {
                 return (
                   <div
                     key={"p" + index}
-                    className={`PageButton ${selectedPage === index ? "Selected" : ""
-                      }`}
+                    className={`PageButton ${
+                      selectedPage === index ? "Selected" : ""
+                    }`}
                     onClick={() => selectPage(index)}
                   >
                     {index + 1}
