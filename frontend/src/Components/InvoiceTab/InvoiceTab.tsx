@@ -117,16 +117,14 @@ export function InvoiceTab() {
           const failed = selectedItems.length - result.length;
           if (result.length > 0) {
             toast.success(
-              `${result.length} Rechnung${
-                result.length > 1 ? "en" : ""
+              `${result.length} Rechnung${result.length > 1 ? "en" : ""
               } versendet!`
             );
           }
 
           if (failed) {
             toast.warn(
-              `${failed} Rechnung${
-                result.length > 1 ? "en" : ""
+              `${failed} Rechnung${result.length > 1 ? "en" : ""
               } nicht versendet!`
             );
           }
@@ -150,7 +148,7 @@ export function InvoiceTab() {
         if (result) {
           toast.warn(
             result.length +
-              ` Rechnung${result.length > 1 ? "en" : ""} gelöscht!`
+            ` Rechnung${result.length > 1 ? "en" : ""} gelöscht!`
           );
           setSelectedItems([]);
           reloadInvoices();
@@ -188,7 +186,7 @@ export function InvoiceTab() {
   return (
     <>
       <div className="SingleCardContainer">
-        <ScrollArea className="DisplayCard" style={{ maxWidth: "100rem" }}>
+        <ScrollArea className="DisplayCard">
           <ScrollAreaViewport>
             <h2>Rechnungen</h2>
 
@@ -206,8 +204,8 @@ export function InvoiceTab() {
                   mailed === undefined
                     ? "Button icon"
                     : mailed
-                    ? "Button icon good-color"
-                    : "Button icon danger-color"
+                      ? "Button icon good-color"
+                      : "Button icon danger-color"
                 }
               >
                 <EnvelopeClosedIcon />
@@ -287,9 +285,8 @@ export function InvoiceTab() {
                   return (
                     <div
                       key={"p" + index}
-                      className={`PageButton ${
-                        selectedPage === index ? "Selected" : ""
-                      }`}
+                      className={`PageButton ${selectedPage === index ? "Selected" : ""
+                        }`}
                       onClick={() => selectPage(index)}
                     >
                       {index + 1}

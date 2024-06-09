@@ -54,7 +54,6 @@ dn: cn=fsinfo,ou=groups,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
 changetype: add
 member: uid=quietschie,ou=users,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
 member: uid=prostadmin,ou=users,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
-member: uid=prostkiosk,ou=users,dc=fsinfo,dc=fim,dc=uni-passau,dc=de
 cn: fsinfo
 objectClass: groupOfNames
 objectClass: top
