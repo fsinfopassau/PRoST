@@ -90,7 +90,7 @@ public class ShopService {
       return Optional.empty();
     }
 
-    if (price == null) {
+    if (!DataFilter.isValidMoney(price)) {
       System.out.println("[SS] :: The price is invalid or null");
       return Optional.empty();
     }
@@ -150,13 +150,20 @@ public class ShopService {
     try {
       if (item.isPresent()) {
         BigDecimal price = new BigDecimal(value);
-        if (price.compareTo(MAX_PRICE) > 0) {
-          System.out.println("[SS] :: Price is with " + price + " to high");
-          return Optional.empty();
-        } else if (price.compareTo(MIN_PRICE) < 0) {
-          System.out.println("[SS] :: Price is with " + price + " to low");
+
+        if (!DataFilter.isValidMoney(price)) {
+          System.out.println("[SS] :: Price-value with " + price + " not valid!");
           return Optional.empty();
         }
+
+        if (price.compareTo(MAX_PRICE) > 0) {
+          System.out.println("[SS] :: Price is with " + price + " too high!");
+          return Optional.empty();
+        } else if (price.compareTo(MIN_PRICE) < 0) {
+          System.out.println("[SS] :: Price is with " + price + " too low!");
+          return Optional.empty();
+        }
+
         item.get().setPrice(price);
         itemRepository.save(item.get());
         return item;

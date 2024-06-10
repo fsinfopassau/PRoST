@@ -44,9 +44,9 @@ export function UserSettingCard(props: {
         if (result) {
           toast.success(
             formatMoney(Math.abs(money)) +
-              ' wurde "' +
-              user.id +
-              '" gutgeschrieben!'
+            ' wurde "' +
+            user.id +
+            '" gutgeschrieben!'
           );
           setTransactionAmount("");
           onUpdate();
@@ -128,7 +128,7 @@ export function UserSettingCard(props: {
 
   function setBalance(newBalance: string) {
     const money = getValidMoney(newBalance);
-    if (money) {
+    if (money != undefined) {
       createTransaction(user, money.toString(), "change").then((result) => {
         if (result) {
           toast.success("Kontostand geändert.");
@@ -190,8 +190,8 @@ export function UserSettingCard(props: {
               transactionAmount.length === 0
                 ? "Input"
                 : isTransactionAmountValid()
-                ? "Input good-color"
-                : "Input danger-color"
+                  ? "Input good-color"
+                  : "Input danger-color"
             }
             value={transactionAmount}
             onKeyDown={handleKeyDown}

@@ -115,6 +115,13 @@ public class ShopServiceTest {
   }
 
   @Test
+  public void testCreateItem_WrongMoneyPrecision_ReturnsEmpty() {
+    Optional<ShopItem> result = shopService.createItem("moneyTest", "Money?", "Category 1",
+        new BigDecimal("10.001"));
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
   public void testCreateItem_DuplicateIdentifier_ReturnsEmpty() {
     when(itemRepository.existsById(shopItem.getId())).thenReturn(true);
     Optional<ShopItem> result = shopService.createItem(shopItem.getId(), "Item 1", "Category 1",
@@ -192,6 +199,14 @@ public class ShopServiceTest {
     when(itemRepository.findById(shopItem.getId())).thenReturn(Optional.empty());
 
     Optional<ShopItem> result = shopService.changePrice(shopItem.getId(), "invalid");
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  public void testChangePrice_PricePrecisionError_ReturnsEmpty() {
+    when(itemRepository.findById(shopItem.getId())).thenReturn(Optional.of(shopItem));
+
+    Optional<ShopItem> result = shopService.changePrice(shopItem.getId(), "10.001");
     assertTrue(result.isEmpty());
   }
 

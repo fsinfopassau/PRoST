@@ -18,7 +18,7 @@ public class DataFilter {
       return false;
     }
     if (value.length() > MAX_NAME_LENGTH) {
-      System.out.println("[DF] :: " + name + " size to large");
+      System.out.println("[DF] :: " + name + " size too large");
       return false;
     }
     return true;
@@ -59,6 +59,13 @@ public class DataFilter {
     df.setMinimumFractionDigits(2); // Ensure two decimal places
     df.setMaximumFractionDigits(2); // Ensure two decimal places
     return df.format(amount);
+  }
+
+  public static boolean isValidMoney(BigDecimal amount) {
+    if (amount == null) {
+      return false;
+    }
+    return amount.scale() <= 2;
   }
 
 }

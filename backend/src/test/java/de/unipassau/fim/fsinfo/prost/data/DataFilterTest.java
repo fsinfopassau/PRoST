@@ -99,5 +99,25 @@ public class DataFilterTest {
   public void testFormatMoney_NegativeAmount() {
     assertEquals("-1.234,56 €", DataFilter.formatMoney(new BigDecimal("-1234.56")));
   }
+
+  @Test
+  public void testValidMoney_RightDecimalAmount() {
+    assertTrue(DataFilter.isValidMoney(new BigDecimal("-1234.56")));
+  }
+
+  @Test
+  public void testValidMoney_RightDecimalAmount2() {
+    assertTrue(DataFilter.isValidMoney(new BigDecimal("-1234")));
+  }
+
+  @Test
+  public void testValidMoney_WrongDecimalAmount() {
+    assertFalse(DataFilter.isValidMoney(new BigDecimal("-1234.563")));
+  }
+
+  @Test
+  public void testValidMoney_NullAmount() {
+    assertFalse(DataFilter.isValidMoney(null));
+  }
 }
 

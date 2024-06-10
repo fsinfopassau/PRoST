@@ -124,6 +124,16 @@ public class TransactionServiceTest {
   }
 
   @Test
+  public void testMoneyTransfer_Buy_WrongMoneyPresicion() {
+    receiver.setBalance(new BigDecimal("20.00"));
+
+    Optional<TransactionEntry> result = transactionService.moneyTransfer(Optional.of(receiver),
+        Optional.of(receiver), Optional.of(bearer), new BigDecimal("10.001"), TransactionType.BUY);
+
+    assertFalse(result.isPresent());
+  }
+
+  @Test
   public void testMoneyTransfer_Change_SetsBalance() {
     receiver.setBalance(new BigDecimal("20.00"));
     when(transactionRepository.save(any(TransactionEntry.class))).thenReturn(transactionEntry);
