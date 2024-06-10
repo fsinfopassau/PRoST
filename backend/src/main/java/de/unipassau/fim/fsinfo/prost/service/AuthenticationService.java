@@ -76,15 +76,22 @@ public class AuthenticationService {
 
     List<UserAccessRole> userRoles = new ArrayList<>();
 
+    if (userDetails != null && userDetails.isServiceAccount()) {
+      userRoles.add(UserAccessRole.KIOSK);
+    }
+
     authentication.getAuthorities().forEach(authority -> {
       if (authority != null) {
         try {
           UserAccessRole role = UserAccessRole.valueOf(authority.getAuthority());
-          userRoles.add(role);
+          if (!userRoles.contains(role)) {
+            userRoles.add(role);
+          }
         } catch (IllegalArgumentException e) {
           System.err.println(
               "[AC] :: Could not map authority " + authority.getAuthority()
-                  + " to UserAccessRole of User " + userDetails.getUsername() + "!");
+                  + " to UserAccessRole of User " + (userDetails == null ? "[No UserDetails]"
+                  : userDetails.getUsername()) + "!");
         }
       }
     });

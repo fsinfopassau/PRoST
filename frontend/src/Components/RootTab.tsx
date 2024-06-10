@@ -5,6 +5,7 @@ import { getOwnUser } from "../Queries";
 import { ErrorComponent } from "./Util/ErrorTab";
 import { UserContainer } from "./SearchTab/UserContainer";
 import { PersonalUserOverview } from "./PersonalView/PersonalUserOverview";
+import { BASE_PATH } from "./App";
 
 export function RootTab(props: { switchTheme: () => void }) {
   const [user, setUser] = useState<User | undefined>(undefined);
@@ -25,8 +26,9 @@ export function RootTab(props: { switchTheme: () => void }) {
         <h1>
           <img
             onClick={props.switchTheme}
-            src="icons/happy-manje/happy beer.svg"
+            src={`${BASE_PATH}/icons/happy-manje/happy beer.svg`}
             id="MainIcon"
+            alt="Logo"
           />
           PRoST
         </h1>

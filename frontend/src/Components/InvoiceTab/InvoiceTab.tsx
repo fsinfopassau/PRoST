@@ -117,16 +117,14 @@ export function InvoiceTab() {
           const failed = selectedItems.length - result.length;
           if (result.length > 0) {
             toast.success(
-              `${result.length} Rechnung${
-                result.length > 1 ? "en" : ""
+              `${result.length} Rechnung${result.length > 1 ? "en" : ""
               } versendet!`
             );
           }
 
           if (failed) {
             toast.warn(
-              `${failed} Rechnung${
-                result.length > 1 ? "en" : ""
+              `${failed} Rechnung${result.length > 1 ? "en" : ""
               } nicht versendet!`
             );
           }
@@ -150,7 +148,7 @@ export function InvoiceTab() {
         if (result) {
           toast.warn(
             result.length +
-              ` Rechnung${result.length > 1 ? "en" : ""} gelöscht!`
+            ` Rechnung${result.length > 1 ? "en" : ""} gelöscht!`
           );
           setSelectedItems([]);
           reloadInvoices();
@@ -188,7 +186,7 @@ export function InvoiceTab() {
   return (
     <>
       <div className="SingleCardContainer">
-        <ScrollArea className="DisplayCard" style={{ maxWidth: "100rem" }}>
+        <ScrollArea className="DisplayCard">
           <ScrollAreaViewport>
             <h2>Rechnungen</h2>
 
@@ -204,10 +202,10 @@ export function InvoiceTab() {
                 onClick={cycleMailed}
                 className={
                   mailed === undefined
-                    ? "Button"
+                    ? "Button icon"
                     : mailed
-                    ? "Button good-color"
-                    : "Button danger-color"
+                      ? "Button icon good-color"
+                      : "Button icon danger-color"
                 }
               >
                 <EnvelopeClosedIcon />
@@ -238,7 +236,7 @@ export function InvoiceTab() {
                       invoices={getSelectedInvoices()}
                       onSubmit={deleteSelected}
                     >
-                      <div className="Button danger-color">
+                      <div className="Button icon danger-color">
                         <FileMinusIcon />
                       </div>
                     </ConfirmInvoices>
@@ -247,7 +245,7 @@ export function InvoiceTab() {
                       invoices={getSelectedInvoices()}
                       onSubmit={mailSelected}
                     >
-                      <div className="Button important-color">
+                      <div className="Button icon important-color">
                         <PaperPlaneIcon />
                       </div>
                     </ConfirmInvoices>
@@ -257,11 +255,9 @@ export function InvoiceTab() {
                 )}
               </div>
 
-              <div
-                style={{ display: "flex", gap: "1rem", alignItems: "center" }}
-              >
+              <div style={{ gap: "1rem", alignItems: "center" }}>
                 <InvoiceCreation onSubmit={reloadInvoices}>
-                  <div className="Button good-color">
+                  <div className="Button icon good-color">
                     <FilePlusIcon />
                   </div>
                 </InvoiceCreation>
@@ -289,9 +285,8 @@ export function InvoiceTab() {
                   return (
                     <div
                       key={"p" + index}
-                      className={`PageButton ${
-                        selectedPage === index ? "Selected" : ""
-                      }`}
+                      className={`PageButton ${selectedPage === index ? "Selected" : ""
+                        }`}
                       onClick={() => selectPage(index)}
                     >
                       {index + 1}

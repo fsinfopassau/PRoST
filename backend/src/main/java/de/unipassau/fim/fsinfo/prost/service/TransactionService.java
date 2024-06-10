@@ -1,5 +1,6 @@
 package de.unipassau.fim.fsinfo.prost.service;
 
+import de.unipassau.fim.fsinfo.prost.data.DataFilter;
 import de.unipassau.fim.fsinfo.prost.data.TransactionType;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.TransactionEntry;
@@ -44,7 +45,7 @@ public class TransactionService {
       Optional<ProstUser> receiver,
       Optional<ProstUser> bearer, BigDecimal amount, TransactionType type) {
 
-    if (amount.scale() > 2) {
+    if (!DataFilter.isValidMoney(amount)) {
       System.err.println("[TS] :: " + amount + " has not the right money-precision!");
       return Optional.empty();
     }
@@ -100,7 +101,7 @@ public class TransactionService {
       BigDecimal amount) {
 
     if (amount.compareTo(BigDecimal.ZERO) < 0) { // Only Positive Values
-      System.out.println("[TS] :: Buy is with " + amount + " to low");
+      System.out.println("[TS] :: Buy is with " + amount + " too low");
       return Optional.empty();
     }
 

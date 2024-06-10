@@ -1,7 +1,4 @@
 @import "@radix-ui/colors/black-alpha.css";
-@import "@radix-ui/colors/blue.css";
-@import "@radix-ui/colors/mauve.css";
-@import "@radix-ui/colors/violet.css";
 /*add new radix-ui colors used for themes*/
 
 * {
@@ -68,7 +65,7 @@ h2 {
   justify-content: center;
   margin: 0.3rem 0;
   font-weight: 500;
-  
+
   @media (max-width: 768px) {
     font-size: 2rem;
   }
@@ -81,15 +78,19 @@ h3 {
   justify-content: center;
   margin: 0.2rem 0;
   font-weight: 400;
-  
+
   @media (max-width: 768px) {
     font-size: 1rem;
   }
 }
 
-a,p,li,strong,div {
+a,
+p,
+li,
+strong,
+div {
   @media (max-width: 768px) {
-    font-size: .8rem;
+    font-size: 0.8rem;
   }
 }
 
@@ -97,7 +98,10 @@ svg {
   margin: 5px;
 }
 
-a {
+a,[aria-haspopup="dialog"] {
+  * {
+    cursor: pointer;
+  }
   cursor: pointer;
 }
 
@@ -111,7 +115,6 @@ a {
   font-size: 12px;
   color: black;
   cursor: pointer;
-  transition: background-color 0.3s ease;
   border-radius: 10000px;
 
   @media (max-width: 768px) {
@@ -273,7 +276,7 @@ a {
 }
 
 #tab-changer > img {
-  padding: .25rem;
+  padding: 0.25rem;
   height: 100%;
 }
 
@@ -284,7 +287,7 @@ a {
   flex-wrap: wrap;
   list-style-type: none;
   height: auto;
-  margin: 0 .75rem;
+  margin: 0 0.75rem;
 }
 
 .TabsTrigger {
@@ -296,7 +299,6 @@ a {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  transition: background-color 0.2s;
 }
 .TabsTrigger * {
   cursor: pointer;
@@ -304,7 +306,6 @@ a {
 .TabsTrigger:active {
   position: relative;
 }
-
 
 /* Alignments */
 .SmallGridContainer {
@@ -321,18 +322,34 @@ a {
 .GridContainer {
   display: grid;
   grid-auto-rows: min-content;
-  grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(35rem, 1fr));
 
   @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
   }
 }
 
 .SingleCardContainer {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   height: 100%;
   width: 100%;
+
+  @media (max-width: 768px) {
+    padding: 0 0.8rem;
+  }
+}
+.SingleCardContainer > .DisplayCard {
+  min-width: 40rem;
+  max-width: 100rem;
+
+  @media (max-width: 768px) {
+    min-width: 0rem;
+    width: 100%;
+  }
 }
 
 .SpreadContainer {
@@ -344,14 +361,24 @@ a {
 }
 
 .AspectRatio {
-  display: flex;
-  place-items: center;
+  position: relative; /* Establishes a new positioning context */
+  width: 100%; /* Adjust based on your layout needs */
+}
+
+.image-fitted {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
+  object-fit: contain; /* Scales the image down to fit the container while preserving aspect ratio */
 }
 
 /* General */
 
 .Button {
+  transition: background-color 150ms ease;
+  transition: border-color 150ms ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -361,7 +388,7 @@ a {
   height: 3rem;
   cursor: pointer;
   @media (max-width: 768px) {
-    font-size: .75rem;
+    font-size: 0.75rem;
     height: 2rem;
   }
 }
@@ -382,6 +409,8 @@ a {
 }
 
 .Input {
+  transition: background-color 150ms ease;
+  transition: border-color 150ms ease;
   flex: 1;
   align-items: center;
   justify-content: center;
@@ -392,7 +421,7 @@ a {
   height: 2rem;
   min-width: 10rem;
   @media (max-width: 768px) {
-    font-size: .9rem;
+    font-size: 0.9rem;
     height: 1.5rem;
     min-width: 5rem;
   }
@@ -408,7 +437,6 @@ a {
 
 .icon {
   min-width: 1rem;
-  width: 10%;
   text-align: left;
 
   div {
@@ -416,6 +444,11 @@ a {
     justify-content: flex-start;
     align-items: center;
   }
+}
+
+.item-desc {
+  display: flex;
+  justify-content: space-between;
 }
 
 /* Table */
@@ -469,19 +502,19 @@ a {
     .date {
       min-width: 5.5rem;
     }
-  
+
     .time {
       min-width: 3.25rem;
     }
-  
+
     .balance {
       min-width: 5rem;
     }
-  
+
     .amount {
       min-width: 3rem;
     }
-  
+
     .name {
       min-width: 5rem;
     }
@@ -496,7 +529,7 @@ a {
   min-width: 21rem;
   width: 100%;
   @media (max-width: 768px) {
-    font-size: .75rem;
+    font-size: 0.75rem;
   }
 }
 .table-entry th {
@@ -547,9 +580,9 @@ a {
   min-height: 44px;
 }
 
-/* Separato */
+/* Separator */
 .Separator {
-  background-color: var(--violet-11);
+  background-color: var(--primary);
 }
 .Separator[data-orientation="horizontal"] {
   height: 2px;
@@ -562,16 +595,22 @@ a {
 
 /* Switch */
 .SwitchRoot {
+  transition: background-color 150ms ease;
+  transition: border-color 150ms ease;
   position: relative;
   width: 2.3rem;
   height: 1.4rem;
   border-radius: 9999px;
+  cursor: pointer;
 }
 .SwitchThumb {
+  transition: background-color 150ms ease;
+  transition: border-color 150ms ease;
+  cursor: pointer;
   display: block;
-  width: 1rem;
-  height: 1rem;
-  transition: transform 100ms;
+  width: 14px;
+  height: 14px;
+  transition: transform 200ms;
   will-change: transform;
   transform: translateX(4px);
   border-radius: 9999px;
@@ -650,8 +689,9 @@ a {
   margin: 0 0.5rem;
   padding: 0.3rem;
   min-width: 2.5rem;
+  transition: background-color 150ms ease;
+  transition: border-color 150ms ease;
 }
-
 
 /*
 Progress
@@ -684,12 +724,231 @@ Progress
 * {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
-  font-style: normal;
 }
 
 .bold {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: 600;
-  font-style: bold;
+}
+
+/* Theme-Template */
+
+body {
+  background: var(--background);
+}
+
+div {
+  color: var(--primary);
+}
+
+a:visited {
+  color: var(--primary);
+}
+
+#tab-changer {
+  background-color: var(--shadow);
+  box-shadow: 0 2px 18px var(--shadow);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+#main-search {
+  color: var(--element-bg);
+  background-color: var(--shadow);
+  box-shadow: 0 2px 18px var(--shadow);
+  border: 4px solid var(--shadow);
+  border-radius: 12px;
+}
+#main-search:focus {
+  border: 4px dashed var(--shadow);
+}
+#main-search::selection {
+  background-color: var(--shadow);
+  color: var(--element-bg);
+}
+
+.Button {
+  background-color: var(--element-bg);
+  color: var(--primary);
+  border: 4px solid var(--element-border);
+  box-shadow: 0 2px 4px var(--shadow);
+  border-radius: 12px;
+}
+.Button:hover {
+  border: 4px solid var(--on-hover);
+}
+.Button:active {
+  background-color: var(--on-active);
+  box-shadow: 0 0 0 2px var(--on-click-border);
+}
+
+.PageButton {
+  background-color: var(--element-bg);
+  color: var(--primary);
+  border: 4px solid var(--element-border);
+  box-shadow: 0 2px 4px var(--shadow);
+  border-radius: 10000px;
+}
+.PageButton:hover {
+  border: 4px solid var(--on-hover);
+}
+.PageButton:active {
+  background-color: var(--on-active);
+  box-shadow: 0 0 0 2px var(--shadow);
+}
+
+.CheckBox {
+  background-color: var(--element-bg);
+  border-radius: 100%;
+  box-shadow: 0 2px 10px var(--shadow);
+  border: 2px solid var(--shadow);
+}
+.CheckBox:hover {
+  background-color: var(--on-hover);
+}
+.CheckBox:active {
+  background-color: var(--on-active);
+  box-shadow: 0 0 0 2px var(--shadow);
+}
+
+.Input {
+  color: var(--primary);
+  border: 3px solid var(--on-hover);
+}
+.Input:focus {
+  border: 3px solid var(--primary);
+}
+
+.DisplayCard {
+  border: 2px solid var(--primary);
+  background-color: var(--element-bg);
+  box-shadow: 0 2px 10px var(--shadow);
+  border-radius: 12px;
+}
+
+.Scrollbar {
+  background: var(--shadow);
+}
+.ScrollbarThumb {
+  background: var(--primary);
+  border-radius: 12px;
+}
+
+/*
+Invoice
+*/
+
+.Table {
+  background-color: var(--table);
+  color: var(--primary);
+  border-radius: 12px;
+  border-collapse: collapse;
+
+  tr {
+    border-bottom: 1px solid var(--tr-split);
+  }
+  tr:last-child {
+    border-bottom: none;
+  }
+}
+
+/*
+Tabs
+*/
+
+.TabsTrigger {
+  background-color: var(--element-bg);
+  color: var(--primary);
+  border: 2px solid var(--element-bg);
+  background-clip: border-box;
+  margin: 4px 0;
+  border-bottom: 4px solid var(--element-bg);
+}
+.TabsTrigger:first-child {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+.TabsTrigger:last-child {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+.TabsTrigger:hover {
+  border: 2px solid var(--on-hover);
+  border-bottom: 4px solid var(--on-hover);
+}
+.TabsTrigger[data-state="active"] {
+  color: var(--primary);
+  border-bottom: 4px solid currentColor;
+}
+.TabsTrigger:active {
+  box-shadow: 0 0 0 2px var(--on-click-border);
+}
+
+/*
+Switch
+*/
+
+.SwitchRoot {
+  background-color: var(--element-bg);
+  box-shadow: 0 2px 10px var(--shadow);
+  -webkit-tap-highlight-color: var(--shadow);
+  border: 3px solid var(--on-hover);
+}
+.SwitchRoot[data-state="checked"] {
+  background-color: var(--primary);
+  border: 3px solid var(--primary);
+}
+.SwitchRoot:hover{
+  background-color: var(--on-hover);
+  .SwitchThumb {
+    background-color: var(--element-bg);
+  }
+}
+.SwitchThumb {
+  background-color: var(--element-bg);
+}
+.SwitchThumb[data-state="unchecked"] {
+  background-color: var(--on-hover);
+}
+
+/*
+Dialog
+*/
+.DialogOverlay {
+  background-color: var(--black-a9);
+}
+
+.DialogContent {
+  background-color: var(--element-bg);
+  box-shadow: hsl(206 22% 7% / 35%) 0 10px 38px -10px,
+    hsl(206 22% 7% / 20%) 0 10px 20px -15px;
+}
+
+.DialogTitle {
+  color: var(--primary);
+}
+
+/*
+Progress
+*/
+.progress-bar {
+  border-radius: 99999px;
+}
+
+.progress-bar-background {
+  background: var(--secondary);
+}
+
+.progress-bar-foreground {
+  background-color: var(--primary);
+}
+
+/*
+Colors
+*/
+
+.Selected {
+  color: var(--primary);
+  border-color: var(--primary);
 }

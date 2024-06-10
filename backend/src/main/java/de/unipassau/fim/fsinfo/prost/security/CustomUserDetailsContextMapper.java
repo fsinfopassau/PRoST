@@ -1,5 +1,6 @@
 package de.unipassau.fim.fsinfo.prost.security;
 
+import java.util.Arrays;
 import java.util.Collection;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,9 +8,9 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
+import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper;
 
-public class CustomUserDetailsContextMapper implements UserDetailsContextMapper {
+public class CustomUserDetailsContextMapper extends LdapUserDetailsMapper {
 
   @Override
   public UserDetails mapUserFromContext(DirContextOperations ctx, String username,
@@ -30,6 +31,14 @@ public class CustomUserDetailsContextMapper implements UserDetailsContextMapper 
       userDetails.setEmail(mails[0]);
     }
 
+    // Additional handling for service accounts if needed
+    if (ctx.attributeExists("objectClass")) {
+      String[] objectClasses = ctx.getStringAttributes("objectClass");
+      if (objectClasses != null && Arrays.asList(objectClasses).contains("simpleSecurityObject")) {
+        userDetails.setServiceAccount(true);
+      }
+    }
+
     return userDetails;
   }
 
@@ -47,6 +56,7 @@ public class CustomUserDetailsContextMapper implements UserDetailsContextMapper 
     private Collection<? extends GrantedAuthority> authorities;
     private String displayName;
     private String email;
+    private boolean serviceAccount;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,4 +1,3 @@
-
 export function convertTimestampToTime(unixTimestamp: number): string {
   // Convert Unix timestamp to Date object
   const date = new Date(unixTimestamp);
@@ -66,10 +65,10 @@ export function formatMoney(
   return formatted + " €";
 }
 
-
 /* DataValidation */
 
-const EMAIL_PATTERN: string = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\\.+[a-zA-Z0-9.-]+$";
+const EMAIL_PATTERN: string =
+  "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\\.+[a-zA-Z0-9.-]+$";
 const MAX_NAME_LENGTH: number = 30;
 
 export function isValidString(value: string): boolean {
@@ -111,13 +110,15 @@ export function getValidMoney(value: string): number | undefined {
     return undefined;
   }
 
-  const numberValue = parseFloat(value.replace(",", ".").replace(/[^0-9.-]+/g, ''));
+  const numberValue = parseFloat(
+    value.replace(",", ".").replace(/[^0-9.-]+/g, "")
+  );
   if (isNaN(numberValue)) {
     return undefined;
   }
 
   // Check if the number has more than 2 decimal places
-  const decimalPlaces = (numberValue.toString().split('.')[1] || '').length;
+  const decimalPlaces = (numberValue.toString().split(".")[1] || "").length;
   if (decimalPlaces > 2) {
     return undefined;
   }

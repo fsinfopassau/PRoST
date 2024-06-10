@@ -21,14 +21,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class MailService {
 
-  @Value("${MAIL_USER_NAME:Username}")
+  @Value("${MAIL_SENDER_ADDR:addr@test.com}")
+  private String mailSenderAddr;
+
+  @Value("${MAIL_USER_NAME:}")
   private String mailUserName;
 
-  @Value("${MAIL_USER_PASSWORD:password}")
+  @Value("${MAIL_USER_PASSWORD:}")
   private String mailUserPassword;
 
   @Value("${MAIL_HOST_NAME:smtp.test.com}")
   private String mailHostName;
+
+  @Value("${MAIL_USE_SSL:true}")
+  private boolean useSsl;
 
   @Value("${MAIL_HOST_PORT:587}")
   private int mailHostPort;
@@ -123,12 +129,16 @@ public class MailService {
     try {
       email.setHostName(mailHostName);
       email.setSmtpPort(mailHostPort);
-      email.setAuthentication(mailUserName, mailUserPassword);
-      email.setFrom(mailUserName);
+      if (mailUserName != null && !mailUserName.isEmpty()) {
+        email.setAuthentication(mailUserName, mailUserPassword == null ? "" : mailUserPassword);
+      }
+      email.setFrom(mailSenderAddr);
       email.addTo(address);
       email.setMsg(text);
-      email.setSSLOnConnect(true);
-      email.setStartTLSEnabled(true);
+      if (useSsl) {
+        email.setSSLOnConnect(true);
+        email.setStartTLSEnabled(true);
+      }
       email.setSubject(subject);
 
       email.send();

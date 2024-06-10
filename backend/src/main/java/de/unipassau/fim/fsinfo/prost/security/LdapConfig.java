@@ -26,6 +26,7 @@ public class LdapConfig {
     authorities.setGroupSearchFilter("(member={0})");
     authorities.setConvertToUpperCase(true);
     authorities.setRolePrefix("");
+    authorities.setIgnorePartialResultException(true); // Handle service accounts without groups
     return authorities;
   }
 

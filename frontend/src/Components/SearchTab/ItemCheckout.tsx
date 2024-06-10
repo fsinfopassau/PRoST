@@ -48,14 +48,18 @@ export function ItemCheckout() {
   function checkout() {
     if (userId && itemId) {
       console.log("checkout", userId, itemId);
-      buyItem(userId, itemId, amount).then((result) => {
-        if (result) {
-          toast(amount + "x " + item?.displayName + " gekauft!");
-        } else {
+      buyItem(userId, itemId, amount)
+        .then((result) => {
+          if (result) {
+            toast(amount + "x " + item?.displayName + " gekauft!");
+            navigate("/");
+          } else {
+            toast.error(item?.displayName + " konnte nicht gekauft werden!");
+          }
+        })
+        .catch(() => {
           toast.error(item?.displayName + " konnte nicht gekauft werden!");
-        }
-        navigate("/");
-      });
+        });
     }
   }
 
@@ -92,13 +96,13 @@ export function ItemCheckout() {
           </div>
         </div>
         <div className="CheckoutCounter">
-          <button className="Button" onClick={decrement}>
+          <button className="Button icon" onClick={decrement}>
             <ChevronLeftIcon height={60} width={60} />
           </button>
           <div>
             <div>{amount}</div>
           </div>
-          <button className="Button" onClick={increment}>
+          <button className="Button icon" onClick={increment}>
             <ChevronRightIcon height={60} width={60} />
           </button>
         </div>

@@ -176,7 +176,7 @@ class UserServiceTest {
   @Test
   public void testSetMoneySpent_UserNotFound_ReturnsFalse() {
     when(userRepository.findById(prostUser.getId())).thenReturn(Optional.empty());
-    boolean result = userService.setMoneySpent(prostUser.getId(), "100.00");
+    boolean result = userService.setMoneySpent(prostUser.getId(), "10.00");
     assertFalse(result);
   }
 
@@ -184,6 +184,13 @@ class UserServiceTest {
   public void testSetMoneySpent_InvalidAmount_ReturnsFalse() {
     when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
     boolean result = userService.setMoneySpent(prostUser.getId(), "invalid");
+    assertFalse(result);
+  }
+
+  @Test
+  public void testSetMoneySpent_WrongPrecision_ReturnsFalse() {
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+    boolean result = userService.setMoneySpent(prostUser.getId(), "0.001");
     assertFalse(result);
   }
 

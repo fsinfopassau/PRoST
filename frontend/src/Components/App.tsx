@@ -18,7 +18,7 @@ import { PersonalInvoiceView } from "./PersonalView/PersonalInvoiceView";
 import { PersonalHistoryView } from "./PersonalView/PersonalHistoryView";
 import ScrollDialog from "./Util/ScrollDialog";
 
-const stylesAvailable = ["purple", "blue"];
+const stylesAvailable = ["purple", "blue", "mc"];
 export const BASE_PATH = import.meta.env.VITE_BASE_PATH || "";
 
 function loadTheme(themeName: string) {
@@ -118,7 +118,7 @@ export function App() {
           </BrowserRouter>
 
           <ScrollDialog
-            onSubmit={() => { }}
+            onSubmit={() => {}}
             title="Datenschutzhinweise der PRoST-Sotware"
             trigger={<div className="site-data-info">Datenschutz</div>}
           >

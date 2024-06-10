@@ -132,8 +132,13 @@ public class UserService {
     try {
       BigDecimal amount = new BigDecimal(amountString);
 
+      if (!DataFilter.isValidMoney(amount)) {
+        System.out.println("[US] :: Price-value with " + amount + " not valid!");
+        return false;
+      }
+
       if (amount.compareTo(BigDecimal.ZERO) < 0) { // Only Positive Values
-        System.out.println("[US] :: Money Spent is with " + amount + " to low");
+        System.out.println("[US] :: Money Spent is with " + amount + " too low");
         return false;
       }
 

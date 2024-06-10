@@ -1,18 +1,21 @@
 package de.unipassau.fim.fsinfo.prost.security;
 
 import de.unipassau.fim.fsinfo.prost.data.UserAccessRole;
+import de.unipassau.fim.fsinfo.prost.security.CustomUserDetailsContextMapper.CustomUserDetails;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -76,10 +79,15 @@ public class WebConfig implements WebMvcConfigurer {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(AUTH_WHITELIST).permitAll()
             .requestMatchers(USER_SPACE)
-            .hasAnyAuthority(UserAccessRole.FSINFO.name(), UserAccessRole.KIOSK.name(),
-                UserAccessRole.KAFFEEKASSE.name())
+            .access((authentication, object) ->
+                new AuthorizationDecision(isServiceAccountOr(authentication.get(),
+                    UserAccessRole.FSINFO, UserAccessRole.KIOSK, UserAccessRole.KAFFEEKASSE))
+            )
             .requestMatchers(KIOSK_SPACE)
-            .hasAnyAuthority(UserAccessRole.KIOSK.name(), UserAccessRole.KAFFEEKASSE.name())
+            .access((authentication, object) -> new AuthorizationDecision(
+                isServiceAccountOr(authentication.get(), UserAccessRole.KIOSK,
+                    UserAccessRole.KAFFEEKASSE))
+            )
             .requestMatchers(ADMIN_SPACE).hasAnyAuthority(UserAccessRole.KAFFEEKASSE.name())
             .anyRequest().authenticated() // Require authentication for all other requests
         )
@@ -88,6 +96,7 @@ public class WebConfig implements WebMvcConfigurer {
         .httpBasic(Customizer.withDefaults())
         .build();
   }
+
 
   @Autowired
   public void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -99,6 +108,23 @@ public class WebConfig implements WebMvcConfigurer {
         .contextSource(ldapConfig.contextSource())
         .ldapAuthoritiesPopulator(ldapConfig.ldapAuthoritiesPopulator())
         .userDetailsContextMapper(userDetailsContextMapper);
+  }
+
+  private boolean isServiceAccountOr(Authentication authentication, UserAccessRole... roles) {
+    if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
+      boolean isServiceAccount = userDetails.isServiceAccount();
+      boolean hasKioskRole = userDetails.getAuthorities().stream()
+          .anyMatch(grantedAuthority -> {
+            for (UserAccessRole role : roles) {
+              if (grantedAuthority.getAuthority().equals(role.name())) {
+                return true;
+              }
+            }
+            return false;
+          });
+      return isServiceAccount || hasKioskRole;
+    }
+    return false;
   }
 
 }

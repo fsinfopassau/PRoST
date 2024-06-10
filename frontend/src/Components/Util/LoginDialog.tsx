@@ -89,7 +89,7 @@ export function LoginDialog() {
         ) : (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <button id="login-button" className="Button">
+              <button id="login-button" className="Button icon">
                 <AvatarIcon width={35} height={25} />
               </button>
             </DialogTrigger>
@@ -98,7 +98,7 @@ export function LoginDialog() {
               <DialogContent className="DialogContent">
                 <div>
                   <DialogClose asChild>
-                    <button className="IconButton" aria-label="Close">
+                    <button className="Button icon" aria-label="Close">
                       <Cross2Icon />
                     </button>
                   </DialogClose>

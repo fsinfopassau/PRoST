@@ -41,7 +41,9 @@ export function UserSummaryCard(props: Props) {
           </Link>
           <div>💙🦆💙</div>
         </div>
-        <div style={{ textAlign: "center" }}>{getLevel(user)}</div>
+        <div style={{ textAlign: "center" }} className="LevelNumberDisplay">
+          {getLevel(user)}
+        </div>
         <LevelProgressDisplay value={(user.totalSpent % 5) / 5} />
         <div className="SpreadContainer">
           <div>
