@@ -98,7 +98,8 @@ svg {
   margin: 5px;
 }
 
-a,[aria-haspopup="dialog"] {
+a,
+[aria-haspopup="dialog"] {
   * {
     cursor: pointer;
   }
@@ -372,6 +373,7 @@ a,[aria-haspopup="dialog"] {
   width: 100%;
   height: 100%;
   object-fit: contain; /* Scales the image down to fit the container while preserving aspect ratio */
+  border-radius: 12px;
 }
 
 /* General */
@@ -899,7 +901,7 @@ Switch
   background-color: var(--primary);
   border: 3px solid var(--primary);
 }
-.SwitchRoot:hover{
+.SwitchRoot:hover {
   background-color: var(--on-hover);
   .SwitchThumb {
     background-color: var(--element-bg);
