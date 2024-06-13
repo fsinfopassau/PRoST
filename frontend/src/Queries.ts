@@ -4,7 +4,6 @@ import { ShopItem } from "./Types/ShopItem";
 import { AuthorizedUser, User } from "./Types/User";
 import { getEncodedCredentials, setAuthorizedUser } from "./SessionInfo";
 import { InvoicePage } from "./Types/Invoice";
-import { toast } from "react-toastify";
 import { TransactionPage } from "./Types/Transaction";
 
 export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
