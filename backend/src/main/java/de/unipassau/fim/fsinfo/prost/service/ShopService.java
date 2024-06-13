@@ -10,23 +10,33 @@ import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ShopService {
 
-  final ShopItemRepository itemRepository;
-  final ShopItemHistoryRepository historyRepository;
-  final UserRepository userRepository;
+  final private ShopItemRepository itemRepository;
+  final private ShopItemHistoryRepository historyRepository;
+  final private UserRepository userRepository;
 
-  final TransactionService transactionService;
+  final private TransactionService transactionService;
 
-  final static int MAX_NAME_LENGTH = 20;
   final static BigDecimal MAX_PRICE = new BigDecimal(100);
   final static BigDecimal MIN_PRICE = BigDecimal.ZERO;
+
+  @Value("${BUY_COOLDOWN:10000}")
+  Long buyCooldownTime;
+
+  /**
+   * Authorized User-ID, Unix-Timestamp
+   */
+  final private HashMap<String, Long> bearerLastBuy = new HashMap<>();
 
   @Autowired
   public ShopService(ShopItemRepository itemRepository, ShopItemHistoryRepository historyRepository,
@@ -37,6 +47,14 @@ public class ShopService {
     this.transactionService = transactionService;
   }
 
+  public boolean hasBearerCooldown(String userId) {
+    if (bearerLastBuy.containsKey(userId)) {
+      Long lastTime = bearerLastBuy.get(userId);
+      return lastTime + buyCooldownTime > Instant.now().toEpochMilli();
+    }
+    return false;
+  }
+
   @Transactional
   public boolean consume(String itemId, String userId, int amount, String bearerId) {
     Optional<ShopItem> itemO = itemRepository.findById(itemId);
@@ -44,6 +62,10 @@ public class ShopService {
     Optional<ProstUser> bearerUser = userRepository.findById(bearerId);
 
     if (amount < 1 || amount > 10) {
+      return false;
+    }
+
+    if (hasBearerCooldown(bearerId)) {
       return false;
     }
 
@@ -69,6 +91,7 @@ public class ShopService {
       historyRepository.save(
           new ShopItemHistoryEntry(transaction.get(), item.getId(), item.getPrice(),
               amount));
+      bearerLastBuy.put(bearerId, Instant.now().toEpochMilli());
       return true;
     } else {
       return false;

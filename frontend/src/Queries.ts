@@ -286,7 +286,7 @@ export async function buyItem(
   userId: string,
   itemId: string,
   amount: number
-): Promise<boolean> {
+): Promise<number> {
   const result = await fetch(
     `${apiUrl}/api/shop/item/consume?id=${itemId}&userId=${userId}&n=${amount}`,
     {
@@ -298,10 +298,16 @@ export async function buyItem(
     }
   );
 
-  if (result.status == 418) {
-    toast.warning("Ich bin ne 🫖, du Keck! 🙃");
+  if ((await result.text()).indexOf("cooldown") !== -1) {
+    return 1;
   }
-  return result.ok;
+
+  if (result.status == 418) {
+    return 2;
+  }
+
+  if (result.ok) return 0;
+  else return -1;
 }
 
 export async function getHistory(

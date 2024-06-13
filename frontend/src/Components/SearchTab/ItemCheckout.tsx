@@ -50,15 +50,24 @@ export function ItemCheckout() {
       console.log("checkout", userId, itemId);
       buyItem(userId, itemId, amount)
         .then((result) => {
-          if (result) {
-            toast(amount + "x " + item?.displayName + " gekauft!");
-            navigate("/");
-          } else {
-            toast.error(item?.displayName + " konnte nicht gekauft werden!");
+          switch (result) {
+            case -1:
+              toast.error(item?.displayName + " konnte nicht gekauft werden!");
+              break;
+            case 0:
+              toast(amount + "x " + item?.displayName + " gekauft!");
+              navigate("/");
+              break;
+            case 1:
+              toast.info("Warte etwas, um nochmal zu kaufen.");
+              break;
+            case 2:
+              toast.warning("Ich bin ne 🫖, du Keck! 🙃");
+              break;
           }
         })
         .catch(() => {
-          toast.error(item?.displayName + " konnte nicht gekauft werden!");
+          toast.error("Transaktionsfehler. Unerwarteter Anzeigefehler!");
         });
     }
   }
