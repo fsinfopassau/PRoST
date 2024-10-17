@@ -8,12 +8,7 @@ import {
   DialogTrigger,
 } from "@radix-ui/react-dialog";
 import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
-import {
-  ScrollArea,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaViewport,
-} from "@radix-ui/react-scroll-area";
+import { ScrollArea, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from "@radix-ui/react-scroll-area";
 import { PropsWithChildren, useState } from "react";
 
 interface CustomComponentProps {
@@ -22,12 +17,7 @@ interface CustomComponentProps {
   onSubmit: () => void;
 }
 
-const ScrollDialog: React.FC<PropsWithChildren<CustomComponentProps>> = ({
-  children,
-  title,
-  trigger,
-  onSubmit,
-}) => {
+const ScrollDialog: React.FC<PropsWithChildren<CustomComponentProps>> = ({ children, title, trigger, onSubmit }) => {
   const [open, setOpen] = useState(false);
 
   function handleKeyDown(event: React.KeyboardEvent) {
@@ -64,16 +54,10 @@ const ScrollDialog: React.FC<PropsWithChildren<CustomComponentProps>> = ({
                 >
                   {children}
                 </ScrollAreaViewport>
-                <ScrollAreaScrollbar
-                  className="Scrollbar"
-                  orientation="vertical"
-                >
+                <ScrollAreaScrollbar className="Scrollbar" orientation="vertical">
                   <ScrollAreaThumb className="ScrollbarThumb" />
                 </ScrollAreaScrollbar>
-                <ScrollAreaScrollbar
-                  className="Scrollbar"
-                  orientation="horizontal"
-                >
+                <ScrollAreaScrollbar className="Scrollbar" orientation="horizontal">
                   <ScrollAreaThumb className="ScrollbarThumb" />
                 </ScrollAreaScrollbar>
               </ScrollArea>
@@ -86,11 +70,7 @@ const ScrollDialog: React.FC<PropsWithChildren<CustomComponentProps>> = ({
               }}
             >
               <DialogClose asChild>
-                <div
-                  className="Button danger-color"
-                  style={{ width: "40%" }}
-                  aria-label="Close"
-                >
+                <div className="Button danger-color" style={{ width: "40%" }} aria-label="Close">
                   <Cross2Icon />
                 </div>
               </DialogClose>

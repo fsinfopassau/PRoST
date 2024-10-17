@@ -2,12 +2,7 @@ import { useEffect, useState } from "react";
 import { ShopHistoryEntry } from "../../Types/ShopHistory";
 import { getHistory, getOwnHistory, getUserHistory } from "../../Queries";
 import { HistoryEntryDisplay } from "../StatisticsTab/HistoryEntryDisplay";
-import {
-  ScrollArea,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaViewport,
-} from "@radix-ui/react-scroll-area";
+import { ScrollArea, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from "@radix-ui/react-scroll-area";
 import { Separator } from "@radix-ui/react-separator";
 
 export function ShopHistory(props: { personal: boolean }) {
@@ -119,8 +114,7 @@ export function ShopHistory(props: { personal: boolean }) {
                 return (
                   <div
                     key={"p" + index}
-                    className={`PageButton ${selectedPage === index ? "Selected" : ""
-                      }`}
+                    className={`PageButton ${selectedPage === index ? "Selected" : ""}`}
                     onClick={() => selectPage(index)}
                   >
                     {index + 1}

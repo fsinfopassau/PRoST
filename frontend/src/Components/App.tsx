@@ -91,23 +91,14 @@ export function App() {
             />
             <div className="MainBody">
               <Routes>
-                <Route
-                  path="/"
-                  element={<RootTab switchTheme={switchTheme} />}
-                />
+                <Route path="/" element={<RootTab switchTheme={switchTheme} />} />
                 <Route path="/me/invoices" element={<PersonalInvoiceView />} />
                 <Route path="/me/history" element={<PersonalHistoryView />} />
                 <Route path="/shop/:userId" element={<ItemSelection />} />
-                <Route
-                  path="/shop/:userId/:itemId"
-                  element={<ItemCheckout />}
-                />
+                <Route path="/shop/:userId/:itemId" element={<ItemCheckout />} />
                 <Route path="/stats" element={<Statistics />} />
                 <Route path="/stats/users" element={<AllUsersStatistics />} />
-                <Route
-                  path="/stats/users/:userId"
-                  element={<UserStatistics />}
-                />
+                <Route path="/stats/users/:userId" element={<UserStatistics />} />
                 <Route path="/history" element={<History />} />
                 <Route path="/invoices" element={<InvoiceTab />} />
                 <Route path="/items" element={<ItemSettings />} />

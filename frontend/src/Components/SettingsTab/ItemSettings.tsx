@@ -27,7 +27,6 @@ export function ItemSettings() {
 
   function createShopItem() {
     if (newPrice) {
-
       const item: ShopItem = {
         id: newId,
         category: newCategory,
@@ -55,16 +54,13 @@ export function ItemSettings() {
     setNewCategory(event.target.value);
   };
 
-  const handleDisplayNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleDisplayNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewDisplayName(event.target.value);
   };
 
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const money = getValidMoney(event.target.value);
-    if (money)
-      setNewPrice(money);
+    if (money) setNewPrice(money);
     else {
       setNewPrice(undefined);
     }

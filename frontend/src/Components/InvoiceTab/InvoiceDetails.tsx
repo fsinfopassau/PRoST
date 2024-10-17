@@ -4,10 +4,7 @@ import { convertTimestampToTime, formatMoney } from "../../Format";
 import { useEffect, useState } from "react";
 import { ShopItem } from "../../Types/ShopItem";
 import { getAllShopItems } from "../../Queries";
-import {
-  DoubleArrowRightIcon,
-  ThickArrowRightIcon,
-} from "@radix-ui/react-icons";
+import { DoubleArrowRightIcon, ThickArrowRightIcon } from "@radix-ui/react-icons";
 
 export function InvoiceDetails(props: { invoice: Invoice }) {
   const { invoice } = props;
@@ -43,11 +40,7 @@ export function InvoiceDetails(props: { invoice: Invoice }) {
           <tbody>
             {invoice.amounts?.map((amount, index) => (
               <tr key={amount.itemId + "" + index} className="table-entry">
-                <th className="left name bold">
-                  {getItem(amount)
-                    ? getItem(amount)?.displayName
-                    : amount.itemId}
-                </th>
+                <th className="left name bold">{getItem(amount) ? getItem(amount)?.displayName : amount.itemId}</th>
                 <th className="amount">{amount.amount}</th>
                 <th className="icon">x</th>
                 <th className="balance ">{formatMoney(amount.singeItemPrice)}</th>
@@ -74,9 +67,7 @@ export function InvoiceDetails(props: { invoice: Invoice }) {
             <></>
           ) : (
             <>
-              <div>
-                {convertTimestampToTime(invoice.previousInvoiceTimestamp)}{" "}
-              </div>
+              <div>{convertTimestampToTime(invoice.previousInvoiceTimestamp)} </div>
               <div className="icon">
                 <div>
                   <DoubleArrowRightIcon />
@@ -86,10 +77,7 @@ export function InvoiceDetails(props: { invoice: Invoice }) {
           )}
           <div>{convertTimestampToTime(invoice.timestamp)}</div>
         </div>
-        <div
-          className="bold"
-          style={{ alignContent: "flex-end", flexGrow: "0" }}
-        >
+        <div className="bold" style={{ alignContent: "flex-end", flexGrow: "0" }}>
           {formatMoney(invoice.balance)}
         </div>
       </div>

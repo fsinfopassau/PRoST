@@ -9,9 +9,7 @@ export function TransactionDisplay(props: { transaction: Transaction }) {
   return (
     <>
       <tr className="table-entry">
-        <th className="left date">
-          {convertTimestampToTime(transaction.timestamp)}
-        </th>
+        <th className="left date">{convertTimestampToTime(transaction.timestamp)}</th>
         <th className="bold">{transaction.transactionType}</th>
         <th className="">
           <div className="horizontalContainer">
@@ -36,9 +34,11 @@ export function TransactionDisplay(props: { transaction: Transaction }) {
               <DoubleArrowRightIcon />
               {formatMoney(transaction.amount)}
             </div>
-          ) : <>{formatMoney(transaction.amount)}</>}
+          ) : (
+            <>{formatMoney(transaction.amount)}</>
+          )}
         </th>
-      </tr >
+      </tr>
     </>
   );
 }

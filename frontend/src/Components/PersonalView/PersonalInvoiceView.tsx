@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
 import { getPersonalInvoices } from "../../Queries";
 import { Invoice } from "../../Types/Invoice";
-import {
-  ScrollArea,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaViewport,
-} from "@radix-ui/react-scroll-area";
+import { ScrollArea, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from "@radix-ui/react-scroll-area";
 import { InvoiceSelectDisplay } from "../InvoiceTab/InvoiceSelectDisplay";
 import { Separator } from "@radix-ui/react-separator";
 
@@ -53,22 +48,14 @@ export function PersonalInvoiceView() {
 
   return (
     <div className="SingleCardContainer">
-      <ScrollArea
-        className="DisplayCard"
-        style={{ height: "100%", maxWidth: "60rem" }}
-      >
+      <ScrollArea className="DisplayCard" style={{ height: "100%", maxWidth: "60rem" }}>
         <ScrollAreaViewport>
           <h2>Rechnungen</h2>
 
           <table className="Table">
             <tbody>
               {invoices.map((invoice, index) => (
-                <InvoiceSelectDisplay
-                  key={index}
-                  invoice={invoice}
-                  onSelect={() => { }}
-                  selected={undefined}
-                />
+                <InvoiceSelectDisplay key={index} invoice={invoice} onSelect={() => {}} selected={undefined} />
               ))}
             </tbody>
           </table>
@@ -81,8 +68,7 @@ export function PersonalInvoiceView() {
                 return (
                   <div
                     key={"p" + index}
-                    className={`PageButton ${selectedPage === index ? "Selected" : ""
-                      }`}
+                    className={`PageButton ${selectedPage === index ? "Selected" : ""}`}
                     onClick={() => selectPage(index)}
                   >
                     {index + 1}

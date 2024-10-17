@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
 import { Transaction } from "../../Types/Transaction";
 import { getAllTransactions, getPersonalTransactions } from "../../Queries";
-import {
-  ScrollArea,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaViewport,
-} from "@radix-ui/react-scroll-area";
+import { ScrollArea, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from "@radix-ui/react-scroll-area";
 import { Separator } from "@radix-ui/react-separator";
 import { TransactionDisplay } from "./TransactionDisplay";
 
@@ -109,8 +104,7 @@ export function TransactionHistory(props: { personal: boolean }) {
               return (
                 <div
                   key={"p" + index}
-                  className={`PageButton ${selectedPage === index ? "Selected" : ""
-                    }`}
+                  className={`PageButton ${selectedPage === index ? "Selected" : ""}`}
                   onClick={() => selectPage(index)}
                 >
                   {index + 1}

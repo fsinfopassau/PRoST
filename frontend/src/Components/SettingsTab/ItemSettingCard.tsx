@@ -25,10 +25,7 @@ import { formatMoney } from "../../Format";
 import ScrollDialog from "../Util/ScrollDialog";
 import { BASE_PATH } from "../App";
 
-export function ItemSettingCard(props: {
-  item: ShopItem;
-  onUpdate: () => void;
-}) {
+export function ItemSettingCard(props: { item: ShopItem; onUpdate: () => void }) {
   const { item, onUpdate } = props;
   const [imageUrl, setImageUrl] = useState<string>(`${BASE_PATH}/img/Beer.jpg`);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -124,11 +121,7 @@ export function ItemSettingCard(props: {
       <div className="SpreadContainer">
         <h3 className="SpreadContainer bold">
           {item.id}
-          <Switch
-            className="SwitchRoot"
-            defaultChecked={item.enabled}
-            onCheckedChange={toggleEnable}
-          >
+          <Switch className="SwitchRoot" defaultChecked={item.enabled} onCheckedChange={toggleEnable}>
             <SwitchThumb className="SwitchThumb" />
           </Switch>
         </h3>
@@ -217,12 +210,7 @@ export function ItemSettingCard(props: {
           <AspectRatio ratio={1 / 1} className="AspectRatio" onClick={setImage}>
             <img src={imageUrl} alt="Item Image" className="image-fitted" />
           </AspectRatio>
-          <input
-            type="file"
-            ref={fileInput}
-            onChange={handleFileChange}
-            style={{ display: "none" }}
-          />
+          <input type="file" ref={fileInput} onChange={handleFileChange} style={{ display: "none" }} />
         </div>
       </div>
     </div>

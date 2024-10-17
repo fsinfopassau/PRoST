@@ -11,10 +11,7 @@ interface CustomComponentProps {
   onSubmit: () => void;
 }
 
-const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({
-  children,
-  onSubmit,
-}) => {
+const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({ children, onSubmit }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 
@@ -27,9 +24,7 @@ const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({
   }, []);
 
   function handleSelect(id: string) {
-    setSelectedUsers((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+    setSelectedUsers((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
   }
 
   function toggleAll() {
@@ -45,11 +40,7 @@ const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({
   }
 
   function isAllSelected(): boolean {
-    if (
-      users === undefined ||
-      users.length === 0 ||
-      selectedUsers.length === 0
-    ) {
+    if (users === undefined || users.length === 0 || selectedUsers.length === 0) {
       return false;
     }
     return users.every((user) => {
@@ -71,12 +62,7 @@ const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({
       .then((result) => {
         if (result && result.length !== undefined) {
           if (result.length !== 0) {
-            toast.success(
-              result.length +
-              " neue Rechnung" +
-              (result.length > 1 ? "en" : "") +
-              "!"
-            );
+            toast.success(result.length + " neue Rechnung" + (result.length > 1 ? "en" : "") + "!");
             onSubmit();
           }
         } else {
@@ -91,11 +77,7 @@ const InvoiceCreation: React.FC<PropsWithChildren<CustomComponentProps>> = ({
 
   return (
     <>
-      <ScrollDialog
-        title="Neue Rechnungen"
-        trigger={<div>{children} </div>}
-        onSubmit={create}
-      >
+      <ScrollDialog title="Neue Rechnungen" trigger={<div>{children} </div>} onSubmit={create}>
         <div className="SpreadContainer" style={{ padding: "0 .7rem" }}>
           {isAllSelected() ? (
             <div className="CheckBox good-color" onClick={toggleAll}>

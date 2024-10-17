@@ -1,8 +1,7 @@
 import { AuthorizedUser } from "./Types/User";
 
 const firstUser = localStorage.getItem("user");
-let authorizedUser =
-  firstUser !== null ? (JSON.parse(firstUser) as AuthorizedUser) : undefined;
+let authorizedUser = firstUser !== null ? (JSON.parse(firstUser) as AuthorizedUser) : undefined;
 
 export function getEncodedCredentials(): string {
   return authorizedUser === undefined ? "" : authorizedUser.credentials;

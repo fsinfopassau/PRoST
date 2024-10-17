@@ -31,7 +31,10 @@ export function ButtonDialogChanger(props: {
       >
         <div className="DialogDescription">{dialogDesc}</div>
         <fieldset className="Fieldset">
-          <input className={isValidString(inputValue) ? "Input good-color" : "Input danger-color"} onChange={handleInputChange} />
+          <input
+            className={isValidString(inputValue) ? "Input good-color" : "Input danger-color"}
+            onChange={handleInputChange}
+          />
         </fieldset>
       </div>
     </ScrollDialog>

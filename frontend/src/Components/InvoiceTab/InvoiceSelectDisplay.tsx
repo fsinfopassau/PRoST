@@ -31,7 +31,9 @@ export function InvoiceSelectDisplay(props: {
 
   return (
     <tr className={totalAmounts() === 0 ? "table-entry important-color" : "table-entry"}>
-      {selected === undefined ? <></> :
+      {selected === undefined ? (
+        <></>
+      ) : (
         <th className="icon">
           {invoice.mailed ? (
             <div>
@@ -55,7 +57,7 @@ export function InvoiceSelectDisplay(props: {
             ></div>
           )}
         </th>
-      }
+      )}
       {invoice.mailed ? (
         <th className="icon">
           <div className="good-color">
@@ -83,7 +85,7 @@ export function InvoiceSelectDisplay(props: {
               <InfoCircledIcon />
             </div>
           }
-          onSubmit={() => { }}
+          onSubmit={() => {}}
         >
           <InvoiceDetails invoice={invoice} />
         </ScrollDialog>

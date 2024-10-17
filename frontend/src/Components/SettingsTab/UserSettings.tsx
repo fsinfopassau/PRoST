@@ -43,9 +43,7 @@ export function UserSettings() {
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewEmail(event.target.value);
   };
-  const handleMoneySpentChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleMoneySpentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMoneySpent(event.target.value);
   };
 
@@ -117,7 +115,7 @@ export function UserSettings() {
               }}
             >
               <div className="DialogDescription">Identifier: *</div>
-              <fieldset className="Fieldset" >
+              <fieldset className="Fieldset">
                 <input
                   className={isValidString(filterNameId(newId)) ? "Input good-color" : "Input danger-color"}
                   onChange={handleIdChange}
@@ -143,7 +141,11 @@ export function UserSettings() {
               <div className="DialogDescription">Bisher ausgegeben:</div>
               <fieldset className="Fieldset">
                 <input
-                  className={getValidMoney(moneySpent.trim().length === 0 ? "0" : moneySpent) !== undefined ? "Input good-color" : "Input danger-color"}
+                  className={
+                    getValidMoney(moneySpent.trim().length === 0 ? "0" : moneySpent) !== undefined
+                      ? "Input good-color"
+                      : "Input danger-color"
+                  }
                   onChange={handleMoneySpentChange}
                   placeholder={"0"}
                 />
@@ -151,27 +153,19 @@ export function UserSettings() {
             </div>
           </ScrollDialog>
 
-          <div
-            className={editMode ? "Button icon important-color" : "Button icon"}
-            onClick={toggleEdit}
-          >
+          <div className={editMode ? "Button icon important-color" : "Button icon"} onClick={toggleEdit}>
             <div>
               <Pencil2Icon />
             </div>
           </div>
-        </div >
+        </div>
         <Separator className="Separator" />
         <div className="GridContainer">
           {filter(users).map((user, index) => (
-            <UserSettingCard
-              user={user}
-              key={index}
-              editMode={editMode}
-              onUpdate={reloadUsers}
-            />
+            <UserSettingCard user={user} key={index} editMode={editMode} onUpdate={reloadUsers} />
           ))}
         </div>
-      </div >
+      </div>
     </>
   );
 }

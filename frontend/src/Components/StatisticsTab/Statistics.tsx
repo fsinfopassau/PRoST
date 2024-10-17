@@ -2,12 +2,7 @@ import { useEffect, useState } from "react";
 import { getAllShopItems, getAllUsers, getHistory } from "../../Queries";
 import { ShopHistoryEntry } from "../../Types/ShopHistory";
 import { HistoryEntryDisplay } from "./HistoryEntryDisplay";
-import {
-  ScrollArea,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaViewport,
-} from "@radix-ui/react-scroll-area";
+import { ScrollArea, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from "@radix-ui/react-scroll-area";
 import { Link } from "react-router-dom";
 import { User } from "../../Types/User";
 import { formatMoney } from "../../Format";

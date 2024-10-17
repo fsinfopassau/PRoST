@@ -87,14 +87,18 @@ export function Navbar(props: { switchTheme: () => void }) {
         <TabsTrigger value="shop" className="TabsTrigger" onClick={() => tabUpdate("shop-self")}>
           <CookieIcon />
         </TabsTrigger>
-        {isOnlyUser() ? (<>
-          <TabsTrigger value="me/history" className="TabsTrigger" onClick={() => tabUpdate("me/history")}>
-            <CalendarIcon />
-          </TabsTrigger>
-          <TabsTrigger value="me/invoices" className="TabsTrigger" onClick={() => tabUpdate("me/invoices")}>
-            <FileTextIcon />
-          </TabsTrigger>
-        </>) : <></>}
+        {isOnlyUser() ? (
+          <>
+            <TabsTrigger value="me/history" className="TabsTrigger" onClick={() => tabUpdate("me/history")}>
+              <CalendarIcon />
+            </TabsTrigger>
+            <TabsTrigger value="me/invoices" className="TabsTrigger" onClick={() => tabUpdate("me/invoices")}>
+              <FileTextIcon />
+            </TabsTrigger>
+          </>
+        ) : (
+          <></>
+        )}
       </>
     );
   }
@@ -137,14 +141,10 @@ export function Navbar(props: { switchTheme: () => void }) {
       <Tabs value={getSelectedTabValue()}>
         <TabsList className="TabsList">
           {isOnlyKiosk() ? kioskView() : isUser() ? userView() : null}
-          {isAdmin() ? (
-            adminView()
-          ) : <></>}
+          {isAdmin() ? adminView() : <></>}
         </TabsList>
       </Tabs>
-      {!isOnlyKiosk() ?
-        <LoginDialog />
-        : <></>}
+      {!isOnlyKiosk() ? <LoginDialog /> : <></>}
     </div>
   );
 }
