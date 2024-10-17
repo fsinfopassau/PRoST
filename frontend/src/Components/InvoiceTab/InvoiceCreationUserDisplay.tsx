@@ -3,11 +3,7 @@ import { User } from "../../Types/User";
 import { Link } from "react-router-dom";
 import { formatMoney } from "../../Format";
 
-export function InvoiceCreationUserDisplay(props: {
-  user: User;
-  selected: boolean;
-  onSelect: (id: string) => void;
-}) {
+export function InvoiceCreationUserDisplay(props: { user: User; selected: boolean; onSelect: (id: string) => void }) {
   const { user, selected, onSelect } = props;
 
   return (

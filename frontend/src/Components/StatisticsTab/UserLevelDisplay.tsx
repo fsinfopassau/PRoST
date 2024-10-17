@@ -17,9 +17,7 @@ export function LevelProgressDisplay(props: { value: number }) {
       <AspectRatio ratio={546 / 15}>
         <div className="progress-bar">
           <div className="progress-bar-background">
-            <div className="progress-bar-foreground"
-              style={{ width: `${width}%` }}
-            ></div>
+            <div className="progress-bar-foreground" style={{ width: `${width}%` }}></div>
           </div>
         </div>
       </AspectRatio>

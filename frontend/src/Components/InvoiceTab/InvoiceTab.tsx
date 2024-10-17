@@ -2,20 +2,9 @@ import { useEffect, useState } from "react";
 import { Invoice } from "../../Types/Invoice";
 import { deleteInvoices, getAllInvoices, mailInvoices } from "../../Queries";
 import { InvoiceSelectDisplay } from "./InvoiceSelectDisplay";
-import {
-  ScrollArea,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaViewport,
-} from "@radix-ui/react-scroll-area";
+import { ScrollArea, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from "@radix-ui/react-scroll-area";
 import { Separator } from "@radix-ui/react-separator";
-import {
-  CheckIcon,
-  EnvelopeClosedIcon,
-  FileMinusIcon,
-  FilePlusIcon,
-  PaperPlaneIcon,
-} from "@radix-ui/react-icons";
+import { CheckIcon, EnvelopeClosedIcon, FileMinusIcon, FilePlusIcon, PaperPlaneIcon } from "@radix-ui/react-icons";
 import ConfirmInvoices from "./ConfirmInvoices";
 import InvoiceCreation from "./InvoiceCreation";
 import { toast } from "react-toastify";
@@ -91,9 +80,7 @@ export function InvoiceTab() {
   }
 
   function handleSelect(id: number) {
-    setSelectedItems((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+    setSelectedItems((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
   }
 
   function toggleAll() {
@@ -116,17 +103,11 @@ export function InvoiceTab() {
         if (result) {
           const failed = selectedItems.length - result.length;
           if (result.length > 0) {
-            toast.success(
-              `${result.length} Rechnung${result.length > 1 ? "en" : ""
-              } versendet!`
-            );
+            toast.success(`${result.length} Rechnung${result.length > 1 ? "en" : ""} versendet!`);
           }
 
           if (failed) {
-            toast.warn(
-              `${failed} Rechnung${result.length > 1 ? "en" : ""
-              } nicht versendet!`
-            );
+            toast.warn(`${failed} Rechnung${result.length > 1 ? "en" : ""} nicht versendet!`);
           }
 
           setSelectedItems([]);
@@ -146,10 +127,7 @@ export function InvoiceTab() {
     deleteInvoices(selectedItems)
       .then((result) => {
         if (result) {
-          toast.warn(
-            result.length +
-            ` Rechnung${result.length > 1 ? "en" : ""} gelöscht!`
-          );
+          toast.warn(result.length + ` Rechnung${result.length > 1 ? "en" : ""} gelöscht!`);
           setSelectedItems([]);
           reloadInvoices();
         } else {
@@ -162,11 +140,7 @@ export function InvoiceTab() {
   }
 
   function isAllSelected(): boolean {
-    if (
-      invoices === undefined ||
-      invoices.length === 0 ||
-      selectedItems.length === 0
-    ) {
+    if (invoices === undefined || invoices.length === 0 || selectedItems.length === 0) {
       return false;
     }
     return invoices.every((invoice) => {
@@ -201,11 +175,7 @@ export function InvoiceTab() {
               <div
                 onClick={cycleMailed}
                 className={
-                  mailed === undefined
-                    ? "Button icon"
-                    : mailed
-                      ? "Button icon good-color"
-                      : "Button icon danger-color"
+                  mailed === undefined ? "Button icon" : mailed ? "Button icon good-color" : "Button icon danger-color"
                 }
               >
                 <EnvelopeClosedIcon />
@@ -214,13 +184,8 @@ export function InvoiceTab() {
 
             <Separator className="Separator" />
 
-            <div
-              className="SpreadContainer"
-              style={{ padding: "0 0.7rem 0.5rem 0.7rem" }}
-            >
-              <div
-                style={{ display: "flex", gap: "1rem", alignItems: "center" }}
-              >
+            <div className="SpreadContainer" style={{ padding: "0 0.7rem 0.5rem 0.7rem" }}>
+              <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                 {isAllSelected() ? (
                   <div className="CheckBox good-color" onClick={toggleAll}>
                     <CheckIcon />
@@ -285,8 +250,7 @@ export function InvoiceTab() {
                   return (
                     <div
                       key={"p" + index}
-                      className={`PageButton ${selectedPage === index ? "Selected" : ""
-                        }`}
+                      className={`PageButton ${selectedPage === index ? "Selected" : ""}`}
                       onClick={() => selectPage(index)}
                     >
                       {index + 1}

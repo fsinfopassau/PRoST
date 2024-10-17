@@ -36,20 +36,9 @@ export function UserContainer() {
 
   return (
     <>
-      <input
-        type="text"
-        onChange={(e) => setSearchValue(e.target.value)}
-        id="main-search"
-        placeholder="Search"
-      />
+      <input type="text" onChange={(e) => setSearchValue(e.target.value)} id="main-search" placeholder="Search" />
       <div className="SmallGridContainer">
-        {users === undefined ? (
-          <></>
-        ) : (
-          filter(users).map((user, index) => (
-            <UserBox key={index} user={user} />
-          ))
-        )}
+        {users === undefined ? <></> : filter(users).map((user, index) => <UserBox key={index} user={user} />)}
       </div>
     </>
   );

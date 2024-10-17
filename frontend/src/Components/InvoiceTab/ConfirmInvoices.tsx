@@ -29,18 +29,11 @@ const ConfirmInvoices: React.FC<PropsWithChildren<CustomComponentProps>> = ({
   }
 
   return (
-    <ScrollDialog
-      title={dialogTitle}
-      trigger={<div>{children} </div>}
-      onSubmit={onSubmit}
-    >
+    <ScrollDialog title={dialogTitle} trigger={<div>{children} </div>} onSubmit={onSubmit}>
       <table className="Table">
         <tbody>
           {invoices.map((invoice, index) => (
-            <tr
-              key={index}
-              className={totalAmounts(invoice) === 0 ? "table-entry important-color" : "table-entry"}
-            >
+            <tr key={index} className={totalAmounts(invoice) === 0 ? "table-entry important-color" : "table-entry"}>
               <th className="icon left">
                 <ScrollDialog
                   title="Rechnung"
@@ -49,7 +42,7 @@ const ConfirmInvoices: React.FC<PropsWithChildren<CustomComponentProps>> = ({
                       <InfoCircledIcon />
                     </div>
                   }
-                  onSubmit={() => { }}
+                  onSubmit={() => {}}
                 >
                   <InvoiceDetails invoice={invoice} />
                 </ScrollDialog>
@@ -61,9 +54,7 @@ const ConfirmInvoices: React.FC<PropsWithChildren<CustomComponentProps>> = ({
               </th>
               <th className="amount">{totalAmounts(invoice)}</th>
               <th className="balance right bold">{formatMoney(invoice.balance)}</th>
-              <th className="date right">
-                {convertTimestampToTime(invoice.timestamp)}
-              </th>
+              <th className="date right">{convertTimestampToTime(invoice.timestamp)}</th>
             </tr>
           ))}
         </tbody>
