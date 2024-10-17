@@ -36,8 +36,7 @@ export async function getUserDisplayName(userId: string): Promise<string> {
     return user.displayName;
   } else {
     const newUsers = await getAllUsers();
-    if (newUsers)
-      newUsers.forEach((newUser: User) => cachedUsers.set(newUser.id, newUser));
+    if (newUsers) newUsers.forEach((newUser: User) => cachedUsers.set(newUser.id, newUser));
 
     user = cachedUsers.get(userId);
     if (user) {
@@ -50,6 +49,7 @@ export async function getUserDisplayName(userId: string): Promise<string> {
 export function getLevel(user: User): number {
   return Math.floor(user.totalSpent / 5) + 1;
 }
+
 
 export const sortUsersByDisplayName = (users: User[]): User[] => {
   return users.sort((a, b) => {

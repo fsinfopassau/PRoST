@@ -84,21 +84,13 @@ export function ItemCheckout() {
       <div id="Checkout">
         <div id="Checkout-Item">
           <h2>{item?.displayName}</h2>
-          <img
-            className="Image"
-            src={imageUrl}
-            alt="Item Image"
-            style={{ width: "100%" }}
-          />
+          <img className="Image" src={imageUrl} alt="Item Image" style={{ width: "100%" }} />
           <div className="SpreadContainer">
             <div style={{ display: "flex", alignItems: "center" }}>
               <BookmarkIcon />
               {item?.category}
             </div>
-            <div
-              className="bold"
-              style={{ display: "flex", alignItems: "center" }}
-            >
+            <div className="bold" style={{ display: "flex", alignItems: "center" }}>
               <LightningBoltIcon />
               {getPrice(amount)}
             </div>

@@ -17,22 +17,13 @@ import {
 import { Separator } from "@radix-ui/react-separator";
 import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
 import { formatMoney, getValidMoney } from "../../Format";
-import {
-  changeUser,
-  createTransaction,
-  deleteUser,
-  enableUser,
-} from "../../Queries";
+import { changeUser, createTransaction, deleteUser, enableUser } from "../../Queries";
 import ScrollDialog from "../Util/ScrollDialog";
 import { UserSummaryCard } from "../StatisticsTab/UserSummaryCard";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-export function UserSettingCard(props: {
-  user: User;
-  editMode: boolean;
-  onUpdate: () => void;
-}) {
+export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate: () => void }) {
   const { user, editMode, onUpdate } = props;
 
   const [transactionAmount, setTransactionAmount] = useState<string>("");
@@ -42,12 +33,7 @@ export function UserSettingCard(props: {
     if (money) {
       createTransaction(user, money.toString(), "deposit").then((result) => {
         if (result) {
-          toast.success(
-            formatMoney(Math.abs(money)) +
-            ' wurde "' +
-            user.id +
-            '" gutgeschrieben!'
-          );
+          toast.success(formatMoney(Math.abs(money)) + ' wurde "' + user.id + '" gutgeschrieben!');
           setTransactionAmount("");
           onUpdate();
         } else {
@@ -157,10 +143,7 @@ export function UserSettingCard(props: {
       <div className="DisplayCard">
         <div className="SpreadContainer">
           <h3 className="SpreadContainer">
-            <Link
-              className="bold SpreadContainer"
-              to={`/stats/users/${user.id}`}
-            >
+            <Link className="bold SpreadContainer" to={`/stats/users/${user.id}`}>
               {user.displayName}
             </Link>
             {user.enabled ? (
@@ -190,8 +173,8 @@ export function UserSettingCard(props: {
               transactionAmount.length === 0
                 ? "Input"
                 : isTransactionAmountValid()
-                  ? "Input good-color"
-                  : "Input danger-color"
+                ? "Input good-color"
+                : "Input danger-color"
             }
             value={transactionAmount}
             onKeyDown={handleKeyDown}
@@ -213,11 +196,7 @@ export function UserSettingCard(props: {
             <Link className="bold" to={`/stats/users/${user.id}`}>
               {user.id}
             </Link>
-            <Switch
-              className="SwitchRoot"
-              defaultChecked={user.enabled}
-              onCheckedChange={toggleEnable}
-            >
+            <Switch className="SwitchRoot" defaultChecked={user.enabled} onCheckedChange={toggleEnable}>
               <SwitchThumb className="SwitchThumb" />
             </Switch>
           </h3>

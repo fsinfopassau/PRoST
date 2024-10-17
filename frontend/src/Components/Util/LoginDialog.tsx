@@ -8,19 +8,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@radix-ui/react-dialog";
-import {
-  AvatarIcon,
-  Cross2Icon,
-  ExitIcon,
-  PaperPlaneIcon,
-} from "@radix-ui/react-icons";
+import { AvatarIcon, Cross2Icon, ExitIcon, PaperPlaneIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { loginNew } from "../../Queries";
-import {
-  getSessionUserName,
-  resetSession,
-  existCredentials,
-} from "../../SessionInfo";
+import { getSessionUserName, resetSession, existCredentials } from "../../SessionInfo";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -104,19 +95,11 @@ export function LoginDialog() {
                   </DialogClose>
                 </div>
                 <DialogTitle className="DialogTitle">Login</DialogTitle>
-                <DialogDescription className="DialogDescription">
-                  Username
-                </DialogDescription>
+                <DialogDescription className="DialogDescription">Username</DialogDescription>
                 <fieldset className="Fieldset">
-                  <input
-                    className="Input"
-                    onChange={handleUserChange}
-                    onKeyDown={handleKeyDown}
-                  />
+                  <input className="Input" onChange={handleUserChange} onKeyDown={handleKeyDown} />
                 </fieldset>
-                <DialogDescription className="DialogDescription">
-                  Password
-                </DialogDescription>
+                <DialogDescription className="DialogDescription">Password</DialogDescription>
                 <fieldset className="Fieldset">
                   <input
                     className="Input"

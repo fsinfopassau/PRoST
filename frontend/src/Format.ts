@@ -50,10 +50,7 @@ export function getTimeSince(unixMillis: number): string {
   return `now`;
 }
 
-export function formatMoney(
-  balance: number | undefined,
-  decimalCount = 2
-): string {
+export function formatMoney(balance: number | undefined, decimalCount = 2): string {
   if (!balance && balance !== 0) {
     return "";
   }
@@ -67,8 +64,7 @@ export function formatMoney(
 
 /* DataValidation */
 
-const EMAIL_PATTERN: string =
-  "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\\.+[a-zA-Z0-9.-]+$";
+const EMAIL_PATTERN: string = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\\.+[a-zA-Z0-9.-]+$";
 const MAX_NAME_LENGTH: number = 30;
 
 export function isValidString(value: string): boolean {
@@ -110,9 +106,7 @@ export function getValidMoney(value: string): number | undefined {
     return undefined;
   }
 
-  const numberValue = parseFloat(
-    value.replace(",", ".").replace(/[^0-9.-]+/g, "")
-  );
+  const numberValue = parseFloat(value.replace(",", ".").replace(/[^0-9.-]+/g, ""));
   if (isNaN(numberValue)) {
     return undefined;
   }
