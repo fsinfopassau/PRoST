@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { User } from "../../Types/User";
+import {sortUsersByDisplayName, User} from "../../Types/User";
 import { UserBox } from "./UserSelectionDisplay";
 import { getAllUsers } from "../../Queries";
 import Fuse from "fuse.js";
@@ -19,6 +19,9 @@ export function UserContainer() {
   }, []);
 
   function filter(users: User[]): User[] {
+
+    sortUsersByDisplayName(users);
+
     if (searchValue.trim().length === 0) {
       return users.filter((user) => user.enabled === true);
     }

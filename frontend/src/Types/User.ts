@@ -50,3 +50,9 @@ export async function getUserDisplayName(userId: string): Promise<string> {
 export function getLevel(user: User): number {
   return Math.floor(user.totalSpent / 5) + 1;
 }
+
+export const sortUsersByDisplayName = (users: User[]): User[] => {
+  return users.sort((a, b) => {
+    return a.displayName.localeCompare(b.displayName);
+  });
+};
