@@ -4,6 +4,8 @@ import { getHistory, getOwnHistory, getUserHistory } from "../../Queries";
 import { HistoryEntryDisplay } from "../StatisticsTab/HistoryEntryDisplay";
 import { ScrollArea, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from "@radix-ui/react-scroll-area";
 import { Separator } from "@radix-ui/react-separator";
+import { useEffectOnce } from "../Util/useEffectOnce";
+import { isNotBlank } from "../Util/utils";
 
 export function ShopHistory(props: { personal: boolean }) {
   const [selectedPage, setSelectedPage] = useState(0);
@@ -13,11 +15,9 @@ export function ShopHistory(props: { personal: boolean }) {
   const [maxPage, setMaxPages] = useState(3);
   const [history, setHistory] = useState<ShopHistoryEntry[]>([]);
 
-  useEffect(() => {
-    reloadTransactions();
-  }, [selectedPage, searchValue]);
+  useEffect(reloadTransactions, [selectedPage, searchValue]);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     if (selectedPage === 0) selectPage(0);
   });
 
@@ -49,6 +49,7 @@ export function ShopHistory(props: { personal: boolean }) {
       reloadTransactions();
     }
   }
+
   function reloadTransactions() {
     if (props.personal) {
       getOwnHistory(10, selectedPage).then((historyPage) => {
@@ -58,21 +59,25 @@ export function ShopHistory(props: { personal: boolean }) {
         }
       });
     } else {
-      if (searchValue.trim().length != 0) {
-        getUserHistory(searchValue, 10, selectedPage).then((historyPage) => {
-          if (historyPage) {
-            setHistory(historyPage.content);
-            setTotalPages(historyPage.totalPages + 1);
-          }
-        });
-      } else {
-        getHistory(10, selectedPage).then((historyPage) => {
-          if (historyPage) {
-            setHistory(historyPage.content);
-            setTotalPages(historyPage.totalPages + 1);
-          }
-        });
-      }
+      executeSearch();
+    }
+  }
+
+  function executeSearch() {
+    if (isNotBlank(searchValue)) {
+      getUserHistory(searchValue, 10, selectedPage).then((historyPage) => {
+        if (historyPage) {
+          setHistory(historyPage.content);
+          setTotalPages(historyPage.totalPages + 1);
+        }
+      });
+    } else {
+      getHistory(10, selectedPage).then((historyPage) => {
+        if (historyPage) {
+          setHistory(historyPage.content);
+          setTotalPages(historyPage.totalPages + 1);
+        }
+      });
     }
   }
 
@@ -81,21 +86,18 @@ export function ShopHistory(props: { personal: boolean }) {
       <ScrollArea className="DisplayCard">
         <ScrollAreaViewport>
           <h2>Historie</h2>
-
           {props.personal ? (
             <></>
           ) : (
-            <>
-              <div className="tableSearch">
-                <input
-                  className="Input"
-                  type="text"
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Käufer Id"
-                />
-              </div>
-            </>
+            <div className="tableSearch">
+              <input
+                className="Input"
+                type="text"
+                onChange={(e) => setSearchValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Käufer Id"
+              />
+            </div>
           )}
 
           <table className="Table">
