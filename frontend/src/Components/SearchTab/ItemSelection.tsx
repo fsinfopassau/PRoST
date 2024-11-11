@@ -27,7 +27,7 @@ export function ItemSelection() {
           setUser(user);
         });
       }
-  });
+  }, [userId]);
 
   function filterItems(itemList: ShopItem[]) {
     return itemList.filter((item) => item.enabled);
