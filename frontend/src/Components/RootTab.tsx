@@ -7,7 +7,7 @@ import { UserContainer } from "./SearchTab/UserContainer";
 import { PersonalUserOverview } from "./PersonalView/PersonalUserOverview";
 import { BASE_PATH } from "./App";
 
-export function RootTab(props: { switchTheme: () => void }) {
+export function RootTab() {
   const [user, setUser] = useState<User | undefined>(undefined);
 
   useEffect(() => {
@@ -20,12 +20,16 @@ export function RootTab(props: { switchTheme: () => void }) {
       });
   }, []);
 
+  function navigateGit(){
+    window.open('https://github.com/fsinfopassau/PRoST', '_blank');
+  }
+
   return (
     <>
       <div>
         <h1>
           <img
-            onClick={props.switchTheme}
+            onClick={navigateGit}
             src={`${BASE_PATH}/icons/happy-manje/happy beer.svg`}
             id="MainIcon"
             alt="Logo"
