@@ -61,9 +61,9 @@ export function ItemSelection() {
           <div style={{ flexGrow: "0" }}>
             <UserSummaryCard user={user} />
           </div>
-          <div>
+          <div id="category-box">
             {groupedItems.map(({ category, items }) => (
-                <div key={category}>
+                <div key={category} className="ItemGroup">
                   <h2>{category}</h2>
                   <div className="SmallGridContainer">
                     {items.map((item, index) => (
