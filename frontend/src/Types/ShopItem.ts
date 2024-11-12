@@ -1,4 +1,4 @@
-import { getAllShopItems } from "../Queries";
+import {getAllShopItems} from "../Queries";
 
 export interface ShopItem {
   id: string;
@@ -33,4 +33,14 @@ export async function getItemDisplayName(
     }
   }
   return undefined;
+}
+
+
+export function extractCategories(items: ShopItem[]): string[] {
+  const categories = items.map(item => item.category);
+  return Array.from(new Set(categories));
+}
+
+export function filterByCategory(items: ShopItem[], category: string): ShopItem[] {
+  return items.filter(item => item.category === category);
 }

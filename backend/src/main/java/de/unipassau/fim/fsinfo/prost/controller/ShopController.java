@@ -7,6 +7,7 @@ import de.unipassau.fim.fsinfo.prost.security.CustomUserDetailsContextMapper.Cus
 import de.unipassau.fim.fsinfo.prost.service.AuthenticationService;
 import de.unipassau.fim.fsinfo.prost.service.FileStorageService;
 import de.unipassau.fim.fsinfo.prost.service.ShopService;
+import de.unipassau.fim.fsinfo.prost.service.UserService;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,14 +37,17 @@ public class ShopController {
   private final AuthenticationService authService;
 
   private final ShopItemRepository itemRepository;
+  private final UserService userService;
 
   @Autowired
   public ShopController(FileStorageService fileStorageService, ShopService shopService,
-      ShopItemRepository itemRepository, AuthenticationService authService) {
+      ShopItemRepository itemRepository, AuthenticationService authService,
+      UserService userService) {
     this.fileStorageService = fileStorageService;
     this.shopService = shopService;
     this.itemRepository = itemRepository;
     this.authService = authService;
+    this.userService = userService;
   }
 
   @GetMapping("/item/list")
@@ -89,6 +93,7 @@ public class ShopController {
     }
 
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+    String bearerId = userDetails.getUsername();
 
     Collection<UserAccessRole> roles = authService.getRoles(authentication);
 
@@ -98,7 +103,7 @@ public class ShopController {
     Optional<UserAccessRole> highestPermission = authService.getHighestRole(roles);
 
     if (highestPermission.isPresent() && highestPermission.get().equals(UserAccessRole.FSINFO)) {
-      if (userId.equals(userDetails.getUsername())) {
+      if (userId.equals(bearerId)) {
         permitted = true;
       } else {
         // 🙃🫖
@@ -107,11 +112,20 @@ public class ShopController {
       }
     }
 
-    if (permitted && shopService.consume(id, userId,
-        (n == null ? 1 : n), userDetails.getUsername())) {
+    if (!permitted) {
+      return ResponseEntity.badRequest().body(permitted + " " + highestPermission);
+    }
+
+    if (shopService.hasBearerCooldown(bearerId)) {
+      return ResponseEntity.badRequest().body("on cooldown");
+    }
+
+    if (shopService.consume(id, userId,
+        (n == null ? 1 : n), bearerId)) {
       return ResponseEntity.ok().build();
     }
-    return ResponseEntity.badRequest().body(permitted + " " + highestPermission);
+
+    return ResponseEntity.badRequest().body("Could not consume!");
 
   }
 

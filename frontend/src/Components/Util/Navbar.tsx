@@ -15,8 +15,7 @@ import { getAuthorizedUser, isAdmin, isOnlyKiosk, isOnlyUser, isUser, resetSessi
 import { BASE_PATH } from "../App";
 import { useEffect } from "react";
 
-export function Navbar(props: { switchTheme: () => void }) {
-  const { switchTheme } = props;
+export function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,7 +33,11 @@ export function Navbar(props: { switchTheme: () => void }) {
     return () => {
       document.removeEventListener("keydown", handleKeyPress);
     };
-  }, []);
+  });
+
+  function navigateRoot(){
+    navigate("");
+  }
 
   function tabUpdate(newValue: string) {
     if (newValue === "root") {
@@ -133,7 +136,7 @@ export function Navbar(props: { switchTheme: () => void }) {
 
   return (
     <div id="tab-changer">
-      <img onClick={switchTheme} src={`${BASE_PATH}/icons/happy-manje/happy beer.svg`} />
+      <img onClick={navigateRoot} src={`${BASE_PATH}/icons/happy-manje/happy beer.svg`}  alt={"Logo"}/>
       <Tabs value={getSelectedTabValue()}>
         <TabsList className="TabsList">
           {isOnlyKiosk() ? kioskView() : isUser() ? userView() : null}

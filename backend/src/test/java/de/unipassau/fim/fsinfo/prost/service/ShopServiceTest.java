@@ -15,6 +15,7 @@ import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -105,6 +106,69 @@ public class ShopServiceTest {
 
     boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId());
     assertTrue(result);
+  }
+
+  @Test
+  public void testConsume_UnsuccessfulSecondTransactionWithoutPause_ReturnsFalse()
+      throws InterruptedException {
+    shopService.buyCooldownTime = 10L;
+
+    TransactionEntry transaction = new TransactionEntry(null, prostUser.getId(), prostUser.getId(),
+        TransactionType.BUY, null, shopItem.getPrice());
+    when(itemRepository.findById(shopItem.getId())).thenReturn(Optional.of(shopItem));
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+    when(transactionService.moneyTransfer(any(), anyString(), anyString(), any(),
+        any(TransactionType.class)))
+        .thenReturn(Optional.of(transaction));
+
+    boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId());
+    assertTrue(result);
+    assertTrue(shopService.hasBearerCooldown(prostUser.getId()));
+
+    // second buy
+    TransactionEntry transaction2 = new TransactionEntry(null, prostUser.getId(), prostUser.getId(),
+        TransactionType.BUY, null, shopItem.getPrice());
+
+    boolean result2 = shopService.consume(shopItem.getId(), prostUser.getId(), 1,
+        prostUser.getId());
+    assertFalse(result2);
+    assertTrue(shopService.hasBearerCooldown(prostUser.getId()));
+  }
+
+  @Test
+  public void testConsume_SuccessfulSecondTransactionWithPause_ReturnsTrue()
+      throws InterruptedException {
+    shopService.buyCooldownTime = 10L;
+
+    TransactionEntry transaction = new TransactionEntry(null, prostUser.getId(), prostUser.getId(),
+        TransactionType.BUY, null, shopItem.getPrice());
+    when(itemRepository.findById(shopItem.getId())).thenReturn(Optional.of(shopItem));
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+    when(transactionService.moneyTransfer(any(), anyString(), anyString(), any(),
+        any(TransactionType.class)))
+        .thenReturn(Optional.of(transaction));
+
+    boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId());
+    long lastTransaction = Instant.now().toEpochMilli();
+    assertTrue(result);
+    assertTrue(shopService.hasBearerCooldown(prostUser.getId()));
+
+    Thread.sleep(shopService.buyCooldownTime + 1);
+    assertFalse(shopService.hasBearerCooldown(prostUser.getId()));
+
+    // second buy
+    TransactionEntry transaction2 = new TransactionEntry(null, prostUser.getId(), prostUser.getId(),
+        TransactionType.BUY, null, shopItem.getPrice());
+    when(transactionService.moneyTransfer(any(), anyString(), anyString(), any(),
+        any(TransactionType.class)))
+        .thenReturn(Optional.of(transaction2));
+
+    boolean result2 = shopService.consume(shopItem.getId(), prostUser.getId(), 1,
+        prostUser.getId());
+    assertTrue(result2);
+    assertTrue(shopService.hasBearerCooldown(prostUser.getId()));
   }
 
   @Test
