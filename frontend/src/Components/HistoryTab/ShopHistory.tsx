@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
-import { ShopHistoryEntry } from "../../Types/ShopHistory";
-import { getHistory, getOwnHistory, getUserHistory } from "../../Queries";
-import { HistoryEntryDisplay } from "../StatisticsTab/HistoryEntryDisplay";
-import { ScrollArea, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from "@radix-ui/react-scroll-area";
-import { Separator } from "@radix-ui/react-separator";
-import { useEffectOnce } from "../Util/useEffectOnce";
-import { isNotBlank } from "../Util/utils";
+import {useEffect, useState} from "react";
+import {ShopHistoryEntry} from "../../Types/ShopHistory";
+import {getHistory, getOwnHistory, getUserHistory} from "../../Queries";
+import {HistoryEntryDisplay} from "../StatisticsTab/HistoryEntryDisplay";
+import {
+  ScrollArea,
+  ScrollAreaScrollbar,
+  ScrollAreaThumb,
+  ScrollAreaViewport
+} from "@radix-ui/react-scroll-area";
+import {Separator} from "@radix-ui/react-separator";
 
 export function ShopHistory(props: { personal: boolean }) {
   const [selectedPage, setSelectedPage] = useState(0);
@@ -15,9 +18,11 @@ export function ShopHistory(props: { personal: boolean }) {
   const [maxPage, setMaxPages] = useState(3);
   const [history, setHistory] = useState<ShopHistoryEntry[]>([]);
 
-  useEffect(reloadTransactions, [selectedPage, searchValue]);
+  useEffect(() => {
+    reloadTransactions();
+  }, [selectedPage, searchValue]);
 
-  useEffectOnce(() => {
+  useEffect(() => {
     if (selectedPage === 0) selectPage(0);
   });
 
@@ -59,80 +64,76 @@ export function ShopHistory(props: { personal: boolean }) {
         }
       });
     } else {
-      executeSearch();
-    }
-  }
-
-  function executeSearch() {
-    if (isNotBlank(searchValue)) {
-      getUserHistory(searchValue, 10, selectedPage).then((historyPage) => {
-        if (historyPage) {
-          setHistory(historyPage.content);
-          setTotalPages(historyPage.totalPages + 1);
-        }
-      });
-    } else {
-      getHistory(10, selectedPage).then((historyPage) => {
-        if (historyPage) {
-          setHistory(historyPage.content);
-          setTotalPages(historyPage.totalPages + 1);
-        }
-      });
+      if (searchValue.trim().length != 0) {
+        getUserHistory(searchValue, 10, selectedPage).then((historyPage) => {
+          if (historyPage) {
+            setHistory(historyPage.content);
+            setTotalPages(historyPage.totalPages + 1);
+          }
+        });
+      } else {
+        getHistory(10, selectedPage).then((historyPage) => {
+          if (historyPage) {
+            setHistory(historyPage.content);
+            setTotalPages(historyPage.totalPages + 1);
+          }
+        });
+      }
     }
   }
 
   return (
-    <>
-      <ScrollArea className="DisplayCard">
-        <ScrollAreaViewport>
-          <h2>Historie</h2>
-          {props.personal ? (
-            <></>
-          ) : (
-            <div className="tableSearch">
-              <input
-                className="Input"
-                type="text"
-                onChange={(e) => setSearchValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Käufer Id"
-              />
-            </div>
-          )}
+      <>
+        <ScrollArea className="DisplayCard">
+          <ScrollAreaViewport>
+            <h2>Historie</h2>
+            {props.personal ? (
+                <></>
+            ) : (
+                <div className="tableSearch">
+                  <input
+                      className="Input"
+                      type="text"
+                      onChange={(e) => setSearchValue(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      placeholder="Käufer Id"
+                  />
+                </div>
+            )}
 
-          <table className="Table">
-            <tbody>
+            <table className="Table">
+              <tbody>
               {history.map((item) => (
-                <HistoryEntryDisplay entry={item} key={item.id} />
+                  <HistoryEntryDisplay entry={item} key={item.id}/>
               ))}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
 
-          <Separator className="Separator" />
+            <Separator className="Separator"/>
 
-          <div className="PageBar">
-            {Array.from({ length: totalPages - 1 }, (_, index) => {
-              if (index >= minPage && index <= maxPage) {
-                return (
-                  <div
-                    key={"p" + index}
-                    className={`PageButton ${selectedPage === index ? "Selected" : ""}`}
-                    onClick={() => selectPage(index)}
-                  >
-                    {index + 1}
-                  </div>
-                );
-              }
-            }).filter(Boolean)}
-          </div>
-        </ScrollAreaViewport>
-        <ScrollAreaScrollbar className="Scrollbar" orientation="vertical">
-          <ScrollAreaThumb className="ScrollbarThumb" />
-        </ScrollAreaScrollbar>
-        <ScrollAreaScrollbar className="Scrollbar" orientation="horizontal">
-          <ScrollAreaThumb className="ScrollbarThumb" />
-        </ScrollAreaScrollbar>
-      </ScrollArea>
-    </>
+            <div className="PageBar">
+              {Array.from({length: totalPages - 1}, (_, index) => {
+                if (index >= minPage && index <= maxPage) {
+                  return (
+                      <div
+                          key={"p" + index}
+                          className={`PageButton ${selectedPage === index ? "Selected" : ""}`}
+                          onClick={() => selectPage(index)}
+                      >
+                        {index + 1}
+                      </div>
+                  );
+                }
+              }).filter(Boolean)}
+            </div>
+          </ScrollAreaViewport>
+          <ScrollAreaScrollbar className="Scrollbar" orientation="vertical">
+            <ScrollAreaThumb className="ScrollbarThumb"/>
+          </ScrollAreaScrollbar>
+          <ScrollAreaScrollbar className="Scrollbar" orientation="horizontal">
+            <ScrollAreaThumb className="ScrollbarThumb"/>
+          </ScrollAreaScrollbar>
+        </ScrollArea>
+      </>
   );
 }
