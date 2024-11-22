@@ -24,7 +24,7 @@ services:
       # MAIL_HOST_NAME: smtp.localhost
       # MAIL_HOST_PORT: 587
       # DB_URL: localhost:3306
-      DB_NAME: PRoST_SQL2
+      # DB_NAME: PRoST_SQL
       # DB_USER: admin
       # DB_PASSWORD: password
     ports:
@@ -38,7 +38,7 @@ services:
     container_name: mariadb
     environment:
       - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=PRoST_SQL2 #optional
+      - MYSQL_DATABASE=PRoST_SQL #optional
       - MYSQL_USER=admin #optional
       - MYSQL_PASSWORD=password #optional
     volumes:
