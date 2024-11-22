@@ -1,2 +1,12 @@
 databaseChangeLog:
-# Insert Changesets
+  - changeSet:
+      id: 1-add-hidden-column
+      author: Paulsenik
+      changes:
+        - addColumn:
+            tableName: PRoST_User
+            columns:
+              - column:
+                  name: hidden
+                  type: BOOLEAN
+                  defaultValue: false
