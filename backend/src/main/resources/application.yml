@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mariadb://${DB_URL:mariadb:3306}/PRoST_SQL
+    url: jdbc:mariadb://${DB_URL:mariadb:3306}/${DB_NAME:PRoST_SQL}
     driverClassName: org.mariadb.jdbc.Driver
     username: ${DB_USER:admin}
     password: ${DB_PASSWORD:password}
