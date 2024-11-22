@@ -57,7 +57,7 @@ public class UserService {
       displayName = userName;
     }
 
-    ProstUser user = new ProstUser(userName, displayName, email, true);
+    ProstUser user = new ProstUser(userName, displayName, email, true, false);
     users.save(user);
     System.out.println("[US] :: " + userName + " :: user-creation succeeded");
     return Optional.of(user);
