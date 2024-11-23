@@ -27,6 +27,7 @@ services:
       # DB_NAME: PRoST_SQL
       # DB_USER: admin
       # DB_PASSWORD: password
+      # LOGGING_LEVEL: DEBUG
     ports:
       - "8081:8081"
     networks:

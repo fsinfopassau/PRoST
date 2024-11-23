@@ -29,7 +29,7 @@ export function UserSettings() {
   }
 
   function reloadUsers() {
-    getAllUsers().then((users) => {
+    getAllUsers(true).then((users) => {
       if (users) setUsers(users);
     });
   }

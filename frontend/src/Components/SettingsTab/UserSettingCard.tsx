@@ -221,6 +221,19 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
       <div className="DisplayCard">
         <div className="SpreadContainer">
           <h3 className="SpreadContainer">
+            <ButtonDialogChanger
+              dialogName="Namen ändern"
+              dialogDesc="Ändere hier den Namen des Nutzers"
+              onSubmit={setName}
+              key={"NameChanger"}
+              trigger={
+                <div className="Button">
+                  <ChatBubbleIcon />
+                  {user.displayName}
+                </div>
+              }
+            />
+            <DotIcon/>
             <Link className="bold" to={`/stats/users/${user.id}`}>
               {user.id}
             </Link>
@@ -287,18 +300,6 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
                 {getLevel(user)}
                 <DoubleArrowRightIcon />
                 {formatMoney(user.totalSpent)}
-              </div>
-            }
-          />
-          <ButtonDialogChanger
-            dialogName="Namen ändern"
-            dialogDesc="Ändere hier den Namen des Nutzers"
-            onSubmit={setName}
-            key={"NameChanger"}
-            trigger={
-              <div className="Button">
-                <ChatBubbleIcon />
-                {user.displayName}
               </div>
             }
           />

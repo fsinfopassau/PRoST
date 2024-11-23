@@ -1,10 +1,10 @@
 import axios from "axios";
-import {ShopHistoryEntryPage} from "./Types/ShopHistory";
-import {ShopItem} from "./Types/ShopItem";
-import {AuthorizedUser, User} from "./Types/User";
-import {getEncodedCredentials, setAuthorizedUser} from "./SessionInfo";
-import {InvoicePage} from "./Types/Invoice";
-import {TransactionPage} from "./Types/Transaction";
+import { ShopHistoryEntryPage } from "./Types/ShopHistory";
+import { ShopItem } from "./Types/ShopItem";
+import { AuthorizedUser, User } from "./Types/User";
+import { getEncodedCredentials, setAuthorizedUser } from "./SessionInfo";
+import { InvoicePage } from "./Types/Invoice";
+import { TransactionPage } from "./Types/Transaction";
 
 export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
 
@@ -117,6 +117,16 @@ export async function hideUser(user: User, hide: boolean): Promise<boolean> {
   return result.ok;
 }
 
+export async function hideOwnUser(hide: boolean): Promise<boolean> {
+  const result = await fetch(`${apiUrl}/api/user/me/${hide ? "hide" : "show"}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${getEncodedCredentials()}`,
+    },
+  });
+  return result.ok;
+}
+
 export async function createNewUser(user: User): Promise<boolean> {
   const result = await fetch(`${apiUrl}/api/user/create`, {
     method: "POST",
@@ -150,9 +160,9 @@ export async function createTransaction(receiver: User, value: string, actionTyp
 }
 
 export async function getAllTransactions(
-    size: number,
-    page: number,
-    receiverId: string | undefined
+  size: number,
+  page: number,
+  receiverId: string | undefined
 ): Promise<TransactionPage | undefined> {
   const params = receiverId ? "&receiverId=" + receiverId : "";
 
@@ -427,12 +437,12 @@ export async function getPersonalInvoices(): Promise<InvoicePage | undefined> {
 }
 
 export async function getAllInvoices(
-    page: number,
-    userId: string | undefined,
-    mailed: boolean | undefined
+  page: number,
+  userId: string | undefined,
+  mailed: boolean | undefined
 ): Promise<InvoicePage | undefined> {
   const params =
-      (userId ? "&userId=" + userId : "") + (mailed === undefined ? "" : "&mailed=" + (mailed ? "true" : "false"));
+    (userId ? "&userId=" + userId : "") + (mailed === undefined ? "" : "&mailed=" + (mailed ? "true" : "false"));
 
   try {
     const response = await fetch(`${apiUrl}/api/invoice/list?s=20&p=` + page + params, {
