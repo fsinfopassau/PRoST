@@ -80,7 +80,8 @@ public class ShopHistoryServiceTest {
         Optional.of(new ShopItem("item2", "Testitem", "Item Two", new BigDecimal("20.99"))));
 
     // Call the method to test
-    Page<ShopItemHistoryEntryDTO> result = shopHistoryService.getHistory(0, 10, Optional.empty());
+    Page<ShopItemHistoryEntryDTO> result = shopHistoryService.getHistory(0, 10, Optional.empty(),
+        false);
 
     // Assertions
     assertEquals(2, result.getContent().size());
