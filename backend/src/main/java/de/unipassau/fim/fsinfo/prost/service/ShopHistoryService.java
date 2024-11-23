@@ -39,14 +39,14 @@ public class ShopHistoryService {
    * Can either return a Page of the complete History or the History of a given user.
    *
    * @param pageNumber The page-index (0-n) of the searched dataset.
-   * @param pageSize The size of a page (1-n).
-   * @param userId The userId of the searched user-buy-history.
+   * @param pageSize   The size of a page (1-n).
+   * @param userId     The userId of the searched user-buy-history.
    * @return A page with the search-result according to the given parameters.
    */
   public Page<ShopItemHistoryEntryDTO> getHistory(
       int pageNumber, int pageSize, Optional<String> userId) {
 
-    Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("timestamp").descending());
+    Pageable pageable = PageRequest.of(pageNumber, pageSize, desc);
     Page<ShopItemHistoryEntry> entriesPage;
 
     if (userId.isPresent()) {
@@ -70,13 +70,15 @@ public class ShopHistoryService {
         userO.isPresent() ? userO.get().getDisplayName() : entry.getUserId();
     String itemDisplayName =
         itemO.isPresent() ? itemO.get().getDisplayName() : entry.getItemId();
+    Boolean isHidden = userO.isPresent() && userO.get().getHidden();
 
     return new ShopItemHistoryEntryDTO(entry.getId(), entry.getUserId(), userDisplayName,
         entry.getItemId(), itemDisplayName,
         entry.getItemPrice(),
         entry.getAmount(),
         entry.getTimestamp(),
-        entry.getTransaction());
+        entry.getTransaction(),
+        isHidden);
   }
 
 }

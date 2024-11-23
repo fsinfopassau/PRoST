@@ -20,5 +20,6 @@ public class ShopItemHistoryEntryDTO {
   private int amount;
   private Long timestamp;
   private TransactionEntry transaction;
+  private Boolean hidden;
 
 }
