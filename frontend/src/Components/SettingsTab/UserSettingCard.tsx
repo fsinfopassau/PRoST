@@ -8,8 +8,11 @@ import {
   Cross1Icon,
   Cross2Icon,
   CrossCircledIcon,
+  DotIcon,
   DoubleArrowRightIcon,
   EnvelopeClosedIcon,
+  EyeClosedIcon,
+  EyeOpenIcon,
   LightningBoltIcon,
   PlusIcon,
   RocketIcon,
@@ -17,7 +20,7 @@ import {
 import { Separator } from "@radix-ui/react-separator";
 import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
 import { formatMoney, getValidMoney } from "../../Format";
-import { changeUser, createTransaction, deleteUser, enableUser } from "../../Queries";
+import { changeUser, createTransaction, deleteUser, enableUser, hideUser } from "../../Queries";
 import ScrollDialog from "../Util/ScrollDialog";
 import { UserSummaryCard } from "../StatisticsTab/UserSummaryCard";
 import { Link } from "react-router-dom";
@@ -56,6 +59,18 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
     enableUser(user, newVal).then((result) => {
       if (result) {
         toast.success(user.id + (newVal ? " aktiviert!" : " deaktiviert!"));
+        onUpdate();
+      } else {
+        toast.error("Änderung fehlgeschlagen!");
+      }
+    });
+  }
+
+  function toggleHidden(){
+    const newVal = !user.hidden;
+    hideUser(user,newVal).then((result) => {
+      if (result) {
+        toast.success(user.id + (newVal ? " ist jetzt versteckt!" : " ist jetzt öffentlich!"));
         onUpdate();
       } else {
         toast.error("Änderung fehlgeschlagen!");
@@ -145,23 +160,36 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
           <h3 className="SpreadContainer">
             <Link className="bold SpreadContainer" to={`/stats/users/${user.id}`}>
               {user.displayName}
+              <DotIcon/> {user.id}
             </Link>
-            {user.enabled ? (
-              <div className="good-color">
-                <CheckIcon />
-              </div>
-            ) : (
-              <div className="danger-color">
-                <Cross2Icon />
-              </div>
-            )}
           </h3>
-
           <h3>
             <RocketIcon />
             {getLevel(user)}
           </h3>
         </div>
+
+        <div style={{display: "flex", gap: "1rem", padding: "0.25rem 0"}}>
+          {user.enabled ? (
+            <div className="good-color">
+              <CheckIcon />
+            </div>
+          ) : (
+            <div className="danger-color">
+              <Cross2Icon />
+            </div>
+          )}
+          {user.hidden ? (
+            <div className="danger-color">
+              <EyeClosedIcon />
+            </div>
+          ) : (
+            <div className="good-color">
+              <EyeOpenIcon />
+            </div>
+          )}
+        </div>
+
         <Separator className="Separator" />
 
         <h3>{formatMoney(user.balance)}</h3>
@@ -196,9 +224,6 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
             <Link className="bold" to={`/stats/users/${user.id}`}>
               {user.id}
             </Link>
-            <Switch className="SwitchRoot" defaultChecked={user.enabled} onCheckedChange={toggleEnable}>
-              <SwitchThumb className="SwitchThumb" />
-            </Switch>
           </h3>
 
           <div className="SpreadContainer">
@@ -232,6 +257,22 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
               </div>
             </ScrollDialog>
           </div>
+        </div>
+        <div style={{display: "flex", gap: "1rem", padding: "0.25rem 0", alignItems: "center"}}>
+          <Switch className="SwitchRoot" defaultChecked={user.enabled} onCheckedChange={toggleEnable}>
+            <SwitchThumb className="SwitchThumb" />
+          </Switch>
+
+          {user.hidden ? (
+            <div className="Button icon danger-color" onClick={toggleHidden}>
+              <EyeClosedIcon />
+            </div>
+          ) : (
+            <div className="Button icon good-color" onClick={toggleHidden}>
+              <EyeOpenIcon />
+            </div>
+          )}
+
         </div>
         <Separator className="Separator" />
         <div className="SmallGridContainer">

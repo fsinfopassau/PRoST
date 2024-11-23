@@ -81,7 +81,7 @@ class UserServiceTest {
   @Test
   public void testInfo_AllUsers_ReturnsUsersList() {
     when(userRepository.findAll()).thenReturn(List.of(prostUser));
-    Optional<List<ProstUser>> result = userService.info(null);
+    Optional<List<ProstUser>> result = userService.info(null, true);
     assertTrue(result.isPresent());
     assertEquals(1, result.get().size());
     assertEquals(prostUser, result.get().get(0));
@@ -90,7 +90,7 @@ class UserServiceTest {
   @Test
   public void testInfo_SpecificUser_ReturnsUser() {
     when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
-    Optional<List<ProstUser>> result = userService.info(prostUser.getId());
+    Optional<List<ProstUser>> result = userService.info(prostUser.getId(), true);
     assertTrue(result.isPresent());
     assertEquals(1, result.get().size());
     assertEquals(prostUser, result.get().get(0));
@@ -99,7 +99,7 @@ class UserServiceTest {
   @Test
   public void testInfo_UserNotFound_ReturnsEmpty() {
     when(userRepository.findById(prostUser.getId())).thenReturn(Optional.empty());
-    Optional<List<ProstUser>> result = userService.info(prostUser.getId());
+    Optional<List<ProstUser>> result = userService.info(prostUser.getId(), true);
     assertTrue(result.isEmpty());
   }
 

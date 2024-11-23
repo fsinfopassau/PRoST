@@ -54,6 +54,7 @@ export function UserSettings() {
       email: newEmail,
       balance: 0,
       enabled: true,
+      hidden: false,
       totalSpent: 0,
     };
 
