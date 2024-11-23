@@ -1,8 +1,11 @@
 package de.unipassau.fim.fsinfo.prost.controller;
 
+import de.unipassau.fim.fsinfo.prost.data.UserAccessRole;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.security.CustomUserDetailsContextMapper.CustomUserDetails;
+import de.unipassau.fim.fsinfo.prost.service.AuthenticationService;
 import de.unipassau.fim.fsinfo.prost.service.UserService;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
   private final UserService userService;
+  private final AuthenticationService authService;
 
   @Autowired
-  public UserController(UserService userService) {
+  public UserController(UserService userService, AuthenticationService auth) {
     this.userService = userService;
+    this.authService = auth;
   }
 
   /**
@@ -33,8 +38,26 @@ public class UserController {
    * @return List of all Users
    */
   @GetMapping("/info")
-  public ResponseEntity<List<ProstUser>> list(@RequestParam(required = false) String id) {
-    return userService.info(id).map(ResponseEntity::ok)
+  public ResponseEntity<List<ProstUser>> list(Authentication authentication,
+      @RequestParam(required = false) String id) {
+
+    if (authentication == null) {
+      return ResponseEntity.badRequest().build();
+    }
+    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+    Collection<UserAccessRole> roles = authService.getRoles(authentication);
+
+    if (userDetails.getUsername().equals(id)) {
+      // always show own profile
+      return userService.info(id, true).map(ResponseEntity::ok)
+          .orElseGet(() -> ResponseEntity.notFound().build());
+    } else if (roles.contains(UserAccessRole.KAFFEEKASSE) || roles.contains(UserAccessRole.KIOSK)) {
+      // allow single-user access for admin & kiosk
+      return userService.info(id, true).map(ResponseEntity::ok)
+          .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    return userService.info(null, false).map(ResponseEntity::ok)
         .orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
@@ -45,9 +68,22 @@ public class UserController {
     }
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-    Optional<List<ProstUser>> users = userService.info(userDetails.getUsername());
+    Optional<List<ProstUser>> users = userService.info(userDetails.getUsername(), true);
     return users.map(prostUsers -> ResponseEntity.ok(prostUsers.get(0)))
         .orElseGet(() -> ResponseEntity.notFound().build());
+  }
+
+  @PostMapping("/me/hide")
+  public ResponseEntity<String> hidePersonal(Authentication authentication) {
+    if (authentication == null) {
+      return ResponseEntity.badRequest().build();
+    }
+    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+    if (userService.setHidden(userDetails.getUsername(), false)) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
   }
 
   @PostMapping("/create")
@@ -107,6 +143,22 @@ public class UserController {
   @PostMapping("/disable")
   public ResponseEntity<String> disable(@RequestParam String id) {
     if (userService.setEnabled(id, false)) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/hide")
+  public ResponseEntity<String> hide(@RequestParam String id) {
+    if (userService.setHidden(id, true)) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/show")
+  public ResponseEntity<String> show(@RequestParam String id) {
+    if (userService.setHidden(id, false)) {
       return ResponseEntity.ok().build();
     }
     return ResponseEntity.badRequest().build();

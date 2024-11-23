@@ -6,6 +6,7 @@ export interface User {
   balance: number;
   totalSpent: number;
   enabled: boolean;
+  hidden: boolean;
 }
 
 export enum UserRole {
@@ -49,7 +50,6 @@ export async function getUserDisplayName(userId: string): Promise<string> {
 export function getLevel(user: User): number {
   return Math.floor(user.totalSpent / 5) + 1;
 }
-
 
 export const sortUsersByDisplayName = (users: User[]): User[] => {
   return users.sort((a, b) => {

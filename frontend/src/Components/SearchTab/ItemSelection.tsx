@@ -22,9 +22,11 @@ export function ItemSelection() {
         getUser(userId).then((user) => {
           setUser(user);
         });
-      } else {
+      } else{
         getOwnUser().then((user) => {
-          setUser(user);
+          if(userId == user?.id){
+            setUser(user);
+          }
         });
       }
   }, [userId]);

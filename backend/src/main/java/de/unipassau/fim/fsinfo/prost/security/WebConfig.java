@@ -36,7 +36,9 @@ public class WebConfig implements WebMvcConfigurer {
   };
 
   public static final String[] USER_SPACE = {
+      "/api/user/info",
       "/api/user/me",
+      "/api/user/me/hide",
       "/api/history/shop/me",
       "/api/transaction/me",
       "/api/invoice/me",
@@ -44,7 +46,6 @@ public class WebConfig implements WebMvcConfigurer {
   };
 
   public static final String[] KIOSK_SPACE = {
-      "/api/user/info",
       "/api/history/shop/**",
   };
 

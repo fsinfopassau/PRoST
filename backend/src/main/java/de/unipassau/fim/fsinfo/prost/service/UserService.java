@@ -63,12 +63,14 @@ public class UserService {
     return Optional.of(user);
   }
 
-  public Optional<List<ProstUser>> info(String id) {
+  public Optional<List<ProstUser>> info(String id, boolean showHidden) {
     if (id == null) {
-      return Optional.of(users.findAll());
+      return Optional.of(users.findAll().stream()
+          .filter(user -> showHidden || Boolean.FALSE.equals(user.getHidden()))
+          .toList());
     } else {
       Optional<ProstUser> user = users.findById(id);
-      if (user.isPresent()) {
+      if (user.isPresent() && (showHidden || Boolean.FALSE.equals(user.get().getHidden()))) {
         return Optional.of(List.of(user.get()));
       }
     }
@@ -120,6 +122,19 @@ public class UserService {
     if (user.isPresent()) {
       ProstUser u = user.get();
       u.setEnabled(value);
+      users.save(u);
+      return true;
+    }
+    return false;
+  }
+
+  @Transactional
+  public boolean setHidden(String id, boolean value) {
+    Optional<ProstUser> user = users.findById(id);
+
+    if (user.isPresent()) {
+      ProstUser u = user.get();
+      u.setHidden(value);
       users.save(u);
       return true;
     }

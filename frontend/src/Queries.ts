@@ -1,10 +1,10 @@
 import axios from "axios";
-import { ShopHistoryEntryPage } from "./Types/ShopHistory";
-import { ShopItem } from "./Types/ShopItem";
-import { AuthorizedUser, User } from "./Types/User";
-import { getEncodedCredentials, setAuthorizedUser } from "./SessionInfo";
-import { InvoicePage } from "./Types/Invoice";
-import { TransactionPage } from "./Types/Transaction";
+import {ShopHistoryEntryPage} from "./Types/ShopHistory";
+import {ShopItem} from "./Types/ShopItem";
+import {AuthorizedUser, User} from "./Types/User";
+import {getEncodedCredentials, setAuthorizedUser} from "./SessionInfo";
+import {InvoicePage} from "./Types/Invoice";
+import {TransactionPage} from "./Types/Transaction";
 
 export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
 
@@ -77,7 +77,7 @@ export async function getUser(userId: string): Promise<User | undefined> {
   }
 }
 
-export async function getAllUsers(): Promise<User[] | undefined> {
+export async function getAllUsers(includeHidden: boolean = false): Promise<User[] | undefined> {
   try {
     const result = await fetch(`${apiUrl}/api/user/info`, {
       method: "GET",
@@ -91,7 +91,7 @@ export async function getAllUsers(): Promise<User[] | undefined> {
       return undefined;
     }
 
-    return (await result.json()) as User[];
+    return ((await result.json()) as User[]).filter((user: User) => !user.hidden || includeHidden);
   } catch (error) {
     return undefined;
   }
@@ -99,6 +99,16 @@ export async function getAllUsers(): Promise<User[] | undefined> {
 
 export async function enableUser(user: User, enable: boolean): Promise<boolean> {
   const result = await fetch(`${apiUrl}/api/user/${enable ? "enable" : "disable"}?id=${user.id}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${getEncodedCredentials()}`,
+    },
+  });
+  return result.ok;
+}
+
+export async function hideUser(user: User, hide: boolean): Promise<boolean> {
+  const result = await fetch(`${apiUrl}/api/user/${hide ? "hide" : "show"}?id=${user.id}`, {
     method: "POST",
     headers: {
       Authorization: `Basic ${getEncodedCredentials()}`,
@@ -140,9 +150,9 @@ export async function createTransaction(receiver: User, value: string, actionTyp
 }
 
 export async function getAllTransactions(
-  size: number,
-  page: number,
-  receiverId: string | undefined
+    size: number,
+    page: number,
+    receiverId: string | undefined
 ): Promise<TransactionPage | undefined> {
   const params = receiverId ? "&receiverId=" + receiverId : "";
 
@@ -387,8 +397,7 @@ export async function getItemDisplayPicture(item: ShopItem): Promise<string | un
 
     if (result.ok && result.status === 200) {
       const blob = await result.blob();
-      const url = URL.createObjectURL(blob);
-      return url;
+      return URL.createObjectURL(blob);
     }
   } catch (error) {
     // If there's a network error or any other error, return null
@@ -418,12 +427,12 @@ export async function getPersonalInvoices(): Promise<InvoicePage | undefined> {
 }
 
 export async function getAllInvoices(
-  page: number,
-  userId: string | undefined,
-  mailed: boolean | undefined
+    page: number,
+    userId: string | undefined,
+    mailed: boolean | undefined
 ): Promise<InvoicePage | undefined> {
   const params =
-    (userId ? "&userId=" + userId : "") + (mailed === undefined ? "" : "&mailed=" + (mailed ? "true" : "false"));
+      (userId ? "&userId=" + userId : "") + (mailed === undefined ? "" : "&mailed=" + (mailed ? "true" : "false"));
 
   try {
     const response = await fetch(`${apiUrl}/api/invoice/list?s=20&p=` + page + params, {
