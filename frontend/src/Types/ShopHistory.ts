@@ -11,6 +11,7 @@ export interface ShopHistoryEntry {
   timestamp: number;
   transaction: Transaction;
   refundTransaction: Transaction;
+  hidden: boolean;
 }
 
 export interface ShopHistoryEntryPage {

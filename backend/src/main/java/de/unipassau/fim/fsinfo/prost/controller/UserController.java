@@ -33,7 +33,8 @@ public class UserController {
   }
 
   /**
-   * List all Users
+   * List all Users Also show hidden Users (if access-rights allow to do so) because filtering out
+   * in the frontend is easier.
    *
    * @return List of all Users
    */
