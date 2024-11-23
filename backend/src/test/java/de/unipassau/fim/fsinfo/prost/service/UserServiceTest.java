@@ -29,7 +29,7 @@ class UserServiceTest {
     MockitoAnnotations.openMocks(this);
     userService = new UserService(userRepository);
 
-    prostUser = new ProstUser("testuser", "User One", "user1@test.com", true);
+    prostUser = new ProstUser("testuser", "User One", "user1@test.com", true, false);
   }
 
   @Test
@@ -76,6 +76,52 @@ class UserServiceTest {
         true);
     assertTrue(result.isPresent());
     assertEquals(prostUser, result.get());
+  }
+
+  @Test
+  public void testInfo_hidden_AllUsers_ReturnsWithoutHidden() {
+    ProstUser hiddenUser = new ProstUser("hiddenUser", "Hidden User", "user1@test.com", true, true);
+    when(userRepository.findAll()).thenReturn(List.of(prostUser, hiddenUser));
+
+    Optional<List<ProstUser>> result1 = userService.info(null, false);
+    assertTrue(result1.isPresent());
+
+    assertEquals(1, result1.get().size());
+    assertEquals(prostUser, result1.get().get(0));
+  }
+
+  @Test
+  public void testInfo_hidden_AllUsers_ReturnsWithHidden() {
+    ProstUser hiddenUser = new ProstUser("hiddenUser", "Hidden User", "user1@test.com", true, true);
+    when(userRepository.findAll()).thenReturn(List.of(prostUser, hiddenUser));
+
+    Optional<List<ProstUser>> result2 = userService.info(null, true);
+    assertTrue(result2.isPresent());
+
+    assertEquals(2, result2.get().size());
+    assertEquals(prostUser, result2.get().get(0));
+    assertEquals(hiddenUser, result2.get().get(1));
+  }
+
+  @Test
+  public void testInfo_hidden_SpecificUser_ReturnsWithoutHidden() {
+    ProstUser hiddenUser = new ProstUser("hiddenUser", "Hidden User", "user1@test.com", true, true);
+    when(userRepository.findById(hiddenUser.getId())).thenReturn(Optional.of(hiddenUser));
+
+    Optional<List<ProstUser>> result1 = userService.info(hiddenUser.getId(), false);
+    assertFalse(result1.isPresent());
+  }
+
+  @Test
+  public void testInfo_hidden_SpecificUser_ReturnsWithHidden() {
+    ProstUser hiddenUser = new ProstUser("hiddenUser", "Hidden User", "user1@test.com", true, true);
+    when(userRepository.findById(hiddenUser.getId())).thenReturn(Optional.of(hiddenUser));
+
+    Optional<List<ProstUser>> result2 = userService.info(hiddenUser.getId(), true);
+    assertTrue(result2.isPresent());
+
+    assertEquals(1, result2.get().size());
+    assertEquals(hiddenUser, result2.get().get(0));
   }
 
   @Test
@@ -156,6 +202,20 @@ class UserServiceTest {
   public void testSetEmail_SuccessfulSetEmail_ReturnsTrue() {
     when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
     boolean result = userService.setEmail(prostUser.getId(), "newemail@example.com");
+    assertTrue(result);
+  }
+
+  @Test
+  public void testSetHidden_UserNotFound_ReturnsFalse() {
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.empty());
+    boolean result = userService.setHidden(prostUser.getId(), false);
+    assertFalse(result);
+  }
+
+  @Test
+  public void testSetHidden_SuccessfulSetEnabled_ReturnsTrue() {
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+    boolean result = userService.setHidden(prostUser.getId(), false);
     assertTrue(result);
   }
 

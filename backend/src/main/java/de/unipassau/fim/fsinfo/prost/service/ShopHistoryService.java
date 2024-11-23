@@ -72,7 +72,8 @@ public class ShopHistoryService {
         userO.isPresent() ? userO.get().getDisplayName() : entry.getUserId();
     String itemDisplayName =
         itemO.isPresent() ? itemO.get().getDisplayName() : entry.getItemId();
-    Boolean isHidden = userO.isPresent() && userO.get().getHidden();
+    boolean isHidden =
+        userO.isPresent() && (userO.get().getHidden() == null || userO.get().getHidden());
 
     if (anonymizeHidden && isHidden) {
       return new ShopItemHistoryEntryDTO(entry.getId(), "", "Anonyme \uD83C\uDF4D",
