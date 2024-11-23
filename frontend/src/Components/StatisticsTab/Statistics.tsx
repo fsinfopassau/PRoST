@@ -70,7 +70,7 @@ export function Statistics() {
             <table className="Table">
               <tbody>
                 {history.map((item) => (
-                  <HistoryEntryDisplay entry={item} key={item.id} />
+                  <HistoryEntryDisplay entry={item} key={item.id} showHidden={false} />
                 ))}
               </tbody>
             </table>

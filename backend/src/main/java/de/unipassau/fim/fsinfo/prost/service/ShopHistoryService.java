@@ -7,6 +7,7 @@ import de.unipassau.fim.fsinfo.prost.data.dto.ShopItemHistoryEntryDTO;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,7 +45,7 @@ public class ShopHistoryService {
    * @return A page with the search-result according to the given parameters.
    */
   public Page<ShopItemHistoryEntryDTO> getHistory(
-      int pageNumber, int pageSize, Optional<String> userId) {
+      int pageNumber, int pageSize, Optional<String> userId, boolean anonymizeHidden) {
 
     Pageable pageable = PageRequest.of(pageNumber, pageSize, desc);
     Page<ShopItemHistoryEntry> entriesPage;
@@ -56,13 +57,14 @@ public class ShopHistoryService {
     }
 
     List<ShopItemHistoryEntryDTO> entryDTOs = entriesPage.getContent().stream()
-        .map(this::getDTO)
+        .map(entry -> this.getDTO(entry, anonymizeHidden))
         .collect(Collectors.toList());
 
     return new PageImpl<>(entryDTOs, pageable, entriesPage.getTotalElements());
   }
 
-  private ShopItemHistoryEntryDTO getDTO(ShopItemHistoryEntry entry) {
+  private ShopItemHistoryEntryDTO getDTO(ShopItemHistoryEntry entry, boolean anonymizeHidden) {
+
     Optional<ProstUser> userO = userRepository.findById(entry.getUserId());
     Optional<ShopItem> itemO = itemRepository.findById(entry.getItemId());
 
@@ -71,6 +73,16 @@ public class ShopHistoryService {
     String itemDisplayName =
         itemO.isPresent() ? itemO.get().getDisplayName() : entry.getItemId();
     Boolean isHidden = userO.isPresent() && userO.get().getHidden();
+
+    if (anonymizeHidden && isHidden) {
+      return new ShopItemHistoryEntryDTO(entry.getId(), "", "Anonyme \uD83C\uDF4D",
+          "", "",
+          BigDecimal.ZERO,
+          0,
+          entry.getTimestamp(),
+          null,
+          isHidden);
+    }
 
     return new ShopItemHistoryEntryDTO(entry.getId(), entry.getUserId(), userDisplayName,
         entry.getItemId(), itemDisplayName,
