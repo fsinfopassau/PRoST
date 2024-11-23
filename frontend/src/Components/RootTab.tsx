@@ -18,6 +18,7 @@ export function RootTab() {
       .catch(() => {
         setUser(undefined);
       });
+      console.log("load profile")
   }, []);
 
   function navigateGit(){
@@ -41,7 +42,7 @@ export function RootTab() {
         ) : isOnlyKiosk() ? (
           <UserContainer />
         ) : isUser() ? (
-          <PersonalUserOverview user={user} />
+          <PersonalUserOverview user={user}/>
         ) : (
           <ErrorComponent />
         )}

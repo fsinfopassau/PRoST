@@ -80,6 +80,19 @@ public class UserController {
     }
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
+    if (userService.setHidden(userDetails.getUsername(), true)) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/me/show")
+  public ResponseEntity<String> showPersonal(Authentication authentication) {
+    if (authentication == null) {
+      return ResponseEntity.badRequest().build();
+    }
+    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
     if (userService.setHidden(userDetails.getUsername(), false)) {
       return ResponseEntity.ok().build();
     }
