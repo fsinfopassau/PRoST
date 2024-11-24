@@ -7,6 +7,7 @@ export interface User {
   totalSpent: number;
   enabled: boolean;
   hidden: boolean;
+  kiosk: boolean;
 }
 
 export enum UserRole {

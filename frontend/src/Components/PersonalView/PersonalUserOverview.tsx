@@ -1,5 +1,5 @@
 import {toast} from "react-toastify";
-import {hideOwnUser} from "../../Queries";
+import {hideOwnUser, setOwnKiosk} from "../../Queries";
 import {User} from "../../Types/User";
 import {UserSummaryCard} from "../StatisticsTab/UserSummaryCard";
 import {Switch, SwitchThumb} from "@radix-ui/react-switch";
@@ -14,6 +14,18 @@ export function PersonalUserOverview(props: { user: User }) {
     hideOwnUser(newVal).then((result) => {
       if (result) {
         toast.success((newVal ? "Dein Profil ist jetzt versteckt!" : "Dein Profil ist jetzt öffentlich!"));
+        user.hidden = newVal;
+      } else {
+        toast.error("Änderung fehlgeschlagen!");
+      }
+    });
+  }
+
+  function toggleKiosk(){
+    const newVal = !user.kiosk;
+    setOwnKiosk(newVal).then((result) => {
+      if (result) {
+        toast.success((newVal ? "Der Kiosk ist mit deinem Profil nutzbar!" : "Dein Profil kann den Kiosk nicht mehr nutzen!"));
         user.hidden = newVal;
       } else {
         toast.error("Änderung fehlgeschlagen!");
@@ -56,6 +68,24 @@ export function PersonalUserOverview(props: { user: User }) {
                 <p>Nicht-Öffentliche Profile werden anderen Nutzern und im Kiosk-Menü
                   ausgeblendet</p>
                 <p>Des Weiteren bleiben Profil, Statistiken und Achievements anderen Nutzern verborgen.</p>
+              </ScrollDialog>
+            </div>
+            <div style={{display: "flex", gap: "1rem", padding: "0.25rem 0", alignItems: "center"}}>
+              <Switch className="SwitchRoot" defaultChecked={user.kiosk}
+                      onCheckedChange={toggleKiosk}>
+                <SwitchThumb className="SwitchThumb"/>
+              </Switch>
+              Kiosk
+              <ScrollDialog
+                  title="Kiosk"
+                  onSubmit={() => {
+                  }}
+                  trigger={
+                    <InfoCircledIcon/>
+                  }
+              >
+                <p>Der Kiosk kann, wenn abgeschalten, keine Käufe in deinem Namen tätigen.</p>
+                <p>Käufe können dann nur noch durch das Profil des Nutzers durchgeführt werden.</p>
               </ScrollDialog>
             </div>
           </div>

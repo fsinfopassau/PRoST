@@ -24,6 +24,7 @@ public class ProstUser {
   private String email;
   private Boolean enabled;
   private Boolean hidden;
+  private Boolean kiosk = true;
 
   public ProstUser(String id, String displayName, String email, Boolean enabled) {
     this.id = id;
@@ -40,6 +41,18 @@ public class ProstUser {
     this.email = email;
     this.enabled = enabled;
     this.hidden = hidden;
+    this.balance = new BigDecimal(0);
+    this.totalSpent = new BigDecimal(0);
+  }
+
+  public ProstUser(String id, String displayName, String email, Boolean enabled, Boolean hidden,
+      Boolean kiosk) {
+    this.id = id;
+    this.displayName = displayName;
+    this.email = email;
+    this.enabled = enabled;
+    this.hidden = hidden;
+    this.kiosk = kiosk;
     this.balance = new BigDecimal(0);
     this.totalSpent = new BigDecimal(0);
   }

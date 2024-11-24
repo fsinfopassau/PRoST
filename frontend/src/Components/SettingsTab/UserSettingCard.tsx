@@ -5,6 +5,7 @@ import {
   ChatBubbleIcon,
   CheckCircledIcon,
   CheckIcon,
+  CookieIcon,
   Cross1Icon,
   Cross2Icon,
   CrossCircledIcon,
@@ -20,7 +21,7 @@ import {
 import { Separator } from "@radix-ui/react-separator";
 import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
 import { formatMoney, getValidMoney } from "../../Format";
-import { changeUser, createTransaction, deleteUser, enableUser, hideUser } from "../../Queries";
+import { changeUser, createTransaction, deleteUser, enableUser, hideUser, setUserKiosk } from "../../Queries";
 import ScrollDialog from "../Util/ScrollDialog";
 import { UserSummaryCard } from "../StatisticsTab/UserSummaryCard";
 import { Link } from "react-router-dom";
@@ -71,6 +72,18 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
     hideUser(user,newVal).then((result) => {
       if (result) {
         toast.success(user.id + (newVal ? " ist jetzt versteckt!" : " ist jetzt öffentlich!"));
+        onUpdate();
+      } else {
+        toast.error("Änderung fehlgeschlagen!");
+      }
+    });
+  }
+
+  function toggleKiosk(){
+    const newVal = !user.kiosk;
+    setUserKiosk(user, newVal).then((result) => {
+      if (result) {
+        toast.success((newVal ? "Der Kiosk ist mit diesem Profil nutzbar!" : "Das Profil kann den Kiosk nichtmehr nutzen!"));
         onUpdate();
       } else {
         toast.error("Änderung fehlgeschlagen!");
@@ -188,6 +201,15 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
               <EyeOpenIcon />
             </div>
           )}
+          {user.kiosk ? (
+            <div className="good-color">
+              <CookieIcon />
+            </div>
+          ) : (
+            <div className="danger-color">
+              <CookieIcon />
+            </div>
+          )}
         </div>
 
         <Separator className="Separator" />
@@ -283,6 +305,16 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
           ) : (
             <div className="Button icon good-color" onClick={toggleHidden}>
               <EyeOpenIcon />
+            </div>
+          )}
+          
+          {user.kiosk ? (
+            <div className="Button icon good-color" onClick={toggleKiosk}>
+              <CookieIcon />
+            </div>
+          ) : (
+            <div className="Button icon danger-color" onClick={toggleKiosk}>
+              <CookieIcon />
             </div>
           )}
 

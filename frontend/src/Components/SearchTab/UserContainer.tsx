@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import {sortUsersByDisplayName, User} from "../../Types/User";
-import { UserBox } from "./UserSelectionDisplay";
-import { getAllUsers } from "../../Queries";
+import {UserBox} from "./UserSelectionDisplay";
+import {getAllUsers} from "../../Queries";
 import Fuse from "fuse.js";
 
 export function UserContainer() {
@@ -10,12 +10,12 @@ export function UserContainer() {
 
   useEffect(() => {
     getAllUsers()
-      .then((userList) => {
-        setUsers(userList);
-      })
-      .catch(() => {
-        setUsers([]);
-      });
+    .then((userList) => {
+      setUsers(userList);
+    })
+    .catch(() => {
+      setUsers([]);
+    });
   }, []);
 
   function filter(users: User[]): User[] {
@@ -23,7 +23,7 @@ export function UserContainer() {
     sortUsersByDisplayName(users);
 
     if (searchValue.trim().length === 0) {
-      return users.filter((user) => user.enabled === true);
+      return users.filter((user) => user.enabled === true && user.kiosk === true);
     }
 
     const fuse = new Fuse(users, {
@@ -35,11 +35,13 @@ export function UserContainer() {
   }
 
   return (
-    <>
-      <input type="text" onChange={(e) => setSearchValue(e.target.value)} id="main-search" placeholder="Search" />
-      <div className="SmallGridContainer">
-        {users === undefined ? <></> : filter(users).map((user, index) => <UserBox key={index} user={user} />)}
-      </div>
-    </>
+      <>
+        <input type="text" onChange={(e) => setSearchValue(e.target.value)} id="main-search"
+               placeholder="Search"/>
+        <div className="SmallGridContainer">
+          {users === undefined ? <></> : filter(users).map((user, index) => <UserBox key={index}
+                                                                                     user={user}/>)}
+        </div>
+      </>
   );
 }

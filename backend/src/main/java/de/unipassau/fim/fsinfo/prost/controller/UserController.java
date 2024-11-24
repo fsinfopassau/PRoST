@@ -100,6 +100,32 @@ public class UserController {
     return ResponseEntity.badRequest().build();
   }
 
+  @PostMapping("/me/disable-kiosk")
+  public ResponseEntity<String> disableKiosk(Authentication authentication) {
+    if (authentication == null) {
+      return ResponseEntity.badRequest().build();
+    }
+    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+    if (userService.setKiosk(userDetails.getUsername(), false)) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/me/enable-kiosk")
+  public ResponseEntity<String> enableKiosk(Authentication authentication) {
+    if (authentication == null) {
+      return ResponseEntity.badRequest().build();
+    }
+    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+    if (userService.setKiosk(userDetails.getUsername(), true)) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
   @PostMapping("/create")
   public ResponseEntity<ProstUser> create(@RequestBody ProstUser userTemplate) {
 
@@ -173,6 +199,22 @@ public class UserController {
   @PostMapping("/show")
   public ResponseEntity<String> show(@RequestParam String id) {
     if (userService.setHidden(id, false)) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/disable-kiosk")
+  public ResponseEntity<String> disableKiosk(@RequestParam String id) {
+    if (userService.setKiosk(id, false)) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @PostMapping("/enable-kiosk")
+  public ResponseEntity<String> enableKiosk(@RequestParam String id) {
+    if (userService.setKiosk(id, true)) {
       return ResponseEntity.ok().build();
     }
     return ResponseEntity.badRequest().build();

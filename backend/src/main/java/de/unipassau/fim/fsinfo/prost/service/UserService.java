@@ -142,6 +142,19 @@ public class UserService {
   }
 
   @Transactional
+  public boolean setKiosk(String id, boolean value) {
+    Optional<ProstUser> user = users.findById(id);
+
+    if (user.isPresent()) {
+      ProstUser u = user.get();
+      u.setKiosk(value);
+      users.save(u);
+      return true;
+    }
+    return false;
+  }
+
+  @Transactional
   public boolean setMoneySpent(String id, String amountString) {
     Optional<ProstUser> user = users.findById(id);
     try {

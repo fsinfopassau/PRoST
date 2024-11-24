@@ -107,6 +107,26 @@ export async function enableUser(user: User, enable: boolean): Promise<boolean> 
   return result.ok;
 }
 
+export async function setUserKiosk(user: User, hide: boolean): Promise<boolean> {
+  const result = await fetch(`${apiUrl}/api/user/${hide ? "enable-kiosk" : "disable-kiosk"}?id=${user.id}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${getEncodedCredentials()}`,
+    },
+  });
+  return result.ok;
+}
+
+export async function setOwnKiosk(hide: boolean): Promise<boolean> {
+  const result = await fetch(`${apiUrl}/api/user/me/${hide ? "enable-kiosk" : "disable-kiosk"}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${getEncodedCredentials()}`,
+    },
+  });
+  return result.ok;
+}
+
 export async function hideUser(user: User, hide: boolean): Promise<boolean> {
   const result = await fetch(`${apiUrl}/api/user/${hide ? "hide" : "show"}?id=${user.id}`, {
     method: "POST",
