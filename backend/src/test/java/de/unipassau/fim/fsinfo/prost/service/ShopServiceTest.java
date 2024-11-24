@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import de.unipassau.fim.fsinfo.prost.data.TransactionType;
+import de.unipassau.fim.fsinfo.prost.data.UserAccessRole;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.data.dao.TransactionEntry;
@@ -53,7 +54,8 @@ public class ShopServiceTest {
 
   @Test
   public void testConsume_InvalidAmount_ReturnsFalse() {
-    boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 0, prostUser.getId());
+    boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 0, prostUser.getId(),
+        UserAccessRole.KAFFEEKASSE);
     assertFalse(result);
   }
 
@@ -61,7 +63,8 @@ public class ShopServiceTest {
   public void testConsume_MissingEntities_ReturnsFalse() {
     when(itemRepository.findById(anyString())).thenReturn(Optional.empty());
     when(userRepository.findById(anyString())).thenReturn(Optional.empty());
-    boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId());
+    boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId(),
+        UserAccessRole.KAFFEEKASSE);
     assertFalse(result);
   }
 
@@ -72,12 +75,14 @@ public class ShopServiceTest {
     when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
     when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
 
-    boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId());
+    boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId(),
+        UserAccessRole.KAFFEEKASSE);
     assertFalse(result);
 
     shopItem.setEnabled(true);
     prostUser.setEnabled(false);
-    result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId());
+    result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId(),
+        UserAccessRole.KAFFEEKASSE);
     assertFalse(result);
   }
 
@@ -89,7 +94,7 @@ public class ShopServiceTest {
     when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
 
     boolean result = shopService.consume(invalidItem.getId(), prostUser.getId(), 1,
-        prostUser.getId());
+        prostUser.getId(), UserAccessRole.KAFFEEKASSE);
     assertFalse(result);
   }
 
@@ -104,7 +109,8 @@ public class ShopServiceTest {
         any(TransactionType.class)))
         .thenReturn(Optional.of(transaction));
 
-    boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId());
+    boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId(),
+        UserAccessRole.KAFFEEKASSE);
     assertTrue(result);
   }
 
@@ -122,7 +128,8 @@ public class ShopServiceTest {
         any(TransactionType.class)))
         .thenReturn(Optional.of(transaction));
 
-    boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId());
+    boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId(),
+        UserAccessRole.KAFFEEKASSE);
     assertTrue(result);
     assertTrue(shopService.hasBearerCooldown(prostUser.getId()));
 
@@ -131,7 +138,7 @@ public class ShopServiceTest {
         TransactionType.BUY, null, shopItem.getPrice());
 
     boolean result2 = shopService.consume(shopItem.getId(), prostUser.getId(), 1,
-        prostUser.getId());
+        prostUser.getId(), UserAccessRole.KAFFEEKASSE);
     assertFalse(result2);
     assertTrue(shopService.hasBearerCooldown(prostUser.getId()));
   }
@@ -150,7 +157,8 @@ public class ShopServiceTest {
         any(TransactionType.class)))
         .thenReturn(Optional.of(transaction));
 
-    boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId());
+    boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId(),
+        UserAccessRole.KAFFEEKASSE);
     long lastTransaction = Instant.now().toEpochMilli();
     assertTrue(result);
     assertTrue(shopService.hasBearerCooldown(prostUser.getId()));
@@ -166,7 +174,7 @@ public class ShopServiceTest {
         .thenReturn(Optional.of(transaction2));
 
     boolean result2 = shopService.consume(shopItem.getId(), prostUser.getId(), 1,
-        prostUser.getId());
+        prostUser.getId(), UserAccessRole.KAFFEEKASSE);
     assertTrue(result2);
     assertTrue(shopService.hasBearerCooldown(prostUser.getId()));
   }

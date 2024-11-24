@@ -2,6 +2,7 @@ package de.unipassau.fim.fsinfo.prost.service;
 
 import de.unipassau.fim.fsinfo.prost.data.DataFilter;
 import de.unipassau.fim.fsinfo.prost.data.TransactionType;
+import de.unipassau.fim.fsinfo.prost.data.UserAccessRole;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItemHistoryEntry;
@@ -55,13 +56,37 @@ public class ShopService {
     return false;
   }
 
+  // Because checking access-rights before trying to buy determines the error-messages to the client.
+  public boolean hasBearerPermissions(String itemId, String userId, int amount, String bearerId,
+      UserAccessRole bearerRole) {
+    Optional<ProstUser> userO = userRepository.findById(userId);
+
+    switch (bearerRole) {
+      case KAFFEEKASSE -> {
+        return true;
+      }
+      case KIOSK -> {
+        return userO.isPresent() && userO.get().getKiosk();
+      }
+      case FSINFO -> {
+        return bearerId != null && bearerId.equals(userId);
+      }
+    }
+    return false;
+  }
+
   @Transactional
-  public boolean consume(String itemId, String userId, int amount, String bearerId) {
+  public boolean consume(String itemId, String userId, int amount, String bearerId,
+      UserAccessRole bearerRole) {
     Optional<ShopItem> itemO = itemRepository.findById(itemId);
     Optional<ProstUser> userO = userRepository.findById(userId);
     Optional<ProstUser> bearerUser = userRepository.findById(bearerId);
 
     if (amount < 1 || amount > 10) {
+      return false;
+    }
+
+    if (!hasBearerPermissions(itemId, userId, amount, bearerId, bearerRole)) {
       return false;
     }
 

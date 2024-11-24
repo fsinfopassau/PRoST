@@ -91,40 +91,37 @@ public class ShopController {
     if (authentication == null) {
       return ResponseEntity.badRequest().build();
     }
+    n = (n == null ? 1 : n);
 
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
     String bearerId = userDetails.getUsername();
 
     Collection<UserAccessRole> roles = authService.getRoles(authentication);
 
-    boolean permitted =
-        roles.contains(UserAccessRole.KIOSK) || roles.contains(UserAccessRole.KAFFEEKASSE);
-
     Optional<UserAccessRole> highestPermission = authService.getHighestRole(roles);
-
-    if (highestPermission.isPresent() && highestPermission.get().equals(UserAccessRole.FSINFO)) {
-      if (userId.equals(bearerId)) {
-        permitted = true;
-      } else {
-        // 🙃🫖
-        return ResponseEntity.status(418)
-            .body("I'm a teapot, and you're not an admin or kiosk! \uD83D\uDE43");
-      }
-    }
-
-    if (!permitted) {
-      return ResponseEntity.badRequest().body(permitted + " " + highestPermission);
-    }
 
     if (shopService.hasBearerCooldown(bearerId)) {
       return ResponseEntity.badRequest().body("on cooldown");
     }
 
-    if (shopService.consume(id, userId,
-        (n == null ? 1 : n), bearerId)) {
-      return ResponseEntity.ok().build();
+    if (highestPermission.isEmpty()) {
+      return ResponseEntity.badRequest().body("No highest permission found!");
     }
 
+    if (!shopService.hasBearerPermissions(id, userId, n, bearerId, highestPermission.get())) {
+      if (highestPermission.get() == UserAccessRole.FSINFO) {
+        // 🙃🫖
+        return ResponseEntity.status(418)
+            .body("I'm a teapot, and you're not an admin or kiosk! \uD83D\uDE43");
+      } else {
+        return ResponseEntity.badRequest().body("No Permissions!");
+      }
+    }
+
+    if (shopService.consume(id, userId,
+        n, bearerId, highestPermission.get())) {
+      return ResponseEntity.ok().build();
+    }
     return ResponseEntity.badRequest().body("Could not consume!");
 
   }

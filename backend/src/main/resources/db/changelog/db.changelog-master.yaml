@@ -10,3 +10,14 @@ databaseChangeLog:
                   name: hidden
                   type: BOOLEAN
                   defaultValue: false
+  - changeSet:
+      id: 2-add-kiosk-disable-buy
+      author: Paulsenik
+      changes:
+        - addColumn:
+            tableName: PRoST_User
+            columns:
+              - column:
+                  name: kiosk
+                  type: BOOLEAN
+                  defaultValue: true
