@@ -55,7 +55,7 @@ export function PersonalUserOverview(props: { user: User }) {
               >
                 <p>Nicht-Öffentliche Profile werden anderen Nutzern und im Kiosk-Menü
                   ausgeblendet</p>
-                <p>Des Weiteren bleibt dein Profil, Statistiken und Achievements anderen Nutzern verborgen.</p>
+                <p>Des Weiteren bleiben Profil, Statistiken und Achievements anderen Nutzern verborgen.</p>
               </ScrollDialog>
             </div>
           </div>
