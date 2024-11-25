@@ -32,7 +32,8 @@ public class WebConfig implements WebMvcConfigurer {
   private final CustomUserDetailsContextMapper userDetailsContextMapper;
 
   public static final String[] AUTH_WHITELIST = {
-      "/api/authentication"
+      "/api/authentication",
+      "/api/statistics/**"
   };
 
   public static final String[] USER_SPACE = {
