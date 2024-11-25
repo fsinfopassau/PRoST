@@ -3,7 +3,7 @@ import { ShopHistoryEntry } from "../../Types/ShopHistory";
 import { formatMoney, getTimeSince } from "../../Format";
 import { EyeClosedIcon } from "@radix-ui/react-icons";
 
-export function HistoryEntryDisplay(props: { entry: ShopHistoryEntry, showHidden: boolean}) {
+export function HistoryEntryDisplay(props: { entry: ShopHistoryEntry; showHidden: boolean }) {
   const { entry, showHidden } = props;
 
   function getAmount(): string {
@@ -11,15 +11,17 @@ export function HistoryEntryDisplay(props: { entry: ShopHistoryEntry, showHidden
     return entry.amount + " x";
   }
 
-  if(entry.hidden && !showHidden){
+  if (entry.hidden && !showHidden) {
     return (
       <tr className="table-entry">
-        <th className="name left">
-          Anonyme 🍍
+        <th className="name left">Anonyme 🍍</th>
+        <th className="balance right">
+          <EyeClosedIcon />
         </th>
-        <th className="balance right"><EyeClosedIcon/></th>
         <th className="amount right"></th>
-        <th className="left"><EyeClosedIcon/></th>
+        <th className="left">
+          <EyeClosedIcon />
+        </th>
         <th className="right time">{getTimeSince(entry.timestamp)}</th>
       </tr>
     );

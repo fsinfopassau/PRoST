@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import {ShopItem} from "../../Types/ShopItem.ts";
-import {getAllShopItems, getOwnUser, getUser} from "../../Queries.ts";
-import {isKiosk, isUser} from "../../SessionInfo.ts";
-import {User} from "../../Types/User.ts";
-import {UserSummaryCard} from "../StatisticsTab/UserSummaryCard.tsx";
-import {ItemDisplay} from "./ItemDisplay.tsx";
-import {ErrorComponent} from "../Util/ErrorTab.tsx";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { ShopItem } from "../../Types/ShopItem.ts";
+import { getAllShopItems, getOwnUser, getUser } from "../../Queries.ts";
+import { isKiosk, isUser } from "../../SessionInfo.ts";
+import { User } from "../../Types/User.ts";
+import { UserSummaryCard } from "../StatisticsTab/UserSummaryCard.tsx";
+import { ItemDisplay } from "./ItemDisplay.tsx";
+import { ErrorComponent } from "../Util/ErrorTab.tsx";
 
 export function ItemSelection() {
   const { userId } = useParams();
@@ -22,9 +22,9 @@ export function ItemSelection() {
         getUser(userId).then((user) => {
           setUser(user);
         });
-      } else{
+      } else {
         getOwnUser().then((user) => {
-          if(userId == user?.id){
+          if (userId == user?.id) {
             setUser(user);
           }
         });
@@ -48,36 +48,36 @@ export function ItemSelection() {
 
     // Sort categories alphabetically and each category's items by displayName
     return Object.keys(groupedItems)
-        .sort((a, b) => a.localeCompare(b)) // Sort categories alphabetically by name
-        .map(category => ({
-          category,
-          items: groupedItems[category].sort((a, b) => a.displayName.localeCompare(b.displayName))
-        }));
+      .sort((a, b) => a.localeCompare(b)) // Sort categories alphabetically by name
+      .map((category) => ({
+        category,
+        items: groupedItems[category].sort((a, b) => a.displayName.localeCompare(b.displayName)),
+      }));
   }
 
   if (user) {
     const groupedItems = groupAndSortItems(items);
 
     return (
-        <>
-          <div style={{ flexGrow: "0" }}>
-            <UserSummaryCard user={user} />
-          </div>
-          <div id="category-box">
-            {groupedItems.map(({ category, items }) => (
-                <div key={category} className="ItemGroup">
-                  <h2>{category}</h2>
-                  <div className="SmallGridContainer">
-                    {items.map((item, index) => (
-                        <ItemDisplay key={index} item={item}/>
-                    ))}
-                  </div>
-                </div>
-            ))}
-          </div>
-        </>
+      <>
+        <div style={{ flexGrow: "0" }}>
+          <UserSummaryCard user={user} />
+        </div>
+        <div id="category-box">
+          {groupedItems.map(({ category, items }) => (
+            <div key={category} className="ItemGroup">
+              <h2>{category}</h2>
+              <div className="SmallGridContainer">
+                {items.map((item, index) => (
+                  <ItemDisplay key={index} item={item} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </>
     );
   } else {
-    return <ErrorComponent/>;
+    return <ErrorComponent />;
   }
 }

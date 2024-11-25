@@ -17,7 +17,7 @@ import { UserSettings } from "./SettingsTab/UserSettings";
 import { PersonalInvoiceView } from "./PersonalView/PersonalInvoiceView";
 import { PersonalHistoryView } from "./PersonalView/PersonalHistoryView";
 import ScrollDialog from "./Util/ScrollDialog";
-import {BlendingModeIcon} from "@radix-ui/react-icons";
+import { BlendingModeIcon } from "@radix-ui/react-icons";
 
 const stylesAvailable = ["purple", "blue", "mc"];
 export const BASE_PATH = import.meta.env.VITE_BASE_PATH || "";
@@ -75,20 +75,20 @@ export function App() {
       <React.StrictMode>
         <div className="Main">
           <BrowserRouter basename={BASE_PATH}>
-            <Navbar/>
+            <Navbar />
             <ToastContainer
-                position="bottom-left"
-                autoClose={4000}
-                //limit={3}
-                hideProgressBar={false}
-                newestOnTop
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss={false}
-                draggable
-                pauseOnHover
-                theme="light"
-                transition={Bounce}
+              position="bottom-left"
+              autoClose={4000}
+              //limit={3}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss={false}
+              draggable
+              pauseOnHover
+              theme="light"
+              transition={Bounce}
             />
             <div className="MainBody">
               <Routes>
@@ -110,17 +110,14 @@ export function App() {
           </BrowserRouter>
 
           <ScrollDialog
-              onSubmit={() => {
-              }}
-              title="Datenschutzhinweise der PRoST-Sotware"
-              trigger={<div id="site-data-info">Datenschutz</div>}
+            onSubmit={() => {}}
+            title="Datenschutzhinweise der PRoST-Sotware"
+            trigger={<div id="site-data-info">Datenschutz</div>}
           >
             {HTMLDataInfos()}
           </ScrollDialog>
-          <div
-              id="theme-switch"
-          onClick={switchTheme}>
-            <BlendingModeIcon/>
+          <div id="theme-switch" onClick={switchTheme}>
+            <BlendingModeIcon />
           </div>
         </div>
       </React.StrictMode>

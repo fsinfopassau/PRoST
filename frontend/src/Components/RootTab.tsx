@@ -18,23 +18,18 @@ export function RootTab() {
       .catch(() => {
         setUser(undefined);
       });
-      console.log("load profile")
+    console.log("load profile");
   }, []);
 
-  function navigateGit(){
-    window.open('https://github.com/fsinfopassau/PRoST', '_blank');
+  function navigateGit() {
+    window.open("https://github.com/fsinfopassau/PRoST", "_blank");
   }
 
   return (
     <>
       <div>
         <h1>
-          <img
-            onClick={navigateGit}
-            src={`${BASE_PATH}/icons/happy-manje/happy beer.svg`}
-            id="MainIcon"
-            alt="Logo"
-          />
+          <img onClick={navigateGit} src={`${BASE_PATH}/icons/happy-manje/happy beer.svg`} id="MainIcon" alt="Logo" />
           PRoST
         </h1>
         {user === undefined ? (
@@ -42,7 +37,7 @@ export function RootTab() {
         ) : isOnlyKiosk() ? (
           <UserContainer />
         ) : isUser() ? (
-          <PersonalUserOverview user={user}/>
+          <PersonalUserOverview user={user} />
         ) : (
           <ErrorComponent />
         )}

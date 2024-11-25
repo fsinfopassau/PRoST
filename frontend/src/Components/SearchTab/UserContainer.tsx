@@ -19,11 +19,10 @@ export function UserContainer() {
   }, []);
 
   function filter(users: User[]): User[] {
-
     sortUsersByDisplayName(users);
 
     if (searchValue.trim().length === 0) {
-      return users.filter((user) => user.enabled === true && user.kiosk === true);
+      return users.filter((user) => user.enabled && user.kiosk);
     }
 
     const fuse = new Fuse(users, {
@@ -31,7 +30,7 @@ export function UserContainer() {
     });
     const results = fuse.search(searchValue).map((result) => result.item);
 
-    return results.filter((user) => user.enabled === true);
+    return results.filter((user) => user.enabled);
   }
 
   return (
