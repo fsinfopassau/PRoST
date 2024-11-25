@@ -51,7 +51,7 @@ public class ShopServiceTest {
   public void setUp() {
     shopItem = new ShopItem("item1", "category1", "Item 1", new BigDecimal("10.00"));
     prostUser = new ProstUser("user1", "Test User", "digga@test.com", true, false, true);
-    kioskUser = new ProstUser("kiosk", "Kiosk", "kiosk@test.com", false, true, false);
+    kioskUser = new ProstUser("kiosk", "Kiosk", "kiosk@test.com", true, true, false);
   }
 
   @Test
@@ -180,6 +180,19 @@ public class ShopServiceTest {
 
     boolean result = shopService.consume(invalidItem.getId(), prostUser.getId(), 1,
         prostUser.getId(), UserAccessRole.KAFFEEKASSE);
+    assertFalse(result);
+  }
+
+  @Test
+  public void testConsume_DisabledBearer_ReturnsFalse() {
+    when(itemRepository.findById(shopItem.getId())).thenReturn(Optional.of(shopItem));
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+    when(userRepository.findById(kioskUser.getId())).thenReturn(Optional.of(kioskUser));
+
+    kioskUser.setEnabled(false);
+
+    boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, kioskUser.getId(),
+        UserAccessRole.KAFFEEKASSE);
     assertFalse(result);
   }
 
