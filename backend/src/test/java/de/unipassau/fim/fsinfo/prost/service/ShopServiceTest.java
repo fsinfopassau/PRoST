@@ -45,11 +45,13 @@ public class ShopServiceTest {
 
   private ShopItem shopItem;
   private ProstUser prostUser;
+  private ProstUser kioskUser;
 
   @BeforeEach
   public void setUp() {
     shopItem = new ShopItem("item1", "category1", "Item 1", new BigDecimal("10.00"));
-    prostUser = new ProstUser("user1", "Test User", "digga@test.com", true);
+    prostUser = new ProstUser("user1", "Test User", "digga@test.com", true, false, true);
+    kioskUser = new ProstUser("kiosk", "Kiosk", "kiosk@test.com", false, true, false);
   }
 
   @Test
@@ -69,21 +71,104 @@ public class ShopServiceTest {
   }
 
   @Test
-  public void testConsume_DisabledItemOrUser_ReturnsFalse() {
-    shopItem.setEnabled(false);
+  public void testConsume_DisabledItem_ReturnsFalse() {
     when(itemRepository.findById(shopItem.getId())).thenReturn(Optional.of(shopItem));
     when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
-    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+    shopItem.setEnabled(false);
 
     boolean result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId(),
         UserAccessRole.KAFFEEKASSE);
     assertFalse(result);
+  }
 
-    shopItem.setEnabled(true);
+  @Test
+  public void testConsume_DisabledUser_ReturnsFalse() {
+    when(itemRepository.findById(shopItem.getId())).thenReturn(Optional.of(shopItem));
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
     prostUser.setEnabled(false);
-    result = shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId(),
-        UserAccessRole.KAFFEEKASSE);
-    assertFalse(result);
+
+    assertFalse(shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId(),
+        UserAccessRole.KAFFEEKASSE));
+  }
+
+  @Test
+  public void testConsume_EnabledKiosk_ReturnsTrue() {
+    TransactionEntry transaction = new TransactionEntry(null, prostUser.getId(), kioskUser.getId(),
+        TransactionType.BUY, null, shopItem.getPrice());
+    when(transactionService.moneyTransfer(any(), anyString(), anyString(), any(),
+        any(TransactionType.class)))
+        .thenReturn(Optional.of(transaction));
+    when(itemRepository.findById(shopItem.getId())).thenReturn(Optional.of(shopItem));
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+    when(userRepository.findById(kioskUser.getId())).thenReturn(Optional.of(kioskUser));
+
+    assertTrue(shopService.consume(shopItem.getId(), prostUser.getId(), 1, kioskUser.getId(),
+        UserAccessRole.KIOSK));
+  }
+
+  @Test
+  public void testConsume_DisabledKiosk_ReturnsFalse() {
+    prostUser.setKiosk(false);
+    when(itemRepository.findById(shopItem.getId())).thenReturn(Optional.of(shopItem));
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+    when(userRepository.findById(kioskUser.getId())).thenReturn(Optional.of(kioskUser));
+
+    assertFalse(shopService.consume(shopItem.getId(), prostUser.getId(), 1, kioskUser.getId(),
+        UserAccessRole.KIOSK));
+  }
+
+  @Test
+  public void testConsume_RegularUser_BuyHimself_ReturnsTrue() {
+    TransactionEntry transaction = new TransactionEntry(null, prostUser.getId(), prostUser.getId(),
+        TransactionType.BUY, null, shopItem.getPrice());
+    when(transactionService.moneyTransfer(any(), anyString(), anyString(), any(),
+        any(TransactionType.class)))
+        .thenReturn(Optional.of(transaction));
+    when(itemRepository.findById(shopItem.getId())).thenReturn(Optional.of(shopItem));
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+
+    assertTrue(shopService.consume(shopItem.getId(), prostUser.getId(), 1, prostUser.getId(),
+        UserAccessRole.FSINFO));
+  }
+
+  @Test
+  public void testConsume_RegularUser_BuyOther_ReturnsFalse() {
+    when(itemRepository.findById(shopItem.getId())).thenReturn(Optional.of(shopItem));
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+    when(userRepository.findById(kioskUser.getId())).thenReturn(Optional.of(kioskUser));
+
+    assertFalse(shopService.consume(shopItem.getId(), prostUser.getId(), 1, kioskUser.getId(),
+        UserAccessRole.FSINFO));
+  }
+
+  @Test
+  public void testHasBearerPermissions_UnknownBearerRole_ReturnsFalse() {
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+
+    assertFalse(
+        shopService.hasBearerPermissions(shopItem.getId(), prostUser.getId(), 1, kioskUser.getId(),
+            UserAccessRole.UNASSIGNED));
+  }
+
+  @Test
+  public void testHasBearerPermissions_RegularUser() {
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+
+    assertFalse(
+        shopService.hasBearerPermissions(shopItem.getId(), prostUser.getId(), 1, kioskUser.getId(),
+            UserAccessRole.FSINFO));
+    assertTrue(
+        shopService.hasBearerPermissions(shopItem.getId(), prostUser.getId(), 1, prostUser.getId(),
+            UserAccessRole.FSINFO));
+  }
+
+  @Test
+  public void testHasBearerPermissions_AdminUser() {
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+
+    assertTrue(
+        shopService.hasBearerPermissions(shopItem.getId(), prostUser.getId(), 1, kioskUser.getId(),
+            UserAccessRole.KAFFEEKASSE));
   }
 
   @Test
@@ -232,6 +317,9 @@ public class ShopServiceTest {
   public void testChangeDisplayName_InvalidData_ReturnsEmpty() {
     Optional<ShopItem> result = shopService.changeDisplayName(shopItem.getId(), "");
     assertTrue(result.isEmpty());
+
+    result = shopService.changeDisplayName(shopItem.getId(), "no item found test");
+    assertTrue(result.isEmpty());
   }
 
   @Test
@@ -246,6 +334,9 @@ public class ShopServiceTest {
   @Test
   public void testChangeCategory_InvalidData_ReturnsEmpty() {
     Optional<ShopItem> result = shopService.changeCategory(shopItem.getId(), "");
+    assertTrue(result.isEmpty());
+
+    result = shopService.changeCategory(shopItem.getId(), "testCategory");
     assertTrue(result.isEmpty());
   }
 
