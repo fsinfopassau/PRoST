@@ -67,9 +67,9 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
     });
   }
 
-  function toggleHidden(){
+  function toggleHidden() {
     const newVal = !user.hidden;
-    hideUser(user,newVal).then((result) => {
+    hideUser(user, newVal).then((result) => {
       if (result) {
         toast.success(user.id + (newVal ? " ist jetzt versteckt!" : " ist jetzt öffentlich!"));
         onUpdate();
@@ -79,11 +79,13 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
     });
   }
 
-  function toggleKiosk(){
+  function toggleKiosk() {
     const newVal = !user.kiosk;
     setUserKiosk(user, newVal).then((result) => {
       if (result) {
-        toast.success((newVal ? "Der Kiosk ist mit diesem Profil nutzbar!" : "Das Profil kann den Kiosk nichtmehr nutzen!"));
+        toast.success(
+          newVal ? "Der Kiosk ist mit diesem Profil nutzbar!" : "Das Profil kann den Kiosk nichtmehr nutzen!"
+        );
         onUpdate();
       } else {
         toast.error("Änderung fehlgeschlagen!");
@@ -173,7 +175,7 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
           <h3 className="SpreadContainer">
             <Link className="bold SpreadContainer" to={`/stats/users/${user.id}`}>
               {user.displayName}
-              <DotIcon/> {user.id}
+              <DotIcon /> {user.id}
             </Link>
           </h3>
           <h3>
@@ -182,7 +184,7 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
           </h3>
         </div>
 
-        <div style={{display: "flex", gap: "1rem", padding: "0.25rem 0"}}>
+        <div style={{ display: "flex", gap: "1rem", padding: "0.25rem 0" }}>
           {user.enabled ? (
             <div className="good-color">
               <CheckIcon />
@@ -255,7 +257,7 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
                 </div>
               }
             />
-            <DotIcon/>
+            <DotIcon />
             <Link className="bold" to={`/stats/users/${user.id}`}>
               {user.id}
             </Link>
@@ -293,7 +295,7 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
             </ScrollDialog>
           </div>
         </div>
-        <div style={{display: "flex", gap: "1rem", padding: "0.25rem 0", alignItems: "center"}}>
+        <div style={{ display: "flex", gap: "1rem", padding: "0.25rem 0", alignItems: "center" }}>
           <Switch className="SwitchRoot" defaultChecked={user.enabled} onCheckedChange={toggleEnable}>
             <SwitchThumb className="SwitchThumb" />
           </Switch>
@@ -307,7 +309,7 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
               <EyeOpenIcon />
             </div>
           )}
-          
+
           {user.kiosk ? (
             <div className="Button icon good-color" onClick={toggleKiosk}>
               <CookieIcon />
@@ -317,7 +319,6 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
               <CookieIcon />
             </div>
           )}
-
         </div>
         <Separator className="Separator" />
         <div className="SmallGridContainer">

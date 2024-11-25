@@ -1,8 +1,8 @@
-import {useNavigate, useParams} from "react-router-dom";
-import {buyItem, getItemDisplayPicture, getShopItem} from "../../Queries";
-import {ShopItem} from "../../Types/ShopItem";
-import {useEffect, useState} from "react";
-import {toast} from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
+import { buyItem, getItemDisplayPicture, getShopItem } from "../../Queries";
+import { ShopItem } from "../../Types/ShopItem";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
   BookmarkIcon,
   ChevronLeftIcon,
@@ -10,12 +10,12 @@ import {
   LightningBoltIcon,
   PaperPlaneIcon,
 } from "@radix-ui/react-icons";
-import {formatMoney} from "../../Format";
-import {BASE_PATH} from "../App";
+import { formatMoney } from "../../Format";
+import { BASE_PATH } from "../App";
 import { ErrorComponent } from "../Util/ErrorTab";
 
 export function ItemCheckout() {
-  const {userId, itemId} = useParams();
+  const { userId, itemId } = useParams();
   const [item, setItem] = useState<ShopItem>();
   const [imageUrl, setImageUrl] = useState<string>(`${BASE_PATH}/img/Beer.jpg`);
   const [amount, setAmount] = useState<number>(1);
@@ -51,26 +51,26 @@ export function ItemCheckout() {
     if (userId && itemId) {
       console.log("checkout", userId, itemId);
       buyItem(userId, itemId, amount)
-      .then((result) => {
-        switch (result) {
-          case -1:
-            toast.error(item?.displayName + " konnte nicht gekauft werden!");
-            break;
-          case 0:
-            toast(amount + "x " + item?.displayName + " gekauft!");
-            navigate("/");
-            break;
-          case 1:
-            toast.info("Warte etwas, um nochmal zu kaufen.");
-            break;
-          case 2:
-            toast.warning("Ich bin ne 🫖, du Keck! 🙃");
-            break;
-        }
-      })
-      .catch(() => {
-        toast.error("Transaktionsfehler. Unerwarteter Anzeigefehler!");
-      });
+        .then((result) => {
+          switch (result) {
+            case -1:
+              toast.error(item?.displayName + " konnte nicht gekauft werden!");
+              break;
+            case 0:
+              toast(amount + "x " + item?.displayName + " gekauft!");
+              navigate("/");
+              break;
+            case 1:
+              toast.info("Warte etwas, um nochmal zu kaufen.");
+              break;
+            case 2:
+              toast.warning("Ich bin ne 🫖, du Keck! 🙃");
+              break;
+          }
+        })
+        .catch(() => {
+          toast.error("Transaktionsfehler. Unerwarteter Anzeigefehler!");
+        });
     }
   }
 
@@ -83,40 +83,40 @@ export function ItemCheckout() {
 
   if (item) {
     return (
-        <>
-          <div id="Checkout">
-            <div id="Checkout-Item">
-              <h2>{item?.displayName}</h2>
-              <img className="Image" src={imageUrl} alt="Item Image" style={{width: "100%"}}/>
-              <div className="SpreadContainer">
-                <div style={{display: "flex", alignItems: "center"}}>
-                  <BookmarkIcon/>
-                  {item?.category}
-                </div>
-                <div className="bold" style={{display: "flex", alignItems: "center"}}>
-                  <LightningBoltIcon/>
-                  {getPrice(amount)}
-                </div>
+      <>
+        <div id="Checkout">
+          <div id="Checkout-Item">
+            <h2>{item?.displayName}</h2>
+            <img className="Image" src={imageUrl} alt="Item Image" style={{ width: "100%" }} />
+            <div className="SpreadContainer">
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <BookmarkIcon />
+                {item?.category}
+              </div>
+              <div className="bold" style={{ display: "flex", alignItems: "center" }}>
+                <LightningBoltIcon />
+                {getPrice(amount)}
               </div>
             </div>
-            <div className="CheckoutCounter">
-              <button className="Button icon" onClick={decrement}>
-                <ChevronLeftIcon height={60} width={60}/>
-              </button>
-              <div>
-                <div>{amount}</div>
-              </div>
-              <button className="Button icon" onClick={increment}>
-                <ChevronRightIcon height={60} width={60}/>
-              </button>
+          </div>
+          <div className="CheckoutCounter">
+            <button className="Button icon" onClick={decrement}>
+              <ChevronLeftIcon height={60} width={60} />
+            </button>
+            <div>
+              <div>{amount}</div>
             </div>
-            <button id="Checkout-Complete" className="Button" onClick={checkout}>
-              <PaperPlaneIcon width={50} height={35}/>
+            <button className="Button icon" onClick={increment}>
+              <ChevronRightIcon height={60} width={60} />
             </button>
           </div>
-        </>
+          <button id="Checkout-Complete" className="Button" onClick={checkout}>
+            <PaperPlaneIcon width={50} height={35} />
+          </button>
+        </div>
+      </>
     );
   } else {
-    return <ErrorComponent/>;
+    return <ErrorComponent />;
   }
 }

@@ -1,14 +1,9 @@
-import {useEffect, useState} from "react";
-import {ShopHistoryEntry} from "../../Types/ShopHistory";
-import {getHistory, getOwnHistory, getUserHistory} from "../../Queries";
-import {HistoryEntryDisplay} from "../StatisticsTab/HistoryEntryDisplay";
-import {
-  ScrollArea,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaViewport
-} from "@radix-ui/react-scroll-area";
-import {Separator} from "@radix-ui/react-separator";
+import { useEffect, useState } from "react";
+import { ShopHistoryEntry } from "../../Types/ShopHistory";
+import { getHistory, getOwnHistory, getUserHistory } from "../../Queries";
+import { HistoryEntryDisplay } from "../StatisticsTab/HistoryEntryDisplay";
+import { ScrollArea, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from "@radix-ui/react-scroll-area";
+import { Separator } from "@radix-ui/react-separator";
 
 export function ShopHistory(props: { personal: boolean }) {
   const [selectedPage, setSelectedPage] = useState(0);
@@ -83,57 +78,57 @@ export function ShopHistory(props: { personal: boolean }) {
   }
 
   return (
-      <>
-        <ScrollArea className="DisplayCard">
-          <ScrollAreaViewport>
-            <h2>Historie</h2>
-            {props.personal ? (
-                <></>
-            ) : (
-                <div className="tableSearch">
-                  <input
-                      className="Input"
-                      type="text"
-                      onChange={(e) => setSearchValue(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                      placeholder="Käufer Id"
-                  />
-                </div>
-            )}
-
-            <table className="Table">
-              <tbody>
-              {history.map((item) => (
-                  <HistoryEntryDisplay entry={item} key={item.id} showHidden={true}/>
-              ))}
-              </tbody>
-            </table>
-
-            <Separator className="Separator"/>
-
-            <div className="PageBar">
-              {Array.from({length: totalPages - 1}, (_, index) => {
-                if (index >= minPage && index <= maxPage) {
-                  return (
-                      <div
-                          key={"p" + index}
-                          className={`PageButton ${selectedPage === index ? "Selected" : ""}`}
-                          onClick={() => selectPage(index)}
-                      >
-                        {index + 1}
-                      </div>
-                  );
-                }
-              }).filter(Boolean)}
+    <>
+      <ScrollArea className="DisplayCard">
+        <ScrollAreaViewport>
+          <h2>Historie</h2>
+          {props.personal ? (
+            <></>
+          ) : (
+            <div className="tableSearch">
+              <input
+                className="Input"
+                type="text"
+                onChange={(e) => setSearchValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Käufer Id"
+              />
             </div>
-          </ScrollAreaViewport>
-          <ScrollAreaScrollbar className="Scrollbar" orientation="vertical">
-            <ScrollAreaThumb className="ScrollbarThumb"/>
-          </ScrollAreaScrollbar>
-          <ScrollAreaScrollbar className="Scrollbar" orientation="horizontal">
-            <ScrollAreaThumb className="ScrollbarThumb"/>
-          </ScrollAreaScrollbar>
-        </ScrollArea>
-      </>
+          )}
+
+          <table className="Table">
+            <tbody>
+              {history.map((item) => (
+                <HistoryEntryDisplay entry={item} key={item.id} showHidden={true} />
+              ))}
+            </tbody>
+          </table>
+
+          <Separator className="Separator" />
+
+          <div className="PageBar">
+            {Array.from({ length: totalPages - 1 }, (_, index) => {
+              if (index >= minPage && index <= maxPage) {
+                return (
+                  <div
+                    key={"p" + index}
+                    className={`PageButton ${selectedPage === index ? "Selected" : ""}`}
+                    onClick={() => selectPage(index)}
+                  >
+                    {index + 1}
+                  </div>
+                );
+              }
+            }).filter(Boolean)}
+          </div>
+        </ScrollAreaViewport>
+        <ScrollAreaScrollbar className="Scrollbar" orientation="vertical">
+          <ScrollAreaThumb className="ScrollbarThumb" />
+        </ScrollAreaScrollbar>
+        <ScrollAreaScrollbar className="Scrollbar" orientation="horizontal">
+          <ScrollAreaThumb className="ScrollbarThumb" />
+        </ScrollAreaScrollbar>
+      </ScrollArea>
+    </>
   );
 }

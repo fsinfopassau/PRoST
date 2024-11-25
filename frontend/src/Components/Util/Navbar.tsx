@@ -35,7 +35,7 @@ export function Navbar() {
     };
   });
 
-  function navigateRoot(){
+  function navigateRoot() {
     navigate("");
   }
 
@@ -140,7 +140,7 @@ export function Navbar() {
 
   return (
     <div id="tab-changer">
-      <img onClick={navigateRoot} src={`${BASE_PATH}/icons/happy-manje/happy beer.svg`}  alt={"Logo"}/>
+      <img onClick={navigateRoot} src={`${BASE_PATH}/icons/happy-manje/happy beer.svg`} alt={"Logo"} />
       <Tabs value={getSelectedTabValue()}>
         <TabsList className="TabsList">
           {isOnlyKiosk() ? kioskView() : isUser() ? userView() : null}
