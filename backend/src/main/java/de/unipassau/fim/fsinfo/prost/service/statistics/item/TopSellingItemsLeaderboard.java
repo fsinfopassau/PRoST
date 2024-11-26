@@ -3,14 +3,14 @@ package de.unipassau.fim.fsinfo.prost.service.statistics.item;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
-import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractLeaderboard;
+import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractItemLeaderboard;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TopSellingItemsLeaderboard extends AbstractLeaderboard<ShopItem> {
+public class TopSellingItemsLeaderboard extends AbstractItemLeaderboard {
 
   private final ShopItemHistoryRepository shopItemHistoryRepository;
   private final ShopItemRepository shopItemRepository;
@@ -18,7 +18,7 @@ public class TopSellingItemsLeaderboard extends AbstractLeaderboard<ShopItem> {
   @Autowired
   public TopSellingItemsLeaderboard(ShopItemHistoryRepository shopItemHistoryRepository,
       ShopItemRepository shopItemRepository) {
-    super(ShopItem.class);
+    super();
     this.shopItemHistoryRepository = shopItemHistoryRepository;
     initLeaderboard(shopItemRepository.findAll());
     this.shopItemRepository = shopItemRepository;
@@ -28,9 +28,6 @@ public class TopSellingItemsLeaderboard extends AbstractLeaderboard<ShopItem> {
   public BigDecimal calculateValue(ShopItem entity, Long startTimeStamp, Long endTimeStamp) {
     Optional<Long> result = shopItemHistoryRepository.getTotalAmountPurchasedInTimeFrame(
         entity.getId(), startTimeStamp, endTimeStamp);
-
-    System.out.println(
-        entity.getId() + " " + result.isPresent() + " " + (result.isPresent() ? result.get() : ""));
 
     return result.map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
   }

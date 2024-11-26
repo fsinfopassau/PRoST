@@ -3,7 +3,7 @@ package de.unipassau.fim.fsinfo.prost.service.statistics.user;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
-import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractLeaderboard;
+import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractUserLeaderboard;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 // Most transactions per user
 @Service
-public class LoyalCustomerLeaderboard extends AbstractLeaderboard<ProstUser> {
+public class LoyalCustomerLeaderboard extends AbstractUserLeaderboard {
 
   private final ShopItemHistoryRepository shopItemHistoryRepository;
   private final UserRepository userRepository;
@@ -19,7 +19,7 @@ public class LoyalCustomerLeaderboard extends AbstractLeaderboard<ProstUser> {
   @Autowired
   public LoyalCustomerLeaderboard(UserRepository userRepository,
       ShopItemHistoryRepository shopItemHistoryRepository) {
-    super(ProstUser.class);
+    super();
     this.shopItemHistoryRepository = shopItemHistoryRepository;
     initLeaderboard(userRepository.findAll());
     this.userRepository = userRepository;
