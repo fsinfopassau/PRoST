@@ -25,10 +25,6 @@ export function AllUserStatistics(props: { timeSpan: TimeSpan }) {
       });
   }, []);
 
-  useEffect(() => {
-    console.log("change");
-  }, [timeSpan]);
-
   return (
     <div className="GridContainer">
       <div className="DisplayCard">

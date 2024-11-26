@@ -5,6 +5,7 @@ import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractLeaderboard;
 import java.math.BigDecimal;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class LoyalCustomerLeaderboard extends AbstractLeaderboard<ProstUser> {
 
   private final ShopItemHistoryRepository shopItemHistoryRepository;
+  private final UserRepository userRepository;
 
   @Autowired
   public LoyalCustomerLeaderboard(UserRepository userRepository,
@@ -20,6 +22,7 @@ public class LoyalCustomerLeaderboard extends AbstractLeaderboard<ProstUser> {
     super(ProstUser.class);
     this.shopItemHistoryRepository = shopItemHistoryRepository;
     initLeaderboard(userRepository.findAll());
+    this.userRepository = userRepository;
   }
 
   @Override
@@ -27,5 +30,16 @@ public class LoyalCustomerLeaderboard extends AbstractLeaderboard<ProstUser> {
     return BigDecimal.valueOf(
         shopItemHistoryRepository.findByUserIdAndTimestampBetween(entity.getId(), startTimestamp,
             endTimestamp).size());
+  }
+
+  @Override
+  public String getKey(ProstUser entity) {
+    return entity.getId();
+  }
+
+  @Override
+  public ProstUser findByKey(String key) {
+    Optional<ProstUser> result = userRepository.findById(key);
+    return result.orElse(null);
   }
 }

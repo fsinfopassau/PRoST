@@ -44,8 +44,8 @@ public abstract class AbstractLeaderboard<T> {
   }
 
   // hardcoded to the last 30days is easier to calculate and more consistent over time.
-  private ConcurrentHashMap<T, BigDecimal> leaderboardEntries_Monthly = new ConcurrentHashMap<>();
-  private ConcurrentHashMap<T, BigDecimal> leaderboardEntries_AllTime = new ConcurrentHashMap<>();
+  private ConcurrentHashMap<String, BigDecimal> leaderboardEntries_Monthly = new ConcurrentHashMap<>();
+  private ConcurrentHashMap<String, BigDecimal> leaderboardEntries_AllTime = new ConcurrentHashMap<>();
 
   private final Class<T> entityType;
 
@@ -66,15 +66,19 @@ public abstract class AbstractLeaderboard<T> {
 
   public abstract BigDecimal calculateValue(T entity, Long startTimestamp, Long endTimestamp);
 
+  public abstract String getKey(T entity);
+
+  public abstract T findByKey(String key);
+
   private void updateEntry(T entity) {
     long now = Instant.now().toEpochMilli();
-    leaderboardEntries_Monthly.put(entity, calculateValue(entity, now - MONTH_MILLIS, now));
-    leaderboardEntries_AllTime.put(entity, calculateValue(entity, 0L, now));
+    leaderboardEntries_Monthly.put(getKey(entity), calculateValue(entity, now - MONTH_MILLIS, now));
+    leaderboardEntries_AllTime.put(getKey(entity), calculateValue(entity, 0L, now));
   }
 
   private void removeEntry(T entity) {
-    leaderboardEntries_Monthly.remove(entity);
-    leaderboardEntries_AllTime.remove(entity);
+    leaderboardEntries_Monthly.remove(getKey(entity));
+    leaderboardEntries_AllTime.remove(getKey(entity));
   }
 
   public Optional<List<LeaderboardEntry<T>>> getLeaderboardEntries(TimeSpan timeSpan) {
@@ -85,15 +89,17 @@ public abstract class AbstractLeaderboard<T> {
   }
 
   private List<LeaderboardEntry<T>> mapToLeaderboardEntries(
-      ConcurrentHashMap<T, BigDecimal> leaderboardEntries) {
+      ConcurrentHashMap<String, BigDecimal> leaderboardEntries) {
 
     return leaderboardEntries.entrySet().stream()
-        .sorted(Map.Entry.<T, BigDecimal>comparingByValue().reversed())
-        .map(entry -> new LeaderboardEntry<T>(entry.getKey(), entry.getValue()))
+        .sorted(Map.Entry.<String, BigDecimal>comparingByValue().reversed())
+        .map(entry -> new LeaderboardEntry<T>(entry.getKey(), findByKey(entry.getKey()),
+            entry.getValue()))
         .collect(Collectors.toList());
   }
 
-  public record LeaderboardEntry<T>(T item, BigDecimal value) {
+
+  public record LeaderboardEntry<T>(String key, T entity, BigDecimal value) {
 
   }
 

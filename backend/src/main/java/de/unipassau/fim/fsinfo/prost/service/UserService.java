@@ -85,7 +85,7 @@ public class UserService {
 
     if (user.isPresent()) {
       users.delete(user.get());
-      AbstractLeaderboard.updateAllEntriesFor(ProstUser.class, user.get());
+      AbstractLeaderboard.removeAllEntriesFor(ProstUser.class, user.get());
       return true;
     }
     return false;
@@ -99,6 +99,7 @@ public class UserService {
       ProstUser u = user.get();
       u.setDisplayName(name);
       users.save(u);
+      AbstractLeaderboard.updateAllEntriesFor(ProstUser.class, user.get());
       return true;
     }
     return false;

@@ -108,7 +108,7 @@ export function Statistics() {
       case "users":
         return <AllUserStatistics timeSpan={timeSpan} />;
       case "items":
-        return <AllItemStatistics />;
+        return <AllItemStatistics timeSpan={timeSpan} />;
     }
     return <AllSystemStatistics />;
   }
