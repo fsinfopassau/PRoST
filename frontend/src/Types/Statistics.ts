@@ -7,11 +7,16 @@ export enum TimeSpan {
 }
 
 export enum ItemLeaderboardType {
+    // backend calculated
     TOP_SELLING_ITEMS = "TOP_SELLING_ITEMS"
 }
 export enum UserLeaderboardType {
+    // frontend calculated
+    DEBT_CUSTOMER = "DEBT_CUSTOMER",
+    MVP = "MVP",
+    // backend calculated
     LOYAL_CUSTOMER = "LOYAL_CUSTOMER",
-    LUXURY_CUSTOMER = "LUXURY_CUSTOMER"
+    LUXURY_CUSTOMER = "LUXURY_CUSTOMER",
 }
 
 export interface LeaderboardUserEntry {
@@ -32,3 +37,19 @@ export function toTimeSpan(value: string): TimeSpan | undefined {
     }
     return undefined; // Return undefined if no match is found
 }
+
+export const convertUsersBalance = (users: User[]): LeaderboardUserEntry[] => {
+    return users.map((user) => ({
+        key: user.id,
+        entity: user,
+        value: user.balance,
+    }))
+};
+
+export const convertUsersSpent = (users: User[]): LeaderboardUserEntry[] => {
+    return users.map((user) => ({
+        key: user.id,
+        entity: user,
+        value: user.totalSpent,
+    }))
+};
