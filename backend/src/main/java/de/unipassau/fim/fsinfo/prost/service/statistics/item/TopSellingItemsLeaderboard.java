@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class TopSellingItemsLeaderboard extends AbstractLeaderboard<ShopItem> {
 
   private final ShopItemHistoryRepository shopItemHistoryRepository;
+  private final ShopItemRepository shopItemRepository;
 
   @Autowired
   public TopSellingItemsLeaderboard(ShopItemHistoryRepository shopItemHistoryRepository,
@@ -20,6 +21,7 @@ public class TopSellingItemsLeaderboard extends AbstractLeaderboard<ShopItem> {
     super(ShopItem.class);
     this.shopItemHistoryRepository = shopItemHistoryRepository;
     initLeaderboard(shopItemRepository.findAll());
+    this.shopItemRepository = shopItemRepository;
   }
 
   @Override
@@ -31,5 +33,16 @@ public class TopSellingItemsLeaderboard extends AbstractLeaderboard<ShopItem> {
         entity.getId() + " " + result.isPresent() + " " + (result.isPresent() ? result.get() : ""));
 
     return result.map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
+  }
+
+  @Override
+  public String getKey(ShopItem entity) {
+    return entity.getId();
+  }
+
+  @Override
+  public ShopItem findByKey(String key) {
+    Optional<ShopItem> result = shopItemRepository.findById(key);
+    return result.orElse(null);
   }
 }

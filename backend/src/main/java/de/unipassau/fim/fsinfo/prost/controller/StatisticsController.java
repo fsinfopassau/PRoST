@@ -1,7 +1,8 @@
 package de.unipassau.fim.fsinfo.prost.controller;
 
-import de.unipassau.fim.fsinfo.prost.data.LeaderboardType;
+import de.unipassau.fim.fsinfo.prost.data.ItemLeaderboardType;
 import de.unipassau.fim.fsinfo.prost.data.TimeSpan;
+import de.unipassau.fim.fsinfo.prost.data.UserLeaderboardType;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractLeaderboard.LeaderboardEntry;
@@ -28,9 +29,9 @@ public class StatisticsController {
     this.loyalCustomerLeaderboard = loyalCustomerLeaderboard;
   }
 
-  @GetMapping("/item/leaderboard/")
+  @GetMapping("/item/leaderboard")
   public ResponseEntity<List<LeaderboardEntry<ShopItem>>> getItemLeaderboard(
-      LeaderboardType type, TimeSpan timespan) {
+      ItemLeaderboardType type, TimeSpan timespan) {
     switch (type) {
       case TOP_SELLING_ITEMS -> {
         return topSellingItemsLeaderboard.getLeaderboardEntries(timespan).map(ResponseEntity::ok)
@@ -42,7 +43,7 @@ public class StatisticsController {
 
   @GetMapping("/user/leaderboard")
   public ResponseEntity<List<LeaderboardEntry<ProstUser>>> getUserLeaderboard(
-      LeaderboardType type, TimeSpan timespan) {
+      UserLeaderboardType type, TimeSpan timespan) {
     switch (type) {
       case LOYAL_CUSTOMER -> {
         return loyalCustomerLeaderboard.getLeaderboardEntries(timespan).map(ResponseEntity::ok)

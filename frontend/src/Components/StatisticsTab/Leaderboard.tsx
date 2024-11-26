@@ -1,7 +1,50 @@
 import { Link } from "react-router-dom";
-import { UserLeaderboardType, LeaderboardUserEntry, TimeSpan } from "../../Types/Statistics";
+import {
+  UserLeaderboardType,
+  LeaderboardUserEntry,
+  TimeSpan,
+  ItemLeaderboardType,
+  LeaderboardItemEntry,
+} from "../../Types/Statistics";
 import { useEffect, useState } from "react";
-import { getUserLeaderboard } from "../../Queries";
+import { getItemLeaderboard, getUserLeaderboard } from "../../Queries";
+
+export function ItemLeaderboard(props: { type: ItemLeaderboardType; timeSpan: TimeSpan }) {
+  const { type, timeSpan } = props;
+  const [stats, setStats] = useState<LeaderboardItemEntry[]>([]);
+
+  useEffect(() => {
+    getItemLeaderboard(type, timeSpan)
+      .then((l) => {
+        if (l) {
+          console.log(l);
+          setStats(l);
+        }
+      })
+      .catch(() => {
+        setStats([]);
+      });
+  }, [timeSpan]);
+
+  return (
+    <table className="Table">
+      <tbody>
+        {stats.map((entry, index) => {
+          return (
+            <LeaderboardEntry
+              entryDisplayName={entry.entity.displayName}
+              entryId={entry.entity.id}
+              entryValue={entry.value}
+              position={index + 1}
+              isUser={false}
+              key={index}
+            />
+          );
+        })}
+      </tbody>
+    </table>
+  );
+}
 
 export function UserLeaderboard(props: { type: UserLeaderboardType; timeSpan: TimeSpan }) {
   const { type, timeSpan } = props;
@@ -26,8 +69,8 @@ export function UserLeaderboard(props: { type: UserLeaderboardType; timeSpan: Ti
         {stats.map((entry, index) => {
           return (
             <LeaderboardEntry
-              entryDisplayName={entry.item.displayName}
-              entryId={entry.item.id}
+              entryDisplayName={entry.entity.displayName}
+              entryId={entry.entity.id}
               entryValue={entry.value}
               position={index + 1}
               isUser={true}
