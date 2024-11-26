@@ -10,6 +10,7 @@ import de.unipassau.fim.fsinfo.prost.data.dao.TransactionEntry;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
+import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractLeaderboard;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
@@ -117,6 +118,9 @@ public class ShopService {
           new ShopItemHistoryEntry(transaction.get(), item.getId(), item.getPrice(),
               amount));
       bearerLastBuy.put(bearerId, Instant.now().toEpochMilli());
+
+      AbstractLeaderboard.updateAllEntriesFor(ShopItem.class, item);
+      AbstractLeaderboard.updateAllEntriesFor(ProstUser.class, user);
       return true;
     } else {
       return false;
@@ -146,6 +150,7 @@ public class ShopService {
     ShopItem item = new ShopItem(DataFilter.filterNameId(identifier), category, displayName,
         price.abs());
     itemRepository.save(item);
+    AbstractLeaderboard.updateAllEntriesFor(ShopItem.class, item);
     return Optional.of(item);
   }
 
@@ -154,6 +159,7 @@ public class ShopService {
     Optional<ShopItem> item = itemRepository.findById(identifier);
     if (item.isPresent()) {
       itemRepository.delete(item.get());
+      AbstractLeaderboard.removeAllEntriesFor(ShopItem.class, item.get());
       return item;
     }
     return Optional.empty();
@@ -224,12 +230,16 @@ public class ShopService {
 
   @Transactional
   public Optional<ShopItem> enable(String identifier) {
-    return setVisibility(identifier, true);
+    Optional<ShopItem> item = setVisibility(identifier, true);
+    item.ifPresent(shopItem -> AbstractLeaderboard.updateAllEntriesFor(ShopItem.class, shopItem));
+    return item;
   }
 
   @Transactional
   public Optional<ShopItem> disable(String identifier) {
-    return setVisibility(identifier, false);
+    Optional<ShopItem> item = setVisibility(identifier, false);
+    item.ifPresent(shopItem -> AbstractLeaderboard.removeAllEntriesFor(ShopItem.class, shopItem));
+    return item;
   }
 
   private Optional<ShopItem> setVisibility(String identifier, boolean value) {
