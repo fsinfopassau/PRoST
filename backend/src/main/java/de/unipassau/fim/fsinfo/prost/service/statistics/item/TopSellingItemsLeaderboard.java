@@ -1,8 +1,9 @@
-package de.unipassau.fim.fsinfo.prost.service.statistics;
+package de.unipassau.fim.fsinfo.prost.service.statistics.item;
 
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
+import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractLeaderboard;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class TopSellingItemsLeaderboard extends AbstractLeaderboard<ShopItem> {
   @Autowired
   public TopSellingItemsLeaderboard(ShopItemHistoryRepository shopItemHistoryRepository,
       ShopItemRepository shopItemRepository) {
-    super();
+    super(ShopItem.class);
     this.shopItemHistoryRepository = shopItemHistoryRepository;
     initLeaderboard(shopItemRepository.findAll());
   }

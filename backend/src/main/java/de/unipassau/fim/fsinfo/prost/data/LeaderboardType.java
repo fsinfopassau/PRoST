@@ -1,5 +1,6 @@
 package de.unipassau.fim.fsinfo.prost.data;
 
 public enum LeaderboardType {
-  TopSellingItems
+  TOP_SELLING_ITEMS,
+  LOYAL_CUSTOMER
 }

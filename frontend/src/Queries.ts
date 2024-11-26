@@ -5,6 +5,7 @@ import { AuthorizedUser, User } from "./Types/User";
 import { getEncodedCredentials, setAuthorizedUser } from "./SessionInfo";
 import { InvoicePage } from "./Types/Invoice";
 import { TransactionPage } from "./Types/Transaction";
+import { UserLeaderboardType, LeaderboardUserEntry, TimeSpan } from "./Types/Statistics";
 
 export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
 
@@ -541,6 +542,26 @@ export async function mailInvoices(ids: number[]): Promise<number[] | undefined>
     }
 
     return (await response.json()) as number[];
+  } catch (error) {
+    return undefined;
+  }
+}
+
+export async function getUserLeaderboard(type: UserLeaderboardType, timeSpan: TimeSpan): Promise<LeaderboardUserEntry[] | undefined> {
+  try {
+    const response = await fetch(`${apiUrl}/api/statistics/user/leaderboard?type=${type.toString()}&timespan=${timeSpan.toString()}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as LeaderboardUserEntry[];
   } catch (error) {
     return undefined;
   }

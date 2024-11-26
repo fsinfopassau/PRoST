@@ -8,7 +8,6 @@ import { ItemCheckout } from "./SearchTab/ItemCheckout";
 import { Statistics } from "./StatisticsTab/Statistics";
 import { History } from "./HistoryTab/History";
 import { UserStatistics } from "./StatisticsTab/UserStatistics";
-import { AllUsersStatistics } from "./StatisticsTab/AllUsersStatistics";
 import { ItemSettings } from "./SettingsTab/ItemSettings";
 import { Bounce, ToastContainer } from "react-toastify";
 import { InvoiceTab } from "./InvoiceTab/InvoiceTab";
@@ -98,7 +97,8 @@ export function App() {
                 <Route path="/shop/:userId" element={<ItemSelection />} />
                 <Route path="/shop/:userId/:itemId" element={<ItemCheckout />} />
                 <Route path="/stats" element={<Statistics />} />
-                <Route path="/stats/users" element={<AllUsersStatistics />} />
+                <Route path="/stats/items" element={<Statistics />} />
+                <Route path="/stats/users" element={<Statistics />} />
                 <Route path="/stats/users/:userId" element={<UserStatistics />} />
                 <Route path="/history" element={<History />} />
                 <Route path="/invoices" element={<InvoiceTab />} />
