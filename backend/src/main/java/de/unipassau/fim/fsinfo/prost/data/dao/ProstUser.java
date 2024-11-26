@@ -56,5 +56,9 @@ public class ProstUser {
     this.balance = new BigDecimal(0);
     this.totalSpent = new BigDecimal(0);
   }
+
+  public static ProstUser getAnonymous() {
+    return new ProstUser("", "Anonyme \uD83C\uDF4D", "", true, true, true);
+  }
 }
 

@@ -17,7 +17,7 @@ public abstract class AbstractLeaderboard<T> {
 
   public static final long MONTH_MILLIS = 1000L * 60 * 60 * 24 * 30;
 
-  private static final Map<Class<?>, List<AbstractLeaderboard<?>>> REGISTRY = new ConcurrentHashMap<>();
+  protected static final Map<Class<?>, List<AbstractLeaderboard<?>>> REGISTRY = new ConcurrentHashMap<>();
 
   public static <T> void updateAllEntriesFor(Class<T> entityType, T entity) {
     List<AbstractLeaderboard<?>> leaderboards = REGISTRY.getOrDefault(entityType, List.of());
@@ -44,10 +44,10 @@ public abstract class AbstractLeaderboard<T> {
   }
 
   // hardcoded to the last 30days is easier to calculate and more consistent over time.
-  private ConcurrentHashMap<String, BigDecimal> leaderboardEntries_Monthly = new ConcurrentHashMap<>();
-  private ConcurrentHashMap<String, BigDecimal> leaderboardEntries_AllTime = new ConcurrentHashMap<>();
+  protected ConcurrentHashMap<String, BigDecimal> leaderboardEntries_Monthly = new ConcurrentHashMap<>();
+  protected ConcurrentHashMap<String, BigDecimal> leaderboardEntries_AllTime = new ConcurrentHashMap<>();
 
-  private final Class<T> entityType;
+  protected final Class<T> entityType;
 
   public AbstractLeaderboard(Class<T> entityType) {
     this.entityType = entityType;
@@ -70,13 +70,13 @@ public abstract class AbstractLeaderboard<T> {
 
   public abstract T findByKey(String key);
 
-  private void updateEntry(T entity) {
+  protected void updateEntry(T entity) {
     long now = Instant.now().toEpochMilli();
     leaderboardEntries_Monthly.put(getKey(entity), calculateValue(entity, now - MONTH_MILLIS, now));
     leaderboardEntries_AllTime.put(getKey(entity), calculateValue(entity, 0L, now));
   }
 
-  private void removeEntry(T entity) {
+  protected void removeEntry(T entity) {
     leaderboardEntries_Monthly.remove(getKey(entity));
     leaderboardEntries_AllTime.remove(getKey(entity));
   }
@@ -88,12 +88,12 @@ public abstract class AbstractLeaderboard<T> {
     };
   }
 
-  private List<LeaderboardEntry<T>> mapToLeaderboardEntries(
+  protected List<LeaderboardEntry<T>> mapToLeaderboardEntries(
       ConcurrentHashMap<String, BigDecimal> leaderboardEntries) {
 
     return leaderboardEntries.entrySet().stream()
         .sorted(Map.Entry.<String, BigDecimal>comparingByValue().reversed())
-        .map(entry -> new LeaderboardEntry<T>(entry.getKey(), findByKey(entry.getKey()),
+        .map(entry -> new LeaderboardEntry<>(entry.getKey(), findByKey(entry.getKey()),
             entry.getValue()))
         .collect(Collectors.toList());
   }
