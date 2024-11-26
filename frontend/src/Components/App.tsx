@@ -17,6 +17,7 @@ import { PersonalInvoiceView } from "./PersonalView/PersonalInvoiceView";
 import { PersonalHistoryView } from "./PersonalView/PersonalHistoryView";
 import ScrollDialog from "./Util/ScrollDialog";
 import { BlendingModeIcon } from "@radix-ui/react-icons";
+import { Users } from "./Users";
 
 const stylesAvailable = ["purple", "blue", "mc"];
 export const BASE_PATH = import.meta.env.VITE_BASE_PATH || "";
@@ -96,14 +97,15 @@ export function App() {
                 <Route path="/me/history" element={<PersonalHistoryView />} />
                 <Route path="/shop/:userId" element={<ItemSelection />} />
                 <Route path="/shop/:userId/:itemId" element={<ItemCheckout />} />
+                <Route path="/users" element={<Users />} />
                 <Route path="/stats" element={<Statistics />} />
                 <Route path="/stats/items" element={<Statistics />} />
                 <Route path="/stats/users" element={<Statistics />} />
                 <Route path="/stats/users/:userId" element={<UserStatistics />} />
                 <Route path="/history" element={<History />} />
                 <Route path="/invoices" element={<InvoiceTab />} />
-                <Route path="/items" element={<ItemSettings />} />
-                <Route path="/users" element={<UserSettings />} />
+                <Route path="/settings/items" element={<ItemSettings />} />
+                <Route path="/settings/users" element={<UserSettings />} />
                 <Route path="*" element={<ErrorComponent />} />
               </Routes>
             </div>

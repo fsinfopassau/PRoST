@@ -63,6 +63,8 @@ export function Navbar() {
       return "root";
     } else if (location.pathname.startsWith("/me")) {
       return "me/" + location.pathname.split("/")[2];
+    } else if (location.pathname.startsWith("/settings")) {
+      return "settings/" + location.pathname.split("/")[2];
     } else {
       return newValue;
     }
@@ -77,6 +79,9 @@ export function Navbar() {
         <TabsTrigger value="stats" className="TabsTrigger" onClick={() => tabUpdate("stats")}>
           <BarChartIcon />
         </TabsTrigger>
+        <TabsTrigger value="users" className="TabsTrigger" onClick={() => tabUpdate("users")}>
+          <PersonIcon />
+        </TabsTrigger>
       </>
     );
   }
@@ -89,6 +94,12 @@ export function Navbar() {
         </TabsTrigger>
         <TabsTrigger value="shop" className="TabsTrigger" onClick={() => tabUpdate("shop-self")}>
           <CookieIcon />
+        </TabsTrigger>
+        <TabsTrigger value="stats" className="TabsTrigger" onClick={() => tabUpdate("stats")}>
+          <BarChartIcon />
+        </TabsTrigger>
+        <TabsTrigger value="users" className="TabsTrigger" onClick={() => tabUpdate("users")}>
+          <PersonIcon />
         </TabsTrigger>
         {isOnlyUser() ? (
           <>
@@ -109,11 +120,6 @@ export function Navbar() {
   function adminView() {
     return (
       <>
-        <TabsTrigger value="stats" className="TabsTrigger" onClick={() => tabUpdate("stats")}>
-          <div className="important-color">
-            <BarChartIcon />
-          </div>
-        </TabsTrigger>
         <TabsTrigger value="history" className="TabsTrigger" onClick={() => tabUpdate("history")}>
           <div className="important-color">
             <CalendarIcon />
@@ -124,12 +130,12 @@ export function Navbar() {
             <FileTextIcon />
           </div>
         </TabsTrigger>
-        <TabsTrigger value="users" className="TabsTrigger" onClick={() => tabUpdate("users")}>
+        <TabsTrigger value="settings/users" className="TabsTrigger" onClick={() => tabUpdate("settings/users")}>
           <div className="important-color">
             <PersonIcon />
           </div>
         </TabsTrigger>
-        <TabsTrigger value="items" className="TabsTrigger" onClick={() => tabUpdate("items")}>
+        <TabsTrigger value="settings/items" className="TabsTrigger" onClick={() => tabUpdate("settings/items")}>
           <div className="important-color">
             <TokensIcon />
           </div>
