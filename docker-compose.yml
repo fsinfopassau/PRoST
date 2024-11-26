@@ -1,5 +1,5 @@
 version: '3.8'
-
+name: 'PRoST'
 services:
   frontend:
     container_name: PRoST-Frontend
