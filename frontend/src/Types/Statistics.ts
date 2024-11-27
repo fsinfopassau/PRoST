@@ -9,7 +9,8 @@ export enum TimeSpan {
 
 export enum ItemLeaderboardType {
     // backend calculated
-    TOP_SELLING_ITEMS = "TOP_SELLING_ITEMS"
+    TOP_SELLING_ITEMS = "TOP_SELLING_ITEMS",
+    ITEM_REVENUE = "ITEM_REVENUE",
 }
 export enum UserLeaderboardType {
     // frontend calculated

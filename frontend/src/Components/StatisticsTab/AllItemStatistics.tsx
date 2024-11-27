@@ -13,6 +13,13 @@ export function AllItemStatistics(props: { timeSpan: TimeSpan }) {
         desc=""
         isMoney={false}
       />
+      <ItemLeaderboard
+        type={ItemLeaderboardType.ITEM_REVENUE}
+        timeSpan={timeSpan}
+        title="Item-Revenue"
+        desc="Revenue"
+        isMoney={true}
+      />
     </div>
   );
 }

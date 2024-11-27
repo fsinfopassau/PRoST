@@ -27,6 +27,13 @@ export function AllUserStatistics(props: { timeSpan: TimeSpan }) {
         desc="Käufe"
         isMoney={false}
       />
+      <UserLeaderboard
+        type={UserLeaderboardType.LUXURY_CUSTOMER}
+        timeSpan={timeSpan}
+        title="Luxorious"
+        desc="Avg. Preis"
+        isMoney={true}
+      />
     </div>
   );
 }

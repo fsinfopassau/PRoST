@@ -1,5 +1,6 @@
 package de.unipassau.fim.fsinfo.prost.data;
 
-public enum ItemLeaderboardType {
+public enum ItemMetricType {
   TOP_SELLING_ITEMS,
+  ITEM_REVENUE,
 }

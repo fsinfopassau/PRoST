@@ -16,6 +16,9 @@ public interface ShopItemHistoryRepository extends JpaRepository<ShopItemHistory
   List<ShopItemHistoryEntry> findByUserIdAndTimestampBetween(String userId, Long startTimestamp,
       Long endTimestamp);
 
+  List<ShopItemHistoryEntry> findAllByItemIdAndTimestampBetween(String itemId, Long startTimestamp,
+      Long endTimestamp);
+
   @Query("SELECT SUM(entry.amount) FROM PRoST_ShopItemHistoryEntry entry " +
       "WHERE entry.itemId = :itemId " +
       "AND entry.timestamp BETWEEN :startTimestamp AND :endTimestamp")

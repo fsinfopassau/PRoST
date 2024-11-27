@@ -10,7 +10,7 @@ import de.unipassau.fim.fsinfo.prost.data.dao.TransactionEntry;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
-import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractLeaderboard;
+import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractMetricCollector;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
@@ -84,19 +84,23 @@ public class ShopService {
     Optional<ProstUser> bearerUser = userRepository.findById(bearerId);
 
     if (amount < 1 || amount > 10) {
+      System.out.println("[SS] :: invalid amount=" + amount);
       return false;
     }
 
     if (!hasBearerPermissions(itemId, userId, amount, bearerId, bearerRole)) {
+      System.out.println(
+          "[SS] :: " + bearerId + " does not have permissions for buyprocess for " + userId);
       return false;
     }
 
     if (hasBearerCooldown(bearerId)) {
+      System.out.println("[SS] :: " + userO + " on Cooldown!");
       return false;
     }
 
     if (userO.isEmpty() || itemO.isEmpty() || bearerUser.isEmpty()) {
-      System.out.println(userO + " " + itemO + " " + bearerUser);
+      System.out.println("[SS] :: empty :: " + userO + " " + itemO + " " + bearerUser);
       return false;
     }
 
@@ -106,6 +110,10 @@ public class ShopService {
 
     // Every Component needs to be allowed to be part of the Transaction
     if (!(item.getEnabled() && user.getEnabled() && bearer.getEnabled())) {
+      System.out.println(
+          "[SS] :: Not Enabled :: item=" + item.getEnabled() + " user=" + user.getEnabled()
+              + " bearer="
+              + bearer.getEnabled());
       return false;
     }
 
@@ -119,10 +127,11 @@ public class ShopService {
               amount));
       bearerLastBuy.put(bearerId, Instant.now().toEpochMilli());
 
-      AbstractLeaderboard.updateAllEntriesFor(ShopItem.class, item);
-      AbstractLeaderboard.updateAllEntriesFor(ProstUser.class, user);
+      AbstractMetricCollector.updateAllEntriesFor(ShopItem.class, item);
+      AbstractMetricCollector.updateAllEntriesFor(ProstUser.class, user);
       return true;
     } else {
+      System.out.println("[SS] :: No Transaction found!");
       return false;
     }
   }
@@ -150,7 +159,7 @@ public class ShopService {
     ShopItem item = new ShopItem(DataFilter.filterNameId(identifier), category, displayName,
         price.abs());
     itemRepository.save(item);
-    AbstractLeaderboard.updateAllEntriesFor(ShopItem.class, item);
+    AbstractMetricCollector.updateAllEntriesFor(ShopItem.class, item);
     return Optional.of(item);
   }
 
@@ -159,7 +168,7 @@ public class ShopService {
     Optional<ShopItem> item = itemRepository.findById(identifier);
     if (item.isPresent()) {
       itemRepository.delete(item.get());
-      AbstractLeaderboard.removeAllEntriesFor(ShopItem.class, item.get());
+      AbstractMetricCollector.removeAllEntriesFor(ShopItem.class, item.get());
       return item;
     }
     return Optional.empty();
@@ -231,14 +240,16 @@ public class ShopService {
   @Transactional
   public Optional<ShopItem> enable(String identifier) {
     Optional<ShopItem> item = setVisibility(identifier, true);
-    item.ifPresent(shopItem -> AbstractLeaderboard.updateAllEntriesFor(ShopItem.class, shopItem));
+    item.ifPresent(
+        shopItem -> AbstractMetricCollector.updateAllEntriesFor(ShopItem.class, shopItem));
     return item;
   }
 
   @Transactional
   public Optional<ShopItem> disable(String identifier) {
     Optional<ShopItem> item = setVisibility(identifier, false);
-    item.ifPresent(shopItem -> AbstractLeaderboard.removeAllEntriesFor(ShopItem.class, shopItem));
+    item.ifPresent(
+        shopItem -> AbstractMetricCollector.removeAllEntriesFor(ShopItem.class, shopItem));
     return item;
   }
 
