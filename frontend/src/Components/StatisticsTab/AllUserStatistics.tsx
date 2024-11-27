@@ -44,8 +44,8 @@ export function AllUserStatistics(props: { timeSpan: TimeSpan }) {
       <CompositeLeaderboard
         type={CompositeLeaderboardType.ITEM_USER}
         timeSpan={timeSpan}
-        title="Composite"
-        desc="Avg. Preis"
+        title="Suchtis"
+        desc="Käufe"
         isMoney={false}
       />
     </div>

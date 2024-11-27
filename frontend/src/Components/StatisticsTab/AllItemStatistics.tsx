@@ -10,14 +10,14 @@ export function AllItemStatistics(props: { timeSpan: TimeSpan }) {
         type={ItemLeaderboardType.TOP_SELLING_ITEMS}
         timeSpan={timeSpan}
         title="Topseller"
-        desc=""
+        desc="Käufe"
         isMoney={false}
       />
       <ItemLeaderboard
         type={ItemLeaderboardType.ITEM_REVENUE}
         timeSpan={timeSpan}
-        title="Item-Revenue"
-        desc="Revenue"
+        title="Revenue"
+        desc="Einnahmen"
         isMoney={true}
       />
     </div>

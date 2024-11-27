@@ -38,8 +38,10 @@ export interface LeaderboardItemEntry {
 }
 
 export interface LeaderboardCompositeEntry {
-    key: string;
-    entity: string;
+    key1: string;
+    key1DisplayName: string;
+    key2: string;
+    key2DisplayName: string;
     value: number;
 }
 
