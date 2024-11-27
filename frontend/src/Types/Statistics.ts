@@ -7,8 +7,8 @@ export enum TimeSpan {
     ALL_TIME = "ALL_TIME",
 }
 
+// backend calculated
 export enum ItemLeaderboardType {
-    // backend calculated
     TOP_SELLING_ITEMS = "TOP_SELLING_ITEMS",
     ITEM_REVENUE = "ITEM_REVENUE",
 }
@@ -19,6 +19,7 @@ export enum UserLeaderboardType {
     // backend calculated
     LOYAL_CUSTOMER = "LOYAL_CUSTOMER",
     LUXURY_CUSTOMER = "LUXURY_CUSTOMER",
+    KIOSK_CUSTOMER = "KIOSK_CUSTOMER",
 }
 
 export interface LeaderboardUserEntry {
