@@ -3,7 +3,7 @@ package de.unipassau.fim.fsinfo.prost.service;
 import de.unipassau.fim.fsinfo.prost.data.DataFilter;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
-import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractLeaderboard;
+import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractMetricCollector;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +60,7 @@ public class UserService {
 
     ProstUser user = new ProstUser(userName, displayName, email, true, false);
     users.save(user);
-    AbstractLeaderboard.updateAllEntriesFor(ProstUser.class, user);
+    AbstractMetricCollector.updateAllEntriesFor(ProstUser.class, user);
     System.out.println("[US] :: " + userName + " :: user-creation succeeded");
     return Optional.of(user);
   }
@@ -85,7 +85,7 @@ public class UserService {
 
     if (user.isPresent()) {
       users.delete(user.get());
-      AbstractLeaderboard.removeAllEntriesFor(ProstUser.class, user.get());
+      AbstractMetricCollector.removeAllEntriesFor(ProstUser.class, user.get());
       return true;
     }
     return false;
@@ -99,7 +99,7 @@ public class UserService {
       ProstUser u = user.get();
       u.setDisplayName(name);
       users.save(u);
-      AbstractLeaderboard.updateAllEntriesFor(ProstUser.class, user.get());
+      AbstractMetricCollector.updateAllEntriesFor(ProstUser.class, user.get());
       return true;
     }
     return false;
@@ -178,7 +178,7 @@ public class UserService {
         ProstUser u = user.get();
         u.setTotalSpent(amount.abs());
         users.save(u);
-        AbstractLeaderboard.updateAllEntriesFor(ProstUser.class, user.get());
+        AbstractMetricCollector.updateAllEntriesFor(ProstUser.class, user.get());
         return true;
       } else {
         System.out.println("[US] :: No user with id " + id + " found");

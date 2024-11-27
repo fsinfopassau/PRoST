@@ -1,27 +1,26 @@
 package de.unipassau.fim.fsinfo.prost.service.statistics.item;
 
+import de.unipassau.fim.fsinfo.prost.data.ItemMetricType;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
-import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractItemLeaderboard;
+import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractItemMetricCollector;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TopSellingItemsLeaderboard extends AbstractItemLeaderboard {
+public class TopSellingItemsMetricCollector extends AbstractItemMetricCollector {
 
   private final ShopItemHistoryRepository shopItemHistoryRepository;
-  private final ShopItemRepository shopItemRepository;
 
   @Autowired
-  public TopSellingItemsLeaderboard(ShopItemHistoryRepository shopItemHistoryRepository,
+  public TopSellingItemsMetricCollector(ShopItemHistoryRepository shopItemHistoryRepository,
       ShopItemRepository shopItemRepository) {
-    super();
+    super(ItemMetricType.TOP_SELLING_ITEMS, shopItemRepository);
     this.shopItemHistoryRepository = shopItemHistoryRepository;
-    initLeaderboard(shopItemRepository.findAll());
-    this.shopItemRepository = shopItemRepository;
+    initMetrics(shopItemRepository.findAll());
   }
 
   @Override
@@ -30,16 +29,5 @@ public class TopSellingItemsLeaderboard extends AbstractItemLeaderboard {
         entity.getId(), startTimeStamp, endTimeStamp);
 
     return result.map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
-  }
-
-  @Override
-  public String getKey(ShopItem entity) {
-    return entity.getId();
-  }
-
-  @Override
-  public ShopItem findByKey(String key) {
-    Optional<ShopItem> result = shopItemRepository.findById(key);
-    return result.orElse(null);
   }
 }
