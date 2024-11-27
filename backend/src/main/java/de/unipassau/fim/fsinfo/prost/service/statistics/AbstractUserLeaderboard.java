@@ -20,6 +20,10 @@ public abstract class AbstractUserLeaderboard extends AbstractLeaderboard<ProstU
     List<LeaderboardEntry<ProstUser>> sanitized = new ArrayList<>();
 
     for (LeaderboardEntry<ProstUser> entry : result) {
+      if (!entry.entity().getEnabled()) {
+        continue;
+      }
+
       if (entry.entity().getHidden()) {
         sanitized.add(getSanitizedEntry(entry));
       } else {

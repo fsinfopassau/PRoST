@@ -10,22 +10,22 @@ export function AllUserStatistics(props: { timeSpan: TimeSpan }) {
         type={UserLeaderboardType.MVP}
         timeSpan={timeSpan}
         title="MVP"
-        desc="Alltime Total"
+        desc="Gesamtausgaben"
         isMoney={true}
       />
       <UserLeaderboard
         type={UserLeaderboardType.DEBT_CUSTOMER}
         timeSpan={timeSpan}
         title="Debtcollectors"
-        desc="Balance"
+        desc="Guthaben"
         isMoney={true}
       />
       <UserLeaderboard
         type={UserLeaderboardType.LOYAL_CUSTOMER}
         timeSpan={timeSpan}
         title="Loyalists"
-        desc="Transactions"
-        isMoney={true}
+        desc="Käufe"
+        isMoney={false}
       />
     </div>
   );
