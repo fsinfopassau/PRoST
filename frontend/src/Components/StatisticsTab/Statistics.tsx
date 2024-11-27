@@ -69,7 +69,14 @@ export function Statistics() {
                   className="TabsTrigger"
                   onClick={() => handleTimeSpanChange(TimeSpan.MONTH)}
                 >
-                  Month
+                  30d
+                </TabsTrigger>
+                <TabsTrigger
+                  value={TimeSpan.WEEK}
+                  className="TabsTrigger"
+                  onClick={() => handleTimeSpanChange(TimeSpan.WEEK)}
+                >
+                  7d
                 </TabsTrigger>
               </TabsList>
             </Tabs>

@@ -2,6 +2,7 @@ import { ShopItem } from "./ShopItem";
 import { User } from "./User";
 
 export enum TimeSpan {
+    WEEK = "WEEK",
     MONTH = "MONTH",
     ALL_TIME = "ALL_TIME",
 }
@@ -39,7 +40,9 @@ export function toTimeSpan(value: string): TimeSpan | undefined {
 }
 
 export const convertUsersBalance = (users: User[]): LeaderboardUserEntry[] => {
-    return users.map((user) => ({
+    return users.filter((u) => {
+        return u.enabled
+    }).map((user) => ({
         key: user.id,
         entity: user,
         value: user.balance,
@@ -47,7 +50,9 @@ export const convertUsersBalance = (users: User[]): LeaderboardUserEntry[] => {
 };
 
 export const convertUsersSpent = (users: User[]): LeaderboardUserEntry[] => {
-    return users.map((user) => ({
+    return users.filter((u) => {
+        return u.enabled
+    }).map((user) => ({
         key: user.id,
         entity: user,
         value: user.totalSpent,

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 public abstract class AbstractLeaderboard<T> {
 
   public static final long MONTH_MILLIS = 1000L * 60 * 60 * 24 * 30;
+  public static final long WEEK_MILLIS = 1000L * 60 * 60 * 24 * 7;
 
   protected static final Map<Class<?>, List<AbstractLeaderboard<?>>> REGISTRY = new ConcurrentHashMap<>();
 
@@ -44,6 +45,7 @@ public abstract class AbstractLeaderboard<T> {
   }
 
   // hardcoded to the last 30days is easier to calculate and more consistent over time.
+  protected ConcurrentHashMap<String, BigDecimal> leaderboardEntries_Weekly = new ConcurrentHashMap<>();
   protected ConcurrentHashMap<String, BigDecimal> leaderboardEntries_Monthly = new ConcurrentHashMap<>();
   protected ConcurrentHashMap<String, BigDecimal> leaderboardEntries_AllTime = new ConcurrentHashMap<>();
 
@@ -55,6 +57,7 @@ public abstract class AbstractLeaderboard<T> {
   }
 
   public void initLeaderboard(Collection<T> initialEntries) {
+    leaderboardEntries_Weekly = new ConcurrentHashMap<>();
     leaderboardEntries_Monthly = new ConcurrentHashMap<>();
     leaderboardEntries_AllTime = new ConcurrentHashMap<>();
     initialEntries.forEach(this::updateEntry);
@@ -72,17 +75,20 @@ public abstract class AbstractLeaderboard<T> {
 
   protected void updateEntry(T entity) {
     long now = Instant.now().toEpochMilli();
+    leaderboardEntries_Weekly.put(getKey(entity), calculateValue(entity, now - WEEK_MILLIS, now));
     leaderboardEntries_Monthly.put(getKey(entity), calculateValue(entity, now - MONTH_MILLIS, now));
     leaderboardEntries_AllTime.put(getKey(entity), calculateValue(entity, 0L, now));
   }
 
   protected void removeEntry(T entity) {
+    leaderboardEntries_Weekly.remove(getKey(entity));
     leaderboardEntries_Monthly.remove(getKey(entity));
     leaderboardEntries_AllTime.remove(getKey(entity));
   }
 
   public Optional<List<LeaderboardEntry<T>>> getLeaderboardEntries(TimeSpan timeSpan) {
     return switch (timeSpan) {
+      case WEEK -> Optional.of(mapToLeaderboardEntries(leaderboardEntries_Weekly));
       case MONTH -> Optional.of(mapToLeaderboardEntries(leaderboardEntries_Monthly));
       case ALL_TIME -> Optional.of(mapToLeaderboardEntries(leaderboardEntries_AllTime));
     };
