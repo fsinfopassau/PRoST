@@ -28,6 +28,13 @@ export function AllUserStatistics(props: { timeSpan: TimeSpan }) {
         isMoney={false}
       />
       <UserLeaderboard
+        type={UserLeaderboardType.KIOSK_CUSTOMER}
+        timeSpan={timeSpan}
+        title="Kiosk Loyalists"
+        desc="Käufe"
+        isMoney={false}
+      />
+      <UserLeaderboard
         type={UserLeaderboardType.LUXURY_CUSTOMER}
         timeSpan={timeSpan}
         title="Luxorious"
