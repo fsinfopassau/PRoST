@@ -72,10 +72,15 @@ public class ItemPurchaseMetricCollector extends AbstractMetricCollector<ShopIte
   public CompositeMetricDTO getCompositeMetricDTO(String itemId, String userId, BigDecimal value) {
 
     Optional<ShopItem> item = shopItemRepository.findById(itemId);
-    Optional<ProstUser> user = userRepository.findById(userId);
+    Optional<ProstUser> userO = userRepository.findById(userId);
+    ProstUser user = ProstUser.getAnonymous();
+
+    if (userO.isPresent() && !userO.get().getHidden()) {
+      user = userO.get();
+    }
 
     return new CompositeMetricDTO(itemId, item.isPresent() ? item.get().getDisplayName() : itemId,
-        userId, user.isPresent() ? user.get().getDisplayName() : userId,
+        user.getId(), user.getDisplayName(),
         value);
   }
 

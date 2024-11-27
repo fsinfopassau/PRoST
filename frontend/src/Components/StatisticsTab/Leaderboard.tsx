@@ -38,7 +38,6 @@ export function CompositeLeaderboard(props: {
   useEffect(() => {
     getCompositeLeaderboard(type, timeSpan).then((l) => {
       if (l) {
-        console.log(l);
         setStats(l);
       }
     });
@@ -92,7 +91,7 @@ export function CompositeLeaderboard(props: {
                     isUser={true}
                     key={index}
                     isMoney={isMoney}
-                    anonymize={false}
+                    anonymize={entry.key2.length == 0}
                   />
                 );
               })}
