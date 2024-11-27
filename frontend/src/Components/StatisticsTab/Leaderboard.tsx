@@ -24,30 +24,31 @@ export function CompositeLeaderboard(props: {
 }) {
   const { type, timeSpan, title, desc, isMoney } = props;
   const [stats, setStats] = useState<LeaderboardCompositeEntry[]>([]);
-  const [options, setOptions] = useState<string[]>([]);
-  const [selected, setSelected] = useState<string>();
+  const [options, setOptions] = useState<[string, string][]>([]);
+  const [selected, setSelected] = useState<[string, string]>();
 
-  function select(key: string) {
-    setSelected(key);
-    console.log(key);
+  function select(key1: string) {
+    const fullTuple = options.find(([k1]) => k1 === key1);
+    if (fullTuple) {
+      setSelected(fullTuple);
+      console.log("Selected tuple:", fullTuple[0]);
+    }
   }
 
   useEffect(() => {
-    getCompositeLeaderboard(type, timeSpan)
-      .then((l) => {
-        if (l) {
-          console.log(l);
-          setStats(l);
-        }
-      })
-      .catch(() => {
-        setStats([]);
-      });
+    getCompositeLeaderboard(type, timeSpan).then((l) => {
+      if (l) {
+        console.log(l);
+        setStats(l);
+      }
+    });
   }, [timeSpan]);
 
   useEffect(() => {
-    const uniqueKeys = Array.from(new Set(stats.map((entry) => entry.entity)));
-    setOptions(uniqueKeys);
+    const uniqueKeys = Array.from(
+      new Set(stats.map((entry) => JSON.stringify([entry.key1, entry.key1DisplayName])))
+    ).map((key) => JSON.parse(key));
+    setOptions(uniqueKeys.sort((a: string, b: string) => a[0].localeCompare(b[0])));
     setSelected(uniqueKeys[0]);
   }, [stats]);
 
@@ -60,9 +61,15 @@ export function CompositeLeaderboard(props: {
         }}
       >
         <h3>{title}</h3>
-        <select onChange={(a) => select(a.target.value)} style={{ margin: "0.5rem" }}>
+        <select
+          onChange={(a) => select(a.target.value)}
+          style={{ margin: "0.5rem" }}
+          value={selected ? selected[0] : options[0]?.[0] || ""}
+        >
           {options.map((option) => (
-            <option value={option}>{option}</option>
+            <option value={option[0]} key={option[0]}>
+              {option[1]}
+            </option>
           ))}
         </select>
         <p>{desc}</p>
@@ -73,13 +80,13 @@ export function CompositeLeaderboard(props: {
           <tbody>
             {stats
               .filter((a) => {
-                return a.entity == selected;
+                return selected && a.key1 == selected[0];
               })
               .map((entry, index) => {
                 return (
                   <LeaderboardEntry
-                    entryDisplayName={entry.key}
-                    entryId={entry.key}
+                    entryDisplayName={entry.key2DisplayName}
+                    entryId={entry.key2}
                     entryValue={entry.value}
                     position={index + 1}
                     isUser={true}

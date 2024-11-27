@@ -6,6 +6,7 @@ import de.unipassau.fim.fsinfo.prost.data.TimeSpan;
 import de.unipassau.fim.fsinfo.prost.data.UserMetricType;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
+import de.unipassau.fim.fsinfo.prost.data.dto.CompositeMetricDTO;
 import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractItemMetricCollector;
 import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractMetricCollector.MetricEntry;
 import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractUserMetricCollector;
@@ -43,7 +44,7 @@ public class StatisticsController {
   }
 
   @GetMapping("/composite/leaderboard")
-  public ResponseEntity<List<MetricEntry<String>>> getCompositeLeaderboard(
+  public ResponseEntity<List<CompositeMetricDTO>> getCompositeLeaderboard(
       CompositeMetricType type, TimeSpan timespan) {
     if (type == CompositeMetricType.ITEM_USER) {
       return metricCollector.getCompositeMetricEntries(timespan).map(ResponseEntity::ok)
