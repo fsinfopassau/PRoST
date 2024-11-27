@@ -1,5 +1,5 @@
-import { UserLeaderboardType, TimeSpan } from "../../Types/Statistics";
-import { UserLeaderboard } from "./Leaderboard";
+import { UserLeaderboardType, TimeSpan, CompositeLeaderboardType } from "../../Types/Statistics";
+import { CompositeLeaderboard, UserLeaderboard } from "./Leaderboard";
 
 export function AllUserStatistics(props: { timeSpan: TimeSpan }) {
   const { timeSpan } = props;
@@ -40,6 +40,13 @@ export function AllUserStatistics(props: { timeSpan: TimeSpan }) {
         title="Luxorious"
         desc="Avg. Preis"
         isMoney={true}
+      />
+      <CompositeLeaderboard
+        type={CompositeLeaderboardType.ITEM_USER}
+        timeSpan={timeSpan}
+        title="Composite"
+        desc="Avg. Preis"
+        isMoney={false}
       />
     </div>
   );

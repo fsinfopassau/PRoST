@@ -122,13 +122,15 @@ public class ShopService {
         item.getPrice().abs().multiply(BigDecimal.valueOf(amount).abs()), TransactionType.BUY);
 
     if (transaction.isPresent()) {
-      historyRepository.save(
-          new ShopItemHistoryEntry(transaction.get(), item.getId(), item.getPrice(),
-              amount));
+      ShopItemHistoryEntry historyEntry = new ShopItemHistoryEntry(transaction.get(), item.getId(),
+          item.getPrice(),
+          amount);
+      historyRepository.save(historyEntry);
       bearerLastBuy.put(bearerId, Instant.now().toEpochMilli());
 
-      AbstractMetricCollector.updateAllEntriesFor(ShopItem.class, item);
       AbstractMetricCollector.updateAllEntriesFor(ProstUser.class, user);
+      AbstractMetricCollector.updateAllEntriesFor(ShopItem.class, item);
+      AbstractMetricCollector.updateAllEntriesFor(ShopItemHistoryEntry.class, historyEntry);
       return true;
     } else {
       System.out.println("[SS] :: No Transaction found!");

@@ -7,11 +7,100 @@ import {
   LeaderboardItemEntry,
   convertUsersBalance,
   convertUsersSpent,
+  CompositeLeaderboardType,
+  LeaderboardCompositeEntry,
 } from "../../Types/Statistics";
 import { useEffect, useState } from "react";
-import { getAllUsers, getItemLeaderboard, getUserLeaderboard } from "../../Queries";
+import { getAllUsers, getCompositeLeaderboard, getItemLeaderboard, getUserLeaderboard } from "../../Queries";
 import { ScrollArea, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from "@radix-ui/react-scroll-area";
 import { formatMoney } from "../../Format";
+
+export function CompositeLeaderboard(props: {
+  type: CompositeLeaderboardType;
+  timeSpan: TimeSpan;
+  title: string;
+  desc: string;
+  isMoney: boolean;
+}) {
+  const { type, timeSpan, title, desc, isMoney } = props;
+  const [stats, setStats] = useState<LeaderboardCompositeEntry[]>([]);
+  const [options, setOptions] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string>();
+
+  function select(key: string) {
+    setSelected(key);
+    console.log(key);
+  }
+
+  useEffect(() => {
+    getCompositeLeaderboard(type, timeSpan)
+      .then((l) => {
+        if (l) {
+          console.log(l);
+          setStats(l);
+        }
+      })
+      .catch(() => {
+        setStats([]);
+      });
+  }, [timeSpan]);
+
+  useEffect(() => {
+    const uniqueKeys = Array.from(new Set(stats.map((entry) => entry.entity)));
+    setOptions(uniqueKeys);
+    setSelected(uniqueKeys[0]);
+  }, [stats]);
+
+  return (
+    <ScrollArea className="DisplayCard">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <h3>{title}</h3>
+        <select onChange={(a) => select(a.target.value)} style={{ margin: "0.5rem" }}>
+          {options.map((option) => (
+            <option value={option}>{option}</option>
+          ))}
+        </select>
+        <p>{desc}</p>
+      </div>
+
+      <ScrollAreaViewport style={{ maxHeight: "20rem" }}>
+        <table className="Table">
+          <tbody>
+            {stats
+              .filter((a) => {
+                return a.entity == selected;
+              })
+              .map((entry, index) => {
+                return (
+                  <LeaderboardEntry
+                    entryDisplayName={entry.key}
+                    entryId={entry.key}
+                    entryValue={entry.value}
+                    position={index + 1}
+                    isUser={true}
+                    key={index}
+                    isMoney={isMoney}
+                    anonymize={false}
+                  />
+                );
+              })}
+          </tbody>
+        </table>
+      </ScrollAreaViewport>
+      <ScrollAreaScrollbar className="Scrollbar" orientation="vertical">
+        <ScrollAreaThumb className="ScrollbarThumb" />
+      </ScrollAreaScrollbar>
+      <ScrollAreaScrollbar className="Scrollbar" orientation="horizontal">
+        <ScrollAreaThumb className="ScrollbarThumb" />
+      </ScrollAreaScrollbar>
+    </ScrollArea>
+  );
+}
 
 export function ItemLeaderboard(props: {
   type: ItemLeaderboardType;
@@ -27,7 +116,6 @@ export function ItemLeaderboard(props: {
     getItemLeaderboard(type, timeSpan)
       .then((l) => {
         if (l) {
-          console.log(l);
           setStats(l);
         }
       })
@@ -103,7 +191,6 @@ export function UserLeaderboard(props: {
     } else {
       getUserLeaderboard(type, timeSpan).then((l) => {
         if (l) {
-          console.log(l);
           setStats(l);
         }
       });

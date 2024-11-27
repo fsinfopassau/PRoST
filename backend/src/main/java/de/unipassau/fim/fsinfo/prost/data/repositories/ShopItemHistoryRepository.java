@@ -21,6 +21,17 @@ public interface ShopItemHistoryRepository extends JpaRepository<ShopItemHistory
 
   @Query("SELECT SUM(entry.amount) FROM PRoST_ShopItemHistoryEntry entry " +
       "WHERE entry.itemId = :itemId " +
+      "AND entry.userId = :userId " +
+      "AND entry.timestamp BETWEEN :startTimestamp AND :endTimestamp")
+  Optional<Long> getUsersTotalAmountPurchasedInTimeFrame(
+      @Param("userId") String userId,
+      @Param("itemId") String itemId,
+      @Param("startTimestamp") Long startTimestamp,
+      @Param("endTimestamp") Long endTimestamp
+  );
+
+  @Query("SELECT SUM(entry.amount) FROM PRoST_ShopItemHistoryEntry entry " +
+      "WHERE entry.itemId = :itemId " +
       "AND entry.timestamp BETWEEN :startTimestamp AND :endTimestamp")
   Optional<Long> getTotalAmountPurchasedInTimeFrame(
       @Param("itemId") String itemId,

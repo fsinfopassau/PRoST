@@ -15,7 +15,6 @@ export function Statistics() {
   useEffect(() => {
     const urlTimeSpan = getTimeSpanFromPath();
     if (timeSpan !== urlTimeSpan) {
-      console.log("test");
       setTimeSpan(urlTimeSpan);
     }
   }, [location.search]);
