@@ -5,7 +5,7 @@ import { AuthorizedUser, User } from "./Types/User";
 import { getEncodedCredentials, setAuthorizedUser } from "./SessionInfo";
 import { InvoicePage } from "./Types/Invoice";
 import { TransactionPage } from "./Types/Transaction";
-import { UserLeaderboardType, LeaderboardUserEntry, TimeSpan, ItemLeaderboardType, LeaderboardItemEntry } from "./Types/Statistics";
+import { UserLeaderboardType, LeaderboardUserEntry, TimeSpan, ItemLeaderboardType, LeaderboardItemEntry, LeaderboardCompositeEntry, CompositeLeaderboardType } from "./Types/Statistics";
 
 export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
 
@@ -582,6 +582,26 @@ export async function getItemLeaderboard(type: ItemLeaderboardType, timeSpan: Ti
     }
 
     return (await response.json()) as LeaderboardItemEntry[];
+  } catch (error) {
+    return undefined;
+  }
+}
+
+export async function getCompositeLeaderboard(type: CompositeLeaderboardType, timeSpan: TimeSpan): Promise<LeaderboardCompositeEntry[] | undefined> {
+  try {
+    const response = await fetch(`${apiUrl}/api/statistics/composite/leaderboard?type=${type.toString()}&timespan=${timeSpan.toString()}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json()) as LeaderboardCompositeEntry[];
   } catch (error) {
     return undefined;
   }

@@ -21,6 +21,9 @@ export enum UserLeaderboardType {
     LUXURY_CUSTOMER = "LUXURY_CUSTOMER",
     KIOSK_CUSTOMER = "KIOSK_CUSTOMER",
 }
+export enum CompositeLeaderboardType {
+    ITEM_USER = "ITEM_USER",
+}
 
 export interface LeaderboardUserEntry {
     key: string;
@@ -31,6 +34,12 @@ export interface LeaderboardUserEntry {
 export interface LeaderboardItemEntry {
     key: string;
     entity: ShopItem;
+    value: number;
+}
+
+export interface LeaderboardCompositeEntry {
+    key: string;
+    entity: string;
     value: number;
 }
 
