@@ -1,9 +1,10 @@
-package de.unipassau.fim.fsinfo.prost.service.statistics;
+package de.unipassau.fim.fsinfo.prost.service.statistics.user;
 
 import de.unipassau.fim.fsinfo.prost.data.TimeSpan;
 import de.unipassau.fim.fsinfo.prost.data.UserMetricType;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
+import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractMetricCollector;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;

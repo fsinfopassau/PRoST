@@ -4,7 +4,6 @@ import de.unipassau.fim.fsinfo.prost.data.ItemMetricType;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
-import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractItemMetricCollector;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
