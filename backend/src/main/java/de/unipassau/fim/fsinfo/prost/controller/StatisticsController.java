@@ -8,6 +8,7 @@ import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.data.dto.CompositeMetricDTO;
 import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractMetricCollector.MetricEntry;
+import de.unipassau.fim.fsinfo.prost.service.statistics.MetricService;
 import de.unipassau.fim.fsinfo.prost.service.statistics.composite.ItemPurchaseMetricCollector;
 import de.unipassau.fim.fsinfo.prost.service.statistics.item.AbstractItemMetricCollector;
 import de.unipassau.fim.fsinfo.prost.service.statistics.user.AbstractUserMetricCollector;
@@ -15,6 +16,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,10 +25,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class StatisticsController {
 
   private final ItemPurchaseMetricCollector metricCollector;
+  private final MetricService metricService;
 
   @Autowired
-  public StatisticsController(ItemPurchaseMetricCollector metricCollector) {
+  public StatisticsController(ItemPurchaseMetricCollector metricCollector,
+      MetricService metricService) {
     this.metricCollector = metricCollector;
+    this.metricService = metricService;
   }
 
   @GetMapping("/item/leaderboard")
@@ -52,6 +57,12 @@ public class StatisticsController {
     } else {
       return ResponseEntity.badRequest().build();
     }
+  }
+
+  @PostMapping("/reset")
+  public ResponseEntity<String> reset() {
+    metricService.resetMetric();
+    return ResponseEntity.ok().build();
   }
 
 }

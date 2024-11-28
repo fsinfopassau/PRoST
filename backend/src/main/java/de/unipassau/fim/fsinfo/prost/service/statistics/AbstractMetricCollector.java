@@ -20,14 +20,26 @@ public abstract class AbstractMetricCollector<T> {
 
   protected static final Map<Class<?>, List<AbstractMetricCollector<?>>> REGISTRY = new ConcurrentHashMap<>();
 
+  public static <T> void initAllCollectors(Class<T> entityType, Collection<T> initialEntries) {
+    List<AbstractMetricCollector<?>> metrics = REGISTRY.getOrDefault(entityType, List.of());
+
+    for (AbstractMetricCollector<?> metric : metrics) {
+      if (metric.supportsEntityType(entityType)) {
+        @SuppressWarnings("unchecked")
+        AbstractMetricCollector<T> typedMetric = (AbstractMetricCollector<T>) metric;
+        typedMetric.initMetrics(initialEntries);
+      }
+    }
+  }
+
   public static <T> void updateAllEntriesFor(Class<T> entityType, T entity) {
     List<AbstractMetricCollector<?>> metrics = REGISTRY.getOrDefault(entityType, List.of());
 
     for (AbstractMetricCollector<?> metric : metrics) {
       if (metric.supportsEntityType(entityType)) {
         @SuppressWarnings("unchecked")
-        AbstractMetricCollector<T> typedmetric = (AbstractMetricCollector<T>) metric;
-        typedmetric.updateEntry(entity);
+        AbstractMetricCollector<T> typedMetric = (AbstractMetricCollector<T>) metric;
+        typedMetric.updateEntry(entity);
       }
     }
   }
@@ -103,7 +115,6 @@ public abstract class AbstractMetricCollector<T> {
             entry.getValue()))
         .collect(Collectors.toList());
   }
-
 
   public record MetricEntry<T>(String key, T entity, BigDecimal value) {
 
