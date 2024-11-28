@@ -606,3 +606,23 @@ export async function getCompositeLeaderboard(type: CompositeLeaderboardType, ti
     return undefined;
   }
 }
+
+export async function resetMetrics(): Promise<string | undefined> {
+  try {
+    const response = await fetch(`${apiUrl}/api/statistics/reset`, {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return (await response.json());
+  } catch (error) {
+    return undefined;
+  }
+}

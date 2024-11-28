@@ -1,11 +1,13 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { BarChartIcon, CookieIcon, PersonIcon } from "@radix-ui/react-icons";
+import { BarChartIcon, CookieIcon, PersonIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { AllSystemStatistics } from "./AllSystemStatistics";
 import { AllUserStatistics } from "./AllUserStatistics";
 import { AllItemStatistics } from "./AllItemStatistics";
 import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { TimeSpan, toTimeSpan } from "../../Types/Statistics";
 import { useEffect, useState } from "react";
+import { resetMetrics } from "../../Queries";
+import { isAdmin } from "../../SessionInfo";
 
 export function Statistics() {
   const location = useLocation();
@@ -79,6 +81,13 @@ export function Statistics() {
                 </TabsTrigger>
               </TabsList>
             </Tabs>
+            {isAdmin() ? (
+              <div className="Button" onClick={resetMetrics}>
+                <ReloadIcon />
+              </div>
+            ) : (
+              <></>
+            )}
           </h2>
         </div>
       </>
