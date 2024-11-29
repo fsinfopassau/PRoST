@@ -38,7 +38,7 @@ export function AllUserStatistics(props: { timeSpan: TimeSpan }) {
         type={UserLeaderboardType.LUXURY_CUSTOMER}
         timeSpan={timeSpan}
         title="Luxorious"
-        desc="Avg. Preis"
+        desc="∅ Preis"
         isMoney={true}
       />
       <CompositeLeaderboard

@@ -35,6 +35,7 @@ class UserServiceTest {
   @Test
   public void testCreateUser_UserAlreadyExists_ReturnsEmpty() {
     when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+
     Optional<ProstUser> result = userService.createUser(prostUser.getId(),
         prostUser.getDisplayName(),
         prostUser.getEmail(),
