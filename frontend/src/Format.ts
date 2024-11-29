@@ -31,14 +31,18 @@ export function getTimeSince(unixMillis: number): string {
   const totalMinutes = Math.floor(totalSeconds / 60);
   const totalHours = Math.floor(totalMinutes / 60);
   const totalDays = Math.floor(totalHours / 24);
+  const totalYears = Math.floor(totalDays / 356);
 
   // Getting the time left
   const remSeconds = totalSeconds % 60;
   const remMinutes = totalMinutes % 60;
   const remHours = totalHours % 24;
+  const remDays = totalDays % 356;
 
-  if (totalDays) {
-    return `${totalDays}d ago`;
+  if (totalYears) {
+    return `${totalYears}y ago`;
+  } else if (remDays) {
+    return `${remDays}d ago`;
   } else if (remHours) {
     return `${remHours}h ago`;
   } else if (remMinutes) {
