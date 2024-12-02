@@ -6,7 +6,7 @@ import { getUser } from "../../Queries";
 import { ErrorComponent } from "../Util/ErrorTab";
 import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { TimeSpan, toTimeSpan, UserLeaderboardType } from "../../Types/Statistics";
-import { UserMetricPlacement } from "./UserMetricPlacement";
+import { UserMetricPlacement } from "./MetricOverview";
 
 export function UserStatistics() {
   const [user, setUser] = useState<User>();

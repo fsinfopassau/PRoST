@@ -119,13 +119,13 @@ export function Statistics() {
 
     switch (split) {
       case "system":
-        return <AllSystemStatistics />;
+        return <AllSystemStatistics timeSpan={timeSpan} />;
       case "users":
         return <AllUserStatistics timeSpan={timeSpan} />;
       case "items":
         return <AllItemStatistics timeSpan={timeSpan} />;
     }
-    return <AllSystemStatistics />;
+    return <AllSystemStatistics timeSpan={timeSpan} />;
   }
 
   return (
