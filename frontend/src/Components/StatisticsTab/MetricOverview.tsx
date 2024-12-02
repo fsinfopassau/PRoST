@@ -49,3 +49,24 @@ export function UserMetricPlacement(props: {
     </div>
   );
 }
+export function MetricInfo(props: { value: string; title: string; desc: string }) {
+  const { value, title, desc } = props;
+
+  return (
+    <div className="DisplayCard">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "0rem", flexDirection: "column" }}>
+          <div className="bold">{title}</div>
+          <h2>{value}</h2>
+          <div>{desc}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
