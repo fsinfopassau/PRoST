@@ -26,17 +26,23 @@ let
     name = "frontend_build";
     tag = "latest";
     fromImage = frontend_build_base;
+    diskSize = 8192;
+    buildVMMemorySize = 2048;
 
-    #copyToRoot = buildEnv {
+    copyToRoot = [ pkgs.nodejs_23 frontend_folder ];
+    #buildEnv {
     #  name = "frontend_build-root";
-    #  #paths = [ frontend_folder ];
-    #  #pathsToLink = [ "/bin" ];
+    #  paths = [ frontend_folder ];
+    #  extraPrefix = WorkingDir;
     #};
 
     runAsRoot = ''
-      cp -L ${frontend_folder} ${WorkingDir}
-      npm install
-      npm run build
+      echo "a"
+      ${pkgs.nodejs_23}/bin/npm config set loglevel verbose
+      ${pkgs.nodejs_23}/bin/npm install
+      echo "b"
+      ${pkgs.nodejs_23}/bin/npm run build
+      echo "c"
     '';
 
     config = {
@@ -48,6 +54,10 @@ let
       inherit WorkingDir;
     };
   };
+  frontend_build_exported = dockerTools.exportImage {
+    fromImage = frontend_build_base;
+    diskSize = 16000;
+  };
   frontend_run_base = dockerTools.pullImage {
     imageName = "docker.io/library/nginx";
     imageDigest =
@@ -56,21 +66,38 @@ let
     finalImageName = "docker.io/library/nginx";
     finalImageTag = "alpine";
   };
+
 in {
-  services.prost.frontend.package = frontend_build;
+  #services.prost.frontend.package = frontend_build_base;
+  #services.prost.frontend.package = frontend_build;
+  services.prost.frontend.package = frontend_build_exported;
+  #services.prost.frontend.package = frontend_folder;
   #services.prost.frontend.package = lib.mkDefault (dockerTools.buildImage {
   #  name = "frontend";
   #  tag = "latest";
 
   #  fromImage = frontend_run_base;
 
-  #  copyToRoot = buildEnv {
-  #    name = "frontend_build-root";
-  #    paths = [ frontend_build ];
-  #    #pathsToLink = [ "/bin" ];
-  #  };
+  #  copyToRoot = let
+  #    folder = stdenv.mkDerivation {
+  #      name = "folder";
+  #      src = frontend_build;
+  #      phases = [ "installPhase" ];
+  #      installPhase = ''
+  #        mkdir -p $out
+  #        cp -r $src $out
+  #      '';
+  #    };
+  #  in [ folder ];
+  #  #buildEnv {
+  #  #  name = "frontend_build-root";
+  #  #  paths = [ frontend_build ];
+  #  #  #pathsToLink = [ "/bin" ];
+  #  #};
 
   #  runAsRoot = ''
+  #    echo ${frontend_build}
+  #    tar xvf ${frontend_build}
   #    cp  ./nginx.conf /etc/nginx/conf.d/default.conf
   #    cp ${frontend_build}/app/frontend/dist/ /usr/share/nginx/html${vite_base_path}
   #  '';
