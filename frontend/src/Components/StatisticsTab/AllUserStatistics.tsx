@@ -9,36 +9,36 @@ export function AllUserStatistics(props: { timeSpan: TimeSpan }) {
       <UserLeaderboard
         type={UserLeaderboardType.MVP}
         timeSpan={timeSpan}
-        title="MVP"
+        title="Stammkunden"
         desc="Gesamtausgaben"
         isMoney={true}
       />
       <UserLeaderboard
         type={UserLeaderboardType.DEBT_CUSTOMER}
         timeSpan={timeSpan}
-        title="Debtcollectors"
+        title="Schuldensammler"
         desc="Guthaben"
         isMoney={true}
       />
       <UserLeaderboard
         type={UserLeaderboardType.LOYAL_CUSTOMER}
         timeSpan={timeSpan}
-        title="Loyalists"
+        title="Loyalisten"
         desc="Käufe"
         isMoney={false}
       />
       <UserLeaderboard
         type={UserLeaderboardType.KIOSK_CUSTOMER}
         timeSpan={timeSpan}
-        title="Kiosk Loyalists"
+        title="Kiosk Loyalisten"
         desc="Käufe"
         isMoney={false}
       />
       <UserLeaderboard
         type={UserLeaderboardType.LUXURY_CUSTOMER}
         timeSpan={timeSpan}
-        title="Luxorious"
-        desc="∅ Preis"
+        title="Oberschicht"
+        desc="∅ Einkaufs-Preis"
         isMoney={true}
       />
       <CompositeLeaderboard
