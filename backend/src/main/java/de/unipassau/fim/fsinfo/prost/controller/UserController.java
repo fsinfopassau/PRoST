@@ -48,18 +48,11 @@ public class UserController {
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
     Collection<UserAccessRole> roles = authService.getRoles(authentication);
 
-    if (userDetails.getUsername().equals(id)) {
-      // always show own profile
-      return userService.info(id, true).map(ResponseEntity::ok)
-          .orElseGet(() -> ResponseEntity.notFound().build());
-    } else if (roles.contains(UserAccessRole.KAFFEEKASSE) || roles.contains(UserAccessRole.KIOSK)) {
-      // allow single-user access for admin & kiosk
-      return userService.info(id, true).map(ResponseEntity::ok)
-          .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    return userService.info(null, false).map(ResponseEntity::ok)
-        .orElseGet(() -> ResponseEntity.badRequest().build());
+    // allow full access for admin & kiosk
+    return userService.info(id,
+            roles.contains(UserAccessRole.KAFFEEKASSE) || roles.contains(UserAccessRole.KIOSK))
+        .map(ResponseEntity::ok)
+        .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   @GetMapping("/me")

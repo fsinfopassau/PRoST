@@ -40,7 +40,7 @@ export function UserMetricPlacement(props: {
       >
         <div style={{ display: "flex", alignItems: "center", gap: "0rem", flexDirection: "column" }}>
           <div className="bold">{title}</div>
-          <h2>{position ? position + 1 : ""}</h2>
+          <h2>{position != undefined ? position + 1 : ""}</h2>
           <div>
             {desc}: {isMoney ? formatMoney(stats?.value) : stats?.value}
           </div>

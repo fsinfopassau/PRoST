@@ -106,7 +106,7 @@ export function Statistics() {
   function getTimeSpanFromPath() {
     const queryParams = new URLSearchParams(location.search);
     const param = queryParams.get("timeSpan");
-    const timeSpan = param ? toTimeSpan(param) : TimeSpan.ALL_TIME;
+    const timeSpan = param ? toTimeSpan(param) : TimeSpan.WEEK;
 
     if (timeSpan) {
       return timeSpan;

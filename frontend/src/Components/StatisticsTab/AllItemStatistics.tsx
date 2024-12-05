@@ -9,14 +9,14 @@ export function AllItemStatistics(props: { timeSpan: TimeSpan }) {
       <ItemLeaderboard
         type={ItemLeaderboardType.TOP_SELLING_ITEMS}
         timeSpan={timeSpan}
-        title="Topseller"
+        title="Verkaufsschlager"
         desc="Käufe"
         isMoney={false}
       />
       <ItemLeaderboard
         type={ItemLeaderboardType.ITEM_REVENUE}
         timeSpan={timeSpan}
-        title="Revenue"
+        title="Profitabel"
         desc="Einnahmen"
         isMoney={true}
       />

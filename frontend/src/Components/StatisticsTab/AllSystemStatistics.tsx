@@ -9,6 +9,7 @@ import { formatMoney } from "../../Format";
 import { MetricInfo } from "./MetricOverview";
 import { isOnlyUser } from "../../SessionInfo";
 import { ItemLeaderboardType, TimeSpan } from "../../Types/Statistics";
+import { ItemMetricPieChart } from "../Chart/PieChart";
 
 export function AllSystemStatistics(props: { timeSpan: TimeSpan }) {
   const [history, setHistory] = useState<ShopHistoryEntry[]>([]);
@@ -93,7 +94,13 @@ export function AllSystemStatistics(props: { timeSpan: TimeSpan }) {
         <MetricInfo title="Nutzer" value={String(users.length)} desc="" />
         <MetricInfo title="Gegenstände" value={String(items.length)} desc="" />
         <MetricInfo title="Guthaben" value={formatMoney(getUserDebt())} desc="" />
-        <MetricInfo title="Revenue" value={formatMoney(totalRevenue)} desc="" />
+        <MetricInfo title="Einnahmen" value={formatMoney(totalRevenue)} desc="" />
+        <ItemMetricPieChart
+          title="Verkaufsschlager"
+          desc=""
+          type={ItemLeaderboardType.TOP_SELLING_ITEMS}
+          time={timeSpan}
+        />
       </div>
     </>
   );

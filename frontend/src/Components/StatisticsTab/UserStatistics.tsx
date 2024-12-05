@@ -5,8 +5,9 @@ import { User } from "../../Types/User";
 import { getUser } from "../../Queries";
 import { ErrorComponent } from "../Util/ErrorTab";
 import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
-import { TimeSpan, toTimeSpan, UserLeaderboardType } from "../../Types/Statistics";
+import { CompositeLeaderboardType, TimeSpan, toTimeSpan, UserLeaderboardType } from "../../Types/Statistics";
 import { UserMetricPlacement } from "./MetricOverview";
+import { CompositeMetricPieChart } from "../Chart/PieChart";
 
 export function UserStatistics() {
   const [user, setUser] = useState<User>();
@@ -16,10 +17,12 @@ export function UserStatistics() {
   const [timeSpan, setTimeSpan] = useState<TimeSpan>(TimeSpan.ALL_TIME);
 
   useEffect(() => {
-    if (userId)
+    if (userId) {
       getUser(userId).then((user) => {
         setUser(user);
       });
+    }
+
     const urlTimeSpan = getTimeSpanFromPath();
     if (timeSpan !== urlTimeSpan) {
       setTimeSpan(urlTimeSpan);
@@ -83,7 +86,7 @@ export function UserStatistics() {
           <UserMetricPlacement
             user={user}
             type={UserLeaderboardType.LOYAL_CUSTOMER}
-            title="Loyality"
+            title="Loyalisten"
             desc="Käufe"
             isMoney={false}
             timeSpan={timeSpan}
@@ -91,7 +94,7 @@ export function UserStatistics() {
           <UserMetricPlacement
             user={user}
             type={UserLeaderboardType.KIOSK_CUSTOMER}
-            title="Kiosk Loyality"
+            title="Kiosk Loyalisten"
             desc="Käufe"
             isMoney={false}
             timeSpan={timeSpan}
@@ -99,10 +102,18 @@ export function UserStatistics() {
           <UserMetricPlacement
             user={user}
             type={UserLeaderboardType.LUXURY_CUSTOMER}
-            title="Luxury"
+            title="Oberschicht"
             desc="∅ Preis"
             isMoney={true}
             timeSpan={timeSpan}
+          />
+          <CompositeMetricPieChart
+            type={CompositeLeaderboardType.ITEM_USER}
+            title="Favoriten"
+            desc=""
+            time={timeSpan}
+            filterFirst={false}
+            dataKey={user.id}
           />
         </div>
       </>
