@@ -27,21 +27,6 @@ in {
       partOf = [ "docker-compose-prost-root.target" ];
       wantedBy = [ "docker-compose-prost-root.target" ];
     };
-    virtualisation.oci-containers.containers."PRoST-Frontend" = {
-      #image = "prost-frontend";
-      image = "frontend:latest";
-      imageFile = cfg.frontend.package;
-      ports = [ "${toString cfg.port}:80/tcp" ];
-      log-driver = "journald";
-      extraOptions = [ "--network-alias=frontend" "--network=prost_default" ];
-    };
-    systemd.services."docker-PRoST-Frontend" = {
-      serviceConfig = { Restart = lib.mkOverride 500 "no"; };
-      after = [ "docker-network-prost_default.service" ];
-      requires = [ "docker-network-prost_default.service" ];
-      partOf = [ "docker-compose-prost-root.target" ];
-      wantedBy = [ "docker-compose-prost-root.target" ];
-    };
     virtualisation.oci-containers.containers."PRoST-LDAP" = with cfg.ldap; {
       image = "bitnami/openldap:latest";
       environment = {

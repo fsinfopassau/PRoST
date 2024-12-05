@@ -3,11 +3,11 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs";
-    systems.url = "github:nix-systems/x86_64-linux";
-    flake-utils = {
-      url = "github:numtide/flake-utils";
-      inputs.systems.follows = "systems";
-    };
+    #systems.url = "github:nix-systems/x86_64-linux";
+    #flake-utils = {
+    #  url = "github:numtide/flake-utils";
+    #  inputs.systems.follows = "systems";
+    #};
   };
 
   outputs = { nixpkgs, flake-utils, ... }:

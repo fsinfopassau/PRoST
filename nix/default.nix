@@ -1,1 +1,13 @@
-{ ... }: { imports = [ ./docker-compose.nix ./options.nix ./package.nix ]; }
+self:
+{ lib, config, ... }:
+let cfg = config.services.prost;
+in {
+  imports = [ ./docker-compose.nix ./options.nix ];
+  config = lib.mkIf cfg.enable {
+    services.nginx = {
+      enable = true;
+      virtualHosts."localhost".locations."/".root =
+        "${self.packages.x86_64-linux.frontend}";
+    };
+  };
+}
