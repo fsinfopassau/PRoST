@@ -14,7 +14,7 @@ import { PropsWithChildren, useState } from "react";
 interface CustomComponentProps {
   title: string;
   trigger: React.ReactNode;
-  onSubmit: () => void;
+  onSubmit: (() => void) | undefined;
 }
 
 const ScrollDialog: React.FC<PropsWithChildren<CustomComponentProps>> = ({ children, title, trigger, onSubmit }) => {
@@ -22,7 +22,7 @@ const ScrollDialog: React.FC<PropsWithChildren<CustomComponentProps>> = ({ child
 
   function handleKeyDown(event: React.KeyboardEvent) {
     if (event.key === "Enter") {
-      onSubmit();
+      if (onSubmit != undefined) onSubmit();
       setOpen(false);
     }
     if (event.key === "Escape") {
@@ -74,11 +74,15 @@ const ScrollDialog: React.FC<PropsWithChildren<CustomComponentProps>> = ({ child
                   <Cross2Icon />
                 </div>
               </DialogClose>
-              <DialogClose asChild onClick={onSubmit}>
-                <div className="Button good-color" style={{ width: "40%" }}>
-                  <CheckIcon />
-                </div>
-              </DialogClose>
+              {onSubmit == undefined ? (
+                <></>
+              ) : (
+                <DialogClose asChild onClick={onSubmit}>
+                  <div className="Button good-color" style={{ width: "40%" }}>
+                    <CheckIcon />
+                  </div>
+                </DialogClose>
+              )}
             </div>
           </DialogContent>
         </DialogOverlay>

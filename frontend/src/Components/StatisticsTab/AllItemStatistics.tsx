@@ -16,7 +16,7 @@ export function AllItemStatistics(props: { timeSpan: TimeSpan }) {
       <ItemLeaderboard
         type={ItemLeaderboardType.ITEM_REVENUE}
         timeSpan={timeSpan}
-        title="Profitabel"
+        title="Lukratives"
         desc="Einnahmen"
         isMoney={true}
       />

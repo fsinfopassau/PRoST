@@ -2,12 +2,13 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { UserSummaryCard } from "./UserSummaryCard";
 import { useEffect, useState } from "react";
 import { User } from "../../Types/User";
-import { getUser } from "../../Queries";
+import { getOwnUser, getUser } from "../../Queries";
 import { ErrorComponent } from "../Util/ErrorTab";
 import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { CompositeLeaderboardType, TimeSpan, toTimeSpan, UserLeaderboardType } from "../../Types/Statistics";
 import { UserMetricPlacement } from "./MetricOverview";
 import { CompositeMetricPieChart } from "../Chart/PieChart";
+import { getAuthorizedUser } from "../../SessionInfo";
 
 export function UserStatistics() {
   const [user, setUser] = useState<User>();
@@ -18,9 +19,16 @@ export function UserStatistics() {
 
   useEffect(() => {
     if (userId) {
-      getUser(userId).then((user) => {
-        setUser(user);
-      });
+      const authU = getAuthorizedUser();
+      if (userId == authU?.id) {
+        getOwnUser().then((u) => {
+          setUser(u);
+        });
+      } else {
+        getUser(userId).then((user) => {
+          setUser(user);
+        });
+      }
     }
 
     const urlTimeSpan = getTimeSpanFromPath();
@@ -47,7 +55,18 @@ export function UserStatistics() {
     return TimeSpan.ALL_TIME;
   }
 
-  if (user) {
+  if (user?.hidden) {
+    return (
+      <>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <div className="GridContainer" style={{ flexGrow: "0" }}>
+            <UserSummaryCard user={user} />
+          </div>
+        </div>
+        <h3>Keine Statistiken für private Profile</h3>
+      </>
+    );
+  } else if (user) {
     return (
       <>
         <div style={{ display: "flex", justifyContent: "center" }}>
@@ -107,6 +126,8 @@ export function UserStatistics() {
             isMoney={true}
             timeSpan={timeSpan}
           />
+        </div>
+        <div className="" style={{ display: "flex", flexFlow: "row wrap", justifyContent: "space-around" }}>
           <CompositeMetricPieChart
             type={CompositeLeaderboardType.ITEM_USER}
             title="Favoriten"
