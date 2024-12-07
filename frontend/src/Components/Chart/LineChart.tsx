@@ -57,7 +57,7 @@ export function CompositeMetricLineChart(props: {
     getCompositeLeaderboard(type, time).then((l) => {
       if (l) {
         if (dataKey == undefined) {
-          l = compress(l, filterFirst);
+          l = compress(l);
         } else {
           if (filterFirst) {
             l = l.filter((i) => {
@@ -81,24 +81,17 @@ export function CompositeMetricLineChart(props: {
   return <MetricLineChart entries={data} title={title} desc={desc} />;
 }
 
-function compress(data: LeaderboardCompositeEntry[], filterFirst: boolean): LeaderboardCompositeEntry[] {
-  // Create a map to group entries by `key1`
-  console.log("before ", filterFirst, data);
-
+function compress(data: LeaderboardCompositeEntry[]): LeaderboardCompositeEntry[] {
   const groupedByKey1 = new Map<string, LeaderboardCompositeEntry>();
 
   for (const entry of data) {
     if (groupedByKey1.has(entry.key1)) {
-      // If an entry with this `key1` exists, update its `value`
       const existingEntry = groupedByKey1.get(entry.key1)!;
-      existingEntry.value += entry.value; // Aggregate the values
+      existingEntry.value += entry.value;
     } else {
-      // If no entry exists for this `key1`, add it to the map
       groupedByKey1.set(entry.key1, { ...entry });
     }
   }
 
-  // Convert the grouped entries back to an array
-  console.log("after ", filterFirst, Array.from(groupedByKey1.values()));
   return Array.from(groupedByKey1.values());
 }
