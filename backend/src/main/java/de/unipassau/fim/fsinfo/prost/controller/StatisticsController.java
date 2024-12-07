@@ -69,8 +69,7 @@ public class StatisticsController {
 
   @PostMapping("/reset")
   public ResponseEntity<String> reset() {
-    metricService.resetMetric();
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok(metricService.resetMetric() + "");
   }
 
 }
