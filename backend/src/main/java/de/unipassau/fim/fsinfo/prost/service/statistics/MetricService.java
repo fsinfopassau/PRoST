@@ -40,7 +40,7 @@ public class MetricService {
     }, UPDATE_INTERVAL, UPDATE_INTERVAL);
   }
 
-  public void resetMetric() {
+  public long resetMetric() {
     System.out.println(
         "[MS] :: Resetting Metrics :: started at " + dateTimeFormatter.format(
             LocalDateTime.now()));
@@ -49,9 +49,9 @@ public class MetricService {
     AbstractMetricCollector.initAllCollectors(ShopItem.class, shopItemRepository.findAll());
     AbstractMetricCollector.initAllCollectors(ShopItemHistoryEntry.class,
         shopItemHistoryRepository.findAll());
-    System.out.println(
-        "[MS] :: Resetting Metrics :: finished after " + (System.currentTimeMillis() - currentTime)
-            + " ms");
+    long dur = (System.currentTimeMillis() - currentTime);
+    System.out.println("[MS] :: Resetting Metrics :: finished after " + dur + " ms");
+    return dur;
   }
 
 }

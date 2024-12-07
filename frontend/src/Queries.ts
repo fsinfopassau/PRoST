@@ -6,6 +6,7 @@ import { getEncodedCredentials, setAuthorizedUser } from "./SessionInfo";
 import { InvoicePage } from "./Types/Invoice";
 import { TransactionPage } from "./Types/Transaction";
 import { UserLeaderboardType, LeaderboardUserEntry, TimeSpan, ItemLeaderboardType, LeaderboardItemEntry, LeaderboardCompositeEntry, CompositeLeaderboardType } from "./Types/Statistics";
+import { toast } from "react-toastify";
 
 export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
 
@@ -618,9 +619,11 @@ export async function resetMetrics(): Promise<string | undefined> {
     });
 
     if (!response.ok) {
-      return undefined;
+      toast.error("Reset failed! " + (await response.json()));
+      return response.json();
     }
 
+    toast.success("Reset finished after " + (await response.json()) + " ms");
     return (await response.json());
   } catch (error) {
     return undefined;
