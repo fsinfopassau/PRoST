@@ -9,6 +9,7 @@ import { CompositeLeaderboardType, TimeSpan, toTimeSpan, UserLeaderboardType } f
 import { UserMetricPlacement } from "./MetricOverview";
 import { CompositeMetricPieChart } from "../Chart/PieChart";
 import { getAuthorizedUser } from "../../SessionInfo";
+import { CompositeMetricLineChart } from "../Chart/LineChart";
 
 export function UserStatistics() {
   const [user, setUser] = useState<User>();
@@ -132,6 +133,14 @@ export function UserStatistics() {
             type={CompositeLeaderboardType.ITEM_USER}
             title="Favoriten"
             desc=""
+            time={timeSpan}
+            filterFirst={false}
+            dataKey={user.id}
+          />
+          <CompositeMetricLineChart
+            type={CompositeLeaderboardType.HOURLY_ACTIVITY}
+            title="Aktivität"
+            desc="Käufe zur Tageszeit"
             time={timeSpan}
             filterFirst={false}
             dataKey={user.id}

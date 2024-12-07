@@ -23,6 +23,7 @@ export enum UserLeaderboardType {
 }
 export enum CompositeLeaderboardType {
     ITEM_USER = "ITEM_USER",
+    HOURLY_ACTIVITY = "HOURLY_ACTIVITY",
 }
 
 export interface LeaderboardUserEntry {

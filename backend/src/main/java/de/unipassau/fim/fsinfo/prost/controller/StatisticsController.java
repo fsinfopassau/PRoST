@@ -9,6 +9,7 @@ import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.data.dto.CompositeMetricDTO;
 import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractMetricCollector.MetricEntry;
 import de.unipassau.fim.fsinfo.prost.service.statistics.MetricService;
+import de.unipassau.fim.fsinfo.prost.service.statistics.composite.HourlyActivityMetricCollector;
 import de.unipassau.fim.fsinfo.prost.service.statistics.composite.ItemPurchaseMetricCollector;
 import de.unipassau.fim.fsinfo.prost.service.statistics.item.AbstractItemMetricCollector;
 import de.unipassau.fim.fsinfo.prost.service.statistics.user.AbstractUserMetricCollector;
@@ -24,13 +25,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/statistics")
 public class StatisticsController {
 
-  private final ItemPurchaseMetricCollector metricCollector;
+  private final ItemPurchaseMetricCollector itemPurchaseMetricCollector;
+  private final HourlyActivityMetricCollector hourlyActivityMetricCollector;
   private final MetricService metricService;
 
   @Autowired
   public StatisticsController(ItemPurchaseMetricCollector metricCollector,
+      HourlyActivityMetricCollector hourlyActivityMetricCollector,
       MetricService metricService) {
-    this.metricCollector = metricCollector;
+    this.hourlyActivityMetricCollector = hourlyActivityMetricCollector;
+    this.itemPurchaseMetricCollector = metricCollector;
     this.metricService = metricService;
   }
 
@@ -52,7 +56,11 @@ public class StatisticsController {
   public ResponseEntity<List<CompositeMetricDTO>> getCompositeLeaderboard(
       CompositeMetricType type, TimeSpan timespan) {
     if (type == CompositeMetricType.ITEM_USER) {
-      return metricCollector.getCompositeMetricEntries(timespan).map(ResponseEntity::ok)
+      return itemPurchaseMetricCollector.getCompositeMetricEntries(timespan).map(ResponseEntity::ok)
+          .orElseGet(() -> ResponseEntity.badRequest().build());
+    } else if (type == CompositeMetricType.HOURLY_ACTIVITY) {
+      return hourlyActivityMetricCollector.getCompositeMetricEntries(timespan)
+          .map(ResponseEntity::ok)
           .orElseGet(() -> ResponseEntity.badRequest().build());
     } else {
       return ResponseEntity.badRequest().build();

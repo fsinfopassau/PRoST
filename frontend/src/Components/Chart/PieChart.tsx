@@ -2,11 +2,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import { CompositeLeaderboardType, ItemLeaderboardType, TimeSpan } from "../../Types/Statistics";
 import { useEffect, useState } from "react";
 import { getCompositeLeaderboard, getItemLeaderboard } from "../../Queries";
-
-type PieChartData = {
-  name: string;
-  value: number;
-};
+import { ChartData } from "../../Types/Chart";
 
 const COLORS = [
   "#6B9080", // Muted Teal
@@ -31,9 +27,9 @@ const COLORS = [
   "#FF6F61", // Soft Coral
 ];
 
-export function MetricPieChart(props: { entries: PieChartData[] | undefined; title: string; desc: string }) {
+export function MetricPieChart(props: { entries: ChartData[] | undefined; title: string; desc: string }) {
   const { entries, title, desc } = props;
-  const [data, setData] = useState<PieChartData[]>([]);
+  const [data, setData] = useState<ChartData[]>([]);
   const [shift, setShift] = useState<number>(0);
 
   useEffect(() => {
@@ -74,7 +70,7 @@ export function MetricPieChart(props: { entries: PieChartData[] | undefined; tit
 export function ItemMetricPieChart(props: { type: ItemLeaderboardType; time: TimeSpan; title: string; desc: string }) {
   const { type, time, title, desc } = props;
 
-  const [data, setData] = useState<PieChartData[]>([]);
+  const [data, setData] = useState<ChartData[]>([]);
 
   useEffect(() => {
     getItemLeaderboard(type, time).then((l) => {
@@ -101,7 +97,7 @@ export function CompositeMetricPieChart(props: {
 }) {
   const { type, filterFirst, dataKey, time, title, desc } = props;
 
-  const [data, setData] = useState<PieChartData[]>([]);
+  const [data, setData] = useState<ChartData[]>([]);
 
   useEffect(() => {
     getCompositeLeaderboard(type, time).then((l) => {
