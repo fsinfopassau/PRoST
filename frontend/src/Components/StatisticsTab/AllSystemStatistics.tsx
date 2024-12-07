@@ -95,6 +95,8 @@ export function AllSystemStatistics(props: { timeSpan: TimeSpan }) {
         <MetricInfo title="Gegenstände" value={String(items.length)} desc="" />
         <MetricInfo title="Guthaben" value={formatMoney(getUserDebt())} desc="" />
         <MetricInfo title="Einnahmen" value={formatMoney(totalRevenue)} desc="" />
+      </div>
+      <div className="" style={{ display: "flex", flexFlow: "row wrap", justifyContent: "space-around" }}>
         <ItemMetricPieChart
           title="Verkaufsschlager"
           desc=""

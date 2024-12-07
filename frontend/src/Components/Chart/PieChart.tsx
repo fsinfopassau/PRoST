@@ -8,15 +8,39 @@ type PieChartData = {
   value: number;
 };
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+const COLORS = [
+  "#6B9080", // Muted Teal
+  "#F6BD60", // Warm Gold
+  "#F28482", // Peach Pink
+  "#84A59D", // Sage Green
+  "#F5CAC3", // Blush
+  "#96C1B1", // Mint Green
+  "#A997DF", // Lavender
+  "#FFD166", // Sunflower Yellow
+  "#6A4C93", // Deep Purple
+  "#99C1DE", // Sky Blue
+  "#E5989B", // Soft Rose
+  "#55A630", // Leaf Green
+  "#EF476F", // Watermelon Red
+  "#118AB2", // Ocean Blue
+  "#FFD670", // Pale Amber
+  "#8D99AE", // Dusty Gray
+  "#073B4C", // Dark Cyan
+  "#FFC300", // Rich Gold
+  "#457B9D", // Muted Denim
+  "#FF6F61", // Soft Coral
+];
 
 export function MetricPieChart(props: { entries: PieChartData[] | undefined; title: string; desc: string }) {
   const { entries, title, desc } = props;
   const [data, setData] = useState<PieChartData[]>([]);
+  const [shift, setShift] = useState<number>(0);
 
   useEffect(() => {
     if (entries) {
       setData(entries);
+      //setShift(Math.floor(Math.random() * entries.length));
+      setShift(0);
     }
   }, [entries]);
 
@@ -34,7 +58,7 @@ export function MetricPieChart(props: { entries: PieChartData[] | undefined; tit
           <PieChart width={400} height={400}>
             <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={125} fill="#8884d8" label>
               {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell key={`cell-${index}`} fill={COLORS[(index + shift) % COLORS.length]} />
               ))}
             </Pie>
             <Tooltip />
