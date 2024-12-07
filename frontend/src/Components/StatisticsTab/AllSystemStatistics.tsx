@@ -8,8 +8,9 @@ import { getAllShopItems, getAllUsers, getHistory, getItemLeaderboard } from "..
 import { formatMoney } from "../../Format";
 import { MetricInfo } from "./MetricOverview";
 import { isOnlyUser } from "../../SessionInfo";
-import { ItemLeaderboardType, TimeSpan } from "../../Types/Statistics";
+import { CompositeLeaderboardType, ItemLeaderboardType, TimeSpan } from "../../Types/Statistics";
 import { ItemMetricPieChart } from "../Chart/PieChart";
+import { CompositeMetricLineChart } from "../Chart/LineChart";
 
 export function AllSystemStatistics(props: { timeSpan: TimeSpan }) {
   const [history, setHistory] = useState<ShopHistoryEntry[]>([]);
@@ -102,6 +103,14 @@ export function AllSystemStatistics(props: { timeSpan: TimeSpan }) {
           desc=""
           type={ItemLeaderboardType.TOP_SELLING_ITEMS}
           time={timeSpan}
+        />
+        <CompositeMetricLineChart
+          type={CompositeLeaderboardType.HOURLY_ACTIVITY}
+          title="Aktivität"
+          desc="Käufe zur Tageszeit"
+          time={timeSpan}
+          filterFirst={false}
+          dataKey={undefined}
         />
       </div>
     </>
