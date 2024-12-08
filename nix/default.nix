@@ -2,7 +2,7 @@ self:
 { lib, config, ... }:
 let cfg = config.services.prost;
 in {
-  imports = [ ./docker-compose.nix ./options.nix ];
+  imports = [ (import ./docker-compose.nix self) ./options.nix ];
   config = lib.mkIf cfg.enable {
     services.nginx = {
       enable = true;

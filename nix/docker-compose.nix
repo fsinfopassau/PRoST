@@ -1,4 +1,5 @@
 # Auto-generated using compose2nix v0.2.3.
+self:
 { pkgs, lib, config, ... }:
 let cfg = config.services.prost;
 in {
@@ -12,7 +13,25 @@ in {
 
     # Containers
     virtualisation.oci-containers.containers."PRoST-Backend" = {
-      image = "prost-backend";
+      image = "prost-backend:latest";
+      imageFile = pkgs.dockerTools.buildImage {
+        name = "prost-backend";
+        tag = "latest";
+        fromImage = pkgs.dockerTools.pullImage {
+          imageName = "openjdk";
+          imageDigest =
+            "sha256:aaa3b3cb27e3e520b8f116863d0580c438ed55ecfa0bc126b41f68c3f62f9774";
+          sha256 = "0qn0ikh9zkkz5pzi133wvdpf6zx815935wy3ymawp1mfvskv0xz1";
+          finalImageName = "openjdk";
+          finalImageTag = "17-slim";
+        };
+        config = {
+          WorkingDir = "/app";
+          Cmd = [ "${self.packages.x86_64-linux.backend}/bin/prost_backend" ];
+          Env = [ "DATA_LOCATION=/data" ];
+          ExposedPorts = { "8081" = { }; };
+        };
+      };
       environment = { "LDAP_URI" = cfg.ldapUri; };
       volumes = [ "${cfg.backend.volumePath}:/data:rw" ];
       ports = [ "8081:8081/tcp" ];
@@ -26,6 +45,16 @@ in {
       requires = [ "docker-network-prost_prost.service" ];
       partOf = [ "docker-compose-prost-root.target" ];
       wantedBy = [ "docker-compose-prost-root.target" ];
+      serviceConfig.ExecStartPre = let
+        script = pkgs.writeShellScriptBin "pre-start" ''
+          #!${pkgs.bash}/bin/bash
+
+
+          docker load -i ${
+            config.virtualisation.oci-containers.containers."PRoST-Backend".imageFile
+          }
+        '';
+      in lib.mkForce [ "${script}/bin/pre-start" ];
     };
     virtualisation.oci-containers.containers."PRoST-LDAP" = with cfg.ldap; {
       image = "bitnami/openldap:latest";

@@ -19,7 +19,7 @@ in {
     backend = {
       volumePath = mkOption {
         type = str;
-        default = "/home/hannses/programming/PRoST/.data";
+        default = "/home/hannses/tmp/.data";
       };
       #package = ...
       #port can not be specified as it seems hardcoded in some places
@@ -43,7 +43,7 @@ in {
 
       dir = mkOption {
         type = str;
-        default = "/home/hannses/programming/PRoST/ldif";
+        default = "/home/hannses/tmp/ldif";
       };
       root = mkOption {
         type = str;
@@ -70,7 +70,7 @@ in {
       };
       configDir = mkOption {
         type = str;
-        default = "/home/hannses/programming/PRoST/.data/maria-config";
+        default = "/home/hannses/tmp/.data/maria-config";
       };
     };
   };
