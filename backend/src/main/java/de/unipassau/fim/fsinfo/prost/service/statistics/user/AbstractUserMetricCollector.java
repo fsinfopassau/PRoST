@@ -1,6 +1,7 @@
 package de.unipassau.fim.fsinfo.prost.service.statistics.user;
 
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
+import de.unipassau.fim.fsinfo.prost.data.dao.ShopItemHistoryEntry;
 import de.unipassau.fim.fsinfo.prost.data.metrics.TimeSpan;
 import de.unipassau.fim.fsinfo.prost.data.metrics.UserMetricType;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
@@ -13,7 +14,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractUserMetricCollector extends AbstractMetricCollector<ProstUser> {
+public abstract class AbstractUserMetricCollector extends
+    AbstractMetricCollector<ProstUser, ShopItemHistoryEntry> {
 
   private final UserRepository userRepository;
 
@@ -30,7 +32,7 @@ public abstract class AbstractUserMetricCollector extends AbstractMetricCollecto
   protected UserMetricType type;
 
   public AbstractUserMetricCollector(UserMetricType type, UserRepository userRepository) {
-    super(ProstUser.class);
+    super(ShopItemHistoryEntry.class);
     this.userRepository = userRepository;
     this.type = type;
     COLLECTORS.put(type, this);
@@ -63,8 +65,8 @@ public abstract class AbstractUserMetricCollector extends AbstractMetricCollecto
   }
 
   @Override
-  public String getKey(ProstUser entity) {
-    return entity.getId();
+  public String getKey(ShopItemHistoryEntry entity) {
+    return entity.getUserId();
   }
 
   @Override

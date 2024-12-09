@@ -10,11 +10,11 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public abstract class AbstractCompositeMetricCollector<T> extends AbstractMetricCollector<T> {
+public abstract class AbstractCompositeMetricCollector<T, A> extends AbstractMetricCollector<T, A> {
 
   protected static final String KEY_SEPARATOR = "-";
 
-  public AbstractCompositeMetricCollector(Class<T> entityType) {
+  public AbstractCompositeMetricCollector(Class<A> entityType) {
     super(entityType);
   }
 
@@ -45,10 +45,10 @@ public abstract class AbstractCompositeMetricCollector<T> extends AbstractMetric
 
   abstract protected T findByKeys(String... keys);
 
-  abstract protected String[] getKeys(T entity);
+  abstract protected String[] getKeys(A entity);
 
   @Override
-  public String getKey(T entity) {
+  public String getKey(A entity) {
     String[] keys = getKeys(entity);
     StringBuilder out = new StringBuilder();
     for (int i = 0; i < keys.length; i++) {

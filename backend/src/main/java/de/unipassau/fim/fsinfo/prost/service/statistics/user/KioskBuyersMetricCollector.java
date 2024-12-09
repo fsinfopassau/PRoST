@@ -1,6 +1,5 @@
 package de.unipassau.fim.fsinfo.prost.service.statistics.user;
 
-import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItemHistoryEntry;
 import de.unipassau.fim.fsinfo.prost.data.metrics.TimeSpan;
 import de.unipassau.fim.fsinfo.prost.data.metrics.UserMetricType;
@@ -22,21 +21,22 @@ public class KioskBuyersMetricCollector extends AbstractUserMetricCollector {
       ShopItemHistoryRepository shopItemHistoryRepository) {
     super(UserMetricType.KIOSK_CUSTOMER, userRepository);
     this.shopItemHistoryRepository = shopItemHistoryRepository;
-    initMetrics(userRepository.findAll());
+    initMetrics(shopItemHistoryRepository.findAll());
   }
 
   @Override
-  public BigDecimal calculateValue(ProstUser entity, TimeSpan timeSpan, Long startTimestamp,
+  public BigDecimal calculateValue(ShopItemHistoryEntry entity, TimeSpan timeSpan,
+      Long startTimestamp,
       Long endTimestamp) {
 
     List<ShopItemHistoryEntry> items = shopItemHistoryRepository.findByUserIdAndTimestampBetween(
-        entity.getId(), startTimestamp,
+        entity.getUserId(), startTimestamp,
         endTimestamp);
 
     // We only check for transactions from other users, because only the kiosk and admins have
     // authority to make transactions for other users.
     Stream<ShopItemHistoryEntry> filter = items.stream()
-        .filter(entry -> !entry.getTransaction().getBearerId().equals(entity.getId()));
+        .filter(entry -> !entry.getTransaction().getBearerId().equals(entity.getUserId()));
 
     return BigDecimal.valueOf(filter.count());
   }

@@ -1,6 +1,6 @@
 package de.unipassau.fim.fsinfo.prost.service.statistics.item;
 
-import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
+import de.unipassau.fim.fsinfo.prost.data.dao.ShopItemHistoryEntry;
 import de.unipassau.fim.fsinfo.prost.data.metrics.ItemMetricType;
 import de.unipassau.fim.fsinfo.prost.data.metrics.TimeSpan;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
@@ -20,14 +20,15 @@ public class TopSellingItemsMetricCollector extends AbstractItemMetricCollector 
       ShopItemRepository shopItemRepository) {
     super(ItemMetricType.TOP_SELLING_ITEMS, shopItemRepository);
     this.shopItemHistoryRepository = shopItemHistoryRepository;
-    initMetrics(shopItemRepository.findAll());
+    initMetrics(shopItemHistoryRepository.findAll());
   }
 
   @Override
-  public BigDecimal calculateValue(ShopItem entity, TimeSpan timeSpan, Long startTimeStamp,
+  public BigDecimal calculateValue(ShopItemHistoryEntry entity, TimeSpan timeSpan,
+      Long startTimeStamp,
       Long endTimeStamp) {
     Optional<Long> result = shopItemHistoryRepository.getTotalAmountPurchasedInTimeFrame(
-        entity.getId(), startTimeStamp, endTimeStamp);
+        entity.getItemId(), startTimeStamp, endTimeStamp);
 
     return result.map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
   }

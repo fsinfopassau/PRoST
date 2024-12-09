@@ -11,6 +11,7 @@ import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractMetricCollector;
+import de.unipassau.fim.fsinfo.prost.service.statistics.MetricService;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
@@ -29,6 +30,8 @@ public class ShopService {
 
   final private TransactionService transactionService;
 
+  final private MetricService metricService;
+
   final static BigDecimal MAX_PRICE = new BigDecimal(100);
   final static BigDecimal MIN_PRICE = BigDecimal.ZERO;
 
@@ -42,11 +45,13 @@ public class ShopService {
 
   @Autowired
   public ShopService(ShopItemRepository itemRepository, ShopItemHistoryRepository historyRepository,
-      UserRepository userRepository, TransactionService transactionService) {
+      UserRepository userRepository, TransactionService transactionService,
+      MetricService metricService) {
     this.itemRepository = itemRepository;
     this.historyRepository = historyRepository;
     this.userRepository = userRepository;
     this.transactionService = transactionService;
+    this.metricService = metricService;
   }
 
   public boolean hasBearerCooldown(String userId) {
@@ -161,7 +166,6 @@ public class ShopService {
     ShopItem item = new ShopItem(DataFilter.filterNameId(identifier), category, displayName,
         price.abs());
     itemRepository.save(item);
-    AbstractMetricCollector.updateAllEntriesFor(ShopItem.class, item);
     return Optional.of(item);
   }
 
@@ -170,7 +174,9 @@ public class ShopService {
     Optional<ShopItem> item = itemRepository.findById(identifier);
     if (item.isPresent()) {
       itemRepository.delete(item.get());
-      AbstractMetricCollector.removeAllEntriesFor(ShopItem.class, item.get());
+      if (metricService != null) {
+        metricService.resetMetric();
+      }
       return item;
     }
     return Optional.empty();
@@ -241,17 +247,15 @@ public class ShopService {
 
   @Transactional
   public Optional<ShopItem> enable(String identifier) {
-    Optional<ShopItem> item = setVisibility(identifier, true);
-    item.ifPresent(
-        shopItem -> AbstractMetricCollector.updateAllEntriesFor(ShopItem.class, shopItem));
-    return item;
+    return setVisibility(identifier, true);
   }
 
   @Transactional
   public Optional<ShopItem> disable(String identifier) {
     Optional<ShopItem> item = setVisibility(identifier, false);
-    item.ifPresent(
-        shopItem -> AbstractMetricCollector.removeAllEntriesFor(ShopItem.class, shopItem));
+    if (metricService != null) {
+      metricService.resetMetric();
+    }
     return item;
   }
 

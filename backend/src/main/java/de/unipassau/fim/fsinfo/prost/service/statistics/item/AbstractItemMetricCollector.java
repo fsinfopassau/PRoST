@@ -1,6 +1,7 @@
 package de.unipassau.fim.fsinfo.prost.service.statistics.item;
 
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
+import de.unipassau.fim.fsinfo.prost.data.dao.ShopItemHistoryEntry;
 import de.unipassau.fim.fsinfo.prost.data.metrics.ItemMetricType;
 import de.unipassau.fim.fsinfo.prost.data.metrics.TimeSpan;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
@@ -10,7 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class AbstractItemMetricCollector extends AbstractMetricCollector<ShopItem> {
+public abstract class AbstractItemMetricCollector extends
+    AbstractMetricCollector<ShopItem, ShopItemHistoryEntry> {
 
   protected ShopItemRepository shopItemRepository;
 
@@ -27,15 +29,15 @@ public abstract class AbstractItemMetricCollector extends AbstractMetricCollecto
   protected ItemMetricType type;
 
   public AbstractItemMetricCollector(ItemMetricType type, ShopItemRepository shopItemRepository) {
-    super(ShopItem.class);
+    super(ShopItemHistoryEntry.class);
     this.shopItemRepository = shopItemRepository;
     this.type = type;
     COLLECTORS.put(type, this);
   }
 
   @Override
-  public String getKey(ShopItem entity) {
-    return entity.getId();
+  public String getKey(ShopItemHistoryEntry entity) {
+    return entity.getItemId();
   }
 
   @Override

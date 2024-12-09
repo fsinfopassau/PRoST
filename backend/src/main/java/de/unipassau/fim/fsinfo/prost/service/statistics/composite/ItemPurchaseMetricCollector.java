@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ItemPurchaseMetricCollector extends
-    AbstractCompositeMetricCollector<ShopItemHistoryEntry> {
+    AbstractCompositeMetricCollector<ShopItemHistoryEntry, ShopItemHistoryEntry> {
 
   protected ShopItemHistoryRepository shopItemHistoryRepository;
   protected ShopItemRepository shopItemRepository;

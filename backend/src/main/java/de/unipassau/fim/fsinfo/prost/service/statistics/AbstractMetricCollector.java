@@ -12,45 +12,49 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
+/**
+ * @param <T> The type of MetricEntry that will be returned.
+ * @param <A> The type of Object that triggers an update.
+ */
 @Service
-public abstract class AbstractMetricCollector<T> {
+public abstract class AbstractMetricCollector<T, A> {
 
   public static final long MONTH_MILLIS = 1000L * 60 * 60 * 24 * 30;
   public static final long WEEK_MILLIS = 1000L * 60 * 60 * 24 * 7;
 
-  protected static final Map<Class<?>, List<AbstractMetricCollector<?>>> REGISTRY = new ConcurrentHashMap<>();
+  protected static final Map<Class<?>, List<AbstractMetricCollector<?, ?>>> REGISTRY = new ConcurrentHashMap<>();
 
-  public static <T> void initAllCollectors(Class<T> entityType, Collection<T> initialEntries) {
-    List<AbstractMetricCollector<?>> metrics = REGISTRY.getOrDefault(entityType, List.of());
+  public static <T, A> void initAllCollectors(Class<A> entityType, Collection<A> initialEntries) {
+    List<AbstractMetricCollector<?, ?>> metrics = REGISTRY.getOrDefault(entityType, List.of());
 
-    for (AbstractMetricCollector<?> metric : metrics) {
+    for (AbstractMetricCollector<?, ?> metric : metrics) {
       if (metric.supportsEntityType(entityType)) {
         @SuppressWarnings("unchecked")
-        AbstractMetricCollector<T> typedMetric = (AbstractMetricCollector<T>) metric;
+        AbstractMetricCollector<T, A> typedMetric = (AbstractMetricCollector<T, A>) metric;
         typedMetric.initMetrics(initialEntries);
       }
     }
   }
 
-  public static <T> void updateAllEntriesFor(Class<T> entityType, T entity) {
-    List<AbstractMetricCollector<?>> metrics = REGISTRY.getOrDefault(entityType, List.of());
+  public static <A> void updateAllEntriesFor(Class<A> entityType, A entity) {
+    List<AbstractMetricCollector<?, ?>> metrics = REGISTRY.getOrDefault(entityType, List.of());
 
-    for (AbstractMetricCollector<?> metric : metrics) {
+    for (AbstractMetricCollector<?, ?> metric : metrics) {
       if (metric.supportsEntityType(entityType)) {
         @SuppressWarnings("unchecked")
-        AbstractMetricCollector<T> typedMetric = (AbstractMetricCollector<T>) metric;
+        AbstractMetricCollector<?, A> typedMetric = (AbstractMetricCollector<?, A>) metric;
         typedMetric.updateEntry(entity);
       }
     }
   }
 
   // Static method to remove all entries for a specific entity type
-  public static <T> void removeAllEntriesFor(Class<T> entityType, T entity) {
-    List<AbstractMetricCollector<?>> metrics = REGISTRY.getOrDefault(entityType, List.of());
-    for (AbstractMetricCollector<?> metric : metrics) {
+  public static <A> void removeAllEntriesFor(Class<A> entityType, A entity) {
+    List<AbstractMetricCollector<?, ?>> metrics = REGISTRY.getOrDefault(entityType, List.of());
+    for (AbstractMetricCollector<?, ?> metric : metrics) {
       if (metric.supportsEntityType(entityType)) {
         @SuppressWarnings("unchecked")
-        AbstractMetricCollector<T> typedmetric = (AbstractMetricCollector<T>) metric;
+        AbstractMetricCollector<?, A> typedmetric = (AbstractMetricCollector<?, A>) metric;
         typedmetric.removeEntry(entity);
       }
     }
@@ -61,14 +65,14 @@ public abstract class AbstractMetricCollector<T> {
   protected ConcurrentHashMap<String, BigDecimal> metricEntries_Monthly = new ConcurrentHashMap<>();
   protected ConcurrentHashMap<String, BigDecimal> metricEntries_AllTime = new ConcurrentHashMap<>();
 
-  protected final Class<T> entityType;
+  protected final Class<A> entityType;
 
-  public AbstractMetricCollector(Class<T> entityType) {
+  public AbstractMetricCollector(Class<A> entityType) {
     this.entityType = entityType;
     REGISTRY.computeIfAbsent(entityType, k -> new ArrayList<>()).add(this);
   }
 
-  protected void initMetrics(Collection<T> initialEntries) {
+  protected void initMetrics(Collection<A> initialEntries) {
     metricEntries_Weekly = new ConcurrentHashMap<>();
     metricEntries_Monthly = new ConcurrentHashMap<>();
     metricEntries_AllTime = new ConcurrentHashMap<>();
@@ -83,14 +87,14 @@ public abstract class AbstractMetricCollector<T> {
    * Calculate only new entry and add value to previous, because it minimizes db-access (when
    * possible)
    */
-  protected abstract BigDecimal calculateValue(T entity, TimeSpan timeSpan, Long startTimestamp,
+  protected abstract BigDecimal calculateValue(A entity, TimeSpan timeSpan, Long startTimestamp,
       Long endTimestamp);
 
-  protected abstract String getKey(T entity);
+  protected abstract String getKey(A entity);
 
   protected abstract T findByKey(String key);
 
-  protected void updateEntry(T entity) {
+  protected void updateEntry(A entity) {
     long now = Instant.now().toEpochMilli();
     metricEntries_Weekly.put(getKey(entity),
         calculateValue(entity, TimeSpan.WEEK, now - WEEK_MILLIS, now));
@@ -99,7 +103,7 @@ public abstract class AbstractMetricCollector<T> {
     metricEntries_AllTime.put(getKey(entity), calculateValue(entity, TimeSpan.ALL_TIME, 0L, now));
   }
 
-  protected void removeEntry(T entity) {
+  protected void removeEntry(A entity) {
     metricEntries_Weekly.remove(getKey(entity));
     metricEntries_Monthly.remove(getKey(entity));
     metricEntries_AllTime.remove(getKey(entity));

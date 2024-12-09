@@ -1,6 +1,6 @@
 package de.unipassau.fim.fsinfo.prost.service.statistics.user;
 
-import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
+import de.unipassau.fim.fsinfo.prost.data.dao.ShopItemHistoryEntry;
 import de.unipassau.fim.fsinfo.prost.data.metrics.TimeSpan;
 import de.unipassau.fim.fsinfo.prost.data.metrics.UserMetricType;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
@@ -20,14 +20,16 @@ public class LoyalCustomerMetricCollector extends AbstractUserMetricCollector {
       ShopItemHistoryRepository shopItemHistoryRepository) {
     super(UserMetricType.LOYAL_CUSTOMER, userRepository);
     this.shopItemHistoryRepository = shopItemHistoryRepository;
-    initMetrics(userRepository.findAll());
+    initMetrics(shopItemHistoryRepository.findAll());
   }
 
   @Override
-  public BigDecimal calculateValue(ProstUser entity, TimeSpan timeSpan, Long startTimestamp,
+  public BigDecimal calculateValue(ShopItemHistoryEntry entity, TimeSpan timeSpan,
+      Long startTimestamp,
       Long endTimestamp) {
     return BigDecimal.valueOf(
-        shopItemHistoryRepository.findByUserIdAndTimestampBetween(entity.getId(), startTimestamp,
+        shopItemHistoryRepository.findByUserIdAndTimestampBetween(entity.getUserId(),
+            startTimestamp,
             endTimestamp).size());
   }
 }
