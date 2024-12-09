@@ -1,8 +1,9 @@
 package de.unipassau.fim.fsinfo.prost.service.statistics.user;
 
-import de.unipassau.fim.fsinfo.prost.data.UserMetricType;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItemHistoryEntry;
+import de.unipassau.fim.fsinfo.prost.data.metrics.TimeSpan;
+import de.unipassau.fim.fsinfo.prost.data.metrics.UserMetricType;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
 import java.math.BigDecimal;
@@ -26,7 +27,8 @@ public class LuxuryCustomerMetricCollector extends AbstractUserMetricCollector {
   }
 
   @Override
-  public BigDecimal calculateValue(ProstUser entity, Long startTimestamp, Long endTimestamp) {
+  public BigDecimal calculateValue(ProstUser entity, TimeSpan timeSpan, Long startTimestamp,
+      Long endTimestamp) {
 
     List<ShopItemHistoryEntry> entries = shopItemHistoryRepository.findByUserIdAndTimestampBetween(
         entity.getId(), startTimestamp,

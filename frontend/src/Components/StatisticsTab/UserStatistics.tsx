@@ -5,7 +5,7 @@ import { User } from "../../Types/User";
 import { getOwnUser, getUser } from "../../Queries";
 import { ErrorComponent } from "../Util/ErrorTab";
 import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
-import { CompositeLeaderboardType, TimeSpan, toTimeSpan, UserLeaderboardType } from "../../Types/Statistics";
+import { CompositeMetricType, TimeSpan, toTimeSpan, UserMetricType } from "../../Types/Statistics";
 import { UserMetricPlacement } from "./MetricOverview";
 import { CompositeMetricPieChart } from "../Chart/PieChart";
 import { getAuthorizedUser } from "../../SessionInfo";
@@ -105,7 +105,7 @@ export function UserStatistics() {
         <div className="" style={{ display: "flex", flexFlow: "row wrap", justifyContent: "space-around" }}>
           <UserMetricPlacement
             user={user}
-            type={UserLeaderboardType.LOYAL_CUSTOMER}
+            type={UserMetricType.LOYAL_CUSTOMER}
             title="Loyalisten"
             desc="Käufe"
             isMoney={false}
@@ -113,7 +113,7 @@ export function UserStatistics() {
           />
           <UserMetricPlacement
             user={user}
-            type={UserLeaderboardType.KIOSK_CUSTOMER}
+            type={UserMetricType.KIOSK_CUSTOMER}
             title="Kiosk Loyalisten"
             desc="Käufe"
             isMoney={false}
@@ -121,7 +121,7 @@ export function UserStatistics() {
           />
           <UserMetricPlacement
             user={user}
-            type={UserLeaderboardType.LUXURY_CUSTOMER}
+            type={UserMetricType.LUXURY_CUSTOMER}
             title="Oberschicht"
             desc="∅ Preis"
             isMoney={true}
@@ -130,7 +130,7 @@ export function UserStatistics() {
         </div>
         <div className="" style={{ display: "flex", flexFlow: "row wrap", justifyContent: "space-around" }}>
           <CompositeMetricPieChart
-            type={CompositeLeaderboardType.ITEM_USER}
+            type={CompositeMetricType.ITEM_USER}
             title="Favoriten"
             desc=""
             time={timeSpan}
@@ -138,7 +138,7 @@ export function UserStatistics() {
             dataKey={user.id}
           />
           <CompositeMetricLineChart
-            type={CompositeLeaderboardType.HOURLY_ACTIVITY}
+            type={CompositeMetricType.HOURLY_ACTIVITY}
             title="Aktivität"
             desc="Käufe zur Tageszeit"
             time={timeSpan}

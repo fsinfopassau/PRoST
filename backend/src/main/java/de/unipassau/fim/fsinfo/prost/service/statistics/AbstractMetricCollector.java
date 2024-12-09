@@ -1,6 +1,6 @@
 package de.unipassau.fim.fsinfo.prost.service.statistics;
 
-import de.unipassau.fim.fsinfo.prost.data.TimeSpan;
+import de.unipassau.fim.fsinfo.prost.data.metrics.TimeSpan;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -79,7 +79,12 @@ public abstract class AbstractMetricCollector<T> {
     return this.entityType.equals(type);
   }
 
-  protected abstract BigDecimal calculateValue(T entity, Long startTimestamp, Long endTimestamp);
+  /**
+   * Calculate only new entry and add value to previous, because it minimizes db-access (when
+   * possible)
+   */
+  protected abstract BigDecimal calculateValue(T entity, TimeSpan timeSpan, Long startTimestamp,
+      Long endTimestamp);
 
   protected abstract String getKey(T entity);
 
@@ -87,9 +92,11 @@ public abstract class AbstractMetricCollector<T> {
 
   protected void updateEntry(T entity) {
     long now = Instant.now().toEpochMilli();
-    metricEntries_Weekly.put(getKey(entity), calculateValue(entity, now - WEEK_MILLIS, now));
-    metricEntries_Monthly.put(getKey(entity), calculateValue(entity, now - MONTH_MILLIS, now));
-    metricEntries_AllTime.put(getKey(entity), calculateValue(entity, 0L, now));
+    metricEntries_Weekly.put(getKey(entity),
+        calculateValue(entity, TimeSpan.WEEK, now - WEEK_MILLIS, now));
+    metricEntries_Monthly.put(getKey(entity),
+        calculateValue(entity, TimeSpan.MONTH, now - MONTH_MILLIS, now));
+    metricEntries_AllTime.put(getKey(entity), calculateValue(entity, TimeSpan.ALL_TIME, 0L, now));
   }
 
   protected void removeEntry(T entity) {
@@ -98,11 +105,26 @@ public abstract class AbstractMetricCollector<T> {
     metricEntries_AllTime.remove(getKey(entity));
   }
 
+  protected Optional<BigDecimal> getValue(TimeSpan timeSpan, String key) {
+    BigDecimal value;
+    switch (timeSpan) {
+      case WEEK -> value = metricEntries_Weekly.get(key);
+      case MONTH -> value = metricEntries_Monthly.get(key);
+      case ALL_TIME -> value = metricEntries_AllTime.get(key);
+      default -> throw new IllegalStateException("Unexpected value: " + timeSpan);
+    }
+    if (value == null) {
+      return Optional.empty();
+    }
+    return Optional.of(value);
+  }
+
   public Optional<List<MetricEntry<T>>> getMetricEntries(TimeSpan timeSpan) {
     return switch (timeSpan) {
       case WEEK -> Optional.of(mapToMetricEntries(metricEntries_Weekly));
       case MONTH -> Optional.of(mapToMetricEntries(metricEntries_Monthly));
       case ALL_TIME -> Optional.of(mapToMetricEntries(metricEntries_AllTime));
+      default -> throw new IllegalStateException("Unexpected value: " + timeSpan);
     };
   }
 

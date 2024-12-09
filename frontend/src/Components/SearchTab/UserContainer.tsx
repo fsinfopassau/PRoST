@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { sortUsersByDisplayName, User } from "../../Types/User";
 import { UserBox } from "./UserSelectionDisplay";
-import { getAllUsers, getUserLeaderboard } from "../../Queries";
+import { getAllUsers, getUserMetric } from "../../Queries";
 import Fuse from "fuse.js";
-import { LeaderboardUserEntry, TimeSpan, UserLeaderboardType } from "../../Types/Statistics";
+import { UserMetricEntry, TimeSpan, UserMetricType } from "../../Types/Statistics";
 
 export function UserContainer() {
   const [searchValue, setSearchValue] = useState("");
   const [users, setUsers] = useState<User[] | undefined>([]);
 
-  const [stats, setStats] = useState<LeaderboardUserEntry[]>([]);
+  const [stats, setStats] = useState<UserMetricEntry[]>([]);
 
   useEffect(() => {
     getAllUsers()
@@ -19,7 +19,7 @@ export function UserContainer() {
       .catch(() => {
         setUsers([]);
       });
-    getUserLeaderboard(UserLeaderboardType.KIOSK_CUSTOMER, TimeSpan.WEEK).then((l) => {
+    getUserMetric(UserMetricType.KIOSK_CUSTOMER, TimeSpan.WEEK).then((l) => {
       if (l) {
         setStats(
           l

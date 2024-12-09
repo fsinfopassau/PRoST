@@ -5,7 +5,7 @@ import { AuthorizedUser, User } from "./Types/User";
 import { getEncodedCredentials, setAuthorizedUser } from "./SessionInfo";
 import { InvoicePage } from "./Types/Invoice";
 import { TransactionPage } from "./Types/Transaction";
-import { UserLeaderboardType, LeaderboardUserEntry, TimeSpan, ItemLeaderboardType, LeaderboardItemEntry, LeaderboardCompositeEntry, CompositeLeaderboardType } from "./Types/Statistics";
+import { UserMetricType as UserMetricType, UserMetricEntry as UserMetricEntry, TimeSpan, ItemMetricType as ItemMetricType, ItemMetricEntry as ItemMetricEntry, CompositeMetricEntry as CompositeMetricEntry, CompositeMetricType as CompositeMetricType } from "./Types/Statistics";
 import { toast } from "react-toastify";
 
 export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
@@ -548,7 +548,7 @@ export async function mailInvoices(ids: number[]): Promise<number[] | undefined>
   }
 }
 
-export async function getUserLeaderboard(type: UserLeaderboardType, timeSpan: TimeSpan): Promise<LeaderboardUserEntry[] | undefined> {
+export async function getUserMetric(type: UserMetricType, timeSpan: TimeSpan): Promise<UserMetricEntry[] | undefined> {
   try {
     const response = await fetch(`${apiUrl}/api/statistics/metric/user?type=${type.toString()}&timespan=${timeSpan.toString()}`, {
       method: "GET",
@@ -562,13 +562,13 @@ export async function getUserLeaderboard(type: UserLeaderboardType, timeSpan: Ti
       return undefined;
     }
 
-    return (await response.json()) as LeaderboardUserEntry[];
+    return (await response.json()) as UserMetricEntry[];
   } catch (error) {
     return undefined;
   }
 }
 
-export async function getItemLeaderboard(type: ItemLeaderboardType, timeSpan: TimeSpan): Promise<LeaderboardItemEntry[] | undefined> {
+export async function getItemMetric(type: ItemMetricType, timeSpan: TimeSpan): Promise<ItemMetricEntry[] | undefined> {
   try {
     const response = await fetch(`${apiUrl}/api/statistics/metric/item?type=${type.toString()}&timespan=${timeSpan.toString()}`, {
       method: "GET",
@@ -582,13 +582,13 @@ export async function getItemLeaderboard(type: ItemLeaderboardType, timeSpan: Ti
       return undefined;
     }
 
-    return (await response.json()) as LeaderboardItemEntry[];
+    return (await response.json()) as ItemMetricEntry[];
   } catch (error) {
     return undefined;
   }
 }
 
-export async function getCompositeLeaderboard(type: CompositeLeaderboardType, timeSpan: TimeSpan): Promise<LeaderboardCompositeEntry[] | undefined> {
+export async function getCompositeMetric(type: CompositeMetricType, timeSpan: TimeSpan): Promise<CompositeMetricEntry[] | undefined> {
   try {
     const response = await fetch(`${apiUrl}/api/statistics/metric/composite?type=${type.toString()}&timespan=${timeSpan.toString()}`, {
       method: "GET",
@@ -602,7 +602,7 @@ export async function getCompositeLeaderboard(type: CompositeLeaderboardType, ti
       return undefined;
     }
 
-    return (await response.json()) as LeaderboardCompositeEntry[];
+    return (await response.json()) as CompositeMetricEntry[];
   } catch (error) {
     return undefined;
   }

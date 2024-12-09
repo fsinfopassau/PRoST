@@ -1,29 +1,29 @@
 import { Link } from "react-router-dom";
 import {
-  UserLeaderboardType,
-  LeaderboardUserEntry,
+  UserMetricType,
+  UserMetricEntry,
   TimeSpan,
-  ItemLeaderboardType,
-  LeaderboardItemEntry,
+  ItemMetricType,
+  ItemMetricEntry,
   convertUsersBalance,
   convertUsersSpent,
-  CompositeLeaderboardType,
-  LeaderboardCompositeEntry,
+  CompositeMetricType,
+  CompositeMetricEntry,
 } from "../../Types/Statistics";
 import { useEffect, useState } from "react";
-import { getAllUsers, getCompositeLeaderboard, getItemLeaderboard, getUserLeaderboard } from "../../Queries";
+import { getAllUsers, getCompositeMetric, getItemMetric, getUserMetric } from "../../Queries";
 import { ScrollArea, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from "@radix-ui/react-scroll-area";
 import { formatMoney } from "../../Format";
 
 export function CompositeLeaderboard(props: {
-  type: CompositeLeaderboardType;
+  type: CompositeMetricType;
   timeSpan: TimeSpan;
   title: string;
   desc: string;
   isMoney: boolean;
 }) {
   const { type, timeSpan, title, desc, isMoney } = props;
-  const [stats, setStats] = useState<LeaderboardCompositeEntry[]>([]);
+  const [stats, setStats] = useState<CompositeMetricEntry[]>([]);
   const [options, setOptions] = useState<[string, string][]>([]);
   const [selected, setSelected] = useState<[string, string]>();
 
@@ -36,7 +36,7 @@ export function CompositeLeaderboard(props: {
   }
 
   useEffect(() => {
-    getCompositeLeaderboard(type, timeSpan).then((l) => {
+    getCompositeMetric(type, timeSpan).then((l) => {
       if (l) {
         setStats(l);
       }
@@ -109,17 +109,17 @@ export function CompositeLeaderboard(props: {
 }
 
 export function ItemLeaderboard(props: {
-  type: ItemLeaderboardType;
+  type: ItemMetricType;
   timeSpan: TimeSpan;
   title: string;
   desc: string;
   isMoney: boolean;
 }) {
   const { type, timeSpan, title, desc, isMoney } = props;
-  const [stats, setStats] = useState<LeaderboardItemEntry[]>([]);
+  const [stats, setStats] = useState<ItemMetricEntry[]>([]);
 
   useEffect(() => {
-    getItemLeaderboard(type, timeSpan)
+    getItemMetric(type, timeSpan)
       .then((l) => {
         if (l) {
           setStats(l);
@@ -172,30 +172,30 @@ export function ItemLeaderboard(props: {
 }
 
 export function UserLeaderboard(props: {
-  type: UserLeaderboardType;
+  type: UserMetricType;
   timeSpan: TimeSpan;
   title: string;
   desc: string;
   isMoney: boolean;
 }) {
   const { type, timeSpan, title, desc, isMoney } = props;
-  const [stats, setStats] = useState<LeaderboardUserEntry[]>([]);
+  const [stats, setStats] = useState<UserMetricEntry[]>([]);
 
   useEffect(() => {
-    if (type == UserLeaderboardType.DEBT_CUSTOMER) {
+    if (type == UserMetricType.DEBT_CUSTOMER) {
       getAllUsers(true).then((u) => {
         if (u) {
           setStats(convertUsersBalance(u).sort((a, b) => a.value - b.value));
         }
       });
-    } else if (type == UserLeaderboardType.MVP) {
+    } else if (type == UserMetricType.MVP) {
       getAllUsers(true).then((u) => {
         if (u) {
           setStats(convertUsersSpent(u).sort((a, b) => b.value - a.value));
         }
       });
     } else {
-      getUserLeaderboard(type, timeSpan).then((l) => {
+      getUserMetric(type, timeSpan).then((l) => {
         if (l) {
           setStats(l);
         }

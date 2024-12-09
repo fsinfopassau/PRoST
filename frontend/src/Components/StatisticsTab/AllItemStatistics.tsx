@@ -1,5 +1,5 @@
 import { ItemLeaderboard } from "./Leaderboard";
-import { ItemLeaderboardType, TimeSpan } from "../../Types/Statistics";
+import { ItemMetricType, TimeSpan } from "../../Types/Statistics";
 
 export function AllItemStatistics(props: { timeSpan: TimeSpan }) {
   const { timeSpan } = props;
@@ -7,14 +7,14 @@ export function AllItemStatistics(props: { timeSpan: TimeSpan }) {
   return (
     <div className="GridContainer" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(25rem, 1fr))" }}>
       <ItemLeaderboard
-        type={ItemLeaderboardType.TOP_SELLING_ITEMS}
+        type={ItemMetricType.TOP_SELLING_ITEMS}
         timeSpan={timeSpan}
         title="Verkaufsschlager"
         desc="Käufe"
         isMoney={false}
       />
       <ItemLeaderboard
-        type={ItemLeaderboardType.ITEM_REVENUE}
+        type={ItemMetricType.ITEM_REVENUE}
         timeSpan={timeSpan}
         title="Lukratives"
         desc="Einnahmen"

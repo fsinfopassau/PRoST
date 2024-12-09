@@ -1,4 +1,4 @@
-import { UserLeaderboardType, TimeSpan, CompositeLeaderboardType } from "../../Types/Statistics";
+import { UserMetricType, TimeSpan, CompositeMetricType } from "../../Types/Statistics";
 import { CompositeLeaderboard, UserLeaderboard } from "./Leaderboard";
 
 export function AllUserStatistics(props: { timeSpan: TimeSpan }) {
@@ -7,42 +7,42 @@ export function AllUserStatistics(props: { timeSpan: TimeSpan }) {
   return (
     <div className="GridContainer" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(25rem, 1fr))" }}>
       <UserLeaderboard
-        type={UserLeaderboardType.MVP}
+        type={UserMetricType.MVP}
         timeSpan={timeSpan}
         title="Stammkunden"
         desc="Gesamtausgaben"
         isMoney={true}
       />
       <UserLeaderboard
-        type={UserLeaderboardType.DEBT_CUSTOMER}
+        type={UserMetricType.DEBT_CUSTOMER}
         timeSpan={timeSpan}
         title="Schuldensammler"
         desc="Guthaben"
         isMoney={true}
       />
       <UserLeaderboard
-        type={UserLeaderboardType.LOYAL_CUSTOMER}
+        type={UserMetricType.LOYAL_CUSTOMER}
         timeSpan={timeSpan}
         title="Loyalisten"
         desc="Käufe"
         isMoney={false}
       />
       <UserLeaderboard
-        type={UserLeaderboardType.KIOSK_CUSTOMER}
+        type={UserMetricType.KIOSK_CUSTOMER}
         timeSpan={timeSpan}
         title="Kiosk Loyalisten"
         desc="Käufe"
         isMoney={false}
       />
       <UserLeaderboard
-        type={UserLeaderboardType.LUXURY_CUSTOMER}
+        type={UserMetricType.LUXURY_CUSTOMER}
         timeSpan={timeSpan}
         title="Oberschicht"
         desc="∅ Einkaufs-Preis"
         isMoney={true}
       />
       <CompositeLeaderboard
-        type={CompositeLeaderboardType.ITEM_USER}
+        type={CompositeMetricType.ITEM_USER}
         timeSpan={timeSpan}
         title="Suchtis"
         desc="Käufe"
