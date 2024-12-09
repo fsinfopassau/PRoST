@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { ShopHistoryEntry } from "../../Types/ShopHistory";
 import { User } from "../../Types/User";
 import { ShopItem } from "../../Types/ShopItem";
-import { getAllShopItems, getAllUsers, getHistory, getItemLeaderboard } from "../../Queries";
+import { getAllShopItems, getAllUsers, getHistory, getItemMetric } from "../../Queries";
 import { formatMoney } from "../../Format";
 import { MetricInfo } from "./MetricOverview";
 import { isOnlyUser } from "../../SessionInfo";
-import { CompositeLeaderboardType, ItemLeaderboardType, TimeSpan } from "../../Types/Statistics";
+import { CompositeMetricType, ItemMetricType, TimeSpan } from "../../Types/Statistics";
 import { ItemMetricPieChart } from "../Chart/PieChart";
 import { CompositeMetricLineChart } from "../Chart/LineChart";
 
@@ -42,7 +42,7 @@ export function AllSystemStatistics(props: { timeSpan: TimeSpan }) {
   }, []);
 
   useEffect(() => {
-    getItemLeaderboard(ItemLeaderboardType.ITEM_REVENUE, timeSpan).then((l) => {
+    getItemMetric(ItemMetricType.ITEM_REVENUE, timeSpan).then((l) => {
       if (l) {
         let v = 0;
         l.forEach((e) => {
@@ -98,14 +98,9 @@ export function AllSystemStatistics(props: { timeSpan: TimeSpan }) {
         <MetricInfo title="Einnahmen" value={formatMoney(totalRevenue)} desc="" />
       </div>
       <div className="" style={{ display: "flex", flexFlow: "row wrap", justifyContent: "space-around" }}>
-        <ItemMetricPieChart
-          title="Verkaufsschlager"
-          desc=""
-          type={ItemLeaderboardType.TOP_SELLING_ITEMS}
-          time={timeSpan}
-        />
+        <ItemMetricPieChart title="Verkaufsschlager" desc="" type={ItemMetricType.TOP_SELLING_ITEMS} time={timeSpan} />
         <CompositeMetricLineChart
-          type={CompositeLeaderboardType.HOURLY_ACTIVITY}
+          type={CompositeMetricType.HOURLY_ACTIVITY}
           title="Aktivität"
           desc="Käufe zur Tageszeit"
           time={timeSpan}

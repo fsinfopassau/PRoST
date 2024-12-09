@@ -1,7 +1,7 @@
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
-import { CompositeLeaderboardType, ItemLeaderboardType, TimeSpan } from "../../Types/Statistics";
+import { CompositeMetricType, ItemMetricType, TimeSpan } from "../../Types/Statistics";
 import { useEffect, useState } from "react";
-import { getCompositeLeaderboard, getItemLeaderboard } from "../../Queries";
+import { getCompositeMetric, getItemMetric } from "../../Queries";
 import { ChartData } from "../../Types/Chart";
 
 const COLORS = [
@@ -67,13 +67,13 @@ export function MetricPieChart(props: { entries: ChartData[] | undefined; title:
   );
 }
 
-export function ItemMetricPieChart(props: { type: ItemLeaderboardType; time: TimeSpan; title: string; desc: string }) {
+export function ItemMetricPieChart(props: { type: ItemMetricType; time: TimeSpan; title: string; desc: string }) {
   const { type, time, title, desc } = props;
 
   const [data, setData] = useState<ChartData[]>([]);
 
   useEffect(() => {
-    getItemLeaderboard(type, time).then((l) => {
+    getItemMetric(type, time).then((l) => {
       if (l) {
         const newData = l.map((entry) => ({
           name: entry.entity.displayName, // Use the ShopItem's name for the chart label
@@ -88,7 +88,7 @@ export function ItemMetricPieChart(props: { type: ItemLeaderboardType; time: Tim
 }
 
 export function CompositeMetricPieChart(props: {
-  type: CompositeLeaderboardType;
+  type: CompositeMetricType;
   filterFirst: boolean;
   dataKey: string;
   time: TimeSpan;
@@ -100,7 +100,7 @@ export function CompositeMetricPieChart(props: {
   const [data, setData] = useState<ChartData[]>([]);
 
   useEffect(() => {
-    getCompositeLeaderboard(type, time).then((l) => {
+    getCompositeMetric(type, time).then((l) => {
       if (l) {
         if (filterFirst) {
           l = l.filter((i) => {

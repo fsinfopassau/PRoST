@@ -8,11 +8,11 @@ export enum TimeSpan {
 }
 
 // backend calculated
-export enum ItemLeaderboardType {
+export enum ItemMetricType {
     TOP_SELLING_ITEMS = "TOP_SELLING_ITEMS",
     ITEM_REVENUE = "ITEM_REVENUE",
 }
-export enum UserLeaderboardType {
+export enum UserMetricType {
     // frontend calculated
     DEBT_CUSTOMER = "DEBT_CUSTOMER",
     MVP = "MVP",
@@ -21,24 +21,24 @@ export enum UserLeaderboardType {
     LUXURY_CUSTOMER = "LUXURY_CUSTOMER",
     KIOSK_CUSTOMER = "KIOSK_CUSTOMER",
 }
-export enum CompositeLeaderboardType {
+export enum CompositeMetricType {
     ITEM_USER = "ITEM_USER",
     HOURLY_ACTIVITY = "HOURLY_ACTIVITY",
 }
 
-export interface LeaderboardUserEntry {
+export interface UserMetricEntry {
     key: string;
     entity: User;
     value: number;
 }
 
-export interface LeaderboardItemEntry {
+export interface ItemMetricEntry {
     key: string;
     entity: ShopItem;
     value: number;
 }
 
-export interface LeaderboardCompositeEntry {
+export interface CompositeMetricEntry {
     key1: string;
     key1DisplayName: string;
     key2: string;
@@ -53,7 +53,7 @@ export function toTimeSpan(value: string): TimeSpan | undefined {
     return undefined; // Return undefined if no match is found
 }
 
-export const convertUsersBalance = (users: User[]): LeaderboardUserEntry[] => {
+export const convertUsersBalance = (users: User[]): UserMetricEntry[] => {
     return users.filter((u) => {
         return u.enabled
     }).map((user) => ({
@@ -63,7 +63,7 @@ export const convertUsersBalance = (users: User[]): LeaderboardUserEntry[] => {
     }))
 };
 
-export const convertUsersSpent = (users: User[]): LeaderboardUserEntry[] => {
+export const convertUsersSpent = (users: User[]): UserMetricEntry[] => {
     return users.filter((u) => {
         return u.enabled
     }).map((user) => ({

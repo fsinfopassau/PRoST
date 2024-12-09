@@ -1,8 +1,8 @@
 package de.unipassau.fim.fsinfo.prost.service.statistics.item;
 
-import de.unipassau.fim.fsinfo.prost.data.ItemMetricType;
-import de.unipassau.fim.fsinfo.prost.data.TimeSpan;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
+import de.unipassau.fim.fsinfo.prost.data.metrics.ItemMetricType;
+import de.unipassau.fim.fsinfo.prost.data.metrics.TimeSpan;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractMetricCollector;
 import java.util.HashMap;

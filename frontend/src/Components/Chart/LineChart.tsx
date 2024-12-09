@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { ChartData } from "../../Types/Chart";
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
-import { getCompositeLeaderboard } from "../../Queries";
-import { CompositeLeaderboardType, LeaderboardCompositeEntry, TimeSpan } from "../../Types/Statistics";
+import { getCompositeMetric } from "../../Queries";
+import { CompositeMetricType, CompositeMetricEntry, TimeSpan } from "../../Types/Statistics";
 
 export function MetricLineChart(props: { entries: ChartData[] | undefined; title: string; desc: string }) {
   const { entries, title, desc } = props;
@@ -42,7 +42,7 @@ export function MetricLineChart(props: { entries: ChartData[] | undefined; title
 }
 
 export function CompositeMetricLineChart(props: {
-  type: CompositeLeaderboardType;
+  type: CompositeMetricType;
   filterFirst: boolean;
   dataKey: string | undefined;
   time: TimeSpan;
@@ -54,7 +54,7 @@ export function CompositeMetricLineChart(props: {
   const [data, setData] = useState<ChartData[]>([]);
 
   useEffect(() => {
-    getCompositeLeaderboard(type, time).then((l) => {
+    getCompositeMetric(type, time).then((l) => {
       if (l) {
         if (dataKey == undefined) {
           l = compress(l);
@@ -81,8 +81,8 @@ export function CompositeMetricLineChart(props: {
   return <MetricLineChart entries={data} title={title} desc={desc} />;
 }
 
-function compress(data: LeaderboardCompositeEntry[]): LeaderboardCompositeEntry[] {
-  const groupedByKey1 = new Map<string, LeaderboardCompositeEntry>();
+function compress(data: CompositeMetricEntry[]): CompositeMetricEntry[] {
+  const groupedByKey1 = new Map<string, CompositeMetricEntry>();
 
   for (const entry of data) {
     if (groupedByKey1.has(entry.key1)) {

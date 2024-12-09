@@ -1,12 +1,12 @@
 package de.unipassau.fim.fsinfo.prost.controller;
 
-import de.unipassau.fim.fsinfo.prost.data.CompositeMetricType;
-import de.unipassau.fim.fsinfo.prost.data.ItemMetricType;
-import de.unipassau.fim.fsinfo.prost.data.TimeSpan;
-import de.unipassau.fim.fsinfo.prost.data.UserMetricType;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.data.dto.CompositeMetricDTO;
+import de.unipassau.fim.fsinfo.prost.data.metrics.CompositeMetricType;
+import de.unipassau.fim.fsinfo.prost.data.metrics.ItemMetricType;
+import de.unipassau.fim.fsinfo.prost.data.metrics.TimeSpan;
+import de.unipassau.fim.fsinfo.prost.data.metrics.UserMetricType;
 import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractMetricCollector.MetricEntry;
 import de.unipassau.fim.fsinfo.prost.service.statistics.MetricService;
 import de.unipassau.fim.fsinfo.prost.service.statistics.composite.HourlyActivityMetricCollector;

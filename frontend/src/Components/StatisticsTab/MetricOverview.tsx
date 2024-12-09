@@ -1,23 +1,23 @@
 import { useEffect, useState } from "react";
-import { LeaderboardUserEntry, TimeSpan, UserLeaderboardType } from "../../Types/Statistics";
-import { getUserLeaderboard } from "../../Queries";
+import { UserMetricEntry, TimeSpan, UserMetricType } from "../../Types/Statistics";
+import { getUserMetric } from "../../Queries";
 import { User } from "../../Types/User";
 import { formatMoney } from "../../Format";
 
 export function UserMetricPlacement(props: {
   user: User;
-  type: UserLeaderboardType;
+  type: UserMetricType;
   timeSpan: TimeSpan;
   title: string;
   desc: string;
   isMoney: boolean;
 }) {
   const { user, type, timeSpan, title, desc, isMoney } = props;
-  const [stats, setStats] = useState<LeaderboardUserEntry>();
+  const [stats, setStats] = useState<UserMetricEntry>();
   const [position, setPosition] = useState<number>();
 
   useEffect(() => {
-    getUserLeaderboard(type, timeSpan).then((l) => {
+    getUserMetric(type, timeSpan).then((l) => {
       if (l) {
         l.map((a, index) => {
           if (a.entity.id == user.id) {

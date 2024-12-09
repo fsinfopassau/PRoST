@@ -5,6 +5,7 @@ import de.unipassau.fim.fsinfo.prost.data.dao.ShopItem;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItemHistoryEntry;
 import de.unipassau.fim.fsinfo.prost.data.dao.TransactionEntry;
 import de.unipassau.fim.fsinfo.prost.data.dto.CompositeMetricDTO;
+import de.unipassau.fim.fsinfo.prost.data.metrics.TimeSpan;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
@@ -35,12 +36,17 @@ public class ItemPurchaseMetricCollector extends
   }
 
   @Override
-  public BigDecimal calculateValue(ShopItemHistoryEntry entity, Long startTimestamp,
-      Long endTimestamp) {
-    Optional<Long> count = shopItemHistoryRepository.getUsersTotalAmountPurchasedInTimeFrame(
-        entity.getUserId(),
-        entity.getItemId(), startTimestamp, endTimestamp);
-    return count.map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
+  public BigDecimal calculateValue(ShopItemHistoryEntry entity, TimeSpan timeSpan,
+      Long startTimestamp, Long endTimestamp) {
+
+    Optional<BigDecimal> valueO = getValue(timeSpan, getKey(entity));
+
+    if (entity.getTimestamp() >= startTimestamp && entity.getTimestamp() <= endTimestamp) {
+      return valueO.map(bigDecimal -> bigDecimal.add(BigDecimal.valueOf(entity.getAmount())))
+          .orElseGet(() -> BigDecimal.valueOf(entity.getAmount()));
+    }
+
+    return valueO.orElse(BigDecimal.ZERO);
   }
 
   @Override

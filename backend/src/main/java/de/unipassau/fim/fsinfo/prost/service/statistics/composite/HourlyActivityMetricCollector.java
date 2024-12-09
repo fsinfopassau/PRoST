@@ -3,6 +3,7 @@ package de.unipassau.fim.fsinfo.prost.service.statistics.composite;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItemHistoryEntry;
 import de.unipassau.fim.fsinfo.prost.data.dto.CompositeMetricDTO;
+import de.unipassau.fim.fsinfo.prost.data.metrics.TimeSpan;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
@@ -12,7 +13,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,28 +52,16 @@ public class HourlyActivityMetricCollector extends
   }
 
   @Override
-  public BigDecimal calculateValue(ShopItemHistoryEntry entity, Long startTimestamp,
+  public BigDecimal calculateValue(ShopItemHistoryEntry entity, TimeSpan timeSpan,
+      Long startTimestamp,
       Long endTimestamp) {
-    // Convert entity timestamp to LocalDateTime
-    LocalDateTime entityTime = Instant.ofEpochMilli(entity.getTimestamp())
-        .atZone(zone)
-        .toLocalDateTime();
-    int entityHour = entityTime.getHour(); // Get the hour of the transaction
+    Optional<BigDecimal> valueO = getValue(timeSpan, getKey(entity));
 
-    // Query the ShopItemHistoryRepository to count transactions made by the user in this timeframe
-    List<ShopItemHistoryEntry> entries = shopItemHistoryRepository.findByUserIdAndTimestampBetween(
-        entity.getUserId(), startTimestamp, endTimestamp);
+    if (entity.getTimestamp() >= startTimestamp && entity.getTimestamp() <= endTimestamp) {
+      return valueO.map(bigDecimal -> bigDecimal.add(BigDecimal.ONE)).orElse(BigDecimal.ONE);
+    }
 
-    long transactionCount = entries.stream()
-        .filter(entry -> {
-          LocalDateTime entryTime = Instant.ofEpochMilli(entry.getTimestamp())
-              .atZone(zone)
-              .toLocalDateTime();
-          return entryTime.getHour() == entityHour;
-        })
-        .count();
-
-    return BigDecimal.valueOf(transactionCount);
+    return valueO.orElse(BigDecimal.ZERO);
   }
 
   @Override
