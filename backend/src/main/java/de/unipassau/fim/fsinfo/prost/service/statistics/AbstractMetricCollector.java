@@ -68,22 +68,22 @@ public abstract class AbstractMetricCollector<T> {
     REGISTRY.computeIfAbsent(entityType, k -> new ArrayList<>()).add(this);
   }
 
-  public void initMetrics(Collection<T> initialEntries) {
+  protected void initMetrics(Collection<T> initialEntries) {
     metricEntries_Weekly = new ConcurrentHashMap<>();
     metricEntries_Monthly = new ConcurrentHashMap<>();
     metricEntries_AllTime = new ConcurrentHashMap<>();
     initialEntries.forEach(this::updateEntry);
   }
 
-  public boolean supportsEntityType(Class<?> type) {
+  protected boolean supportsEntityType(Class<?> type) {
     return this.entityType.equals(type);
   }
 
-  public abstract BigDecimal calculateValue(T entity, Long startTimestamp, Long endTimestamp);
+  protected abstract BigDecimal calculateValue(T entity, Long startTimestamp, Long endTimestamp);
 
-  public abstract String getKey(T entity);
+  protected abstract String getKey(T entity);
 
-  public abstract T findByKey(String key);
+  protected abstract T findByKey(String key);
 
   protected void updateEntry(T entity) {
     long now = Instant.now().toEpochMilli();

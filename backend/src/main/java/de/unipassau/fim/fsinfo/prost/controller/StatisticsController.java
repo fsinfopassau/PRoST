@@ -38,22 +38,22 @@ public class StatisticsController {
     this.metricService = metricService;
   }
 
-  @GetMapping("/item/leaderboard")
-  public ResponseEntity<List<MetricEntry<ShopItem>>> getItemLeaderboard(
+  @GetMapping("/metric/item")
+  public ResponseEntity<List<MetricEntry<ShopItem>>> getItemMetric(
       ItemMetricType type, TimeSpan timespan) {
     return AbstractItemMetricCollector.getMetricEntries(type, timespan).map(ResponseEntity::ok)
         .orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
-  @GetMapping("/user/leaderboard")
-  public ResponseEntity<List<MetricEntry<ProstUser>>> getUserLeaderboard(
+  @GetMapping("/metric/user")
+  public ResponseEntity<List<MetricEntry<ProstUser>>> getUserMetric(
       UserMetricType type, TimeSpan timespan) {
     return AbstractUserMetricCollector.getMetricEntries(type, timespan).map(ResponseEntity::ok)
         .orElseGet(() -> ResponseEntity.badRequest().build());
   }
 
-  @GetMapping("/composite/leaderboard")
-  public ResponseEntity<List<CompositeMetricDTO>> getCompositeLeaderboard(
+  @GetMapping("/metric/composite")
+  public ResponseEntity<List<CompositeMetricDTO>> getCompositeMetric(
       CompositeMetricType type, TimeSpan timespan) {
     if (type == CompositeMetricType.ITEM_USER) {
       return itemPurchaseMetricCollector.getCompositeMetricEntries(timespan).map(ResponseEntity::ok)

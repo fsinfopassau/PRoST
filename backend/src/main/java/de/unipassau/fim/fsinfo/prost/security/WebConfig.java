@@ -33,9 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
 
   public static final String[] AUTH_WHITELIST = {
       "/api/authentication",
-      "/api/statistics/composite/**",
-      "/api/statistics/user/**",
-      "/api/statistics/item/**"
+      "/api/statistics/metric/**",
   };
 
   public static final String[] USER_SPACE = {

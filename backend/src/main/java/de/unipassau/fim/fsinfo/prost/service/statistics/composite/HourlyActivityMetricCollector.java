@@ -1,27 +1,23 @@
 package de.unipassau.fim.fsinfo.prost.service.statistics.composite;
 
-import de.unipassau.fim.fsinfo.prost.data.TimeSpan;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.dao.ShopItemHistoryEntry;
 import de.unipassau.fim.fsinfo.prost.data.dto.CompositeMetricDTO;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
-import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractMetricCollector;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class HourlyActivityMetricCollector extends AbstractMetricCollector<ShopItemHistoryEntry> {
+public class HourlyActivityMetricCollector extends
+    AbstractCompositeMetricCollector<ShopItemHistoryEntry> {
 
   protected ShopItemHistoryRepository shopItemHistoryRepository;
   protected ShopItemRepository shopItemRepository;
@@ -62,23 +58,22 @@ public class HourlyActivityMetricCollector extends AbstractMetricCollector<ShopI
   }
 
   @Override
-  public String getKey(ShopItemHistoryEntry entity) {
+  public String[] getKeys(ShopItemHistoryEntry entity) {
     LocalDateTime entityTime = Instant.ofEpochMilli(entity.getTimestamp()).atZone(ZoneOffset.UTC)
         .toLocalDateTime();
     int hour = entityTime.getHour();
-    return entity.getUserId() + "-" + hour;
+    return new String[]{entity.getUserId(), "" + hour};
   }
 
   @Override
-  public ShopItemHistoryEntry findByKey(String key) {
-    String[] parts = key.split("-");
-    String userId = parts[0];
-    String hour = parts[1];
-
+  public ShopItemHistoryEntry findByKeys(String... keys) {
     return new ShopItemHistoryEntry();
   }
 
-  public CompositeMetricDTO getCompositeMetricDTO(String key1, String key2, BigDecimal value) {
+  @Override
+  public CompositeMetricDTO getCompositeMetricDTO(BigDecimal value, String... keys) {
+    String key1 = keys[0];
+    String key2 = keys[1];
 
     Optional<ProstUser> userO = userRepository.findById(key1);
     Optional<Integer> hour;
@@ -99,24 +94,6 @@ public class HourlyActivityMetricCollector extends AbstractMetricCollector<ShopI
         hour.map(integer -> integer + ":00").orElse("unknown"),
         user.getId(), user.getDisplayName(),
         value);
-  }
-
-  protected List<CompositeMetricDTO> mapToCompositeMetricEntries(
-      ConcurrentHashMap<String, BigDecimal> metricEntries) {
-
-    return metricEntries.entrySet().stream()
-        .sorted(Map.Entry.<String, BigDecimal>comparingByValue().reversed())
-        .map(entry -> getCompositeMetricDTO(entry.getKey().split("-")[0],
-            entry.getKey().split("-")[1], entry.getValue()))
-        .collect(Collectors.toList());
-  }
-
-  public Optional<List<CompositeMetricDTO>> getCompositeMetricEntries(TimeSpan timeSpan) {
-    return switch (timeSpan) {
-      case WEEK -> Optional.of(mapToCompositeMetricEntries(metricEntries_Weekly));
-      case MONTH -> Optional.of(mapToCompositeMetricEntries(metricEntries_Monthly));
-      case ALL_TIME -> Optional.of(mapToCompositeMetricEntries(metricEntries_AllTime));
-    };
   }
 
 }
