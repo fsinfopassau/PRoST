@@ -550,7 +550,7 @@ export async function mailInvoices(ids: number[]): Promise<number[] | undefined>
 
 export async function getUserLeaderboard(type: UserLeaderboardType, timeSpan: TimeSpan): Promise<LeaderboardUserEntry[] | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/statistics/user/leaderboard?type=${type.toString()}&timespan=${timeSpan.toString()}`, {
+    const response = await fetch(`${apiUrl}/api/statistics/metric/user?type=${type.toString()}&timespan=${timeSpan.toString()}`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -570,7 +570,7 @@ export async function getUserLeaderboard(type: UserLeaderboardType, timeSpan: Ti
 
 export async function getItemLeaderboard(type: ItemLeaderboardType, timeSpan: TimeSpan): Promise<LeaderboardItemEntry[] | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/statistics/item/leaderboard?type=${type.toString()}&timespan=${timeSpan.toString()}`, {
+    const response = await fetch(`${apiUrl}/api/statistics/metric/item?type=${type.toString()}&timespan=${timeSpan.toString()}`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
@@ -590,7 +590,7 @@ export async function getItemLeaderboard(type: ItemLeaderboardType, timeSpan: Ti
 
 export async function getCompositeLeaderboard(type: CompositeLeaderboardType, timeSpan: TimeSpan): Promise<LeaderboardCompositeEntry[] | undefined> {
   try {
-    const response = await fetch(`${apiUrl}/api/statistics/composite/leaderboard?type=${type.toString()}&timespan=${timeSpan.toString()}`, {
+    const response = await fetch(`${apiUrl}/api/statistics/metric/composite?type=${type.toString()}&timespan=${timeSpan.toString()}`, {
       method: "GET",
       headers: {
         Authorization: `Basic ${getEncodedCredentials()}`,
