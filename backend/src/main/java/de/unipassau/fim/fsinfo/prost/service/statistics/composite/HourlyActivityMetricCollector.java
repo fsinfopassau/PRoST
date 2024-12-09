@@ -6,13 +6,16 @@ import de.unipassau.fim.fsinfo.prost.data.dto.CompositeMetricDTO;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemHistoryRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.ShopItemRepository;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
+import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +26,10 @@ public class HourlyActivityMetricCollector extends
   protected ShopItemRepository shopItemRepository;
   protected UserRepository userRepository;
 
+  @Value("${ZONE_ID:Europe/Berlin}")
+  private String zoneId;
+  private ZoneId zone;
+
   @Autowired
   public HourlyActivityMetricCollector(ShopItemHistoryRepository shopItemHistoryRepository,
       ShopItemRepository shopItemRepository, UserRepository userRepository) {
@@ -30,6 +37,17 @@ public class HourlyActivityMetricCollector extends
     this.shopItemHistoryRepository = shopItemHistoryRepository;
     this.shopItemRepository = shopItemRepository;
     this.userRepository = userRepository;
+  }
+
+  @PostConstruct
+  public void init() {
+    if (zoneId != null) {
+      zone = ZoneId.of(zoneId);
+      System.out.println("[HAMC] :: zone : " + zoneId);
+    } else {
+      zone = ZoneOffset.UTC;
+      System.out.println("[HAMC] :: zone defaults to UTC");
+    }
     initMetrics(shopItemHistoryRepository.findAll());
   }
 
@@ -37,7 +55,8 @@ public class HourlyActivityMetricCollector extends
   public BigDecimal calculateValue(ShopItemHistoryEntry entity, Long startTimestamp,
       Long endTimestamp) {
     // Convert entity timestamp to LocalDateTime
-    LocalDateTime entityTime = Instant.ofEpochMilli(entity.getTimestamp()).atZone(ZoneOffset.UTC)
+    LocalDateTime entityTime = Instant.ofEpochMilli(entity.getTimestamp())
+        .atZone(zone)
         .toLocalDateTime();
     int entityHour = entityTime.getHour(); // Get the hour of the transaction
 
@@ -48,7 +67,7 @@ public class HourlyActivityMetricCollector extends
     long transactionCount = entries.stream()
         .filter(entry -> {
           LocalDateTime entryTime = Instant.ofEpochMilli(entry.getTimestamp())
-              .atZone(ZoneOffset.UTC)
+              .atZone(zone)
               .toLocalDateTime();
           return entryTime.getHour() == entityHour;
         })
@@ -59,7 +78,8 @@ public class HourlyActivityMetricCollector extends
 
   @Override
   public String[] getKeys(ShopItemHistoryEntry entity) {
-    LocalDateTime entityTime = Instant.ofEpochMilli(entity.getTimestamp()).atZone(ZoneOffset.UTC)
+    ZoneOffset offset = zone.getRules().getOffset(Instant.now());
+    LocalDateTime entityTime = Instant.ofEpochMilli(entity.getTimestamp()).atZone(offset)
         .toLocalDateTime();
     int hour = entityTime.getHour();
     return new String[]{entity.getUserId(), "" + hour};
