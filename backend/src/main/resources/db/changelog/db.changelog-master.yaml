@@ -2,6 +2,12 @@ databaseChangeLog:
   - changeSet:
       id: 1-add-hidden-column
       author: Paulsenik
+      preConditions:
+        onFail: MARK_RAN
+        onError: MARK_RAN
+        preConditions:
+          - tableExists:
+              tableName: PRoST_User
       changes:
         - addColumn:
             tableName: PRoST_User
@@ -10,9 +16,16 @@ databaseChangeLog:
                   name: hidden
                   type: BOOLEAN
                   defaultValue: false
+
   - changeSet:
       id: 2-add-kiosk-disable-buy
       author: Paulsenik
+      preConditions:
+        onFail: MARK_RAN
+        onError: MARK_RAN
+        preConditions:
+          - tableExists:
+              tableName: PRoST_User
       changes:
         - addColumn:
             tableName: PRoST_User
