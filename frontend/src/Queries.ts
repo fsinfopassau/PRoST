@@ -1,12 +1,20 @@
 import axios from "axios";
-import { ShopHistoryEntryPage } from "./Types/ShopHistory";
-import { ShopItem } from "./Types/ShopItem";
-import { AuthorizedUser, User } from "./Types/User";
-import { getEncodedCredentials, setAuthorizedUser } from "./SessionInfo";
-import { InvoicePage } from "./Types/Invoice";
-import { TransactionPage } from "./Types/Transaction";
-import { UserMetricType as UserMetricType, UserMetricEntry as UserMetricEntry, TimeSpan, ItemMetricType as ItemMetricType, ItemMetricEntry as ItemMetricEntry, CompositeMetricEntry as CompositeMetricEntry, CompositeMetricType as CompositeMetricType } from "./Types/Statistics";
-import { toast } from "react-toastify";
+import {ShopHistoryEntryPage} from "./Types/ShopHistory";
+import {ShopItem} from "./Types/ShopItem";
+import {AuthorizedUser, User} from "./Types/User";
+import {getEncodedCredentials, setAuthorizedUser} from "./SessionInfo";
+import {InvoicePage} from "./Types/Invoice";
+import {TransactionPage} from "./Types/Transaction";
+import {
+  CompositeMetricEntry as CompositeMetricEntry,
+  CompositeMetricType as CompositeMetricType,
+  ItemMetricEntry as ItemMetricEntry,
+  ItemMetricType as ItemMetricType,
+  TimeSpan,
+  UserMetricEntry as UserMetricEntry,
+  UserMetricType as UserMetricType
+} from "./Types/Statistics";
+import {toast} from "react-toastify";
 
 export const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8081";
 
@@ -182,9 +190,9 @@ export async function createTransaction(receiver: User, value: string, actionTyp
 }
 
 export async function getAllTransactions(
-  size: number,
-  page: number,
-  receiverId: string | undefined
+    size: number,
+    page: number,
+    receiverId: string | undefined
 ): Promise<TransactionPage | undefined> {
   const params = receiverId ? "&receiverId=" + receiverId : "";
 
@@ -418,24 +426,7 @@ export async function uploadItemDisplayPicture(item: ShopItem, file: File): Prom
 }
 
 export async function getItemDisplayPicture(item: ShopItem): Promise<string | undefined> {
-  try {
-    const result = await fetch(apiUrl + `/api/shop/item/picture?id=${item.id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Basic ${getEncodedCredentials()}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (result.ok && result.status === 200) {
-      const blob = await result.blob();
-      return URL.createObjectURL(blob);
-    }
-  } catch (error) {
-    // If there's a network error or any other error, return null
-    return undefined;
-  }
-  return undefined;
+  return `${apiUrl}/api/shop/item/picture?id=${item.id}`;
 }
 
 export async function getPersonalInvoices(): Promise<InvoicePage | undefined> {
@@ -459,12 +450,12 @@ export async function getPersonalInvoices(): Promise<InvoicePage | undefined> {
 }
 
 export async function getAllInvoices(
-  page: number,
-  userId: string | undefined,
-  mailed: boolean | undefined
+    page: number,
+    userId: string | undefined,
+    mailed: boolean | undefined
 ): Promise<InvoicePage | undefined> {
   const params =
-    (userId ? "&userId=" + userId : "") + (mailed === undefined ? "" : "&mailed=" + (mailed ? "true" : "false"));
+      (userId ? "&userId=" + userId : "") + (mailed === undefined ? "" : "&mailed=" + (mailed ? "true" : "false"));
 
   try {
     const response = await fetch(`${apiUrl}/api/invoice/list?s=20&p=` + page + params, {
