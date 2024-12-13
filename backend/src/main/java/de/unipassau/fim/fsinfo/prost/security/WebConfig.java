@@ -33,7 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
 
   public static final String[] AUTH_WHITELIST = {
       "/api/authentication",
-      "/api/statistics/metric/**",
+      "/api/shop/item/picture",
   };
 
   public static final String[] USER_SPACE = {
@@ -44,6 +44,7 @@ public class WebConfig implements WebMvcConfigurer {
       "/api/transaction/me",
       "/api/invoice/me",
       "/api/shop/item/**",
+      "/api/statistics/metric/**",
   };
 
   public static final String[] KIOSK_SPACE = {

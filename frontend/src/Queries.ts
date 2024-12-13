@@ -418,24 +418,7 @@ export async function uploadItemDisplayPicture(item: ShopItem, file: File): Prom
 }
 
 export async function getItemDisplayPicture(item: ShopItem): Promise<string | undefined> {
-  try {
-    const result = await fetch(apiUrl + `/api/shop/item/picture?id=${item.id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Basic ${getEncodedCredentials()}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (result.ok && result.status === 200) {
-      const blob = await result.blob();
-      return URL.createObjectURL(blob);
-    }
-  } catch (error) {
-    // If there's a network error or any other error, return null
-    return undefined;
-  }
-  return undefined;
+  return `${apiUrl}/api/shop/item/picture?id=${item.id}`;
 }
 
 export async function getPersonalInvoices(): Promise<InvoicePage | undefined> {

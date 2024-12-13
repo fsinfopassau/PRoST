@@ -16,16 +16,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -65,18 +60,30 @@ public class ShopController {
   }
 
   @GetMapping("/item/picture")
-  public ResponseEntity<FileSystemResource> getDisplayImage(@RequestParam String id) {
+  public ResponseEntity<FileSystemResource> getDisplayImage(@RequestParam String id,
+                                                            @RequestHeader(value = HttpHeaders.IF_MODIFIED_SINCE, required = false) String ifModifiedSince) {
     Optional<ShopItem> item = itemRepository.findById(id);
     if (item.isPresent()) {
 
-      Optional<File> file = fileStorageService.getItemPicture(item.get());
-      if (file.isPresent()) {
-        FileSystemResource resource = new FileSystemResource(file.get());
+      Optional<File> fileO = fileStorageService.getItemPicture(item.get());
+      if (fileO.isPresent()) {
+        File file = fileO.get();
+        long lastModified = file.lastModified();
+
+        // Handle last modified check
+        if (ifModifiedSince != null && Long.parseLong(ifModifiedSince) >= lastModified) {
+          return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        }
+
+        FileSystemResource resource = new FileSystemResource(file);
 
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
             .header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + file.get().getName() + "\"")
+                "attachment; filename=\"" + file.getName() + "\"")
+                .header(HttpHeaders.CACHE_CONTROL,"max-age=31536000, public, immutable")
+                .header(HttpHeaders.ETAG, String.valueOf(file.lastModified()))
+                .header(HttpHeaders.LAST_MODIFIED, String.valueOf(file.lastModified()))
             .body(resource);
       } else {
         return ResponseEntity.noContent().build();
