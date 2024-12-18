@@ -43,4 +43,9 @@ public abstract class AbstractItemMetricCollector extends AbstractMetricCollecto
     Optional<ShopItem> result = shopItemRepository.findById(key);
     return result.orElse(null);
   }
+
+  @Override
+  protected boolean filterOut(ShopItem entity) {
+    return false;
+  }
 }

@@ -65,6 +65,16 @@ public class HourlyActivityMetricCollector extends
   }
 
   @Override
+  protected boolean filterOut(ShopItemHistoryEntry entity) {
+    Optional<ProstUser> userO = userRepository.findById(entity.getUserId());
+    if (userO.isPresent()) {
+      ProstUser user = userO.get();
+      return user.getHidden();
+    }
+    return false;
+  }
+
+  @Override
   public String[] getKeys(ShopItemHistoryEntry entity) {
     ZoneOffset offset = zone.getRules().getOffset(Instant.now());
     LocalDateTime entityTime = Instant.ofEpochMilli(entity.getTimestamp()).atZone(offset)
