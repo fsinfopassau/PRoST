@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
+import de.unipassau.fim.fsinfo.prost.service.statistics.MetricService;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,9 @@ class UserServiceTest {
   private UserService userService;
 
   @Mock
+  private MetricService metricService;
+
+  @Mock
   private UserRepository userRepository;
 
   private ProstUser prostUser;
@@ -27,7 +31,7 @@ class UserServiceTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    userService = new UserService(userRepository);
+    userService = new UserService(userRepository, metricService);
 
     prostUser = new ProstUser("testuser", "User One", "user1@test.com", true, false);
   }

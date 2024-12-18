@@ -90,8 +90,17 @@ public abstract class AbstractMetricCollector<T> {
 
   protected abstract T findByKey(String key);
 
+  /**
+   * @param entity
+   * @return true if entity should be ignored in the metrics.
+   */
+  protected abstract boolean filterOut(T entity);
+
   protected void updateEntry(T entity) {
     long now = Instant.now().toEpochMilli();
+    if (filterOut(entity)) {
+      return;
+    }
     metricEntries_Weekly.put(getKey(entity),
         calculateValue(entity, TimeSpan.WEEK, now - WEEK_MILLIS, now));
     metricEntries_Monthly.put(getKey(entity),

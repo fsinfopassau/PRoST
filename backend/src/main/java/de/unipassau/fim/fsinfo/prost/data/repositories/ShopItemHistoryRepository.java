@@ -11,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface ShopItemHistoryRepository extends JpaRepository<ShopItemHistoryEntry, Long> {
 
+  List<ShopItemHistoryEntry> findByUserId(String userId);
+
   Page<ShopItemHistoryEntry> findByUserIdEquals(String username, Pageable pageable);
 
   List<ShopItemHistoryEntry> findByUserIdAndTimestampBetween(String userId, Long startTimestamp,

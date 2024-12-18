@@ -72,4 +72,9 @@ public abstract class AbstractUserMetricCollector extends AbstractMetricCollecto
     Optional<ProstUser> result = userRepository.findById(key);
     return result.orElse(null);
   }
+
+  @Override
+  protected boolean filterOut(ProstUser entity) {
+    return entity.getHidden();
+  }
 }

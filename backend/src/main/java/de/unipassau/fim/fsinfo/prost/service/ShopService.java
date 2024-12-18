@@ -128,9 +128,11 @@ public class ShopService {
       historyRepository.save(historyEntry);
       bearerLastBuy.put(bearerId, Instant.now().toEpochMilli());
 
-      AbstractMetricCollector.updateAllEntriesFor(ProstUser.class, user);
-      AbstractMetricCollector.updateAllEntriesFor(ShopItem.class, item);
-      AbstractMetricCollector.updateAllEntriesFor(ShopItemHistoryEntry.class, historyEntry);
+      if (!user.getHidden()) {
+        AbstractMetricCollector.updateAllEntriesFor(ProstUser.class, user);
+        AbstractMetricCollector.updateAllEntriesFor(ShopItem.class, item);
+        AbstractMetricCollector.updateAllEntriesFor(ShopItemHistoryEntry.class, historyEntry);
+      }
       return true;
     } else {
       System.out.println("[SS] :: No Transaction found!");

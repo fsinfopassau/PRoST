@@ -30,9 +30,9 @@ public class ItemPurchaseMetricCollector extends
       ShopItemRepository shopItemRepository, UserRepository userRepository) {
     super(ShopItemHistoryEntry.class);
     this.shopItemHistoryRepository = shopItemHistoryRepository;
-    initMetrics(shopItemHistoryRepository.findAll());
     this.shopItemRepository = shopItemRepository;
     this.userRepository = userRepository;
+    initMetrics(shopItemHistoryRepository.findAll());
   }
 
   @Override
@@ -47,6 +47,16 @@ public class ItemPurchaseMetricCollector extends
     }
 
     return valueO.orElse(BigDecimal.ZERO);
+  }
+
+  @Override
+  protected boolean filterOut(ShopItemHistoryEntry entity) {
+    Optional<ProstUser> userO = userRepository.findById(entity.getUserId());
+    if (userO.isPresent()) {
+      ProstUser user = userO.get();
+      return user.getHidden();
+    }
+    return false;
   }
 
   @Override

@@ -4,6 +4,7 @@ import de.unipassau.fim.fsinfo.prost.data.DataFilter;
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
 import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractMetricCollector;
+import de.unipassau.fim.fsinfo.prost.service.statistics.MetricService;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -15,10 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
   private final UserRepository users;
+  private final MetricService metricService;
 
   @Autowired
-  public UserService(UserRepository users) {
+  public UserService(UserRepository users, MetricService metricService) {
     this.users = users;
+    this.metricService = metricService;
   }
 
   @Transactional
@@ -85,7 +88,6 @@ public class UserService {
 
     if (user.isPresent()) {
       users.delete(user.get());
-      AbstractMetricCollector.removeAllEntriesFor(ProstUser.class, user.get());
       return true;
     }
     return false;
@@ -140,6 +142,12 @@ public class UserService {
       ProstUser u = user.get();
       u.setHidden(value);
       users.save(u);
+
+      if (value) {
+        metricService.removeFromMetrics(u);
+      } else {
+        metricService.addToMetrics(u);
+      }
       return true;
     }
     return false;
