@@ -1,23 +1,20 @@
-import { ScrollArea, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from "@radix-ui/react-scroll-area";
-import { HistoryEntryDisplay } from "./HistoryEntryDisplay";
-import { useEffect, useState } from "react";
-import { ShopHistoryEntry } from "../../Types/ShopHistory";
-import { User } from "../../Types/User";
-import { ShopItem } from "../../Types/ShopItem";
-import { getAllShopItems, getAllUsers, getHistory, getItemMetric } from "../../Queries";
-import { formatMoney } from "../../Format";
-import { MetricInfo } from "./MetricOverview";
-import { isOnlyUser } from "../../SessionInfo";
-import { CompositeMetricType, ItemMetricType, TimeSpan } from "../../Types/Statistics";
-import { ItemMetricPieChart } from "../Chart/PieChart";
-import { CompositeMetricLineChart } from "../Chart/LineChart";
+import {useEffect, useState} from "react";
+import {ShopHistoryEntry} from "../../Types/ShopHistory";
+import {User} from "../../Types/User";
+import {ShopItem} from "../../Types/ShopItem";
+import {getAllShopItems, getAllUsers, getHistory, getItemMetric} from "../../Queries";
+import {formatMoney} from "../../Format";
+import {MetricInfo} from "./MetricOverview";
+import {CompositeMetricType, ItemMetricType, TimeSpan} from "../../Types/Statistics";
+import {ItemMetricPieChart} from "../Chart/PieChart";
+import {CompositeMetricLineChart} from "../Chart/LineChart";
 
 export function AllSystemStatistics(props: { timeSpan: TimeSpan }) {
   const [history, setHistory] = useState<ShopHistoryEntry[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [items, setItems] = useState<ShopItem[]>([]);
   const [totalRevenue, setTotalRevenue] = useState<number>(0);
-  const { timeSpan } = props;
+  const {timeSpan} = props;
 
   useEffect(reloadShopItems, []);
 
@@ -29,16 +26,16 @@ export function AllSystemStatistics(props: { timeSpan: TimeSpan }) {
 
   useEffect(() => {
     getAllUsers()
-      .then((userList) => {
-        if (userList === undefined) {
-          setUsers([]);
-        } else {
-          setUsers(userList);
-        }
-      })
-      .catch(() => {
+    .then((userList) => {
+      if (userList === undefined) {
         setUsers([]);
-      });
+      } else {
+        setUsers(userList);
+      }
+    })
+    .catch(() => {
+      setUsers([]);
+    });
   }, []);
 
   useEffect(() => {
@@ -68,46 +65,27 @@ export function AllSystemStatistics(props: { timeSpan: TimeSpan }) {
   }
 
   return (
-    <>
-      {isOnlyUser() ? (
-        <></>
-      ) : (
-        <ScrollArea className="DisplayCard">
-          <ScrollAreaViewport style={{ maxHeight: "20rem" }}>
-            <h3 className="bold">Kürzliche Käufe</h3>
-            <table className="Table">
-              <tbody>
-                {history.map((item) => (
-                  <HistoryEntryDisplay entry={item} key={item.id} showHidden={false} />
-                ))}
-              </tbody>
-            </table>
-          </ScrollAreaViewport>
-          <ScrollAreaScrollbar className="Scrollbar" orientation="vertical">
-            <ScrollAreaThumb className="ScrollbarThumb" />
-          </ScrollAreaScrollbar>
-          <ScrollAreaScrollbar className="Scrollbar" orientation="horizontal">
-            <ScrollAreaThumb className="ScrollbarThumb" />
-          </ScrollAreaScrollbar>
-        </ScrollArea>
-      )}
-      <div className="GridContainer" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(24rem, 1fr))" }}>
-        <MetricInfo title="Nutzer" value={String(users.length)} desc="" />
-        <MetricInfo title="Gegenstände" value={String(items.length)} desc="" />
-        <MetricInfo title="Guthaben" value={formatMoney(getUserDebt())} desc="" />
-        <MetricInfo title="Einnahmen" value={formatMoney(totalRevenue)} desc="" />
-      </div>
-      <div className="" style={{ display: "flex", flexFlow: "row wrap", justifyContent: "space-around" }}>
-        <ItemMetricPieChart title="Verkaufsschlager" desc="" type={ItemMetricType.TOP_SELLING_ITEMS} time={timeSpan} />
-        <CompositeMetricLineChart
-          type={CompositeMetricType.HOURLY_ACTIVITY}
-          title="Aktivität"
-          desc="Käufe zur Tageszeit"
-          time={timeSpan}
-          filterFirst={false}
-          dataKey={undefined}
-        />
-      </div>
-    </>
+      <>
+        <div className="GridContainer"
+             style={{gridTemplateColumns: "repeat(auto-fill, minmax(24rem, 1fr))"}}>
+          <MetricInfo title="Nutzer" value={String(users.length)} desc=""/>
+          <MetricInfo title="Gegenstände" value={String(items.length)} desc=""/>
+          <MetricInfo title="Guthaben" value={formatMoney(getUserDebt())} desc=""/>
+          <MetricInfo title="Einnahmen" value={formatMoney(totalRevenue)} desc=""/>
+        </div>
+        <div className=""
+             style={{display: "flex", flexFlow: "row wrap", justifyContent: "space-around"}}>
+          <ItemMetricPieChart title="Verkaufsschlager" desc=""
+                              type={ItemMetricType.TOP_SELLING_ITEMS} time={timeSpan}/>
+          <CompositeMetricLineChart
+              type={CompositeMetricType.HOURLY_ACTIVITY}
+              title="Aktivität"
+              desc="Käufe zur Tageszeit"
+              time={timeSpan}
+              filterFirst={false}
+              dataKey={undefined}
+          />
+        </div>
+      </>
   );
 }
