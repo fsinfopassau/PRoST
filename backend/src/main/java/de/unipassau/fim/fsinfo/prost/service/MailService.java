@@ -76,7 +76,7 @@ public class MailService {
           "\nBitte überweise den Betrag mittels PayPal [1] oder gib ihn mir bei der nächsten Gelegenheit persönlich in bar.\n"
               + "\n"
               + "Viele Grüße\n"
-              + "Bierjam\n"
+              + "Markus\n"
               + "\n"
               + "[1] https://paypal.me/fsinfokaffee/" + Math.abs(invoice.getBalance().doubleValue())
               + "\n";
