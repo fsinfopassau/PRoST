@@ -21,15 +21,11 @@ export function RootTab() {
     console.log("load profile");
   }, []);
 
-  function navigateGit() {
-    window.open("https://github.com/fsinfopassau/PRoST", "_blank");
-  }
-
   return (
     <>
       <div>
         <h1>
-          <img onClick={navigateGit} src={`${BASE_PATH}/icons/happy-manje/happy beer.svg`} id="MainIcon" alt="Logo" />
+          <img src={`${BASE_PATH}/icons/happy-manje/happy beer.svg`} id="MainIcon" alt="Logo" />
           PRoST
         </h1>
         {user === undefined ? (
