@@ -44,11 +44,13 @@ public abstract class AbstractUserMetricCollector extends AbstractMetricCollecto
     List<MetricEntry<ProstUser>> sanitized = new ArrayList<>();
 
     for (MetricEntry<ProstUser> entry : result) {
-      if (!entry.entity().getEnabled()) {
+      // entity is null if the user was deleted since the last metric reset
+      if (entry.entity() == null || Boolean.FALSE.equals(entry.entity().getEnabled())) {
         continue;
       }
 
-      if (entry.entity().getHidden()) {
+      // treat unknown (null) visibility as hidden
+      if (!Boolean.FALSE.equals(entry.entity().getHidden())) {
         sanitized.add(getSanitizedEntry(entry));
       } else {
         sanitized.add(entry);
@@ -75,6 +77,6 @@ public abstract class AbstractUserMetricCollector extends AbstractMetricCollecto
 
   @Override
   protected boolean filterOut(ProstUser entity) {
-    return entity.getHidden();
+    return !Boolean.FALSE.equals(entity.getHidden());
   }
 }

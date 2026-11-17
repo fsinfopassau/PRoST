@@ -54,7 +54,7 @@ public class ItemPurchaseMetricCollector extends
     Optional<ProstUser> userO = userRepository.findById(entity.getUserId());
     if (userO.isPresent()) {
       ProstUser user = userO.get();
-      return user.getHidden();
+      return !Boolean.FALSE.equals(user.getHidden());
     }
     return false;
   }
@@ -81,7 +81,7 @@ public class ItemPurchaseMetricCollector extends
     Optional<ProstUser> userO = userRepository.findById(userId);
     ProstUser user = ProstUser.getAnonymous();
 
-    if (userO.isPresent() && !userO.get().getHidden()) {
+    if (userO.isPresent() && Boolean.FALSE.equals(userO.get().getHidden())) {
       user = userO.get();
     }
 

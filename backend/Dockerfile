@@ -5,7 +5,7 @@ COPY ./src ./src/
 RUN mvn package -DskipTests
 
 # Run
-FROM docker.io/library/openjdk:17-slim
+FROM docker.io/library/eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=backend /app/backend/target/*.jar ./backend.jar
 EXPOSE 8081

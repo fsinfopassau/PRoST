@@ -41,6 +41,13 @@ public class TransactionEntry {
   @Column(nullable = false)
   private Long timestamp;
 
+  /**
+   * Optional client-generated id of the request that created this entry. Unique, so a repeated
+   * request (double-click, retry after a lost response) can never be booked twice.
+   */
+  @Column(unique = true, length = 64)
+  private String requestId;
+
   public TransactionEntry(String senderId, String receiverId, String bearerId,
       TransactionType type,
       BigDecimal previous, BigDecimal amount) {

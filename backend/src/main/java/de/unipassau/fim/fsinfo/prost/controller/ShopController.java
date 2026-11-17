@@ -15,11 +15,13 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -99,16 +101,30 @@ public class ShopController {
     return ResponseEntity.badRequest().build();
   }
 
+  /**
+   * @param requestId optional client-generated id of this purchase. If the client did not get the
+   *                  response (network drop) it retries with the same id; an already booked
+   *                  purchase is then answered with 200 instead of being charged again.
+   */
   @PostMapping("/item/consume")
   public ResponseEntity<String> consume(@RequestParam String id, @RequestParam String userId,
-      @RequestParam(required = false) Integer n, Authentication authentication) {
+      @RequestParam(required = false) Integer n,
+      @RequestParam(required = false) String requestId, Authentication authentication) {
     if (authentication == null) {
       return ResponseEntity.badRequest().build();
     }
     n = (n == null ? 1 : n);
+    if (requestId != null && (requestId.isBlank() || requestId.length() > 64)) {
+      return ResponseEntity.badRequest().body("invalid requestId");
+    }
 
     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
     String bearerId = userDetails.getUsername();
+
+    // before the cooldown check: a retry right after a lost response must not get "on cooldown"
+    if (shopService.isAlreadyBooked(requestId, bearerId, userId)) {
+      return ResponseEntity.ok("already booked");
+    }
 
     Collection<UserAccessRole> roles = authService.getRoles(authentication);
 
@@ -132,9 +148,17 @@ public class ShopController {
       }
     }
 
-    if (shopService.consume(id, userId,
-        n, bearerId, highestPermission.get())) {
-      return ResponseEntity.ok().build();
+    try {
+      if (shopService.consume(id, userId,
+          n, bearerId, highestPermission.get(), requestId)) {
+        return ResponseEntity.ok().build();
+      }
+    } catch (DataAccessException | TransactionSystemException e) {
+      // a concurrent duplicate of the same request was committed first (unique requestId)
+      if (shopService.isAlreadyBooked(requestId, bearerId, userId)) {
+        return ResponseEntity.ok("already booked");
+      }
+      throw e;
     }
     return ResponseEntity.badRequest().body("Could not consume!");
 

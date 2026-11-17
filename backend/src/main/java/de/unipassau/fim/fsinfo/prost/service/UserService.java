@@ -28,19 +28,25 @@ public class UserService {
   public Optional<ProstUser> createUser(String userName, String displayName, String email,
       boolean manualCreation) {
 
-    if (users.findById(userName).isPresent()) {
-      System.out.println("[US] :: " + userName + " :: user-creation failed :: exists ");
-      return Optional.empty();
-    }
-
     if (!DataFilter.isValidString(userName, "userName")) {
       System.out.println(
           "[US] :: " + userName + " :: user-creation failed [userName=" + userName + "] ");
       return Optional.empty();
     }
 
+    // Filter BEFORE the existence check, otherwise e.g. "alice!" passes the check and the
+    // save() of the filtered id "alice" overwrites an existing user (balance reset to 0).
     if (manualCreation) {
       userName = DataFilter.filterNameId(userName);
+      if (userName.isEmpty()) {
+        System.out.println("[US] :: user-creation failed :: id empty after filtering");
+        return Optional.empty();
+      }
+    }
+
+    if (users.findById(userName).isPresent()) {
+      System.out.println("[US] :: " + userName + " :: user-creation failed :: exists ");
+      return Optional.empty();
     }
 
     // Allow only valid or no mail at all.
@@ -87,6 +93,9 @@ public class UserService {
     Optional<ProstUser> user = users.findById(id);
 
     if (user.isPresent()) {
+      // remove from the in-memory leaderboards first, otherwise they reference a missing user
+      // (null entity -> NPE on every leaderboard request until the hourly reset)
+      metricService.removeFromMetrics(user.get());
       users.delete(user.get());
       return true;
     }

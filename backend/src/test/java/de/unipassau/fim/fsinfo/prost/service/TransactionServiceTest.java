@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import de.unipassau.fim.fsinfo.prost.data.TransactionType;
@@ -184,5 +187,68 @@ public class TransactionServiceTest {
     assertFalse(result.isEmpty());
     assertEquals(1, result.getTotalElements());
     assertEquals(receiver.getId(), result.getContent().get(0).getReceiverId());
+  }
+
+  @Test
+  public void testMoneyTransfer_RepeatedRequestId_NotBookedTwice() {
+    TransactionEntry existing = new TransactionEntry(null, receiver.getId(), bearer.getId(),
+        TransactionType.DEPOSIT, BigDecimal.ZERO, new BigDecimal("5.00"));
+    existing.setRequestId("req-1");
+    when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
+    when(userRepository.findById(bearer.getId())).thenReturn(Optional.of(bearer));
+    when(transactionRepository.findFirstByRequestId("req-1")).thenReturn(Optional.of(existing));
+
+    Optional<TransactionEntry> result = transactionService.moneyTransfer(Optional.empty(),
+        receiver.getId(), bearer.getId(), new BigDecimal("5.00"), TransactionType.DEPOSIT,
+        "req-1", null);
+
+    assertEquals(existing, result.orElseThrow());
+    assertEquals(0, receiver.getBalance().signum()); // balance untouched
+    verify(transactionRepository, never()).save(any());
+    verify(userRepository, never()).save(any());
+  }
+
+  @Test
+  public void testMoneyTransfer_NewRequestId_BookedWithId() {
+    when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
+    when(userRepository.findById(bearer.getId())).thenReturn(Optional.of(bearer));
+    when(transactionRepository.findFirstByRequestId("req-2")).thenReturn(Optional.empty());
+
+    Optional<TransactionEntry> result = transactionService.moneyTransfer(Optional.empty(),
+        receiver.getId(), bearer.getId(), new BigDecimal("5.00"), TransactionType.DEPOSIT,
+        "req-2", null);
+
+    assertEquals("req-2", result.orElseThrow().getRequestId());
+    assertEquals(0, receiver.getBalance().compareTo(new BigDecimal("5.00")));
+  }
+
+  @Test
+  public void testMoneyTransfer_ChangeWithOutdatedExpectedBalance_Conflict() {
+    receiver.setBalance(new BigDecimal("8.50")); // a purchase happened after the admin looked
+    when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
+    when(userRepository.findById(bearer.getId())).thenReturn(Optional.of(bearer));
+
+    BalanceConflictException e = assertThrows(BalanceConflictException.class,
+        () -> transactionService.moneyTransfer(Optional.empty(), receiver.getId(),
+            bearer.getId(), new BigDecimal("15.00"), TransactionType.CHANGE, null,
+            new BigDecimal("10.00")));
+
+    assertEquals(0, e.getCurrentBalance().compareTo(new BigDecimal("8.50")));
+    assertEquals(0, receiver.getBalance().compareTo(new BigDecimal("8.50")));
+    verify(userRepository, never()).save(any());
+  }
+
+  @Test
+  public void testMoneyTransfer_ChangeWithCurrentExpectedBalance_Applied() {
+    receiver.setBalance(new BigDecimal("10.00"));
+    when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
+    when(userRepository.findById(bearer.getId())).thenReturn(Optional.of(bearer));
+
+    Optional<TransactionEntry> result = transactionService.moneyTransfer(Optional.empty(),
+        receiver.getId(), bearer.getId(), new BigDecimal("15.00"), TransactionType.CHANGE, null,
+        new BigDecimal("10.0")); // scale differs, value equal
+
+    assertTrue(result.isPresent());
+    assertEquals(0, receiver.getBalance().compareTo(new BigDecimal("15.00")));
   }
 }

@@ -13,8 +13,9 @@ import de.unipassau.fim.fsinfo.prost.data.repositories.UserRepository;
 import de.unipassau.fim.fsinfo.prost.service.statistics.AbstractMetricCollector;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class ShopService {
   /**
    * Authorized User-ID, Unix-Timestamp
    */
-  final private HashMap<String, Long> bearerLastBuy = new HashMap<>();
+  final private ConcurrentHashMap<String, Long> bearerLastBuy = new ConcurrentHashMap<>();
 
   @Autowired
   public ShopService(ShopItemRepository itemRepository, ShopItemHistoryRepository historyRepository,
@@ -50,11 +51,26 @@ public class ShopService {
   }
 
   public boolean hasBearerCooldown(String userId) {
-    if (bearerLastBuy.containsKey(userId)) {
-      Long lastTime = bearerLastBuy.get(userId);
-      return lastTime + buyCooldownTime > Instant.now().toEpochMilli();
-    }
-    return false;
+    Long lastTime = bearerLastBuy.get(userId);
+    return lastTime != null && lastTime + buyCooldownTime > Instant.now().toEpochMilli();
+  }
+
+  /**
+   * Atomically checks the cooldown and, if it is not active, starts it. Two parallel requests of
+   * the same bearer can therefore never both pass (check-then-act race).
+   *
+   * @return true if the cooldown was acquired by this call.
+   */
+  private boolean tryAcquireCooldown(String bearerId, long now) {
+    AtomicBoolean acquired = new AtomicBoolean(false);
+    bearerLastBuy.compute(bearerId, (key, lastTime) -> {
+      if (lastTime != null && lastTime + buyCooldownTime > now) {
+        return lastTime;
+      }
+      acquired.set(true);
+      return now;
+    });
+    return acquired.get();
   }
 
   // Because checking access-rights before trying to buy determines the error-messages to the client.
@@ -76,9 +92,26 @@ public class ShopService {
     return false;
   }
 
+  /**
+   * @return true if a purchase with this client request id was already booked for this bearer
+   * and user (the client is retrying after it did not receive the response).
+   */
+  public boolean isAlreadyBooked(String requestId, String bearerId, String userId) {
+    return transactionService.findByRequestId(requestId)
+        .filter(entry -> entry.getTransactionType() == TransactionType.BUY
+            && entry.getBearerId().equals(bearerId) && entry.getReceiverId().equals(userId))
+        .isPresent();
+  }
+
   @Transactional
   public boolean consume(String itemId, String userId, int amount, String bearerId,
       UserAccessRole bearerRole) {
+    return consume(itemId, userId, amount, bearerId, bearerRole, null);
+  }
+
+  @Transactional
+  public boolean consume(String itemId, String userId, int amount, String bearerId,
+      UserAccessRole bearerRole, String requestId) {
     Optional<ShopItem> itemO = itemRepository.findById(itemId);
     Optional<ProstUser> userO = userRepository.findById(userId);
     Optional<ProstUser> bearerUser = userRepository.findById(bearerId);
@@ -91,11 +124,6 @@ public class ShopService {
     if (!hasBearerPermissions(itemId, userId, amount, bearerId, bearerRole)) {
       System.out.println(
           "[SS] :: " + bearerId + " does not have permissions for buyprocess for " + userId);
-      return false;
-    }
-
-    if (hasBearerCooldown(bearerId)) {
-      System.out.println("[SS] :: " + userO + " on Cooldown!");
       return false;
     }
 
@@ -117,18 +145,34 @@ public class ShopService {
       return false;
     }
 
-    Optional<TransactionEntry> transaction = transactionService.moneyTransfer(
-        Optional.empty(), user.getId(), bearer.getId(),
-        item.getPrice().abs().multiply(BigDecimal.valueOf(amount).abs()), TransactionType.BUY);
+    long now = Instant.now().toEpochMilli();
+    if (!tryAcquireCooldown(bearerId, now)) {
+      System.out.println("[SS] :: " + bearerId + " on Cooldown!");
+      return false;
+    }
+
+    if (requestId != null && transactionService.findByRequestId(requestId).isPresent()) {
+      // booked by an earlier attempt of the same request; must not create a second history entry
+      System.out.println("[SS] :: request " + requestId + " already booked");
+      bearerLastBuy.remove(bearerId, now);
+      return isAlreadyBooked(requestId, bearerId, userId);
+    }
+
+    BigDecimal price = item.getPrice().abs().multiply(BigDecimal.valueOf(amount).abs());
+    Optional<TransactionEntry> transaction = requestId == null
+        ? transactionService.moneyTransfer(Optional.empty(), user.getId(), bearer.getId(), price,
+        TransactionType.BUY)
+        // the unique requestId column is the final guard against a concurrent duplicate
+        : transactionService.moneyTransfer(Optional.empty(), user.getId(), bearer.getId(), price,
+            TransactionType.BUY, requestId, null);
 
     if (transaction.isPresent()) {
       ShopItemHistoryEntry historyEntry = new ShopItemHistoryEntry(transaction.get(), item.getId(),
           item.getPrice(),
           amount);
       historyRepository.save(historyEntry);
-      bearerLastBuy.put(bearerId, Instant.now().toEpochMilli());
 
-      if (!user.getHidden()) {
+      if (Boolean.FALSE.equals(user.getHidden())) {
         AbstractMetricCollector.updateAllEntriesFor(ProstUser.class, user);
         AbstractMetricCollector.updateAllEntriesFor(ShopItem.class, item);
         AbstractMetricCollector.updateAllEntriesFor(ShopItemHistoryEntry.class, historyEntry);
@@ -136,6 +180,8 @@ public class ShopService {
       return true;
     } else {
       System.out.println("[SS] :: No Transaction found!");
+      // failed buys should not block the bearer; only remove our own reservation
+      bearerLastBuy.remove(bearerId, now);
       return false;
     }
   }
@@ -150,8 +196,16 @@ public class ShopService {
       return Optional.empty();
     }
 
-    if (itemRepository.existsById(identifier)) {
-      System.out.println("[SS] :: identifier \"" + identifier + "\" already present.");
+    // Filter BEFORE the existence check, otherwise e.g. "Mate!" passes the check and the
+    // save() of the filtered id "mate" overwrites the existing item.
+    String filteredId = DataFilter.filterNameId(identifier);
+    if (filteredId.isEmpty()) {
+      System.out.println("[SS] :: identifier \"" + identifier + "\" is empty after filtering.");
+      return Optional.empty();
+    }
+
+    if (itemRepository.existsById(filteredId)) {
+      System.out.println("[SS] :: identifier \"" + filteredId + "\" already present.");
       return Optional.empty();
     }
 
@@ -160,8 +214,7 @@ public class ShopService {
       return Optional.empty();
     }
 
-    ShopItem item = new ShopItem(DataFilter.filterNameId(identifier), category, displayName,
-        price.abs());
+    ShopItem item = new ShopItem(filteredId, category, displayName, price.abs());
     itemRepository.save(item);
     AbstractMetricCollector.updateAllEntriesFor(ShopItem.class, item);
     return Optional.of(item);

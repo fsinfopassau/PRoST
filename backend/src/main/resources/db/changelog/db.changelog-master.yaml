@@ -34,3 +34,28 @@ databaseChangeLog:
                   name: kiosk
                   type: BOOLEAN
                   defaultValue: true
+
+  - changeSet:
+      id: 3-add-transaction-request-id
+      author: Paulsenik
+      preConditions:
+        onFail: MARK_RAN
+        onError: MARK_RAN
+        preConditions:
+          - tableExists:
+              tableName: PRoST_TransactionHistoryEntry
+          - not:
+              - columnExists:
+                  tableName: PRoST_TransactionHistoryEntry
+                  columnName: requestId
+      changes:
+        - addColumn:
+            tableName: PRoST_TransactionHistoryEntry
+            columns:
+              - column:
+                  name: requestId
+                  type: VARCHAR(64)
+        - addUniqueConstraint:
+            tableName: PRoST_TransactionHistoryEntry
+            columnNames: requestId
+            constraintName: UK_transaction_request_id

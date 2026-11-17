@@ -33,11 +33,55 @@ public class TransactionService {
   @Transactional
   public Optional<TransactionEntry> moneyTransfer(Optional<String> senderId, String receiverId,
       String bearerId, BigDecimal amount, TransactionType type) {
+    return moneyTransfer(senderId, receiverId, bearerId, amount, type, null, null);
+  }
+
+  /**
+   * @param requestId       optional client-generated id. If a transaction with this id already
+   *                        exists, nothing is booked and the existing entry is returned (repeated
+   *                        submit / retry). Concurrent duplicates are rejected by the unique
+   *                        column at commit (DataIntegrityViolationException).
+   * @param expectedBalance optional balance the client based this request on. If the current
+   *                        balance differs, a {@link BalanceConflictException} is thrown and
+   *                        nothing is written.
+   */
+  @Transactional
+  public Optional<TransactionEntry> moneyTransfer(Optional<String> senderId, String receiverId,
+      String bearerId, BigDecimal amount, TransactionType type, String requestId,
+      BigDecimal expectedBalance) {
     Optional<ProstUser> receiver = users.findById(receiverId);
     Optional<ProstUser> bearer = users.findById(bearerId);
     Optional<ProstUser> sender = senderId.flatMap(users::findById);
 
-    return moneyTransfer(sender, receiver, bearer, amount, type);
+    // Serialize concurrent balance changes of the same user (otherwise lost updates).
+    receiver.ifPresent(users::lockForUpdate);
+
+    if (requestId != null) {
+      Optional<TransactionEntry> existing = history.findFirstByRequestId(requestId);
+      if (existing.isPresent()) {
+        System.out.println("[TS] :: request " + requestId + " already booked, ignoring repeat");
+        return existing;
+      }
+    }
+
+    // compared against the balance re-read under the lock, so it is always current
+    if (expectedBalance != null && receiver.isPresent()
+        && receiver.get().getBalance().compareTo(expectedBalance) != 0) {
+      throw new BalanceConflictException(expectedBalance, receiver.get().getBalance());
+    }
+
+    Optional<TransactionEntry> entry = moneyTransfer(sender, receiver, bearer, amount, type);
+    if (requestId != null) {
+      entry.ifPresent(e -> {
+        e.setRequestId(requestId);
+        history.save(e);
+      });
+    }
+    return entry;
+  }
+
+  public Optional<TransactionEntry> findByRequestId(String requestId) {
+    return requestId == null ? Optional.empty() : history.findFirstByRequestId(requestId);
   }
 
   @Transactional
