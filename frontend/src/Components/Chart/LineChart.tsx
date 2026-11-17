@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChartData } from "../../Types/Chart";
-import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { getCompositeMetric } from "../../Queries";
 import { CompositeMetricType, CompositeMetricEntry, TimeSpan } from "../../Types/Statistics";
 
@@ -24,16 +24,19 @@ export function MetricLineChart(props: { entries: ChartData[] | undefined; title
           justifyContent: "center",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "0rem", flexDirection: "column" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0rem", flexDirection: "column", width: 800, maxWidth: "100%" }}>
           <div className="bold">{title}</div>
-          <LineChart width={800} height={400} data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
-          </LineChart>
+          {/* scales down on small screens, 800x400 at most as before */}
+          <ResponsiveContainer width="100%" aspect={2}>
+            <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
+            </LineChart>
+          </ResponsiveContainer>
           <div>{desc}</div>
         </div>
       </div>

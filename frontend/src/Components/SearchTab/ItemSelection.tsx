@@ -60,7 +60,7 @@ export function ItemSelection() {
 
     return (
       <>
-        <div style={{ flexGrow: "0" }}>
+        <div className="ShopUserSummary" style={{ flexGrow: "0" }}>
           <UserSummaryCard user={user} />
         </div>
         <div id="category-box">

@@ -69,17 +69,11 @@ h1 {
 }
 
 .UserSummary .Balance {
-  font-size: 2rem;
+  /* pixel font is wider: half the size of the default theme, scales with the screen */
+  font-size: clamp(0.5rem, min(4vw, 4.5vh), 2rem);
   display: flex;
   justify-content: flex-end;
   align-items: center;
-
-  @media screen and (max-width: 450px) {
-    font-size: 1rem;
-  }
-  @media screen and (max-width: 350px) {
-    font-size: 0.5rem;
-  }
 }
 
 .item-desc * {

@@ -134,7 +134,7 @@ export function ItemCheckout() {
         <div id="Checkout">
           <div id="Checkout-Item">
             <h2>{item?.displayName}</h2>
-            <img className="Image" src={imageUrl} alt="Item Image" style={{ width: "100%" }} />
+            <img className="Image" src={imageUrl} alt="Item Image" />
             <div className="SpreadContainer">
               <div style={{ display: "flex", alignItems: "center" }}>
                 <BookmarkIcon />
