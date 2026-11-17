@@ -27,7 +27,8 @@ export function existCredentials(): boolean {
 export function setAuthorizedUser(user: AuthorizedUser) {
   authorizedUser = user;
   localStorage.setItem("user", JSON.stringify(user));
-  console.log("Current User: " + JSON.stringify(user));
+  // never log `user` itself: it contains the encoded LDAP credentials
+  console.log("Current User: " + user.id + " (" + user.accessRole + ")");
 }
 
 export function getAuthorizedUser(): AuthorizedUser | undefined {

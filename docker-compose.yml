@@ -49,7 +49,7 @@ services:
       - prost
   ldap:
     container_name: PRoST-LDAP
-    image: bitnami/openldap:latest
+    image: bitnamilegacy/openldap:latest
     networks:
       - prost
     volumes:

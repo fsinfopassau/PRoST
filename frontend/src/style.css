@@ -14,9 +14,17 @@ input {
   all: unset;
 }
 
+/*
+App shell: the page itself never scrolls. The navbar stays on top and only the content area
+(.MainBody) scrolls. This keeps the navbar visible on long pages (the old "sticky" navbar was
+bound to a 100vh-high parent and scrolled away) and lets pages like the checkout fill exactly
+the remaining screen height.
+*/
 body {
   margin: 0 0;
   height: 100vh;
+  height: 100dvh; /* excludes mobile browser bars where supported */
+  overflow: hidden;
 }
 
 #root {
@@ -26,53 +34,60 @@ body {
 .Main {
   display: flex;
   flex-direction: column;
-  padding: 0 1rem 1rem 1rem;
   margin: 0 auto;
   height: 100%;
+}
+
+.MainBody {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  padding: 0 1rem 1rem 1rem;
 
   @media (max-width: 768px) {
     padding: 0;
   }
 }
 
-.MainBody {
-  flex-grow: 1;
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-}
-
 /*standard*/
 
+/* sizes scale with the screen height too, so short screens (e.g. 800x480 touch displays)
+   do not lose half of their height to headings */
 h1 {
-  font-size: 6rem;
+  font-size: clamp(2.5rem, 11vh, 6rem);
   align-items: center;
   text-align: center;
   justify-content: center;
-  margin: 4rem 0;
+  margin: clamp(0.5rem, 6vh, 4rem) 0;
   font-weight: 500;
 
   @media (max-width: 768px) {
-    font-size: 3rem;
-    margin: 2rem 0;
+    font-size: clamp(2rem, 8vh, 3rem);
+    margin: clamp(0.5rem, 4vh, 2rem) 0;
   }
 }
 
 h2 {
-  font-size: 4rem;
+  font-size: clamp(2rem, min(6vw, 8vh), 4rem);
   align-items: center;
   text-align: center;
   justify-content: center;
   margin: 0.3rem 0;
   font-weight: 500;
+  overflow-wrap: anywhere;
 
   @media (max-width: 768px) {
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 6vh, 2rem);
   }
 }
 
 h3 {
-  font-size: 2rem;
+  font-size: clamp(1rem, min(3vw, 4.5vh), 2rem);
   align-items: center;
   text-align: center;
   justify-content: center;
@@ -157,20 +172,61 @@ a,
 /* Search */
 
 #MainIcon {
-  height: 5rem;
+  height: 0.85em; /* follows the heading size (5rem at the 6rem desktop heading) */
   padding: 0 1rem;
+  vertical-align: middle;
+
+  @media (max-width: 768px) {
+    height: 1.4em;
+  }
 }
 
 #main-search {
-  margin: 1rem auto;
+  margin: clamp(0.5rem, 2vh, 1rem) auto;
   padding: 0 1rem;
   justify-content: center;
   display: flex;
+  flex-shrink: 0;
   width: 80vw;
   min-width: 10%;
   max-width: 100%;
-  font-size: 2rem;
-  height: 4rem;
+  font-size: clamp(1.25rem, 4vh, 2rem);
+  height: clamp(2.75rem, 8vh, 4rem);
+}
+
+/* kiosk: most loyal users (wraps instead of being cut off on narrow screens) */
+.RecentUsers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.5rem, 2vw, 1rem);
+  justify-content: space-between;
+}
+
+/* kiosk user list: two columns on phones instead of one */
+@media (max-width: 600px) {
+  #main-search ~ .SmallGridContainer,
+  .RecentUsers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(9rem, 100%), 1fr));
+    gap: 0.5rem;
+  }
+  .SmallGridContainer .Button.large,
+  .RecentUsers .Button.large {
+    font-size: 1.1rem;
+  }
+}
+
+/* kiosk: big touch buttons for selecting a user */
+.Button.large {
+  display: block;
+  height: clamp(2.5rem, 6vh, 3rem);
+  line-height: clamp(2.5rem, 6vh, 3rem);
+  font-size: clamp(1rem, 2.5vh, 1.5rem);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 /* Login */
@@ -190,71 +246,172 @@ a,
   cursor: pointer;
 }
 
-/* Checkout */
+/*
+Checkout
+Always fits the screen: the page never has to be scrolled to reach the buy button.
+#Checkout fills the space below the navbar and is a size container, so the item image can be
+sized from the space that is left after the fixed-height parts (title, info, counter, button).
+Portrait / tall screens: one column. Short landscape screens (touch displays): two columns.
+*/
 
 #Checkout {
-  flex-grow: 1;
+  --co-gap: clamp(0.25rem, 1.5vh, 1rem);
+  --co-pad: clamp(0.5rem, 2vh, 1.5rem); /* keeps the button clear of the corner links */
+  --co-title: clamp(1.5rem, min(7vw, 8vh), 4rem);
+  --co-info: clamp(1rem, min(3.5vw, 4.5vh), 2rem);
+  --co-ctrl: clamp(2.75rem, 8vh, 3.5rem); /* height of counter buttons and buy button */
+  --co-count: clamp(2rem, 8vh, 4rem);
+  --co-reserve: calc(
+    1.25 * var(--co-title) + 1.6 * var(--co-info) + 2 * var(--co-ctrl) + 5 * var(--co-gap) +
+      var(--co-pad)
+  );
+
+  flex: 1 1 auto;
+  min-height: 0;
+  container-type: size;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  gap: var(--co-gap);
+  padding: 0 clamp(0.5rem, 3vw, 1rem) var(--co-pad);
   overflow: hidden;
 }
 
 #Checkout-Item {
   display: flex;
   flex-direction: column;
-  font-size: 2rem;
-  width: 50rem;
+  align-items: center;
+  gap: var(--co-gap);
+  flex: 0 1 auto;
+  min-height: 0;
+  font-size: var(--co-info);
+  width: min(50rem, 100%, 50vh); /* fallback without container query units */
+  width: min(50rem, 100cqw, 100cqh - var(--co-reserve));
+}
 
-  @media screen and (max-height: 1500px) {
-    max-width: 70vh;
-  }
+#Checkout-Item h2 {
+  font-size: var(--co-title);
+  line-height: 1.2;
+  margin: 0;
+  flex-shrink: 0;
+}
 
-  @media screen and (max-height: 1200px) {
-    max-width: 60vh;
-  }
+#Checkout-Item .Image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  flex: 0 1 auto;
+  min-height: 0; /* shrinks instead of pushing the buy button off screen (e.g. 2-line titles) */
+}
 
-  @media screen and (max-height: 800px) {
-    max-width: 50vh;
-  }
-
-  @media screen and (max-height: 650px) {
-    max-width: 40vh;
-  }
-  @media (max-width: 768px) {
-    font-size: 1rem;
-  }
-  @media screen and (max-height: 550px) {
-    max-width: 30vh;
-  }
+#Checkout-Item .SpreadContainer {
+  width: 100%;
+  flex-shrink: 0;
+  gap: 0.5em;
+}
+#Checkout-Item .SpreadContainer div {
+  font-size: var(--co-info);
+  white-space: nowrap;
+  min-width: 0;
+}
+#Checkout-Item .SpreadContainer div:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#Checkout-Item .SpreadContainer svg {
+  width: 0.8em;
+  height: 0.8em;
+  margin: 0 0.25em 0 0;
+  flex-shrink: 0;
 }
 
 #Checkout-Complete {
-  margin: 1rem;
-  width: 50vw;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  height: var(--co-ctrl);
+  width: clamp(min(100%, 16rem), 50vw, 100%);
   border-radius: 10000px;
+}
+#Checkout-Complete svg {
+  height: 65%;
+  width: auto;
 }
 
 .CheckoutCounter {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
-  width: 50vw;
+  gap: clamp(0.75rem, 3vw, 20px);
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 60rem;
 }
-.CheckoutCounter > div {
-  width: 3.5rem;
-  font-size: 4rem;
+.CheckoutCounter > div,
+.CheckoutCounter > div > div {
+  min-width: 1.4em;
+  font-size: var(--co-count);
+  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  @media (max-width: 768px) {
-    font-size: 2rem;
-  }
 }
-.CheckoutCounter > Button {
+.CheckoutCounter > .Button {
+  box-sizing: border-box;
+  height: var(--co-ctrl);
+  width: clamp(4.5rem, 20vw, 6.75rem);
+  padding: 0;
   border-radius: 10000px;
+}
+.CheckoutCounter > .Button svg {
+  height: 80%;
+  width: auto;
+}
+
+/* short landscape screens: image left, title/price/counter/buy right */
+@media (orientation: landscape) and (max-height: 800px) {
+  #Checkout {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: 1fr auto auto auto auto 1fr;
+    grid-template-areas:
+      "image ."
+      "image title"
+      "image info"
+      "image counter"
+      "image buy"
+      "image .";
+    column-gap: clamp(1rem, 4vw, 3rem);
+    row-gap: var(--co-gap);
+    justify-items: center;
+    align-items: center;
+    padding: var(--co-gap) clamp(0.5rem, 3vw, 2rem) var(--co-pad);
+  }
+  #Checkout-Item {
+    display: contents; /* its children are placed directly into the grid */
+  }
+  #Checkout-Item h2 {
+    grid-area: title;
+    width: 100%;
+  }
+  #Checkout-Item .Image {
+    grid-area: image;
+    width: min(50vh, 45vw); /* fallback without container query units */
+    width: min(100cqh, 55cqw);
+    height: auto;
+  }
+  #Checkout-Item .SpreadContainer {
+    grid-area: info;
+    width: min(100%, 28rem);
+  }
+  .CheckoutCounter {
+    grid-area: counter;
+  }
+  #Checkout-Complete {
+    grid-area: buy;
+    width: min(100%, 28rem);
+  }
 }
 
 /* UserSummary */
@@ -266,41 +423,36 @@ a,
   width: 100%;
 }
 .UserSummary .Balance {
-  font-size: 4rem;
+  font-size: clamp(1rem, min(8vw, 9vh), 4rem);
+  white-space: nowrap;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-
-  @media screen and (max-width: 450px) {
-    font-size: 2rem;
-  }
-  @media screen and (max-width: 350px) {
-    font-size: 1rem;
-  }
 }
 
 /* Tabs */
 
 #tab-changer {
   display: flex;
-  margin-bottom: 0.6rem;
-  padding: 1rem;
-  position: sticky;
+  flex-shrink: 0;
+  margin: 0 1rem 0.6rem 1rem;
+  padding: clamp(0.4rem, 1.5vh, 1rem) 1rem;
+  position: relative;
   z-index: 1;
-  top: 0;
   align-items: center;
   justify-content: left;
-  width: 100%;
 
   @media (max-width: 768px) {
     flex-direction: column;
+    margin: 0 0 0.6rem 0;
     padding: 0.5rem;
   }
 }
 
 #tab-changer > img {
   padding: 0.25rem;
-  height: 100%;
+  height: clamp(2.75rem, 7vh, 4.75rem);
+  width: auto;
 }
 
 .TabsList {
@@ -317,7 +469,7 @@ a,
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.5rem 1rem;
+  padding: clamp(0.35rem, 1vh, 0.5rem) 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -335,11 +487,79 @@ a,
   display: grid;
   grid-template-columns: repeat(
     auto-fill,
-    minmax(14rem, 10fr)
-  ); /* Adjust the minmax values as needed */
+    minmax(min(14rem, 100%), 1fr)
+  ); /* never wider than the screen */
   grid-auto-rows: min-content;
   gap: 1rem;
-  padding: 20px;
+  padding: clamp(0.5rem, 2vw, 20px);
+}
+
+/* shop: item tiles scale with the screen so several items fit side by side
+   (14rem tiles on large screens as before, ~7rem on small touch displays and phones) */
+.ItemGroup > h2 {
+  font-size: clamp(1.5rem, min(5vw, 7vh), 4rem);
+  margin-top: clamp(0.25rem, 1.5vh, 0.75rem);
+}
+.ItemGroup .SmallGridContainer {
+  grid-template-columns: repeat(auto-fill, minmax(min(clamp(7rem, 22vmin, 14rem), 100%), 1fr));
+  gap: clamp(0.5rem, 2vmin, 1rem);
+}
+.ItemGroup .SmallGridContainer > div {
+  min-width: 0;
+}
+
+/* short landscape screens (800x480 / 1024x600 / 1280x720 touch displays, laptops, phones held
+   sideways): user summary as a sidebar next to the items instead of above them, so the first
+   screen shows several items instead of one */
+@supports selector(:has(*)) {
+  @media (orientation: landscape) and (max-height: 800px) {
+    .MainBody:has(> #category-box) {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: clamp(0.25rem, 1vw, 0.5rem);
+    }
+    .ShopUserSummary {
+      position: sticky;
+      top: 0;
+      flex: 0 0 clamp(12rem, 28vw, 18rem);
+    }
+    .ShopUserSummary .UserSummary .SpreadContainer:last-child {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.25rem;
+    }
+    .ShopUserSummary .UserSummary .Separator[data-orientation="vertical"] {
+      width: 100%;
+      height: 2px;
+      margin: 0.3rem 0;
+    }
+    .ShopUserSummary .UserSummary .Balance {
+      font-size: clamp(1.25rem, min(4vw, 8vh), 2.25rem);
+    }
+    #category-box {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+  }
+}
+
+/* very short screens: less space above/below the big "PRoST" heading and the categories */
+@media (max-height: 600px) {
+  h1 {
+    font-size: clamp(2rem, 10vh, 3rem);
+    margin: 0.5rem 0;
+  }
+}
+
+/* short screens: compact category headings in the shop */
+@media (max-height: 800px) {
+  .ItemGroup > h2 {
+    font-size: clamp(1.25rem, 5vh, 2.25rem);
+    margin: 0.25rem 0 0 0;
+  }
+  .ItemGroup .SmallGridContainer {
+    padding: 0.5rem;
+  }
 }
 
 .GridContainer {
@@ -467,7 +687,19 @@ a,
 
 .item-desc {
   display: flex;
+  flex-wrap: wrap; /* small tiles: price moves below the name instead of splitting words */
   justify-content: space-between;
+  column-gap: 0.4em;
+  margin-top: 0.2em;
+}
+.item-desc > div {
+  font-size: clamp(0.8rem, 2.2vmin, 1rem);
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.item-desc > div:last-child {
+  white-space: nowrap;
+  margin-left: auto;
 }
 
 /* Table */

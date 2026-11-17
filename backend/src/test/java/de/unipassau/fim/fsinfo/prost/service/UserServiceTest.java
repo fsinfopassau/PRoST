@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import de.unipassau.fim.fsinfo.prost.data.dao.ProstUser;
@@ -47,6 +49,25 @@ class UserServiceTest {
     assertTrue(result.isEmpty());
   }
 
+
+  @Test
+  public void testCreateUser_FilteredIdAlreadyExists_ReturnsEmpty() {
+    // "testuser!" is filtered to "testuser" and must not overwrite the existing user
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+
+    Optional<ProstUser> result = userService.createUser(prostUser.getId() + "!",
+        prostUser.getDisplayName(), prostUser.getEmail(), true);
+    assertTrue(result.isEmpty());
+    verify(userRepository, never()).save(any(ProstUser.class));
+  }
+
+  @Test
+  public void testCreateUser_IdEmptyAfterFilter_ReturnsEmpty() {
+    Optional<ProstUser> result = userService.createUser("!!!", prostUser.getDisplayName(),
+        prostUser.getEmail(), true);
+    assertTrue(result.isEmpty());
+    verify(userRepository, never()).save(any(ProstUser.class));
+  }
 
   @Test
   public void testCreateUser_InvalidUserName_ReturnsEmpty() {

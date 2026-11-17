@@ -21,29 +21,54 @@ import {
 import { Separator } from "@radix-ui/react-separator";
 import { ButtonDialogChanger } from "../Util/ButtonDialogChange";
 import { formatMoney, getValidMoney } from "../../Format";
-import { changeUser, createTransaction, deleteUser, enableUser, hideUser, setUserKiosk } from "../../Queries";
+import {
+  changeUser,
+  createTransaction,
+  deleteUser,
+  enableUser,
+  hideUser,
+  newRequestId,
+  setUserKiosk,
+} from "../../Queries";
 import ScrollDialog from "../Util/ScrollDialog";
 import { UserSummaryCard } from "../StatisticsTab/UserSummaryCard";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate: () => void }) {
   const { user, editMode, onUpdate } = props;
 
   const [transactionAmount, setTransactionAmount] = useState<string>("");
+  // Refs (not state) so a second click in the same render frame already sees them.
+  const depositPending = useRef(false);
+  // Same id for every submit of the same deposit (double click, retry) -> backend books it once.
+  const depositRequestId = useRef<string | undefined>(undefined);
 
   function applyTransaction() {
+    if (depositPending.current) {
+      return; // a deposit is already on its way
+    }
     const money = getValidMoney(transactionAmount);
     if (money) {
-      createTransaction(user, money.toString(), "deposit").then((result) => {
-        if (result) {
-          toast.success(formatMoney(Math.abs(money)) + ' wurde "' + user.id + '" gutgeschrieben!');
-          setTransactionAmount("");
-          onUpdate();
-        } else {
-          toast.error("Transaktion fehlgeschlagen!");
-        }
-      });
+      depositPending.current = true;
+      if (!depositRequestId.current) {
+        depositRequestId.current = newRequestId();
+      }
+      createTransaction(user, money.toString(), "deposit", { requestId: depositRequestId.current })
+        .then((result) => {
+          if (result.status === "ok") {
+            toast.success(formatMoney(Math.abs(money)) + ' wurde "' + user.id + '" gutgeschrieben!');
+            depositRequestId.current = undefined;
+            setTransactionAmount("");
+            onUpdate();
+          } else {
+            // keep the request id: retrying the same deposit must not book it twice
+            toast.error("Transaktion fehlgeschlagen!");
+          }
+        })
+        .finally(() => {
+          depositPending.current = false;
+        });
     } else {
       toast.error("Kein gültiger Betrag!");
     }
@@ -145,9 +170,20 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
   function setBalance(newBalance: string) {
     const money = getValidMoney(newBalance);
     if (money != undefined) {
-      createTransaction(user, money.toString(), "change").then((result) => {
-        if (result) {
+      // send the balance the admin saw: if a purchase happened in the meantime the backend
+      // refuses (409) instead of silently overwriting it
+      createTransaction(user, money.toString(), "change", {
+        expectedBalance: Number(user.balance).toFixed(2),
+      }).then((result) => {
+        if (result.status === "ok") {
           toast.success("Kontostand geändert.");
+          onUpdate();
+        } else if (result.status === "conflict") {
+          toast.warning(
+            "Kontostand hat sich inzwischen geändert (jetzt " +
+              formatMoney(result.currentBalance) +
+              "). Nichts geändert – bitte prüfen und erneut eintragen."
+          );
           onUpdate();
         } else {
           toast.error("Änderung fehlgeschlagen!");
@@ -230,7 +266,10 @@ export function UserSettingCard(props: { user: User; editMode: boolean; onUpdate
             }
             value={transactionAmount}
             onKeyDown={handleKeyDown}
-            onChange={(e) => setTransactionAmount(e.target.value)}
+            onChange={(e) => {
+              depositRequestId.current = undefined; // new amount = new deposit
+              setTransactionAmount(e.target.value);
+            }}
           />
           <div className="Button good-color icon" onClick={applyTransaction}>
             <PlusIcon />

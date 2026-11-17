@@ -5,6 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import de.unipassau.fim.fsinfo.prost.data.TransactionType;
@@ -300,6 +304,16 @@ public class ShopServiceTest {
   }
 
   @Test
+  public void testCreateItem_FilteredIdentifierAlreadyExists_ReturnsEmpty() {
+    // "Item1!" is filtered to "item1" and must not overwrite the existing item
+    when(itemRepository.existsById(shopItem.getId())).thenReturn(true);
+    Optional<ShopItem> result = shopService.createItem("Item1!", "Item 1", "Category 1",
+        new BigDecimal("10.00"));
+    assertTrue(result.isEmpty());
+    verify(itemRepository, never()).save(any(ShopItem.class));
+  }
+
+  @Test
   public void testCreateItem_SuccessfulCreation_ReturnsItem() {
     when(itemRepository.existsById(shopItem.getId())).thenReturn(false);
     when(itemRepository.save(any(ShopItem.class))).thenReturn(shopItem);
@@ -443,5 +457,53 @@ public class ShopServiceTest {
     Optional<ShopItem> result = shopService.disable(shopItem.getId());
     assertTrue(result.isPresent());
     assertFalse(result.get().getEnabled());
+  }
+
+  @Test
+  public void testConsume_RetryOfBookedRequest_NotChargedAgain() {
+    TransactionEntry booked = new TransactionEntry(null, prostUser.getId(), kioskUser.getId(),
+        TransactionType.BUY, BigDecimal.ZERO, shopItem.getPrice());
+    booked.setRequestId("buy-1");
+    when(itemRepository.findById(shopItem.getId())).thenReturn(Optional.of(shopItem));
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+    when(userRepository.findById(kioskUser.getId())).thenReturn(Optional.of(kioskUser));
+    when(transactionService.findByRequestId("buy-1")).thenReturn(Optional.of(booked));
+
+    assertTrue(shopService.consume(shopItem.getId(), prostUser.getId(), 1, kioskUser.getId(),
+        UserAccessRole.KIOSK, "buy-1"));
+    verify(transactionService, never()).moneyTransfer(any(), anyString(), anyString(), any(),
+        any(TransactionType.class), any(), any());
+    verify(transactionService, never()).moneyTransfer(any(), anyString(), anyString(), any(),
+        any(TransactionType.class));
+    verify(historyRepository, never()).save(any());
+    // the retry must not block the bearer's next real purchase
+    assertFalse(shopService.hasBearerCooldown(kioskUser.getId()));
+  }
+
+  @Test
+  public void testConsume_NewRequestId_PassedToTransaction() {
+    TransactionEntry transaction = new TransactionEntry(null, prostUser.getId(), kioskUser.getId(),
+        TransactionType.BUY, BigDecimal.ZERO, shopItem.getPrice());
+    when(itemRepository.findById(shopItem.getId())).thenReturn(Optional.of(shopItem));
+    when(userRepository.findById(prostUser.getId())).thenReturn(Optional.of(prostUser));
+    when(userRepository.findById(kioskUser.getId())).thenReturn(Optional.of(kioskUser));
+    when(transactionService.findByRequestId("buy-2")).thenReturn(Optional.empty());
+    when(transactionService.moneyTransfer(any(), anyString(), anyString(), any(),
+        eq(TransactionType.BUY), eq("buy-2"), isNull())).thenReturn(Optional.of(transaction));
+
+    assertTrue(shopService.consume(shopItem.getId(), prostUser.getId(), 1, kioskUser.getId(),
+        UserAccessRole.KIOSK, "buy-2"));
+    verify(historyRepository).save(any());
+  }
+
+  @Test
+  public void testIsAlreadyBooked_OnlyForSameBearerAndUser() {
+    TransactionEntry booked = new TransactionEntry(null, prostUser.getId(), kioskUser.getId(),
+        TransactionType.BUY, BigDecimal.ZERO, shopItem.getPrice());
+    when(transactionService.findByRequestId("buy-3")).thenReturn(Optional.of(booked));
+
+    assertTrue(shopService.isAlreadyBooked("buy-3", kioskUser.getId(), prostUser.getId()));
+    assertFalse(shopService.isAlreadyBooked("buy-3", prostUser.getId(), prostUser.getId()));
+    assertFalse(shopService.isAlreadyBooked("buy-3", kioskUser.getId(), "someoneelse"));
   }
 }

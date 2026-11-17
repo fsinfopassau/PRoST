@@ -57,7 +57,7 @@ export function UserContainer() {
       <input type="text" onChange={(e) => setSearchValue(e.target.value)} id="main-search" placeholder="Search" />
       <div className="DisplayCard">
         <h3>Loyale Nutzer</h3>
-        <div style={{ display: "flex", gap: "1rem", justifyContent: "space-between" }}>
+        <div className="RecentUsers">
           {users === undefined ? <></> : getRecent().map((user, index) => <UserBox key={index} user={user} />)}
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { CompositeMetricType, ItemMetricType, TimeSpan } from "../../Types/Statistics";
 import { useEffect, useState } from "react";
 import { getCompositeMetric, getItemMetric } from "../../Queries";
@@ -49,17 +49,20 @@ export function MetricPieChart(props: { entries: ChartData[] | undefined; title:
           justifyContent: "center",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "0rem", flexDirection: "column" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0rem", flexDirection: "column", width: 400, maxWidth: "100%" }}>
           <div className="bold">{title}</div>
-          <PieChart width={400} height={400}>
-            <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={125} fill="#8884d8" label>
-              {data.map((_, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[(index + shift) % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
+          {/* scales down on small screens, 400x400 at most as before */}
+          <ResponsiveContainer width="100%" aspect={1}>
+            <PieChart>
+              <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius="62%" fill="#8884d8" label>
+                {data.map((_, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[(index + shift) % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
           <div>{desc}</div>
         </div>
       </div>

@@ -179,14 +179,45 @@ export async function deleteUser(user: User): Promise<boolean> {
   return result.ok;
 }
 
-export async function createTransaction(receiver: User, value: string, actionType: string): Promise<boolean> {
-  const result = await fetch(`${apiUrl}/api/transaction/${actionType}?id=${receiver.id}&value=${value}`, {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${getEncodedCredentials()}`,
-    },
-  });
-  return result.ok;
+export type TransactionResult =
+  | { status: "ok" }
+  | { status: "conflict"; currentBalance: number } // balance changed since it was displayed
+  | { status: "error" };
+
+/** Unique id per money action, so the backend books a repeated submit (double click, retry) only once. */
+export function newRequestId(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID(); // only available in secure contexts (https / localhost)
+  }
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+export async function createTransaction(
+  receiver: User,
+  value: string,
+  actionType: "deposit" | "change",
+  options: { requestId?: string; expectedBalance?: string } = {}
+): Promise<TransactionResult> {
+  const params = new URLSearchParams({ id: receiver.id, value });
+  if (options.requestId) params.set("requestId", options.requestId);
+  if (options.expectedBalance !== undefined) params.set("expected", options.expectedBalance);
+
+  try {
+    const result = await fetch(`${apiUrl}/api/transaction/${actionType}?${params}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+      },
+    });
+    if (result.status === 409) {
+      return { status: "conflict", currentBalance: Number(await result.text()) };
+    }
+    return result.ok ? { status: "ok" } : { status: "error" };
+  } catch (error) {
+    return { status: "error" };
+  }
 }
 
 export async function getAllTransactions(
@@ -297,16 +328,36 @@ export async function createNewShopItem(item: ShopItem): Promise<boolean> {
   return result.ok;
 }
 
-export async function buyItem(userId: string, itemId: string, amount: number): Promise<number> {
-  const result = await fetch(`${apiUrl}/api/shop/item/consume?id=${itemId}&userId=${userId}&n=${amount}`, {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${getEncodedCredentials()}`,
-      "Content-Type": "application/json",
-    },
-  });
+/**
+ * @param requestId same id for every attempt of the same purchase: if a response gets lost, the
+ *                  purchase can be retried and the backend will not charge it twice.
+ * @returns 0 = bought, 1 = cooldown, 2 = no permission (teapot), -1 = refused,
+ *          3 = outcome unknown (network error / server error): retry with the same requestId
+ */
+export async function buyItem(userId: string, itemId: string, amount: number, requestId?: string): Promise<number> {
+  const params = new URLSearchParams({ id: itemId, userId, n: String(amount) });
+  if (requestId) params.set("requestId", requestId);
 
-  if ((await result.text()).indexOf("cooldown") !== -1) {
+  let result: Response;
+  let text: string;
+  try {
+    result = await fetch(`${apiUrl}/api/shop/item/consume?${params}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${getEncodedCredentials()}`,
+        "Content-Type": "application/json",
+      },
+    });
+    text = await result.text();
+  } catch (error) {
+    return 3; // request or response lost - the purchase may or may not have been booked
+  }
+
+  if (result.status >= 500) {
+    return 3; // e.g. proxy timeout: the backend may still have booked it
+  }
+
+  if (text.indexOf("cooldown") !== -1) {
     return 1;
   }
 

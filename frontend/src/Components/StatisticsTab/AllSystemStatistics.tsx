@@ -1,8 +1,7 @@
 import {useEffect, useState} from "react";
-import {ShopHistoryEntry} from "../../Types/ShopHistory";
 import {User} from "../../Types/User";
 import {ShopItem} from "../../Types/ShopItem";
-import {getAllShopItems, getAllUsers, getHistory, getItemMetric} from "../../Queries";
+import {getAllShopItems, getAllUsers, getItemMetric} from "../../Queries";
 import {formatMoney} from "../../Format";
 import {MetricInfo} from "./MetricOverview";
 import {CompositeMetricType, ItemMetricType, TimeSpan} from "../../Types/Statistics";
@@ -10,7 +9,6 @@ import {ItemMetricPieChart} from "../Chart/PieChart";
 import {CompositeMetricLineChart} from "../Chart/LineChart";
 
 export function AllSystemStatistics(props: { timeSpan: TimeSpan }) {
-  const [history, setHistory] = useState<ShopHistoryEntry[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [items, setItems] = useState<ShopItem[]>([]);
   const [totalRevenue, setTotalRevenue] = useState<number>(0);
@@ -49,12 +47,6 @@ export function AllSystemStatistics(props: { timeSpan: TimeSpan }) {
       }
     });
   }, [timeSpan]);
-
-  useEffect(() => {
-    getHistory(10, 0).then((historyList) => {
-      if (historyList) setHistory(historyList.content);
-    });
-  }, []);
 
   function getUserDebt(): number {
     let num = 0;
